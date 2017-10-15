@@ -15,12 +15,12 @@ public class MeetingListActivity extends AppCompatActivity {
         //TODO setup toolbar and drawer
 
         MeetingListFragment meetingListFragment =
-                (MeetingListFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_meeting_list);
+                (MeetingListFragment) getSupportFragmentManager().findFragmentById(R.id.meeting_list_contentFrame);
         if (meetingListFragment == null) {
             meetingListFragment = new MeetingListFragment();
             getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.fragment_meeting_list,meetingListFragment)
+                    .add(R.id.meeting_list_contentFrame,meetingListFragment)
                     .commit();
         }
 

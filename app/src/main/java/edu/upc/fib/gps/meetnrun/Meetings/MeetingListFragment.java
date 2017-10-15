@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.upc.fib.gps.meetnrun.Meetings.MeetingsRecyclerView.Meeting;
 import edu.upc.fib.gps.meetnrun.Meetings.MeetingsRecyclerView.MeetingsAdapter;
 import edu.upc.fib.gps.meetnrun.R;
 
@@ -45,21 +46,25 @@ public class MeetingListFragment extends Fragment {
                 createNewMeeting();
             }
         });
-        SwipeRefreshLayout swipeRefreshLayout =
-                (SwipeRefreshLayout) view.findViewById(R.id.fragment_meeting_container);
+        final SwipeRefreshLayout swipeRefreshLayout =
+                (SwipeRefreshLayout) view.findViewById(R.id.fragment_meeting_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 meetingsAdapter.updateMeetingsList(getMeetingsList());
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
+        return view;
     }
 
     private void createNewMeeting() {
+        meetingsAdapter.addItem(this.getContext());
         //TODO intent to the create meeting activity
     }
 
     private ArrayList<Meeting> getMeetingsList() {
         //TODO get meetigns from DB
+        return new ArrayList<>();
     }
 }

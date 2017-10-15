@@ -1,9 +1,13 @@
 package edu.upc.fib.gps.meetnrun.Meetings.MeetingsRecyclerView;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import java.util.List;
 
 import edu.upc.fib.gps.meetnrun.R;
 
@@ -22,6 +26,14 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
         return new MeetingsViewHolder(view);
     }
 
+    //TODO delete this once connection to db is available
+    public void addItem(Context context) {
+        meetings.add(new Meeting());
+        notifyItemInserted(getItemCount());
+        notifyDataSetChanged();
+        Toast.makeText(context,"New meeting: " + getItemCount(), Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onBindViewHolder(final MeetingsViewHolder holder, int position) {
         Meeting meeting = meetings.get(position);
@@ -35,7 +47,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
 
 
     public void updateMeetingsList(List<Meeting> meetings) {
-        this.meetings = meetings;
+       //TODO update this.meetings = meetings;
         notifyDataSetChanged();
     }
 
