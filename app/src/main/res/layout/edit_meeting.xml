@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/title_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="5dp"
+        android:labelFor="@+id/meeting_title"
+        android:layout_marginTop="10dp"
+        android:text="Title" />
+
+    <EditText
+        android:id="@+id/meeting_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/title_label"
+        android:text="Title" />
+
+    <TextView
+        android:id="@+id/description_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:labelFor="@+id/meeting_description"
+        android:layout_below="@+id/meeting_title"
+        android:layout_marginTop="10dp"
+        android:text="Description" />
+
+    <EditText
+        android:id="@+id/meeting_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/description_label"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:layout_alignParentEnd="true"
+        android:text="Description"/>
+
+    <TextView
+        android:id="@+id/date_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:labelFor="@+id/meeting_date"
+        android:layout_below="@+id/meeting_description"
+        android:layout_marginTop="10dp"
+        android:text="Date" />
+
+    <EditText
+        android:id="@+id/meeting_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/date_label"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:inputType="none"
+        android:editable="false"
+        android:text="Date" />
+
+    <Button
+        android:id="@+id/change_date_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/date_label"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/meeting_date"
+        android:layout_marginTop="10dp"
+        android:text="Change date" />
+
+    <TextView
+        android:id="@+id/time_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:labelFor="@+id/meeting_time"
+        android:layout_below="@+id/meeting_date"
+        android:layout_marginTop="10dp"
+        android:text="Time" />
+
+    <EditText
+        android:id="@+id/meeting_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/time_label"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:inputType="none"
+        android:editable="false"
+        android:text="Time" />
+
+    <Button
+        android:id="@+id/change_time_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/time_label"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/meeting_time"
+        android:layout_marginTop="10dp"
+        android:text="Change time" />
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/meeting_time"
+        android:layout_marginTop="20dp"/>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:src="@drawable/common_full_open_on_phone"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        />
+
+
+
+</RelativeLayout>
