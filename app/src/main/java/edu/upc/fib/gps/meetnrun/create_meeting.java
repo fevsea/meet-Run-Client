@@ -10,6 +10,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -24,6 +26,7 @@ public class create_meeting extends Activity{
     private EditText hour=(EditText) findViewById(R.id.hour);
     private EditText level=(EditText) findViewById(R.id.level);
     private EditText description=(EditText) findViewById(R.id.description);
+    private GoogleMap maps;
 
    /* private void updateLabel() {
         String myFormat = "DD/mm/yy"; //In which you need put here
@@ -47,11 +50,11 @@ public class create_meeting extends Activity{
         String Hour = hour.getText().toString();
         String Description = description.toString();
         if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty()){
-            Toast.makeText(this, "You left some important fields empty. You MUST fill name, date and hour", Toast.LENGTH_SHORT).show();
-            return;
+            Toast.makeText(this, "@string/emptycreate", Toast.LENGTH_SHORT).show();
         }
-        else {
-            //Afegir a DB
+        else if(Name.length()>=100) Toast.makeText(this,"@string/bigName", Toast.LENGTH_SHORT).show();
+        else if(Description.length()>=500) Toast.makeText(this, "@string/bigDescription", Toast.LENGTH_SHORT).show();
+        else{
         }
     }
 /*  FUTURE ADD-ONS

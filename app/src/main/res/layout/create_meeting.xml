@@ -8,7 +8,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="0.03">
 
         <EditText
@@ -28,7 +28,7 @@
             android:id="@+id/nameTV"
             android:layout_width="180dp"
             android:layout_height="39dp"
-            android:text="Nom del meeting"
+            android:text="@string/MeetingName"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
@@ -39,7 +39,7 @@
             android:id="@+id/dateTV"
             android:layout_width="182dp"
             android:layout_height="38dp"
-            android:text="Data"
+            android:text="@string/date"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:layout_marginStart="16dp"
             tools:layout_editor_absoluteY="67dp"
@@ -64,7 +64,7 @@
             android:id="@+id/hourTV"
             android:layout_width="171dp"
             android:layout_height="41dp"
-            android:text="Hora"
+            android:text="@string/hour"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
@@ -80,7 +80,7 @@
             android:id="@+id/levelTV"
             android:layout_width="170dp"
             android:layout_height="43dp"
-            android:text="Nivell mínim"
+            android:text="@string/level"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:layout_marginStart="16dp"
             android:layout_marginTop="9dp"
@@ -107,7 +107,7 @@
             android:id="@+id/descriptionTV"
             android:layout_width="387dp"
             android:layout_height="42dp"
-            android:text="Descripció del meeting"
+            android:text="@string/MeetingDesc"
             android:textAppearance="@android:style/TextAppearance.Material.Large"
             android:layout_marginStart="16dp"
             tools:layout_editor_absoluteY="220dp"
