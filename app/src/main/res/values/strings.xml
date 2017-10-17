@@ -5,6 +5,10 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="edit_meeting_close_dialog_message">Are you sure you want to close without saving?</string>
+    <string name="edit_meeting_close_dialog_title">Closing without saving</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

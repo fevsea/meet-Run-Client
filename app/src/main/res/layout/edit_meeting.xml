@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/title_label"
@@ -113,26 +115,25 @@
         android:layout_marginTop="10dp"
         android:text="Change time" />
 
+
+
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         android:name="com.google.android.gms.maps.MapFragment"
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/meeting_time"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp" >
 
+        <Button
+            android:id="@+id/change_location_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="92dp"
+            android:layout_marginEnd="26dp"
+            android:text="Change location" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="end|bottom"
-        android:layout_margin="16dp"
-        android:src="@drawable/common_full_open_on_phone"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        />
-
+    </fragment>
 
 
 </RelativeLayout>
