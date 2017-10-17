@@ -1,5 +1,6 @@
 package edu.upc.fib.gps.meetnrun.Meetings;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -60,7 +61,9 @@ public class MeetingListFragment extends Fragment {
 
     private void createNewMeeting() {
         meetingsAdapter.addItem(this.getContext());
-        //TODO intent to the create meeting activity
+        /* TODO startactivity once createMeetingActivity is created
+        Intent intent = new Intent(this,createMeetingActivity.java);
+        startActivity(intent);*/
     }
 
     private ArrayList<Meeting> getMeetingsList() {

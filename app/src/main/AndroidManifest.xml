@@ -11,9 +11,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Meetings.MeetingListActivity"
+            android:hardwareAccelerated="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:hardwareAccelerated="true"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

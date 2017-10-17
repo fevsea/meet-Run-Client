@@ -22,6 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
+                android:layout_gravity="center_vertical"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"/>
             <!-- TODO imageview rounded and with another little imageview with the user level
                  TODO check TextDrawable library to do it -->
@@ -40,31 +41,35 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/meeting_item_user_name"
                 android:layout_toRightOf="@id/meeting_item_user_photo"/>
-            <TextView
-                android:id="@+id/meeting_item_date"
+            <RelativeLayout
+                android:id="@+id/meeting_item_datetime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"/>
+                android:layout_alignParentEnd="true">
+                <TextView
+                    android:id="@+id/meeting_item_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/meeting_item_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/meeting_item_date" />
+                <ImageButton
+                    android:id="@+id/meeting_item_meet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_add"
+                    android:layout_below="@id/meeting_item_time" />
+
+            </RelativeLayout>
             <TextView
                 android:id="@+id/meeting_item_level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/meeting_item_date"
                 android:gravity="center"
+                android:layout_toStartOf="@id/meeting_item_datetime"
                 android:background="@drawable/circular_text_view"/>
-            <TextView
-                android:id="@+id/meeting_item_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/meeting_item_date"
-                android:layout_alignParentEnd="true"/>
-            <ImageButton
-                android:id="@+id/meeting_item_meet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_add"
-                android:layout_below="@id/meeting_item_time"
-                android:layout_alignParentEnd="true"/>
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>
