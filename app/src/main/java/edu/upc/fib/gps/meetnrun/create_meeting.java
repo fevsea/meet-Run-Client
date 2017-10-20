@@ -1,13 +1,18 @@
 package edu.upc.fib.gps.meetnrun;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +24,8 @@ import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
@@ -30,16 +37,17 @@ import java.util.Locale;
  * Created by Javier on 14/10/2017.
  */
 
-public class create_meeting extends Activity{
+public class create_meeting extends Activity {
     private Integer year, month, day, hour2, minute;
-    private EditText name=(EditText) findViewById(R.id.name);
-    private EditText date=(EditText) findViewById(R.id.date);
-    private EditText hour=(EditText) findViewById(R.id.hour);
-    private EditText level=(EditText) findViewById(R.id.level);
-    private EditText description=(EditText) findViewById(R.id.description);
-
+    private EditText name = (EditText) findViewById(R.id.name);
+    private EditText date = (EditText) findViewById(R.id.date);
+    private EditText hour = (EditText) findViewById(R.id.hour);
+    private EditText level = (EditText) findViewById(R.id.level);
+    private EditText description = (EditText) findViewById(R.id.description);
     private GoogleMap maps;
-    
+    private LatLng myLocation;
+    private Marker myMarker;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
 
@@ -47,10 +55,26 @@ public class create_meeting extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_meeting);
 
-        Button dateButton= findViewById(R.id.pickDate);
-        Button hourButton= findViewById(R.id.pickHour);
+        Button dateButton = findViewById(R.id.pickDate);
         dateButton.setOnClickListener(this);
+        Button hourButton = findViewById(R.id.pickHour);
         hourButton.setOnClickListener(this);
+
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        double longitude = location.getLongitude();
+        double latitude = location.getLatitude();
+        myLocation = new LatLng(longitude, latitude);
 
         MapFragment mMapFragment = MapFragment.newInstance();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -58,8 +82,6 @@ public class create_meeting extends Activity{
         fragmentTransaction.commit();
         mMapFragment.getMapAsync(this);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         this.setTitle("Edit Meeting");
     }
 
@@ -76,8 +98,21 @@ public class create_meeting extends Activity{
         else if(Description.length()>=500) Toast.makeText(this, "@string/bigDescription", Toast.LENGTH_SHORT).show();
         else{
             //DB stuff
+            Toast.makeText(this,"Meeting name:"+Name+", Date:"+Date+",Hour:"+Hour+",Level:"+Level+",Description:"+Description,)
         }
     }
+
+    public void onMapReady(GoogleMap map) {
+      maps = map;
+      // Add some markers to the map, and add a data object to each marker.
+      myMarker = maps.addMarker(new MarkerOptions()
+                       .position(myLocation)
+                       .title("@string/location")
+                       .draggable(true));
+      myMarker.setTag(0);
+      // Set a listener for marker click
+      maps.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
+}
 
     private void showTimePickerDialog() {
         final EditText timeText = (EditText) findViewById(R.id.hour);
@@ -114,7 +149,6 @@ public class create_meeting extends Activity{
     }
 
     @Override
-
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.pickDate:
