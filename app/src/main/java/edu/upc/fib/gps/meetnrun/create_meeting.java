@@ -2,6 +2,7 @@ package edu.upc.fib.gps.meetnrun;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.location.Address;
@@ -16,6 +17,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -35,23 +37,30 @@ public class create_meeting extends Activity{
     private EditText hour=(EditText) findViewById(R.id.hour);
     private EditText level=(EditText) findViewById(R.id.level);
     private EditText description=(EditText) findViewById(R.id.description);
-    private Button dateButton=(Button) findViewById(R.id.pickDate);
-    private Button hourButton=(Button) findViewById(R.id.pickHour);
+
     private GoogleMap maps;
-
-   /* private void updateLabel() {
-        String myFormat = "DD/mm/yy"; //In which you need put here
-        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.FRANCE);
-
-        edittext.setText(sdf.format(myCalendar.getTime()));
-    } */
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
 
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_meeting);
+
+        Button dateButton= findViewById(R.id.pickDate);
+        Button hourButton= findViewById(R.id.pickHour);
+        dateButton.setOnClickListener(this);
+        hourButton.setOnClickListener(this);
+
+        MapFragment mMapFragment = MapFragment.newInstance();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.maps, mMapFragment);
+        fragmentTransaction.commit();
+        mMapFragment.getMapAsync(this);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        this.setTitle("Edit Meeting");
     }
 
     public void create (View view){
@@ -114,8 +123,8 @@ public class create_meeting extends Activity{
             case R.id.pickHour:
                 showTimePickerDialog();
                 break;
-            case R.id.change_location_button:
-                showLocationPicker();
+            case R.id.create:
+                create();
                 break;
         }
     }
