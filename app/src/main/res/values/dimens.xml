@@ -6,7 +6,8 @@
     <dimen name="list_padding">8dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="item_paddig">8dp</dimen>
+    <dimen name="meeting_item_paddig">8dp</dimen>
+    <dimen name="meeting_item_margin">8dp</dimen>
     <dimen name="card_depth">2dp</dimen>
     <dimen name="card_radius">4dp</dimen>
 </resources>

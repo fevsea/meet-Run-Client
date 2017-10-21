@@ -1,6 +1,5 @@
 package edu.upc.fib.gps.meetnrun.Meetings;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -14,9 +13,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.upc.fib.gps.meetnrun.Meetings.MeetingsRecyclerView.Meeting;
 import edu.upc.fib.gps.meetnrun.Meetings.MeetingsRecyclerView.MeetingsAdapter;
 import edu.upc.fib.gps.meetnrun.R;
+import edu.upc.fib.gps.meetnrun.models.Meeting;
 
 
 public class MeetingListFragment extends Fragment {

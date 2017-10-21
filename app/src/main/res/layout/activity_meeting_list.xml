@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/fab_margin"
-                android:src="@drawable/ic_add"
+                android:src="@drawable/add_group_512"
                 app:fabSize="normal"
                 app:layout_anchor="@id/meeting_list_contentFrame"
                 app:layout_anchorGravity="bottom|right|end" />

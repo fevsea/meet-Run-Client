@@ -7,9 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.gps.meetnrun.R;
+import edu.upc.fib.gps.meetnrun.models.Meeting;
 
 public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
 
@@ -28,7 +30,12 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
 
     //TODO delete this once connection to db is available
     public void addItem(Context context) {
-        meetings.add(new Meeting());
+        String title = null;
+        String description = null;
+        String creatorAuthor = null;
+        Date dateTime = null;
+        boolean isPublic = true; int level = 0; float latitude = 0; float longitude = 0;
+        meetings.add(new Meeting(title,description,creatorAuthor,dateTime,isPublic,level,latitude,longitude));
         notifyItemInserted(getItemCount());
         notifyDataSetChanged();
         Toast.makeText(context,"New meeting: " + getItemCount(), Toast.LENGTH_SHORT).show();
@@ -47,7 +54,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
 
 
     public void updateMeetingsList(List<Meeting> meetings) {
-       //TODO update this.meetings = meetings;
+        //TODO this.meetings = meetings;
         notifyDataSetChanged();
     }
 

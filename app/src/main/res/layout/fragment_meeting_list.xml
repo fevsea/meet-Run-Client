@@ -10,6 +10,6 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:orientation="vertical"
-        android:padding="@dimen/item_paddig">
+        android:padding="@dimen/meeting_item_paddig">
     </android.support.v7.widget.RecyclerView>
 </android.support.v4.widget.SwipeRefreshLayout>

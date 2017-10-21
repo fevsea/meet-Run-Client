@@ -78,7 +78,7 @@ public class MeetingListActivity extends AppCompatActivity {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
             case R.id.meeting_list_menu_search:
-                //TODO search
+                //TODO search (query on recyclerview adapter)
                 break;
         }
         return true;
