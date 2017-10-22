@@ -4,7 +4,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/meeting_item_paddig">
+    android:paddingLeft="@dimen/meeting_item_padding_horizontal"
+    android:paddingRight="@dimen/meeting_item_padding_horizontal"
+    android:paddingBottom="@dimen/meeting_item_padding_vertical"
+    android:paddingTop="@dimen/meeting_item_padding_vertical">
     <android.support.v7.widget.CardView
         android:id="@+id/meeting_item_cardview"
         android:layout_width="match_parent"
@@ -15,7 +18,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/meeting_item_paddig">
+            android:padding="@dimen/meeting_item_padding_vertical">
             <!-- Once images are added refactor the first Textview to an Imageview
             <ImageView
                 android:id="@+id/meeting_item_user_photo"
