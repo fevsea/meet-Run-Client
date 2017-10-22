@@ -12,7 +12,7 @@
     <string name="MeetingName">Meeting name</string>
     <string name="level">Minimum level</string>
     <string name="MeetingDesc">Meeting description</string>
-    <string name="emptyCreate">You left some important fields empty. You MUST fill name, date and hour.</string>
+    <string name="emptyCreate">You left some important fields empty. You MUST fill name, date, hour and meeting location.</string>
     <string name="bigName">Name of the meeting should be shorter than 100 characters.</string>
     <string name="bigDescription">Description of the meeting should be shorter than 500 characters.</string>
     <string name="location">Your last known location.</string>

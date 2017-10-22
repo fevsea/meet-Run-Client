@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -37,7 +39,7 @@ import java.util.Locale;
  * Created by Javier on 14/10/2017.
  */
 
-public class create_meeting extends Activity {
+public class create_meeting extends FragmentActivity {
     private Integer year, month, day, hour2, minute;
     private EditText name = (EditText) findViewById(R.id.name);
     private EditText date = (EditText) findViewById(R.id.date);
@@ -56,9 +58,9 @@ public class create_meeting extends Activity {
         setContentView(R.layout.create_meeting);
 
         Button dateButton = findViewById(R.id.pickDate);
-        dateButton.setOnClickListener(this);
+        dateButton.setOnClickListener((View.OnClickListener) this);
         Button hourButton = findViewById(R.id.pickHour);
-        hourButton.setOnClickListener(this);
+        hourButton.setOnClickListener((View.OnClickListener) this);
 
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -78,9 +80,9 @@ public class create_meeting extends Activity {
 
         MapFragment mMapFragment = MapFragment.newInstance();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.maps, mMapFragment);
+        fragmentTransaction.add(R.id.mapView, mMapFragment);
         fragmentTransaction.commit();
-        mMapFragment.getMapAsync(this);
+        mMapFragment.getMapAsync((OnMapReadyCallback) this);
 
         this.setTitle("Edit Meeting");
     }
@@ -91,14 +93,16 @@ public class create_meeting extends Activity {
         int Level = Integer.parseInt(level.getText().toString());
         String Hour = hour.getText().toString();
         String Description = description.toString();
-        if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty()){
-            Toast.makeText(this, "@string/emptycreate", Toast.LENGTH_SHORT).show();
+        String Latitude = String.valueOf(myLocation.latitude);
+        String Longitude = String.valueOf(myLocation.longitude);
+        if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty()){
+            Toast.makeText(this, "@string/emptyCreate", Toast.LENGTH_SHORT).show();
         }
         else if(Name.length()>=100) Toast.makeText(this,"@string/bigName", Toast.LENGTH_SHORT).show();
         else if(Description.length()>=500) Toast.makeText(this, "@string/bigDescription", Toast.LENGTH_SHORT).show();
         else{
             //DB stuff
-            Toast.makeText(this,"Meeting name:"+Name+", Date:"+Date+",Hour:"+Hour+",Level:"+Level+",Description:"+Description,)
+            Toast.makeText(this,"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description, Toast.LENGTH_SHORT);
         }
     }
 
@@ -148,7 +152,6 @@ public class create_meeting extends Activity {
         datePickerFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.pickDate:
@@ -158,7 +161,7 @@ public class create_meeting extends Activity {
                 showTimePickerDialog();
                 break;
             case R.id.create:
-                create();
+                create(view);
                 break;
         }
     }
