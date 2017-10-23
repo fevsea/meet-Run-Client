@@ -6,8 +6,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
+
+import edu.upc.fib.gps.meetnrun.models.User;
 
 public class ProfileActivity extends AppCompatActivity {
+
+    TextView userNameTextView =(TextView) findViewById(R.id.userName);
+    TextView userEmailTextView =(TextView) findViewById(R.id.userEmail);
+    TextView userPostCodeTextView =(TextView) findViewById(R.id.userPostCode);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +31,22 @@ public class ProfileActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        /*String userName = getUserName()+ " " + getFirstName() + " " + getLastName();
+        String email = getEmail();
+        int postCode = getPostCode();*/
+
+        String name = "Monica Follana";
+        String email = "monicfm44@gmail.com";
+        String postCode = "08028";
+
+        userNameTextView.setText(name);
+        userEmailTextView.setText(email);
+        userPostCodeTextView.setText(postCode);
+
+
+        /*final TextView helloTextView = (TextView) findViewById(R.id.text_view_id);
+        helloTextView.setText(R.string.user_greeting);*/
     }
 
 }
