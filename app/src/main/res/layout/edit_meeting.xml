@@ -14,7 +14,7 @@
         android:layout_marginStart="5dp"
         android:labelFor="@+id/meeting_title"
         android:layout_marginTop="10dp"
-        android:text="Title" />
+        android:text="@string/title" />
 
     <EditText
         android:id="@+id/meeting_title"
@@ -24,7 +24,7 @@
         android:inputType="text"
         android:layout_marginTop="5dp"
         android:layout_below="@+id/title_label"
-        android:text="Title" />
+        android:text="@string/title" />
 
     <TextView
         android:id="@+id/description_label"
@@ -35,7 +35,7 @@
         android:labelFor="@+id/meeting_description"
         android:layout_below="@+id/meeting_title"
         android:layout_marginTop="10dp"
-        android:text="Description" />
+        android:text="@string/description" />
 
     <EditText
         android:id="@+id/meeting_description"
@@ -47,7 +47,7 @@
         android:ems="10"
         android:inputType="textMultiLine"
         android:layout_alignParentEnd="true"
-        android:text="Description"/>
+        android:text="@string/description"/>
 
     <TextView
         android:id="@+id/date_label"
@@ -58,7 +58,7 @@
         android:labelFor="@+id/meeting_date"
         android:layout_below="@+id/meeting_description"
         android:layout_marginTop="10dp"
-        android:text="Date" />
+        android:text="@string/date" />
 
     <EditText
         android:id="@+id/meeting_date"
@@ -68,9 +68,9 @@
         android:layout_below="@+id/date_label"
         android:layout_marginTop="10dp"
         android:ems="10"
-        android:inputType="none"
+        android:inputType="date"
         android:editable="false"
-        android:text="Date" />
+        android:text="@string/date" />
 
     <Button
         android:id="@+id/change_date_button"
@@ -80,7 +80,7 @@
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/meeting_date"
         android:layout_marginTop="10dp"
-        android:text="Change date" />
+        android:text="@string/change_date" />
 
     <TextView
         android:id="@+id/time_label"
@@ -91,7 +91,7 @@
         android:labelFor="@+id/meeting_time"
         android:layout_below="@+id/meeting_date"
         android:layout_marginTop="10dp"
-        android:text="Time" />
+        android:text="@string/time" />
 
     <EditText
         android:id="@+id/meeting_time"
@@ -103,7 +103,7 @@
         android:ems="10"
         android:inputType="none"
         android:editable="false"
-        android:text="Time" />
+        android:text="@string/time" />
 
     <Button
         android:id="@+id/change_time_button"
@@ -113,7 +113,7 @@
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@+id/meeting_time"
         android:layout_marginTop="10dp"
-        android:text="Change time" />
+        android:text="@string/change_time" />
 
 
 
@@ -122,8 +122,9 @@
         android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="71dp"
         android:layout_below="@+id/meeting_time"
-        android:layout_marginTop="20dp" >
+        android:layout_alignParentStart="true">
 
         <Button
             android:id="@+id/change_location_button"
@@ -131,9 +132,40 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="92dp"
             android:layout_marginEnd="26dp"
-            android:text="Change location" />
+            android:text="@string/change_location" />
 
     </fragment>
+
+    <Switch
+        android:id="@+id/isPublic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="@string/is_public"
+        android:layout_below="@+id/meeting_time"
+        android:layout_marginTop="15dp" />
+
+    <EditText
+        android:id="@+id/meeting_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/meeting_time"
+        android:ems="10"
+        android:layout_marginTop="10dp"
+        android:inputType="number"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="10dp"/>
+
+    <TextView
+        android:id="@+id/level_label"
+        android:labelFor="@id/meeting_level"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/meeting_time"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:text="@string/level" />
 
 
 </RelativeLayout>

@@ -9,7 +9,18 @@
     <string name="edit_meeting_close_dialog_title">Closing without saving</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-
+    <string name="is_public">Public</string>
+    <string name="edit_meeting_error_dialog_title">Error editing the Meeting</string>
+    <string name="edit_meeting_error_dialog_message">There was an error while processing the edited Meeting, check if the values are correct!</string>
+    <string name="level">Level</string>
+    <string name="change_location">Change location</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="time">Time</string>
+    <string name="date">Date</string>
+    <string name="change_date">Change date</string>
+    <string name="change_time">Change time</string>
+    <string name="edit_meeting">Edit meeting</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -22,7 +22,7 @@ public class DatePickerFragment extends DialogFragment {
     public void setValues(Integer year, Integer month, Integer day) {
         this.year = year;
         this.month = month;
-        this.day = year;
+        this.day = day;
     }
 
     @Override
