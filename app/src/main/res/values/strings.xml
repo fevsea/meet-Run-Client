@@ -15,5 +15,7 @@
     <string name="emptyCreate">You left some important fields empty. You MUST fill name, date, hour and meeting location.</string>
     <string name="bigName">Name of the meeting should be shorter than 100 characters.</string>
     <string name="bigDescription">Description of the meeting should be shorter than 500 characters.</string>
-    <string name="location">Your last known location.</string>
+    <string name="location">Your last known location</string>
+    <string name="meetingLocation">Location of the meeting</string>
+    <string name="createButton">Create</string>
 </resources>
