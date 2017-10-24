@@ -37,6 +37,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import edu.upc.fib.gps.meetnrun.R;
+import edu.upc.fib.gps.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.gps.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.gps.meetnrun.views.fragments.TimePickerFragment;
 import edu.upc.fib.gps.meetnrun.views.fragments.DatePickerFragment;
 import edu.upc.fib.gps.meetnrun.models.Meeting;
@@ -54,7 +56,9 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_meeting);
         this.controller = new MeetingsPersistenceController();
-        this.meeting = controller.get(getIntent().getIntExtra("id", -1));
+        try {
+            this.meeting = controller.get(getIntent().getIntExtra("id", -1));
+            if (this.meeting == null ) return; //TODO created for test
 
         EditText titleText = (EditText) findViewById(R.id.meeting_title);
         titleText.setText(meeting.getTitle());
@@ -92,6 +96,10 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         this.setTitle(getResources().getString(R.string.edit_meeting) + " " + meeting.getTitle());
+
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -233,7 +241,9 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.done_button) {
-            if(!this.controller.update(this.meeting)) {
+            try {
+                this.controller.updateObject(this.meeting);
+            } catch (ParamsException | NotFoundException e) {
                 String title = getResources().getString(R.string.edit_meeting_error_dialog_title);
                 String message = getResources().getString(R.string.edit_meeting_error_dialog_message);
                 String ok = getResources().getString(R.string.ok);

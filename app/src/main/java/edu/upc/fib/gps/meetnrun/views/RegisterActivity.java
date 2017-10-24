@@ -8,9 +8,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.upc.fib.gps.meetnrun.R;
+import edu.upc.fib.gps.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.gps.meetnrun.persistence.UserPersistenceController;
 
-public class SignInActivity extends AppCompatActivity{
+public class RegisterActivity extends AppCompatActivity{
 
     EditText editName, editSurname, editUsername, editEmail, editPc, editPassword1, editPassword2;
     TextView text;
@@ -88,7 +89,11 @@ public class SignInActivity extends AppCompatActivity{
             text.setText("correct");
 
             UserPersistenceController upc = new UserPersistenceController();
-            upc.registerUser(username, name, surname, email, pcInt, password1);
+            try {
+                upc.registerUser(username, name, surname, email, pcInt, password1);
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
         }
 
     }

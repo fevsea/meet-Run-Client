@@ -1,22 +1,31 @@
 package edu.upc.fib.gps.meetnrun.views;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import edu.upc.fib.gps.meetnrun.R;
 import edu.upc.fib.gps.meetnrun.views.fragments.MeetingListFragment;
 
-public class MeetingListActivity extends AppCompatActivity {
+public class MeetingListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private DrawerLayout drawerLayout;
+    private ActivityManager am;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,23 +40,14 @@ public class MeetingListActivity extends AppCompatActivity {
 
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_meeting_list_drawer);
         drawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.setDrawerListener(toggle);
         NavigationView navigationView = (NavigationView) findViewById(R.id.meeting_list_nav_view);
-        if (navigationView != null) {
-            navigationView.setNavigationItemSelectedListener(
-                    new NavigationView.OnNavigationItemSelectedListener() {
-                        @Override
-                        public boolean onNavigationItemSelected(MenuItem menuItem) {
-                            switch (menuItem.getItemId()) {
-                                //TODO cases on drawerlayout
-                                default:
-                                    break;
-                            }
-                            menuItem.setChecked(true);
-                            drawerLayout.closeDrawers();
-                            return true;
-                        }
-                    });
-        }
+        navigationView.setNavigationItemSelectedListener(this);
+        am = (ActivityManager)getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+
+
 
         MeetingListFragment meetingListFragment =
                 (MeetingListFragment) getSupportFragmentManager().findFragmentById(R.id.meeting_list_contentFrame);
@@ -80,5 +80,48 @@ public class MeetingListActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Intent i = null;
+        Log.e("Meetings","Entrando en onNav");
+        ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
+        if (id == R.id.crete_meeting) {
+            if(!cn.getClassName().equals(CreateMeetingActivity.class.getName()))
+            i = new Intent(this,CreateMeetingActivity.class);
+        } else if (id == R.id.edit_meeting) {
+            if(!cn.getClassName().equals(EditMeetingActivity.class.getName()))
+            i = new Intent(this,EditMeetingActivity.class);
+        } else if (id == R.id.user_profile) {
+            if(!cn.getClassName().equals(ProfileActivity.class.getName()))
+            i = new Intent(this,ProfileActivity.class);
+        } else if (id == R.id.register) {
+            if(!cn.getClassName().equals(RegisterActivity.class.getName()))
+            i = new Intent(this,RegisterActivity.class);
+        } else if (id == R.id.meetings) {
+            if(!cn.getClassName().equals(MeetingListActivity.class.getName()))
+            i = new Intent(this,MeetingListActivity.class);
+        }
+        if(i != null)
+            startActivity(i);
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    public void sendMessage(View view) {
+        Intent intent = new Intent(this, CreateMeetingActivity.class);
+        startActivity(intent);
     }
 }

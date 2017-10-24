@@ -3,6 +3,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/meetings"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Meetings" />
+        <item
             android:id="@+id/crete_meeting"
             android:icon="@drawable/ic_menu_camera"
             android:title="Create Meeting" />
@@ -18,10 +22,7 @@
             android:id="@+id/register"
             android:icon="@drawable/ic_menu_manage"
             android:title="register" />
-        <item
-            android:id="@+id/meetings"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="register" />
+
     </group>
 
     <item android:title="Communicate">

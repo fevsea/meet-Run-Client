@@ -3,6 +3,8 @@ package edu.upc.fib.gps.meetnrun.persistence;
 import java.util.Date;
 import java.util.List;
 
+import edu.upc.fib.gps.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.gps.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.gps.meetnrun.models.Meeting;
 
 /**
@@ -23,22 +25,22 @@ public class MeetingsPersistenceController implements IGenericController<Meeting
      * @param longitude Longitude where the meeting gonna happen
      * @return
      */
-    public Meeting createMeetingPublic(String title, String description, Date meetingDateTime, int level, String latitude, String longitude){
+    public Meeting createMeetingPublic(String title, String description, Date meetingDateTime, int level, String latitude, String longitude) throws ParamsException{
         return null;
     }
 
     @Override
-    public Meeting get(int id) {
+    public Meeting get(int id) throws NotFoundException {
         return null;
     }
 
     @Override
-    public boolean updateObject(Meeting obj) {
+    public boolean updateObject(Meeting obj) throws ParamsException,NotFoundException{
         return false;
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws NotFoundException {
         return false;
     }
 

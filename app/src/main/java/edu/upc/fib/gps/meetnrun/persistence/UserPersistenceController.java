@@ -2,6 +2,7 @@ package edu.upc.fib.gps.meetnrun.persistence;
 
 import java.util.List;
 
+import edu.upc.fib.gps.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.gps.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.gps.meetnrun.models.User;
 
@@ -27,17 +28,17 @@ public class UserPersistenceController implements IGenericController<User> {
 
 
     @Override
-    public User get(int id) {
+    public User get(int id) throws NotFoundException {
         return null;
     }
 
     @Override
-    public boolean updateObject(User obj) {
+    public boolean updateObject(User obj) throws NotFoundException,ParamsException {
         return false;
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(int id) throws NotFoundException {
         return false;
     }
 

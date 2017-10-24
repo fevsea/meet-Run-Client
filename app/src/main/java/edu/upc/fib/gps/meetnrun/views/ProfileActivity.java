@@ -9,12 +9,18 @@ import android.view.View;
 import android.widget.TextView;
 
 import edu.upc.fib.gps.meetnrun.R;
+import edu.upc.fib.gps.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.gps.meetnrun.models.User;
+import edu.upc.fib.gps.meetnrun.persistence.MeetingsPersistenceController;
+import edu.upc.fib.gps.meetnrun.persistence.UserPersistenceController;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    TextView userNameTextView =(TextView) findViewById(R.id.userName);
-    TextView userEmailTextView =(TextView) findViewById(R.id.userEmail);
-    TextView userPostCodeTextView =(TextView) findViewById(R.id.userPostCode);
+    TextView userNameTextView;
+    TextView userEmailTextView;
+    TextView userPostCodeTextView;
+    User u;
+    private UserPersistenceController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +28,20 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        this.userNameTextView =   (TextView) findViewById(R.id.userName);
+        this.userEmailTextView =(TextView) findViewById(R.id.userEmail);
+        this.userPostCodeTextView = (TextView) findViewById(R.id.userPostCode);
+        this.controller = new UserPersistenceController();
+
+        int id = getIntent().getIntExtra("id", -1);
+        try {
+            u = controller.get(id);
+            if(u == null) return; // TODO created to avoid exception in tests, to do u how tests for the app u can create a stub with u = new User and test
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
