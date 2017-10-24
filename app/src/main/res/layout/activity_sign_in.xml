@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.upc.fib.gps.meetnrun.views.RegisterActivity">
+    tools:context="edu.upc.fib.meetnrun.views.RegisterActivity">
 
     <TextView
         android:id="@+id/name"
