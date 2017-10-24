@@ -17,12 +17,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import edu.upc.fib.gps.meetnrun.R;
 import edu.upc.fib.gps.meetnrun.views.fragments.MeetingListFragment;
 
-public class MeetingListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private DrawerLayout drawerLayout;
     private ActivityManager am;
@@ -109,8 +108,8 @@ public class MeetingListActivity extends AppCompatActivity implements Navigation
             if(!cn.getClassName().equals(RegisterActivity.class.getName()))
             i = new Intent(this,RegisterActivity.class);
         } else if (id == R.id.meetings) {
-            if(!cn.getClassName().equals(MeetingListActivity.class.getName()))
-            i = new Intent(this,MeetingListActivity.class);
+            if(!cn.getClassName().equals(MainActivity.class.getName()))
+            i = new Intent(this,MainActivity.class);
         }
         if(i != null)
             startActivity(i);

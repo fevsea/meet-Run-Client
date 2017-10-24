@@ -58,7 +58,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         this.controller = new MeetingsPersistenceController();
         try {
             this.meeting = controller.get(getIntent().getIntExtra("id", -1));
-            if (this.meeting == null ) return; //TODO created for test
+            if (this.meeting == null ) return; //TODO created to avoid exception before persistence, create a stub class for testings
 
         EditText titleText = (EditText) findViewById(R.id.meeting_title);
         titleText.setText(meeting.getTitle());
