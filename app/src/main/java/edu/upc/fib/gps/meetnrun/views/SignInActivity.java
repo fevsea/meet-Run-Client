@@ -1,17 +1,13 @@
-package edu.upc.fib.gps.meetnrun;
+package edu.upc.fib.gps.meetnrun.views;
 
-import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.StringTokenizer;
-
+import edu.upc.fib.gps.meetnrun.R;
 import edu.upc.fib.gps.meetnrun.persistence.UserPersistenceController;
 
 public class SignInActivity extends AppCompatActivity{

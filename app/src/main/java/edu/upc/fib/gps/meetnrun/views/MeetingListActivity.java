@@ -1,7 +1,5 @@
-package edu.upc.fib.gps.meetnrun.Meetings;
+package edu.upc.fib.gps.meetnrun.views;
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,9 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import edu.upc.fib.gps.meetnrun.R;
+import edu.upc.fib.gps.meetnrun.views.fragments.MeetingListFragment;
 
 public class MeetingListActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package edu.upc.fib.gps.meetnrun.Meetings;
+package edu.upc.fib.gps.meetnrun.views.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,19 +8,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import edu.upc.fib.gps.meetnrun.Meetings.MeetingsRecyclerView.MeetingsAdapter;
-import edu.upc.fib.gps.meetnrun.Meetings.MeetingsRecyclerView.RecyclerViewOnClickListener;
+import edu.upc.fib.gps.meetnrun.views.MeetingInfoActivity;
+import edu.upc.fib.gps.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
+import edu.upc.fib.gps.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.gps.meetnrun.R;
 import edu.upc.fib.gps.meetnrun.models.Meeting;
 

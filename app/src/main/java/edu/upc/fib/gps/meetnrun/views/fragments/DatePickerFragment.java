@@ -1,11 +1,11 @@
-package edu.upc.fib.gps.meetnrun;
+package edu.upc.fib.gps.meetnrun.views.fragments;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.widget.DatePicker;
+
 import java.util.Date;
 
 public class DatePickerFragment extends DialogFragment {

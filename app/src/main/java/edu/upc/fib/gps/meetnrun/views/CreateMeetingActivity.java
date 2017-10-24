@@ -1,20 +1,9 @@
-package edu.upc.fib.gps.meetnrun;
+package edu.upc.fib.gps.meetnrun.views;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.DatePickerDialog;
-import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -23,23 +12,19 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
+import edu.upc.fib.gps.meetnrun.views.fragments.DatePickerFragment;
+import edu.upc.fib.gps.meetnrun.R;
+import edu.upc.fib.gps.meetnrun.views.fragments.TimePickerFragment;
 
 /**
  * Created by Javier on 14/10/2017.
  */
 
-public class create_meeting extends FragmentActivity {
+public class CreateMeetingActivity extends FragmentActivity {
     private Integer year, month, day, hour2, minute;
 
     private GoogleMap maps;
@@ -78,6 +63,7 @@ public class create_meeting extends FragmentActivity {
             }
         });
 
+        /*
         MapFragment mMapFragment = MapFragment.newInstance();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.map, mMapFragment);
@@ -93,7 +79,7 @@ public class create_meeting extends FragmentActivity {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.mapView, mMapFragment);
         fragmentTransaction.commit();
-        mMapFragment.getMapAsync((OnMapReadyCallback) this);
+        mMapFragment.getMapAsync((OnMapReadyCallback) this);*/
 
         this.setTitle("Create Meeting");
     }

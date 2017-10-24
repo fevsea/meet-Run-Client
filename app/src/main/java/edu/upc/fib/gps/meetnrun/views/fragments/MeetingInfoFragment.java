@@ -1,4 +1,4 @@
-package edu.upc.fib.gps.meetnrun.Meetings;
+package edu.upc.fib.gps.meetnrun.views.fragments;
 
 
 import android.os.Bundle;

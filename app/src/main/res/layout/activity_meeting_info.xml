@@ -5,7 +5,7 @@
     android:id="@+id/activity_meeting_info_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Meetings.MeetingInfoActivity"
+    tools:context=".views.MeetingInfoActivity"
     tools:openDrawer="start">
 
     <LinearLayout

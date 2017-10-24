@@ -24,7 +24,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".Meetings.MeetingListActivity"
+            android:name=".views.MeetingListActivity"
             android:hardwareAccelerated="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -37,22 +37,22 @@
         </activity>
 
         <activity
-            android:name=".Meetings.MeetingInfoActivity"
+            android:name=".views.MeetingInfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
         <activity
-            android:name=".create_meeting"
+            android:name=".views.CreateMeetingActivity"
             android:label="Create Meeting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
-        <activity android:name=".EditMeeting"></activity>
+        <activity android:name=".views.EditMeetingActivity"></activity>
 
         <activity
-            android:name=".ProfileActivity"
+            android:name=".views.ProfileActivity"
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

@@ -1,4 +1,4 @@
-package edu.upc.fib.gps.meetnrun.Meetings.MeetingsRecyclerView;
+package edu.upc.fib.gps.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

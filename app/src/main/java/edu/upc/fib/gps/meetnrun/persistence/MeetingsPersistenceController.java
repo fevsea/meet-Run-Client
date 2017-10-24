@@ -10,30 +10,7 @@ import edu.upc.fib.gps.meetnrun.models.Meeting;
  */
 
 public class MeetingsPersistenceController implements IGenericController<Meeting> {
-    @Override
-    public Meeting get(int id) {
-        return null;
-    }
 
-    @Override
-    public boolean insert(Meeting obj) {
-        return false;
-    }
-
-    @Override
-    public boolean update(Meeting obj) {
-        return false;
-    }
-
-    @Override
-    public boolean delete(Meeting obj) {
-        return false;
-    }
-
-    @Override
-    public List<Meeting> getAll() {
-        return null;
-    }
 
     /**
      * Given a public meeting information, crete that meeting inthe DB
@@ -44,9 +21,29 @@ public class MeetingsPersistenceController implements IGenericController<Meeting
      * @param level Meeting level
      * @param latitude Latitude where the meeting gonna happen
      * @param longitude Longitude where the meeting gonna happen
-     * @return Error code described in @{@link edu.upc.fib.gps.meetnrun.utils.ErrorCodes}
+     * @return
      */
-    public int createMeetingPublic(String title, String description, Date meetingDateTime, int level, String latitude, String longitude){
-        return -1;
+    public Meeting createMeetingPublic(String title, String description, Date meetingDateTime, int level, String latitude, String longitude){
+        return null;
+    }
+
+    @Override
+    public Meeting get(int id) {
+        return null;
+    }
+
+    @Override
+    public boolean updateObject(Meeting obj) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(int id) {
+        return false;
+    }
+
+    @Override
+    public List<Meeting> getAll() {
+        return null;
     }
 }

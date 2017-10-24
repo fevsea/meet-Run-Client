@@ -1,4 +1,4 @@
-package edu.upc.fib.gps.meetnrun.Meetings.MeetingsRecyclerView;
+package edu.upc.fib.gps.meetnrun.views.utils.meetingsrecyclerview;
 
 
 

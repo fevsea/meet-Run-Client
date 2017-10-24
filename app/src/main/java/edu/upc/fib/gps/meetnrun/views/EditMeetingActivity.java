@@ -1,4 +1,4 @@
-package edu.upc.fib.gps.meetnrun;
+package edu.upc.fib.gps.meetnrun.views;
 
 import android.app.DatePickerDialog;
 import android.app.FragmentTransaction;
@@ -36,10 +36,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import edu.upc.fib.gps.meetnrun.R;
+import edu.upc.fib.gps.meetnrun.views.fragments.TimePickerFragment;
+import edu.upc.fib.gps.meetnrun.views.fragments.DatePickerFragment;
 import edu.upc.fib.gps.meetnrun.models.Meeting;
 import edu.upc.fib.gps.meetnrun.persistence.MeetingsPersistenceController;
 
-public class EditMeeting extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
+public class EditMeetingActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
 
     private GoogleMap map;
     private Marker marker;
@@ -191,7 +194,7 @@ public class EditMeeting extends AppCompatActivity implements View.OnClickListen
         showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        EditMeeting.super.onBackPressed();
+                        EditMeetingActivity.super.onBackPressed();
                     }
                 },
                 new DialogInterface.OnClickListener() {

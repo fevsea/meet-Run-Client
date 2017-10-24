@@ -1,4 +1,4 @@
-package edu.upc.fib.gps.meetnrun.Meetings.MeetingsRecyclerView;
+package edu.upc.fib.gps.meetnrun.views.utils.meetingsrecyclerview;
 
 
 import android.graphics.drawable.GradientDrawable;
@@ -7,12 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Random;
 
 import edu.upc.fib.gps.meetnrun.R;
 import edu.upc.fib.gps.meetnrun.models.Meeting;
