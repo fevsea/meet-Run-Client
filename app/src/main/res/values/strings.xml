@@ -6,6 +6,16 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="search">Search</string>
     <string name="action_settings">Settings</string>
-    <string name="date">Date:</string>
-    <string name="time">Time:</string>
+    <string name="time">Time</string>
+    <string name="hour">Hour</string>
+    <string name="date">Date</string>
+    <string name="meeting_name">Meeting name</string>
+    <string name="level">Minimum level</string>
+    <string name="meeting_description">Meeting description</string>
+    <string name="empty_create_error">You left some important fields empty. You MUST fill name, date, hour and meeting location.</string>
+    <string name="big_name_error">Name of the meeting should be shorter than 100 characters.</string>
+    <string name="big_description_error">Description of the meeting should be shorter than 500 characters.</string>
+    <string name="location">Your last known location</string>
+    <string name="meeting_location">Location of the meeting</string>
+    <string name="create_button">Create</string>
 </resources>
