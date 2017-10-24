@@ -32,4 +32,6 @@
     <string name="change_date">Change date</string>
     <string name="change_time">Change time</string>
     <string name="edit_meeting">Edit meeting</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+
 </resources>
