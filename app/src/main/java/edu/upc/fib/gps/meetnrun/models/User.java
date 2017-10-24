@@ -5,13 +5,15 @@ package edu.upc.fib.gps.meetnrun.models;
  */
 
 public class User {
+    private int id;
     private String userName;
     private String firstName;
     private String lastName;
     private String email;
     private int postCode;
 
-    public User(String userName, String firstName, String lastName, String email, int postCode) {
+    public User(int id,String userName, String firstName, String lastName, String email, int postCode) {
+        this.id = id;
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -57,5 +59,13 @@ public class User {
 
     public void setPostCode(int postCode) {
         this.postCode = postCode;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

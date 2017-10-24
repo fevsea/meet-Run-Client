@@ -7,6 +7,7 @@ import java.util.Date;
  */
 
 public class Meeting {
+    private int id;
     private String title;
     private String description;
     private String creatorAuthor;
@@ -16,7 +17,8 @@ public class Meeting {
     private float latitude;
     private float longitude;
 
-    public Meeting(String title, String description, String creatorAuthor, Date dateTime, boolean isPublic, int level, float latitude, float longitude) {
+    public Meeting(int id,String title, String description, String creatorAuthor, Date dateTime, boolean isPublic, int level, float latitude, float longitude) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.creatorAuthor = creatorAuthor;
@@ -89,5 +91,13 @@ public class Meeting {
 
     public void setLongitude(float longitude) {
         this.longitude = longitude;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

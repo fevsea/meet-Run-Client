@@ -48,7 +48,7 @@ public class MeetingListActivity extends AppCompatActivity implements Navigation
         am = (ActivityManager)getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
 
 
-
+        //TODO check currentSesion token, with no token create intent to login (inside login if we can resgister user)
         MeetingListFragment meetingListFragment =
                 (MeetingListFragment) getSupportFragmentManager().findFragmentById(R.id.meeting_list_contentFrame);
         if (meetingListFragment == null) {
@@ -58,8 +58,6 @@ public class MeetingListActivity extends AppCompatActivity implements Navigation
                     .add(R.id.meeting_list_contentFrame,meetingListFragment)
                     .commit();
         }
-
-
 
     }
 
