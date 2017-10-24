@@ -16,9 +16,6 @@ import edu.upc.fib.meetnrun.persistence.UserPersistenceController;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    TextView userNameTextView;
-    TextView userEmailTextView;
-    TextView userPostCodeTextView;
     User u;
     private UserPersistenceController controller;
 
@@ -29,9 +26,6 @@ public class ProfileActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        this.userNameTextView =   (TextView) findViewById(R.id.userName);
-        this.userEmailTextView =(TextView) findViewById(R.id.userEmail);
-        this.userPostCodeTextView = (TextView) findViewById(R.id.userPostCode);
         this.controller = new UserPersistenceController();
 
         int id = getIntent().getIntExtra("id", -1);
@@ -52,21 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        /*String userName = getUserName()+ " " + getFirstName() + " " + getLastName();
-        String email = getEmail();
-        int postCode = getPostCode();*/
 
-        String name = "Monica Follana";
-        String email = "monicfm44@gmail.com";
-        String postCode = "08028";
-
-        userNameTextView.setText(name);
-        userEmailTextView.setText(email);
-        userPostCodeTextView.setText(postCode);
-
-
-        /*final TextView helloTextView = (TextView) findViewById(R.id.text_view_id);
-        helloTextView.setText(R.string.user_greeting);*/
     }
 
 }
