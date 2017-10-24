@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,8 +14,8 @@ import edu.upc.fib.meetnrun.persistence.UserPersistenceController;
 
 public class RegisterActivity extends AppCompatActivity{
 
-    EditText editName, editSurname, editUsername, editEmail, editPc, editPassword1, editPassword2;
-    TextView text;
+    private EditText editName, editSurname, editUsername, editEmail, editPc, editPassword1, editPassword2;
+    private TextView text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,7 @@ public class RegisterActivity extends AppCompatActivity{
         else if (!arrova) {
             Toast.makeText(getApplicationContext(), "E-mail field is wrong", Toast.LENGTH_SHORT).show();
         }
-        else if (!pcNum) {
+        else if (pcNum) {
             Toast.makeText(getApplicationContext(), "Postal code field is wrong", Toast.LENGTH_SHORT).show();
         }
         else if (!password1.equals(password2)) {
@@ -94,6 +95,9 @@ public class RegisterActivity extends AppCompatActivity{
             } catch (ParamsException e) {
                 e.printStackTrace();
             }
+
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
         }
 
     }
