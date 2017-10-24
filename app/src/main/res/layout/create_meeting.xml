@@ -145,7 +145,7 @@
                         android:id="@+id/levelTV"
                         android:layout_width="170dp"
                         android:layout_height="43dp"
-                        android:text="@string/level"
+                        android:text="@string/minimum_level"
                         android:textAppearance="@android:style/TextAppearance.Material.Large"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="9dp"

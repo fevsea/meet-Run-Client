@@ -9,6 +9,7 @@ import android.widget.DatePicker;
 import java.util.Date;
 
 public class DatePickerFragment extends DialogFragment {
+
     private DatePickerDialog.OnDateSetListener listener;
     private Integer year;
     private Integer month;
@@ -23,8 +24,6 @@ public class DatePickerFragment extends DialogFragment {
         this.month = month;
         this.day = day;
     }
-
-
 
     @Override
     @NonNull
@@ -49,3 +48,4 @@ public class DatePickerFragment extends DialogFragment {
         return new DatePickerDialog(getActivity(), listener, this.year, this.month, this.day);
     }
 }
+
