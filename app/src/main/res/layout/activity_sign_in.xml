@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="edu.upc.fib.gps.meetnrun.SignInActivity">
+
+            <TextView
+                android:id="@+id/name"
+                android:textSize="17dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name:"
+                android:layout_marginTop="19dp"
+                android:layout_marginStart="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
+
+            <EditText
+                android:id="@+id/editName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:textSize="17dp"
+                android:layout_below="@+id/name"
+                android:layout_alignStart="@+id/name" />
+
+            <TextView
+                android:id="@+id/surname"
+                android:textSize="17dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Surname:"
+                android:layout_marginTop="14dp"
+                android:layout_below="@+id/editName"
+                android:layout_alignStart="@+id/editSurname" />
+
+            <EditText
+                android:id="@+id/editSurname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:textSize="17dp"
+                android:layout_below="@+id/surname"
+                android:layout_alignStart="@+id/editName" />
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username:"
+                android:textSize="17dp"
+                android:layout_marginTop="17dp"
+                android:layout_below="@+id/editSurname"
+                android:layout_alignStart="@+id/editSurname" />
+
+            <EditText
+                android:id="@+id/editUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:textSize="17dp"
+                android:layout_below="@+id/username"
+                android:layout_alignStart="@+id/username" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="E-mail:"
+                android:textSize="17dp"
+                android:layout_marginTop="14dp"
+                android:layout_below="@+id/editUsername"
+                android:layout_alignStart="@+id/editUsername" />
+
+            <EditText
+                android:id="@+id/editEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textEmailAddress"
+                android:textSize="17dp"
+                android:layout_below="@+id/email"
+                android:layout_alignStart="@+id/email" />
+
+
+            <TextView
+                android:id="@+id/postalCode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Postal Code:"
+                android:textSize="17dp"
+                android:layout_marginTop="16dp"
+                android:layout_below="@+id/editEmail"
+                android:layout_alignStart="@+id/editEmail" />
+
+            <EditText
+                android:id="@+id/editPostalCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPostalAddress"
+                android:textSize="17dp"
+                android:layout_below="@+id/postalCode"
+                android:layout_alignStart="@+id/postalCode" />
+
+            <TextView
+                android:id="@+id/password1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Password:"
+                android:textSize="17dp"
+                android:layout_marginTop="16dp"
+                android:layout_below="@+id/editPostalCode"
+                android:layout_alignStart="@+id/editPostalCode" />
+
+            <EditText
+                android:id="@+id/editPassword1"
+                android:textSize="17dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:layout_below="@+id/password1"
+                android:layout_alignStart="@+id/password1" />
+
+            <TextView
+                android:id="@+id/password2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Repeat password:"
+                android:textSize="17dp"
+                android:layout_marginTop="15dp"
+                android:layout_below="@+id/editPassword1"
+                android:layout_alignStart="@+id/editPassword1" />
+
+            <EditText
+                android:id="@+id/editPassword2"
+                android:textSize="17dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:layout_below="@+id/password2"
+                android:layout_alignStart="@+id/password2" />
+
+            <Button
+                android:id="@+id/register"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="register"
+                android:text="Register"
+                android:textSize="13dp"
+                android:layout_marginTop="16dp"
+                android:layout_below="@+id/editPassword2"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/name"
+                android:layout_toEndOf="@+id/email" />
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</LinearLayout>
