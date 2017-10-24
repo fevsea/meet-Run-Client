@@ -41,14 +41,15 @@ import java.util.Locale;
 
 public class create_meeting extends FragmentActivity {
     private Integer year, month, day, hour2, minute;
-    private EditText name = (EditText) findViewById(R.id.name);
-    private EditText date = (EditText) findViewById(R.id.date);
-    private EditText hour = (EditText) findViewById(R.id.hour);
-    private EditText level = (EditText) findViewById(R.id.level);
-    private EditText description = (EditText) findViewById(R.id.description);
+
     private GoogleMap maps;
     private LatLng myLocation;
     private Marker myMarker;
+    EditText name;
+    EditText date;
+    EditText hour;
+    EditText level;
+    EditText description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -56,24 +57,34 @@ public class create_meeting extends FragmentActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_meeting);
-
+        name = (EditText) findViewById(R.id.name);
+        date = (EditText) findViewById(R.id.date);
+        hour = (EditText) findViewById(R.id.hour);
+        level = (EditText) findViewById(R.id.level);
+        description = (EditText) findViewById(R.id.description);
         Button dateButton = findViewById(R.id.pickDate);
-        dateButton.setOnClickListener((View.OnClickListener) this);
-        Button hourButton = findViewById(R.id.pickHour);
-        hourButton.setOnClickListener((View.OnClickListener) this);
+        dateButton.setOnClickListener(new View.OnClickListener(){
 
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog();
+            }
+        });
+        Button hourButton = findViewById(R.id.pickHour);
+        hourButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                showTimePickerDialog();
+            }
+        });
+
+        MapFragment mMapFragment = MapFragment.newInstance();
+        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.map, mMapFragment);
+        fragmentTransaction.commit();
+        mMapFragment.getMapAsync(this);
+        
+        Location location = new Location();
         double longitude = location.getLongitude();
         double latitude = location.getLatitude();
         myLocation = new LatLng(longitude, latitude);
@@ -84,7 +95,7 @@ public class create_meeting extends FragmentActivity {
         fragmentTransaction.commit();
         mMapFragment.getMapAsync((OnMapReadyCallback) this);
 
-        this.setTitle("Edit Meeting");
+        this.setTitle("Create Meeting");
     }
 
     public void create (View view){
@@ -154,12 +165,6 @@ public class create_meeting extends FragmentActivity {
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.pickDate:
-                showDatePickerDialog();
-                break;
-            case R.id.pickHour:
-                showTimePickerDialog();
-                break;
             case R.id.create:
                 create(view);
                 break;
