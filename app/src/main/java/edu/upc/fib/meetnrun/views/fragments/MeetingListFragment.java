@@ -100,7 +100,7 @@ public class MeetingListFragment extends Fragment {
     }
 
     private void createNewMeeting() {
-        //meetingsAdapter.addItem(this.getContext());
+        meetingsAdapter.addItem(this.getContext());
         /* TODO startactivity once createMeetingActivity is created
         Intent intent = new Intent(this,createMeetingActivity.java);
         startActivity(intent);*/
@@ -120,8 +120,6 @@ public class MeetingListFragment extends Fragment {
         protected void onPostExecute(String s) {
             System.err.println("FINISHED");
             meetingsAdapter.updateMeetingsList(l);
-            //mAdapter.updateAnswers(l);
-            //TODO update el adapter
             super.onPostExecute(s);
         }
     }

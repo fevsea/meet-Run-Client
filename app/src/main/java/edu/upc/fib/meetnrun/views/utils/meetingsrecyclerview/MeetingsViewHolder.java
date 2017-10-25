@@ -41,7 +41,9 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
         meetingLocation.setText(meeting.getDescription());
 
         TextView meetingLevel = view.findViewById(R.id.meeting_item_level);
-        meetingLevel.setText(String.valueOf(meeting.getLevel()));
+        String level = String.valueOf(meeting.getLevel());
+        if (level.equals("null")) level = "0";
+        meetingLevel.setText(String.valueOf(level));
 
         TextView meetingDate = view.findViewById(R.id.meeting_item_date);
         String datetime = meeting.getDate();
