@@ -20,7 +20,7 @@ public class RetrofitClient {
             OkHttpClient client = new OkHttpClient.Builder().
                     connectTimeout(100, TimeUnit.SECONDS)
                     .readTimeout(100,TimeUnit.SECONDS)
-                    .addInterceptor(new AuthenticationInterceptor(CurrentSession.getInstance().getToken()))
+                  //  .addInterceptor(new AuthenticationInterceptor(CurrentSession.getInstance().getToken()))
                     .build();
             retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)

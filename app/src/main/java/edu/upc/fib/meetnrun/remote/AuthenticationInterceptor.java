@@ -21,11 +21,14 @@ public class AuthenticationInterceptor implements Interceptor {
 
     @Override
     public Response intercept(Chain chain) throws IOException {
+
         Request original = chain.request();
+        if (this.authToken == null) this.authToken= "";
         Request.Builder builder = original.newBuilder().header("Authorization",authToken);
 
         Request request = builder.build();
 
         return chain.proceed(request);
+
     }
 }
