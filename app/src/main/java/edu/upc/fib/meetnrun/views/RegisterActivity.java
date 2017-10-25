@@ -1,8 +1,10 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -16,6 +18,7 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.GenericController;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 
@@ -23,7 +26,8 @@ public class RegisterActivity extends AppCompatActivity{
 
     private EditText editName, editSurname, editUsername, editEmail, editPc, editPassword1, editPassword2, editAnswer;
     private Spinner spinnerQuestion;
-    private TextView text;
+    private String name, surname, username, email, password1, quest, answ;
+    private int pcInt;
     private final static String[] questionsList = {"What is the first name of the person you first kissed?",
                                                                     "What was the name of your primary school?",
                                                                     "What time of the day were you born?",
@@ -49,15 +53,15 @@ public class RegisterActivity extends AppCompatActivity{
     }
 
     public void register(View v) {
-        String name = editName.getText().toString();
-        String surname = editSurname.getText().toString();
-        String username = editUsername.getText().toString();
-        String email = editEmail.getText().toString();
+        name = editName.getText().toString();
+        surname = editSurname.getText().toString();
+        username = editUsername.getText().toString();
+        email = editEmail.getText().toString();
         String pc = editPc.getText().toString();
-        String password1 = editPassword1.getText().toString();
+        password1 = editPassword1.getText().toString();
         String password2 = editPassword2.getText().toString();
-        String quest = spinnerQuestion.getSelectedItem().toString();
-        String answ = editAnswer.getText().toString();
+        quest = spinnerQuestion.getSelectedItem().toString();
+        answ = editAnswer.getText().toString();
 
         boolean arrova = false;
         for (int i = 0; i < email.length(); i++) {
@@ -99,18 +103,35 @@ public class RegisterActivity extends AppCompatActivity{
             Toast.makeText(getApplicationContext(), "Passwords don't match", Toast.LENGTH_SHORT).show();
         }
         else {
-            int pcInt = Integer.parseInt(pc);
+            pcInt = Integer.parseInt(pc);
 
-            IGenericController gc = GenericController.getInstance();
-            try {
-                gc.registerUser(username, name.toLowerCase(), surname.toLowerCase(), email, pcInt, password1, quest, answ);
-            } catch (ParamsException e) {
-                e.printStackTrace();
-            }
+            registerUser();
 
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
 
+    }
+
+    private void registerUser() {
+        new register().execute();
+    }
+
+    private class register extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                GenericController.getInstance().registerUser(username, name, surname, email, pcInt, password1, quest, answ);
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
     }
 }
