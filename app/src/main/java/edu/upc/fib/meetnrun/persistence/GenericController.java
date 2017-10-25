@@ -45,7 +45,14 @@ public class GenericController implements IGenericController {
 
     @Override
     public Meeting getMeeting(int id) throws NotFoundException {
-        return null;
+        Meeting m = null;
+        try {
+            Response<Meeting> ret = mServices.getMeeting(id).execute();
+            m = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return m;
     }
 
     @Override
@@ -78,22 +85,34 @@ public class GenericController implements IGenericController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < l.size(); i++) {
-            Log.e("MAIN","i: "+i+" titlle: "+ l.get(i).getTitle());
-            System.err.println("i: "+i+" titlle: "+ l.get(i).getTitle());
-        }
 
         return l;
     }
 
     @Override
     public List<User> getAllUsers() {
-        return null;
+        List<User> l = new ArrayList<>();
+
+        try {
+            Response<User[]> res = mServices.getUsers().execute();
+            l.addAll(Arrays.asList(res.body()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return l;
     }
 
     @Override
-    public Meeting createMeetingPublic(String title, String description, Date meetingDateTime, int level, String latitude, String longitude) throws ParamsException {
-        return null;
+    public Meeting createMeetingPublic(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException {
+        Meeting m = new Meeting(0, title, description, _public, level, date, latitude, longitude);
+        try {
+            Response<Meeting> ret = mServices.createMeeting(m).execute();
+            m = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return m;
     }
 
     @Override
