@@ -1,7 +1,10 @@
 package edu.upc.fib.meetnrun.remote;
 
+import android.util.Log;
+
 import java.io.IOException;
 
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -11,10 +14,8 @@ import okhttp3.Response;
  */
 
 public class AuthenticationInterceptor implements Interceptor {
-    private String authToken;
 
-    public AuthenticationInterceptor(String token) {
-        this.authToken = token;
+    public AuthenticationInterceptor() {
     }
 
 
@@ -23,12 +24,23 @@ public class AuthenticationInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
 
         Request original = chain.request();
-        if (this.authToken == null) this.authToken= "";
-        Request.Builder builder = original.newBuilder().header("Authorization",authToken);
+        String token = CurrentSession.getInstance().getToken();
+        Response r = null;
 
-        Request request = builder.build();
-
-        return chain.proceed(request);
+        if (token != null && !token.equals("")){
+            Request.Builder builder = original.newBuilder();
+            Log.e("AUTHENTICATION","ENTRANDO EN EL IF");
+            builder = builder.header("Authorization","Token " + CurrentSession.getInstance().getToken());
+            //builder = builder.header("Authorization","Token 54d5210bc172307ff887fafc7fc0407f75f4f0c4");
+            builder = builder.header("User-Agent","Android");
+            Request request = builder.build();
+            r = chain.proceed(request);
+        } else {
+            r = chain.proceed(original);
+        }
+        //Request.Builder builder = original.newBuilder().header("Authorization","Token 54d5210bc172307ff887fafc7fc0407f75f4f0c4");
+        Log.e("AUTHENTICATION","TOKEN: "+token);
+        return r;
 
     }
 }
