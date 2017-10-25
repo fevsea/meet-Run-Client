@@ -39,25 +39,26 @@ import java.util.GregorianCalendar;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.views.fragments.TimePickerFragment;
 import edu.upc.fib.meetnrun.views.fragments.DatePickerFragment;
 import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.persistence.MeetingsPersistenceController;
 
 public class EditMeetingActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
 
     private GoogleMap map;
     private Marker marker;
     private Meeting meeting;
-    private MeetingsPersistenceController controller;
+    private IGenericController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_meeting);
-        this.controller = new MeetingsPersistenceController();
+        this.controller = GenericController.getInstance();
         try {
-            this.meeting = controller.get(getIntent().getIntExtra("id", -1));
+            this.meeting = controller.getMeeting(getIntent().getIntExtra("id", -1));
             if (this.meeting == null ) return; //TODO created to avoid exception before persistence, create a stub class for testings
 
         EditText titleText = (EditText) findViewById(R.id.meeting_title);
@@ -66,7 +67,8 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         descriptionText.setText(meeting.getDescription());
         EditText dateText = (EditText) findViewById(R.id.meeting_date);
         Calendar date = new GregorianCalendar();
-        date.setTime(meeting.getDateTime());
+        //date.setTime(meeting.getDateTime());
+            date.setTime(new Date(meeting.getDate()));
         int year = date.get(Calendar.YEAR);
         int month = date.get(Calendar.MONTH);
         int day = date.get(Calendar.DAY_OF_MONTH);
@@ -76,7 +78,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         int minute = date.get(Calendar.MINUTE);
         timeText.setText(((hour<10)?"0"+hour:hour) + ":" + ((minute<10)?"0"+minute:minute));
         Switch isPublic = (Switch) findViewById(R.id.isPublic);
-        isPublic.setChecked(meeting.isPublic());
+        isPublic.setChecked(meeting.getPublic());
 
         Button changeDateButton = (Button) findViewById(R.id.change_date_button);
         changeDateButton.setOnClickListener(this);
@@ -124,18 +126,21 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         datePickerFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int yearSet, int monthSet, int daySet) {
-                Date dateTime = meeting.getDateTime();
+                Date dateTime = new Date(meeting.getDate());
+                //Date dateTime = meeting.getDateTime();
                 Calendar date = new GregorianCalendar();
                 date.setTime(dateTime);
                 date.set(Calendar.YEAR, yearSet + 1900);
                 date.set(Calendar.MONTH, monthSet);
                 date.set(Calendar.DAY_OF_MONTH, daySet);
-                meeting.setDateTime(date.getTime());
+                meeting.setDate(date.getTime().toString());
+                //meeting.setDateTime(date.getTime());
                 final String selectedDate = ((daySet<10)?"0"+daySet:daySet) + "/" + (((monthSet+1)<10)?"0"+(monthSet+1):(monthSet+1)) + "/" + yearSet;
                 dateText.setText(selectedDate);
             }
         });
-        Date dateTime = meeting.getDateTime();
+        //Date dateTime = meeting.getDateTime();
+        Date dateTime = new Date(meeting.getDate());
         if (dateTime != null) {
             Calendar date = new GregorianCalendar();
             date.setTime(dateTime);
@@ -150,17 +155,19 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         timePickerFragment.setListener(new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hourSet, int minuteSet) {
-                Date dateTime = meeting.getDateTime();
+                Date dateTime = new Date(meeting.getDate());
                 Calendar date = new GregorianCalendar();
                 date.setTime(dateTime);
                 date.set(Calendar.HOUR_OF_DAY, hourSet);
                 date.set(Calendar.MINUTE, minuteSet);
-                meeting.setDateTime(date.getTime());
+                //meeting.setDateTime(date.getTime());
+                meeting.setDate(date.getTime().toString());
                 final String selectedTime = ((hourSet<10)?"0"+hourSet:hourSet) + ":" + ((minuteSet<10)?"0"+minuteSet:minuteSet);
                 timeText.setText(selectedTime);
             }
         });
-        Date dateTime = meeting.getDateTime();
+        //Date dateTime = meeting.getDateTime();
+        Date dateTime = new Date(meeting.getDate());
         Calendar date = new GregorianCalendar();
         date.setTime(dateTime);
         timePickerFragment.setValues(date.get(Calendar.HOUR), date.get(Calendar.MINUTE));
@@ -181,7 +188,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onMapReady(GoogleMap map) {
         this.map = map;
-        LatLng location = new LatLng(meeting.getLatitude(), meeting.getLongitude());
+        LatLng location = new LatLng(Double.valueOf(meeting.getLatitude()), Double.valueOf(meeting.getLongitude()));
         marker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
         moveMapCameraAndMarker(location);
     }
@@ -242,7 +249,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         int id = item.getItemId();
         if (id == R.id.done_button) {
             try {
-                this.controller.updateObject(this.meeting);
+                this.controller.updateMeeting(this.meeting);
             } catch (ParamsException | NotFoundException e) {
                 String title = getResources().getString(R.string.edit_meeting_error_dialog_title);
                 String message = getResources().getString(R.string.edit_meeting_error_dialog_message);
@@ -268,8 +275,8 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
             if (resultCode == RESULT_OK) { //Retrieve the result from the PlacePicker
                 Place place = PlacePicker.getPlace(this, data);
                 LatLng location = place.getLatLng();
-                meeting.setLatitude((float) location.latitude);
-                meeting.setLongitude((float) location.longitude);
+                meeting.setLatitude(String.valueOf(location.latitude));
+                meeting.setLongitude(String.valueOf(location.longitude));
                 moveMapCameraAndMarker(location);
             }
         }
