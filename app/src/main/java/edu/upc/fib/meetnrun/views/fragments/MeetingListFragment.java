@@ -1,12 +1,14 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.upc.fib.meetnrun.persistence.GenericController;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -103,6 +106,25 @@ public class MeetingListFragment extends Fragment {
 
     private ArrayList<Meeting> getMeetingsList() {
         //TODO get meetigns from DB
-        return new ArrayList<>();
+    }
+
+    private class GetMeetings extends AsyncTask<String,String,String> {
+        List<Meeting> l = new ArrayList<>();
+
+        @Override
+        protected String doInBackground(String... strings) {
+            Log.e("MAIN","DOINGGGG");
+            l = GenericController.getInstance().getAllMeetings();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            System.err.println("FINISHED");
+            meetingsAdapter.updateMeetingsList(l);
+            //mAdapter.updateAnswers(l);
+            //TODO update el adapter
+            super.onPostExecute(s);
+        }
     }
 }

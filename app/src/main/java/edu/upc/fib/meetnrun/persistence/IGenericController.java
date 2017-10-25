@@ -24,4 +24,5 @@ public interface IGenericController {
     public List<User> getAllUsers();
     public Meeting createMeetingPublic(String title, String description, Date meetingDateTime, int level, String latitude, String longitude) throws ParamsException;
     public User registerUser(String userName, String firstName, String lastName, String email, int postCode, String password) throws ParamsException;
+    public String login(String username, String Password);
 }
