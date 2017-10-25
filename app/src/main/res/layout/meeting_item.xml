@@ -92,12 +92,12 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/meeting_item_user_name"
+                        android:id="@+id/meeting_item_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
                     <TextView
-                        android:id="@+id/meeting_item_location"
+                        android:id="@+id/meeting_item_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>

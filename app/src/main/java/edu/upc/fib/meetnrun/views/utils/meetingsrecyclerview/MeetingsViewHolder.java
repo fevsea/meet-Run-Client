@@ -28,29 +28,27 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     public void bindMeeting(Meeting meeting) {
-/*        TextView userPhoto = view.findViewById(R.id.meeting_item_user_photo);
-        char letter = meeting.getCreatorAuthor().charAt(0);
+        TextView userPhoto = view.findViewById(R.id.meeting_item_user_photo);
+        char letter = meeting.getTitle().charAt(0);
         String firstLetter = String.valueOf(letter);
         userPhoto.setBackground(getColoredCircularShape((letter)));
-        userPhoto.setText(firstLetter);*/
+        userPhoto.setText(firstLetter);
 
-  //      TextView userName = view.findViewById(R.id.meeting_item_user_name);
-   //     userName.setText(meeting.getCreatorAuthor());
+        TextView userName = view.findViewById(R.id.meeting_item_title);
+        userName.setText(meeting.getTitle());
 
-        TextView meetingLocation = view.findViewById(R.id.meeting_item_location);
+        TextView meetingLocation = view.findViewById(R.id.meeting_item_description);
         meetingLocation.setText(meeting.getDescription());
 
         TextView meetingLevel = view.findViewById(R.id.meeting_item_level);
         meetingLevel.setText(String.valueOf(meeting.getLevel()));
 
         TextView meetingDate = view.findViewById(R.id.meeting_item_date);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        //meetingDate.setText((simpleDateFormat.format(meeting.getDateTime())));
-        meetingDate.setText(meeting.getDate());
+        String datetime = meeting.getDate();
+        meetingDate.setText(datetime.substring(0,datetime.indexOf('T')));
 
         TextView meetingTime = view.findViewById(R.id.meeting_item_time);
-        simpleDateFormat = new SimpleDateFormat("h:mm a");
-        //meetingTime.setText(simpleDateFormat.format(meeting.getDateTime()));
+        meetingTime.setText(datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
 
         addUserButton = view.findViewById(R.id.meeting_item_meet);
         addUserButton.setOnClickListener(this);
