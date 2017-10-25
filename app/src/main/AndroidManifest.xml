@@ -35,22 +35,32 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".views.MeetingInfoActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".views.CreateMeetingActivity"
             android:label="Create Meeting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".views.EditMeetingActivity" />
-        <activity android:name=".views.RegisterActivity" />
+
+        <activity
+            android:name=".views.RegisterActivity" />
+
         <activity
             android:name=".views.ProfileActivity"
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".views.LoginActivity" />
+
+        <activity
+            android:name=".views.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
     </application>
 
 </manifest>
