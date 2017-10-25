@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.IGenericController;
 
 public class RegisterActivity extends AppCompatActivity{
 
@@ -87,7 +89,7 @@ public class RegisterActivity extends AppCompatActivity{
             int pcInt = Integer.parseInt(pc);
             text.setText("correct");
 
-            UserPersistenceController upc = new UserPersistenceController();
+            IGenericController upc = GenericController.getInstance();
             try {
                 upc.registerUser(username, name, surname, email, pcInt, password1);
             } catch (ParamsException e) {

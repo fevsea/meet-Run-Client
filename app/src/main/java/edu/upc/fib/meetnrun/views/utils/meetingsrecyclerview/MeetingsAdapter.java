@@ -32,7 +32,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
         return new MeetingsViewHolder(view,listener);
     }
 
-    //TODO delete this once connection to db is available
+    /*TODO
     public void addItem(Context context) {
         int id = 1;
         String title = "Meeting at this place";
@@ -42,11 +42,11 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
         String creatorAuthor = letters.charAt(random.nextInt(letters.length())) + "User name here";
         Date dateTime = Calendar.getInstance().getTime();
         boolean isPublic = true; int level = 10; float latitude = 0; float longitude = 0;
-        meetings.add(new Meeting(id,title,description,creatorAuthor,dateTime,isPublic,level,latitude,longitude));
+        meetings.add(new Meeting(id,title,description,,isPublic,level,latitude,longitude));
         notifyItemInserted(getItemCount());
         notifyDataSetChanged();
         Toast.makeText(context,"New meeting: " + getItemCount(), Toast.LENGTH_SHORT).show();
-    }
+    }*/
 
     @Override
     public void onBindViewHolder(final MeetingsViewHolder holder, int position) {

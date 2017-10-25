@@ -55,7 +55,7 @@ public class MeetingListFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                meetingsAdapter.updateMeetingsList(getMeetingsList());
+                updateMeetingList();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -66,8 +66,8 @@ public class MeetingListFragment extends Fragment {
         final RecyclerView meetingsList = view.findViewById(R.id.fragment_meeting_container);
         meetingsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //TODO get meetings from db
-        List<Meeting> meetings = getMeetingsList();
+        List<Meeting> meetings = new ArrayList<>();
+        updateMeetingList();
         meetingsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {
@@ -81,11 +81,9 @@ public class MeetingListFragment extends Fragment {
                 Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
                 meetingInfoIntent.putExtra("description",meeting.getDescription());
-                meetingInfoIntent.putExtra("creatorAuthor",meeting.getCreatorAuthor());
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                meetingInfoIntent.putExtra("date",simpleDateFormat.format(meeting.getDateTime()));
+                meetingInfoIntent.putExtra("date",meeting.getDate());
                 simpleDateFormat = new SimpleDateFormat("h:mm a");
-                meetingInfoIntent.putExtra("time",simpleDateFormat.format(meeting.getDateTime()));
                 meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
                 meetingInfoIntent.putExtra("latitude",String.valueOf(meeting.getLatitude()));
                 meetingInfoIntent.putExtra("longitude",String.valueOf(meeting.getLongitude()));
@@ -97,15 +95,15 @@ public class MeetingListFragment extends Fragment {
 
     }
 
+    private void updateMeetingList() {
+        new GetMeetings().execute();
+    }
+
     private void createNewMeeting() {
-        meetingsAdapter.addItem(this.getContext());
+        //meetingsAdapter.addItem(this.getContext());
         /* TODO startactivity once createMeetingActivity is created
         Intent intent = new Intent(this,createMeetingActivity.java);
         startActivity(intent);*/
-    }
-
-    private ArrayList<Meeting> getMeetingsList() {
-        //TODO get meetigns from DB
     }
 
     private class GetMeetings extends AsyncTask<String,String,String> {

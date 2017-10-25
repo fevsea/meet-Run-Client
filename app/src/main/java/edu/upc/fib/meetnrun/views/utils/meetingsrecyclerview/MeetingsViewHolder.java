@@ -28,14 +28,14 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     public void bindMeeting(Meeting meeting) {
-        TextView userPhoto = view.findViewById(R.id.meeting_item_user_photo);
+/*        TextView userPhoto = view.findViewById(R.id.meeting_item_user_photo);
         char letter = meeting.getCreatorAuthor().charAt(0);
         String firstLetter = String.valueOf(letter);
         userPhoto.setBackground(getColoredCircularShape((letter)));
-        userPhoto.setText(firstLetter);
+        userPhoto.setText(firstLetter);*/
 
-        TextView userName = view.findViewById(R.id.meeting_item_user_name);
-        userName.setText(meeting.getCreatorAuthor());
+  //      TextView userName = view.findViewById(R.id.meeting_item_user_name);
+   //     userName.setText(meeting.getCreatorAuthor());
 
         TextView meetingLocation = view.findViewById(R.id.meeting_item_location);
         meetingLocation.setText(meeting.getDescription());

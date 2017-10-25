@@ -11,6 +11,8 @@ import android.widget.TextView;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.IGenericController;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -18,7 +20,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView userEmailTextView;
     TextView userPostCodeTextView;
     User u;
-    private UserPersistenceController controller;
+    private IGenericController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +32,11 @@ public class ProfileActivity extends AppCompatActivity {
         this.userNameTextView =   (TextView) findViewById(R.id.userName);
         this.userEmailTextView =(TextView) findViewById(R.id.userEmail);
         this.userPostCodeTextView = (TextView) findViewById(R.id.userPostCode);
-        this.controller = new UserPersistenceController();
+        this.controller = GenericController.getInstance();
 
         int id = getIntent().getIntExtra("id", -1);
         try {
-            u = controller.get(id);
+            u = controller.getUser(id);
             if(u == null) return; // TODO created to avoid exception in tests, to do u how tests for the app u can create a stub with u = new User and test
         } catch (NotFoundException e) {
             e.printStackTrace();

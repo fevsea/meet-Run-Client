@@ -2,6 +2,8 @@ package edu.upc.fib.meetnrun.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 public class Meeting {
 
     @SerializedName("id")
@@ -121,6 +123,14 @@ public class Meeting {
 
     public void setLongitude(String longitude) {
         this.longitude = longitude;
+    }
+
+    public Date getDateTime() {
+        return new Date();
+    }
+
+    public void setDateTime(Date d){
+
     }
 
 }

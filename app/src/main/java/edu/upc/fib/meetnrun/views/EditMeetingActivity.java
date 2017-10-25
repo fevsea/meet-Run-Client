@@ -39,6 +39,8 @@ import java.util.GregorianCalendar;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.views.fragments.TimePickerFragment;
 import edu.upc.fib.meetnrun.views.fragments.DatePickerFragment;
 import edu.upc.fib.meetnrun.models.Meeting;
@@ -48,15 +50,15 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
     private GoogleMap map;
     private Marker marker;
     private Meeting meeting;
-    private MeetingsPersistenceController controller;
+    private IGenericController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_meeting);
-        this.controller = new MeetingsPersistenceController();
+        this.controller = GenericController.getInstance();
         try {
-            this.meeting = controller.get(getIntent().getIntExtra("id", -1));
+            this.meeting = controller.getMeeting(getIntent().getIntExtra("id", -1));
             if (this.meeting == null ) return; //TODO created to avoid exception before persistence, create a stub class for testings
 
         EditText titleText = (EditText) findViewById(R.id.meeting_title);
@@ -75,7 +77,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         int minute = date.get(Calendar.MINUTE);
         timeText.setText(((hour<10)?"0"+hour:hour) + ":" + ((minute<10)?"0"+minute:minute));
         Switch isPublic = (Switch) findViewById(R.id.isPublic);
-        isPublic.setChecked(meeting.isPublic());
+        isPublic.setChecked(meeting.getPublic());
 
         Button changeDateButton = (Button) findViewById(R.id.change_date_button);
         changeDateButton.setOnClickListener(this);
@@ -180,7 +182,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
     @Override
     public void onMapReady(GoogleMap map) {
         this.map = map;
-        LatLng location = new LatLng(meeting.getLatitude(), meeting.getLongitude());
+        LatLng location = new LatLng(Double.valueOf(meeting.getLatitude()), Double.valueOf(meeting.getLongitude()));
         marker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
         moveMapCameraAndMarker(location);
     }
@@ -241,7 +243,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         int id = item.getItemId();
         if (id == R.id.done_button) {
             try {
-                this.controller.updateObject(this.meeting);
+                this.controller.updateMeeting(this.meeting);
             } catch (ParamsException | NotFoundException e) {
                 String title = getResources().getString(R.string.edit_meeting_error_dialog_title);
                 String message = getResources().getString(R.string.edit_meeting_error_dialog_message);
@@ -267,8 +269,8 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
             if (resultCode == RESULT_OK) { //Retrieve the result from the PlacePicker
                 Place place = PlacePicker.getPlace(this, data);
                 LatLng location = place.getLatLng();
-                meeting.setLatitude((float) location.latitude);
-                meeting.setLongitude((float) location.longitude);
+                meeting.setLatitude(String.valueOf(location.latitude));
+                meeting.setLongitude(String.valueOf(location.longitude));
                 moveMapCameraAndMarker(location);
             }
         }
