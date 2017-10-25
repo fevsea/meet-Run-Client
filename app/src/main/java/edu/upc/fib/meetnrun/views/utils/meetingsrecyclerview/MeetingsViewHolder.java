@@ -45,11 +45,12 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
 
         TextView meetingDate = view.findViewById(R.id.meeting_item_date);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-        meetingDate.setText((simpleDateFormat.format(meeting.getDateTime())));
+        //meetingDate.setText((simpleDateFormat.format(meeting.getDateTime())));
+        meetingDate.setText(meeting.getDate());
 
         TextView meetingTime = view.findViewById(R.id.meeting_item_time);
         simpleDateFormat = new SimpleDateFormat("h:mm a");
-        meetingTime.setText(simpleDateFormat.format(meeting.getDateTime()));
+        //meetingTime.setText(simpleDateFormat.format(meeting.getDateTime()));
 
         addUserButton = view.findViewById(R.id.meeting_item_meet);
         addUserButton.setOnClickListener(this);

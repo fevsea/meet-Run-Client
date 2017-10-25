@@ -67,7 +67,8 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         descriptionText.setText(meeting.getDescription());
         EditText dateText = (EditText) findViewById(R.id.meeting_date);
         Calendar date = new GregorianCalendar();
-        date.setTime(meeting.getDateTime());
+        //date.setTime(meeting.getDateTime());
+            date.setTime(new Date(meeting.getDate()));
         int year = date.get(Calendar.YEAR);
         int month = date.get(Calendar.MONTH);
         int day = date.get(Calendar.DAY_OF_MONTH);
@@ -125,18 +126,21 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         datePickerFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int yearSet, int monthSet, int daySet) {
-                Date dateTime = meeting.getDateTime();
+                Date dateTime = new Date(meeting.getDate());
+                //Date dateTime = meeting.getDateTime();
                 Calendar date = new GregorianCalendar();
                 date.setTime(dateTime);
                 date.set(Calendar.YEAR, yearSet + 1900);
                 date.set(Calendar.MONTH, monthSet);
                 date.set(Calendar.DAY_OF_MONTH, daySet);
-                meeting.setDateTime(date.getTime());
+                meeting.setDate(date.getTime().toString());
+                //meeting.setDateTime(date.getTime());
                 final String selectedDate = ((daySet<10)?"0"+daySet:daySet) + "/" + (((monthSet+1)<10)?"0"+(monthSet+1):(monthSet+1)) + "/" + yearSet;
                 dateText.setText(selectedDate);
             }
         });
-        Date dateTime = meeting.getDateTime();
+        //Date dateTime = meeting.getDateTime();
+        Date dateTime = new Date(meeting.getDate());
         if (dateTime != null) {
             Calendar date = new GregorianCalendar();
             date.setTime(dateTime);
@@ -151,17 +155,19 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         timePickerFragment.setListener(new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hourSet, int minuteSet) {
-                Date dateTime = meeting.getDateTime();
+                Date dateTime = new Date(meeting.getDate());
                 Calendar date = new GregorianCalendar();
                 date.setTime(dateTime);
                 date.set(Calendar.HOUR_OF_DAY, hourSet);
                 date.set(Calendar.MINUTE, minuteSet);
-                meeting.setDateTime(date.getTime());
+                //meeting.setDateTime(date.getTime());
+                meeting.setDate(date.getTime().toString());
                 final String selectedTime = ((hourSet<10)?"0"+hourSet:hourSet) + ":" + ((minuteSet<10)?"0"+minuteSet:minuteSet);
                 timeText.setText(selectedTime);
             }
         });
-        Date dateTime = meeting.getDateTime();
+        //Date dateTime = meeting.getDateTime();
+        Date dateTime = new Date(meeting.getDate());
         Calendar date = new GregorianCalendar();
         date.setTime(dateTime);
         timePickerFragment.setValues(date.get(Calendar.HOUR), date.get(Calendar.MINUTE));

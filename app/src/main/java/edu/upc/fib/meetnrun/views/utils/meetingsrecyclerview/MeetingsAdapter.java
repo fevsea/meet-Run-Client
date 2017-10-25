@@ -23,6 +23,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
     public MeetingsAdapter(List<Meeting> meetings, RecyclerViewOnClickListener listener) {
         this.meetings = meetings;
         this.listener = listener;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -61,7 +62,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
 
 
     public void updateMeetingsList(List<Meeting> meetings) {
-        //TODO this.meetings = meetings;
+        this.meetings = meetings;
         notifyDataSetChanged();
     }
 
