@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:text="Username:"
                 android:textSize="17dp"
-                android:layout_marginTop="17dp"
+                android:layout_marginTop="14dp"
                 android:layout_below="@+id/editSurname"
                 android:layout_alignStart="@+id/editSurname" />
 
@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:text="Postal Code:"
                 android:textSize="17dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="14dp"
                 android:layout_below="@+id/editEmail"
                 android:layout_alignStart="@+id/editEmail" />
 
@@ -113,7 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="textPostalAddress"
+                android:inputType="number"
                 android:textSize="17dp"
                 android:layout_below="@+id/postalCode"
                 android:layout_alignStart="@+id/postalCode" />
@@ -122,11 +122,11 @@
                 android:id="@+id/password1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Password:"
-                android:textSize="17dp"
-                android:layout_marginTop="16dp"
+                android:layout_alignStart="@+id/editPostalCode"
                 android:layout_below="@+id/editPostalCode"
-                android:layout_alignStart="@+id/editPostalCode" />
+                android:layout_marginTop="14dp"
+                android:text="Password (min. 5 characters):"
+                android:textSize="17dp" />
 
             <EditText
                 android:id="@+id/editPassword1"
@@ -144,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:text="Repeat password:"
                 android:textSize="17dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="14dp"
                 android:layout_below="@+id/editPassword1"
                 android:layout_alignStart="@+id/editPassword1" />
 
@@ -166,16 +166,46 @@
                 android:text="Register"
                 android:textSize="13dp"
                 android:layout_marginTop="16dp"
-                android:layout_below="@+id/editPassword2"
+                android:layout_below="@+id/editAnswer"
                 android:layout_alignParentStart="true" />
 
             <TextView
-                android:id="@+id/text"
+                android:id="@+id/question"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/password2"
+                android:layout_below="@+id/editPassword2"
+                android:text="Security question:"
+                android:textSize="17dp"
+                android:layout_marginTop="14dp" />
+
+            <Spinner
+                android:id="@+id/spinnerQuestion"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/name"
-                android:layout_toEndOf="@+id/email" />
+                android:layout_below="@+id/question"
+                android:layout_alignStart="@+id/editPassword2"
+                android:textSize="17dp" />
 
+            <TextView
+                android:id="@+id/answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/question"
+                android:layout_below="@+id/spinnerQuestion"
+                android:text="Answer:"
+                android:textSize="17dp"
+                android:layout_marginTop="14dp" />
+
+            <EditText
+                android:id="@+id/editAnswer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/answer"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:layout_alignStart="@+id/spinnerQuestion"
+                android:textSize="17dp" />
 
         </RelativeLayout>
 

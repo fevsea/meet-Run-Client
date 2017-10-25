@@ -23,7 +23,7 @@ public class UserPersistenceController implements IGenericController<User> {
      * @param postCode register postcode
      * @param password user password
      */
-    public void registerUser(String userName, String firstName, String lastName, String email, int postCode,String password) throws ParamsException {
+    public void registerUser(String userName, String firstName, String lastName, String email, int postCode,String password, String question, String answer) throws ParamsException {
     }
 
 
