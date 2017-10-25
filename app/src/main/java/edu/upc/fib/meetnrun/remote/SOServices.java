@@ -30,10 +30,10 @@ public interface SOServices {
     Call<Meeting> getMeeting(@Path("id") int id);
 
     @DELETE("/meetings/{id}")
-    Call<Void> deletetMeeting(@Path("id") int id, @Body Meeting meeting);
+    Call<Void> deletetMeeting(@Path("id") int id);
 
     @PATCH("/meetings/{id}")
-    Call<Meeting> updateMeeting(@Path("id") int id, @Body Meeting meeting);
+    Call<Void> updateMeeting(@Path("id") int id, @Body Meeting meeting);
 
     @POST("/login")
     Call<String> logIn(@Field("username") String username, @Field("password") String password);

@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.remote;
 
 import java.util.concurrent.TimeUnit;
 
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -19,6 +20,7 @@ public class RetrofitClient {
             OkHttpClient client = new OkHttpClient.Builder().
                     connectTimeout(100, TimeUnit.SECONDS)
                     .readTimeout(100,TimeUnit.SECONDS)
+                    .addInterceptor(new AuthenticationInterceptor(CurrentSession.getInstance().getToken()))
                     .build();
             retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
