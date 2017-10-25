@@ -11,8 +11,6 @@ import android.widget.TextView;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.MeetingsPersistenceController;
-import edu.upc.fib.meetnrun.persistence.UserPersistenceController;
 
 public class ProfileActivity extends AppCompatActivity {
 

@@ -42,7 +42,6 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.views.fragments.TimePickerFragment;
 import edu.upc.fib.meetnrun.views.fragments.DatePickerFragment;
 import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.persistence.MeetingsPersistenceController;
 
 public class EditMeetingActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
 

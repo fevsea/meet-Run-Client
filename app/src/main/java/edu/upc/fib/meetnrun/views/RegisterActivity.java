@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
-import edu.upc.fib.meetnrun.persistence.UserPersistenceController;
 
 public class RegisterActivity extends AppCompatActivity{
 
