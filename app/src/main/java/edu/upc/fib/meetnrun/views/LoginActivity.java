@@ -4,15 +4,10 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.persistence.UserPersistenceController;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -39,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Password field is empty", Toast.LENGTH_SHORT).show();
         }
         else {
-            UserPersistenceController upc = new UserPersistenceController();
+
 
             //CurrentSession.getInstance().setToken();
             Intent intent = new Intent(this, MainActivity.class);

@@ -1,32 +1,72 @@
 package edu.upc.fib.meetnrun.models;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-/**
- * Created by Awais Iqbal on 17/10/2017.
- */
-
 public class Meeting {
-    private int id;
-    private String title;
-    private String description;
-    private String creatorAuthor;
-    private Date dateTime;
-    private boolean isPublic;
-    private int level;
-    private float latitude;
-    private float longitude;
 
-    public Meeting(int id,String title, String description, String creatorAuthor, Date dateTime, boolean isPublic, int level, float latitude, float longitude) {
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("title")
+    @Expose
+    private String title;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("public")
+    @Expose
+    private Boolean _public;
+    @SerializedName("level")
+    @Expose
+    private Integer level;
+    @SerializedName("date")
+    @Expose
+    private String date;
+    @SerializedName("latitude")
+    @Expose
+    private String latitude;
+    @SerializedName("longitude")
+    @Expose
+    private String longitude;
+
+    /**
+     * No args constructor for use in serialization
+     *
+     */
+    public Meeting() {
+    }
+
+    /**
+     *
+     * @param id
+     * @param title
+     * @param level
+     * @param _public
+     * @param description
+     * @param longitude
+     * @param latitude
+     * @param date
+     */
+    public Meeting(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) {
+        super();
         this.id = id;
         this.title = title;
         this.description = description;
-        this.creatorAuthor = creatorAuthor;
-        this.dateTime = dateTime;
-        this.isPublic = isPublic;
+        this._public = _public;
         this.level = level;
+        this.date = date;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -45,59 +85,51 @@ public class Meeting {
         this.description = description;
     }
 
-    public String getCreatorAuthor() {
-        return creatorAuthor;
+    public Boolean getPublic() {
+        return _public;
     }
 
-    public void setCreatorAuthor(String creatorAuthor) {
-        this.creatorAuthor = creatorAuthor;
+    public void setPublic(Boolean _public) {
+        this._public = _public;
     }
 
-    public Date getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(Date dateTime) {
-        this.dateTime = dateTime;
-    }
-
-    public boolean isPublic() {
-        return isPublic;
-    }
-
-    public void setPublic(boolean aPublic) {
-        isPublic = aPublic;
-    }
-
-    public int getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 
-    public float getLatitude() {
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public float getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
-    public int getId() {
-        return id;
+    public Date getDateTime() {
+        return new Date();
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setDateTime(Date d){
+
     }
 }

@@ -23,6 +23,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
     public MeetingsAdapter(List<Meeting> meetings, RecyclerViewOnClickListener listener) {
         this.meetings = meetings;
         this.listener = listener;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -32,17 +33,16 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
         return new MeetingsViewHolder(view,listener);
     }
 
-    //TODO delete this once connection to db is available
+
     public void addItem(Context context) {
         int id = 1;
         String title = "Meeting at this place";
         String description = "Meeting description test";
-        String letters = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-        Random random = new Random();
-        String creatorAuthor = letters.charAt(random.nextInt(letters.length())) + "User name here";
-        Date dateTime = Calendar.getInstance().getTime();
-        boolean isPublic = true; int level = 10; float latitude = 0; float longitude = 0;
-        meetings.add(new Meeting(id,title,description,creatorAuthor,dateTime,isPublic,level,latitude,longitude));
+        String datetime = "yyyy-MM-ddTHH:mm:ssZ";
+        boolean isPublic = true;
+        int level = 10;
+        String latitude = "0"; String longitude = "0";
+        meetings.add(new Meeting(id,title,description,isPublic,level,datetime,latitude,longitude));
         notifyItemInserted(getItemCount());
         notifyDataSetChanged();
         Toast.makeText(context,"New meeting: " + getItemCount(), Toast.LENGTH_SHORT).show();
@@ -61,7 +61,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
 
 
     public void updateMeetingsList(List<Meeting> meetings) {
-        //TODO this.meetings = meetings;
+        this.meetings = meetings;
         notifyDataSetChanged();
     }
 

@@ -16,7 +16,8 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
-import edu.upc.fib.meetnrun.persistence.UserPersistenceController;
+import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.IGenericController;
 
 public class RegisterActivity extends AppCompatActivity{
 
@@ -100,9 +101,9 @@ public class RegisterActivity extends AppCompatActivity{
         else {
             int pcInt = Integer.parseInt(pc);
 
-            UserPersistenceController upc = new UserPersistenceController();
+            IGenericController gc = GenericController.getInstance();
             try {
-                upc.registerUser(username, name.toLowerCase(), surname.toLowerCase(), email, pcInt, password1, quest, answ);
+                gc.registerUser(username, name.toLowerCase(), surname.toLowerCase(), email, pcInt, password1, quest, answ);
             } catch (ParamsException e) {
                 e.printStackTrace();
             }
