@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +36,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -53,9 +53,12 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
 
     private GoogleMap map;
     private Marker marker;
-    private Meeting meeting;
+    private Meeting meeting; //= new Meeting(1, "HOLA", "Descr \n ipcion \n rand \n om", false, 5, new Date().toString(), "41", "2");
     private IGenericController controller;
     private boolean thereWasAnAttemptToSave = false;
+    EditText titleText;
+    EditText descriptionText;
+    EditText levelText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         setContentView(R.layout.edit_meeting);
         this.controller = GenericController.getInstance();
         try {
+            Log.i("GET Meeting with ID: ", String.valueOf(getIntent().getIntExtra("id", -1)));
             this.meeting = controller.getMeeting(getIntent().getIntExtra("id", -1));
         }
         catch (NotFoundException e) {
@@ -72,9 +76,9 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
             Toast.makeText(EditMeetingActivity.this, getResources().getString(R.string.error_loading_meeting), Toast.LENGTH_SHORT).show();
             return;
         }
-        EditText titleText = (EditText) findViewById(R.id.meeting_title);
+        titleText = (EditText) findViewById(R.id.meeting_title);
         titleText.setText(meeting.getTitle());
-        EditText descriptionText = (EditText) findViewById(R.id.meeting_description);
+        descriptionText = (EditText) findViewById(R.id.meeting_description);
         descriptionText.setText(meeting.getDescription());
         EditText dateText = (EditText) findViewById(R.id.meeting_date);
         Calendar date = new GregorianCalendar();
@@ -90,6 +94,8 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         timeText.setText(((hour<10)?"0"+hour:hour) + ":" + ((minute<10)?"0"+minute:minute));
         Switch isPublic = (Switch) findViewById(R.id.isPublic);
         isPublic.setChecked(meeting.getPublic());
+        levelText = (EditText) findViewById(R.id.meeting_level);
+        levelText.setText(String.valueOf(meeting.getLevel()));
 
         Button changeDateButton = (Button) findViewById(R.id.change_date_button);
         changeDateButton.setOnClickListener(this);
@@ -137,7 +143,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
                 //Date dateTime = meeting.getDateTime();
                 Calendar date = new GregorianCalendar();
                 date.setTime(dateTime);
-                date.set(Calendar.YEAR, yearSet + 1900);
+                date.set(Calendar.YEAR, yearSet/* + 1900*/);
                 date.set(Calendar.MONTH, monthSet);
                 date.set(Calendar.DAY_OF_MONTH, daySet);
                 meeting.setDate(date.getTime().toString());
@@ -261,6 +267,9 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         int id = item.getItemId();
         if (id == R.id.done_button) {
             thereWasAnAttemptToSave = true;
+            meeting.setTitle(titleText.getText().toString());
+            meeting.setDescription(descriptionText.getText().toString());
+            meeting.setLevel(Integer.valueOf(levelText.getText().toString()));
             SaveMeeting saveMeeting = new SaveMeeting();
             saveMeeting.execute(this.meeting);
         }
