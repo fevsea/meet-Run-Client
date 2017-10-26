@@ -58,7 +58,7 @@ public interface SOServices {
     @POST("/login")
     Call<Forms.Token> logIn(@Body Forms.LoginUser lu);
 
-    @GET("/user/current")
+    @GET("/users/current/")
     Call<User> getCurrentUser();
 
 
