@@ -146,5 +146,10 @@ public class GenericController implements IGenericController {
         return token;
     }
 
+    @Override
+    public User getUserWithToken(String Token) {
+        return null;
+    }
+
 
 }
