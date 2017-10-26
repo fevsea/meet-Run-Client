@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -65,6 +66,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
     EditText titleText;
     EditText descriptionText;
     EditText levelText;
+    ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +108,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         isPublic.setChecked(meeting.getPublic());
         levelText = (EditText) findViewById(R.id.meeting_level);
         levelText.setText(String.valueOf(meeting.getLevel()));
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
 
         Button changeDateButton = (Button) findViewById(R.id.change_date_button);
         changeDateButton.setOnClickListener(this);
@@ -162,7 +165,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
                 date.set(Calendar.YEAR, yearSet/* + 1900*/);
                 date.set(Calendar.MONTH, monthSet);
                 date.set(Calendar.DAY_OF_MONTH, daySet);
-                meeting.setDate(date.getTime().toString());
+                meeting.setDate(inputFormat.format(date.getTime()));
                 //meeting.setDateTime(date.getTime());
                 final String selectedDate = ((daySet<10)?"0"+daySet:daySet) + "/" + (((monthSet+1)<10)?"0"+(monthSet+1):(monthSet+1)) + "/" + yearSet;
                 dateText.setText(selectedDate);
@@ -204,7 +207,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
                 date.set(Calendar.HOUR_OF_DAY, hourSet);
                 date.set(Calendar.MINUTE, minuteSet);
                 //meeting.setDateTime(date.getTime());
-                meeting.setDate(date.getTime().toString());
+                meeting.setDate(inputFormat.format(date.getTime()));
                 final String selectedTime = ((hourSet<10)?"0"+hourSet:hourSet) + ":" + ((minuteSet<10)?"0"+minuteSet:minuteSet);
                 timeText.setText(selectedTime);
             }
@@ -241,6 +244,12 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         LatLng location = new LatLng(Double.valueOf(meeting.getLatitude()), Double.valueOf(meeting.getLongitude()));
         marker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
         moveMapCameraAndMarker(location);
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                scrollView.requestDisallowInterceptTouchEvent(true);
+            }
+        });
     }
 
     private void moveMapCameraAndMarker(LatLng location) {

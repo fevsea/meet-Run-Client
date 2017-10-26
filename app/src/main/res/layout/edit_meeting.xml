@@ -8,7 +8,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="0.03">
+        android:layout_weight="0.03"
+        android:id="@+id/scrollView">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -123,7 +124,6 @@
                 android:layout_toEndOf="@+id/meeting_time"
                 android:layout_marginTop="10dp"
                 android:text="@string/change_time" />
-
 
 
             <fragment xmlns:android="http://schemas.android.com/apk/res/android"
