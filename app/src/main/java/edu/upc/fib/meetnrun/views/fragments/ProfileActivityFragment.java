@@ -22,8 +22,6 @@ public class ProfileActivityFragment extends Fragment {
     }*/
 
     private View view;
-    private GenericController controller;
-    CurrentSession cs;
 
 
     @Override
@@ -31,8 +29,7 @@ public class ProfileActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        String token = cs.getToken();
-        updateUser(token);
+        updateUser();
         return view;
     }
 
@@ -56,8 +53,8 @@ public class ProfileActivityFragment extends Fragment {
 
     }
 
-    private void updateUser(String token) {
-        new GetUser().execute(token);
+    private void updateUser() {
+        new GetUser().execute();
     }
 
     private class GetUser extends AsyncTask<String,String,String> {
@@ -66,7 +63,7 @@ public class ProfileActivityFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             //Log.e("MAIN","DOINGGGG");
-            u = GenericController.getInstance().getUserWithToken(strings[0]);
+            u = GenericController.getInstance().getCurrentUser();
             return null;
         }
 
