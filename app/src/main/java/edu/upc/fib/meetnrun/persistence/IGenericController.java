@@ -22,7 +22,7 @@ public interface IGenericController {
     public boolean deleteMeetingByID(int id) throws NotFoundException;
     public List<Meeting> getAllMeetings();
     public List<User> getAllUsers();
-    public Meeting createMeetingPublic(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException;
+    public Meeting createMeetingPublic( String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException;
     public User registerUser(String userName, String firstName, String lastName, String email, int postCode, String password) throws ParamsException;
     public String login(String username, String password);
 }
