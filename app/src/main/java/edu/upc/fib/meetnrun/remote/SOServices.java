@@ -17,9 +17,6 @@ import retrofit2.http.Query;
  */
 
 public interface SOServices {
-    @GET("/users")
-    Call<User[]> getUsers();
-
     @GET("/meetings")
     Call<Meeting[]> getMeetings();
 
@@ -37,6 +34,22 @@ public interface SOServices {
 
     @POST("/login")
     Call<String> logIn(@Field("username") String username, @Field("password") String password);
+
+    @GET("/users")
+    Call<User[]> getUsers();
+
+    @GET("/users/{id}")
+    Call<User> getUser(@Path("id") int id);
+
+    @PATCH("/users/{id}")
+    Call<Void> updateUser(@Path("id") int id, @Body User user);
+
+    @DELETE("/users/{id}")
+    Call<Void> deleteUser(@Path("id") int id);
+
+    //TODO temporal
+    @POST("/users/register/{id}")
+    Call<Void> registerUser(@Path("id") int id);
 
 
 }
