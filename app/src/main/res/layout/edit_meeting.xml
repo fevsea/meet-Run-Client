@@ -5,167 +5,177 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/title_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="5dp"
-        android:labelFor="@+id/meeting_title"
-        android:layout_marginTop="10dp"
-        android:text="@string/title" />
-
-    <EditText
-        android:id="@+id/meeting_title"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/title_label"
-        android:text="@string/title" />
+        android:layout_height="match_parent"
+        android:layout_weight="0.03">
 
-    <TextView
-        android:id="@+id/description_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="5dp"
-        android:labelFor="@+id/meeting_description"
-        android:layout_below="@+id/meeting_title"
-        android:layout_marginTop="10dp"
-        android:text="@string/description" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/meeting_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/description_label"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:inputType="textMultiLine"
-        android:layout_alignParentEnd="true"
-        android:text="@string/description"/>
+            <TextView
+                android:id="@+id/title_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="5dp"
+                android:labelFor="@+id/meeting_title"
+                android:layout_marginTop="10dp"
+                android:text="@string/title" />
 
-    <TextView
-        android:id="@+id/date_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="5dp"
-        android:labelFor="@+id/meeting_date"
-        android:layout_below="@+id/meeting_description"
-        android:layout_marginTop="10dp"
-        android:text="@string/date" />
+            <EditText
+                android:id="@+id/meeting_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                android:layout_marginTop="5dp"
+                android:layout_below="@+id/title_label"
+                android:text="@string/title" />
 
-    <EditText
-        android:id="@+id/meeting_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/date_label"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:inputType="date"
-        android:editable="false"
-        android:text="@string/date" />
+            <TextView
+                android:id="@+id/description_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="5dp"
+                android:labelFor="@+id/meeting_description"
+                android:layout_below="@+id/meeting_title"
+                android:layout_marginTop="10dp"
+                android:text="@string/description" />
 
-    <Button
-        android:id="@+id/change_date_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/date_label"
-        android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/meeting_date"
-        android:layout_marginTop="10dp"
-        android:text="@string/change_date" />
+            <EditText
+                android:id="@+id/meeting_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/description_label"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="textMultiLine"
+                android:layout_alignParentEnd="true"
+                android:text="@string/description"/>
 
-    <TextView
-        android:id="@+id/time_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="5dp"
-        android:labelFor="@+id/meeting_time"
-        android:layout_below="@+id/meeting_date"
-        android:layout_marginTop="10dp"
-        android:text="@string/time" />
+            <TextView
+                android:id="@+id/date_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="5dp"
+                android:labelFor="@+id/meeting_date"
+                android:layout_below="@+id/meeting_description"
+                android:layout_marginTop="10dp"
+                android:text="@string/date" />
 
-    <EditText
-        android:id="@+id/meeting_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/time_label"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:inputType="none"
-        android:editable="false"
-        android:text="@string/time" />
+            <EditText
+                android:id="@+id/meeting_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/date_label"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="date"
+                android:editable="false"
+                android:text="@string/date" />
 
-    <Button
-        android:id="@+id/change_time_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/time_label"
-        android:layout_marginStart="10dp"
-        android:layout_toEndOf="@+id/meeting_time"
-        android:layout_marginTop="10dp"
-        android:text="@string/change_time" />
+            <Button
+                android:id="@+id/change_date_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/date_label"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/meeting_date"
+                android:layout_marginTop="10dp"
+                android:text="@string/change_date" />
+
+            <TextView
+                android:id="@+id/time_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="5dp"
+                android:labelFor="@+id/meeting_time"
+                android:layout_below="@+id/meeting_date"
+                android:layout_marginTop="10dp"
+                android:text="@string/time" />
+
+            <EditText
+                android:id="@+id/meeting_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/time_label"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:inputType="none"
+                android:editable="false"
+                android:text="@string/time" />
+
+            <Button
+                android:id="@+id/change_time_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/time_label"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/meeting_time"
+                android:layout_marginTop="10dp"
+                android:text="@string/change_time" />
 
 
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="71dp"
-        android:layout_below="@+id/meeting_time"
-        android:layout_alignParentStart="true">
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                android:name="com.google.android.gms.maps.MapFragment"
+                android:id="@+id/map"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="71dp"
+                android:layout_below="@+id/meeting_time"
+                android:layout_alignParentStart="true">
 
-        <Button
-            android:id="@+id/change_location_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="92dp"
-            android:layout_marginEnd="26dp"
-            android:text="@string/change_location" />
+                <Button
+                    android:id="@+id/change_location_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="92dp"
+                    android:layout_marginEnd="26dp"
+                    android:text="@string/change_location" />
 
-    </fragment>
+            </fragment>
 
-    <Switch
-        android:id="@+id/isPublic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:text="@string/is_public"
-        android:layout_below="@+id/meeting_time"
-        android:layout_marginTop="15dp" />
+            <Switch
+                android:id="@+id/isPublic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/is_public"
+                android:layout_below="@+id/meeting_time"
+                android:layout_marginTop="15dp" />
 
-    <EditText
-        android:id="@+id/meeting_level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/meeting_time"
-        android:ems="10"
-        android:layout_marginTop="10dp"
-        android:inputType="number"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="10dp"/>
+            <EditText
+                android:id="@+id/meeting_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/meeting_time"
+                android:ems="10"
+                android:layout_marginTop="10dp"
+                android:inputType="number"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"/>
 
-    <TextView
-        android:id="@+id/level_label"
-        android:labelFor="@id/meeting_level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/meeting_time"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:text="@string/minimum_level" />
-
+            <TextView
+                android:id="@+id/level_label"
+                android:labelFor="@id/meeting_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/meeting_time"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/minimum_level" />
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>
