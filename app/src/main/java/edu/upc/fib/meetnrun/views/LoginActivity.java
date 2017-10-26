@@ -9,11 +9,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.GenericController;
-import edu.upc.fib.meetnrun.utils.FormContainers;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -50,8 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        FormContainers.LoginUser lc = new FormContainers.LoginUser(username, password);
-        new login().execute(lc);
+        new login().execute();
     }
 
     private void changeToMainActivity() {
@@ -60,16 +57,15 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private class login extends AsyncTask<FormContainers.LoginUser,String,String> {
+    private class login extends AsyncTask<String,String,String> {
 
         String token = null;
         GenericController gc = GenericController.getInstance();
         User u = null;
 
         @Override
-        protected String doInBackground(FormContainers.LoginUser... logUser) {
-            FormContainers.LoginUser lu = logUser[0];
-            token = gc.login(lu.getUsername(), lu.getPassword());
+        protected String doInBackground(String... logUser) {
+            token = gc.login(username, password);
             if(token != null && !token.equals("")){
                 u = gc.getCurrentUser();
             }

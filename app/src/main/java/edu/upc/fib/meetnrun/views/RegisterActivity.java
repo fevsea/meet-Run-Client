@@ -4,31 +4,22 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.GenericController;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
-import edu.upc.fib.meetnrun.utils.FormContainers;
 
 public class RegisterActivity extends AppCompatActivity{
 
     private EditText editName, editSurname, editUsername, editEmail, editPc, editPassword1, editPassword2, editAnswer;
     private Spinner spinnerQuestion;
-    private String name, surname, username, email, password1, quest, answ;
-    private int pcInt;
+    private String name, surname, username, email, password1, quest, answ,pcInt;
     private final static String[] questionsList = {"What is the first name of the person you first kissed?",
                                                                     "What was the name of your primary school?",
                                                                     "What time of the day were you born?",
@@ -58,7 +49,7 @@ public class RegisterActivity extends AppCompatActivity{
         surname = editSurname.getText().toString();
         username = editUsername.getText().toString();
         email = editEmail.getText().toString();
-        String pc = editPc.getText().toString();
+        pcInt = editPc.getText().toString();
         password1 = editPassword1.getText().toString();
         String password2 = editPassword2.getText().toString();
         quest = spinnerQuestion.getSelectedItem().toString();
@@ -82,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity{
         else if (email.equals("")) {
             Toast.makeText(getApplicationContext(), "E-mail field is empty", Toast.LENGTH_SHORT).show();
         }
-        else if (pc.equals("")) {
+        else if (pcInt.equals("")) {
             Toast.makeText(getApplicationContext(), "Postal code field is empty", Toast.LENGTH_SHORT).show();
         }
         else if (password1.equals("")) {
@@ -94,7 +85,7 @@ public class RegisterActivity extends AppCompatActivity{
         else if (!arrova) {
             Toast.makeText(getApplicationContext(), "E-mail field is wrong", Toast.LENGTH_SHORT).show();
         }
-        else if (pc.length() != 5) {
+        else if (pcInt.length() != 5) {
             Toast.makeText(getApplicationContext(), "Postal code field is wrong", Toast.LENGTH_SHORT).show();
         }
         else if (password1.length() < 5) {
@@ -104,16 +95,13 @@ public class RegisterActivity extends AppCompatActivity{
             Toast.makeText(getApplicationContext(), "Passwords don't match", Toast.LENGTH_SHORT).show();
         }
         else {
-            pcInt = Integer.parseInt(pc);
-
             registerUser();
         }
 
     }
 
     private void registerUser() {
-        FormContainers.RegisterUser fc = new FormContainers.RegisterUser(username, name, surname, email, pcInt, password1, quest, answ);
-        new register().execute(fc);
+        new register().execute();
     }
 
     private void changeToLoginActivity() {
@@ -122,15 +110,14 @@ public class RegisterActivity extends AppCompatActivity{
         startActivity(intent);
     }
 
-    private class register extends AsyncTask<FormContainers.RegisterUser,String,String> {
+    private class register extends AsyncTask<String,String,String> {
 
         User user = null;
 
         @Override
-        protected String doInBackground(FormContainers.RegisterUser... registerUser) {
-            FormContainers.RegisterUser ru = registerUser[0];
+        protected String doInBackground(String... registerUser) {
             try {
-                user = GenericController.getInstance().registerUser(ru.getUsername(), ru.getName(), ru.getSurname(), ru.getEmail(), ru.getPostalCode(), ru.getPassword(), ru.getQuestion(), ru.getAnswer());
+                user = GenericController.getInstance().registerUser(username, name, surname, email, pcInt, password1, quest, answ);
             } catch (ParamsException e) {
                 e.printStackTrace();
             }

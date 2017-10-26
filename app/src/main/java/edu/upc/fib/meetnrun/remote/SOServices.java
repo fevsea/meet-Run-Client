@@ -40,8 +40,8 @@ public interface SOServices {
     @GET("/users")
     Call<User[]> getUsers();
 
-    @POST("/users")
-    Call<User> registerUser(@Body User user);
+    @POST("/users/")
+    Call<User> registerUser(@Body Forms.UserRegistration user);
 
     @GET("/users/{id}")
     Call<User> getUser(@Path("id") int id);
