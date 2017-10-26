@@ -40,7 +40,13 @@ public class GenericController implements IGenericController {
     @Override
     public User getUser(int id) throws NotFoundException {
         User u = null;
-        return null;
+        try {
+            Response<User> ret = mServices.getUser(id).execute();
+            u = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return u;
     }
 
     @Override
@@ -171,7 +177,14 @@ public class GenericController implements IGenericController {
 
     @Override
     public User getCurrentUser() {
-        return null;
+        User u = null;
+        try {
+            Response<User> ret = mServices.getCurrentUser().execute();
+            u = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return u;
     }
 
 
