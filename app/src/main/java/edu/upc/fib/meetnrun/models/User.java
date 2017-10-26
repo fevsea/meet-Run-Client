@@ -1,32 +1,68 @@
 package edu.upc.fib.meetnrun.models;
-
-/**
- * Created by Awais Iqbal on 17/10/2017.
- */
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class User {
-    private int id;
-    private String userName;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private int postCode;
 
-    public User(int id,String userName, String firstName, String lastName, String email, int postCode) {
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("username")
+    @Expose
+    private String username;
+    @SerializedName("first_name")
+    @Expose
+    private String firstName;
+    @SerializedName("last_name")
+    @Expose
+    private String lastName;
+    @SerializedName("postal_code")
+    @Expose
+    private String postalCode;
+    @SerializedName("question")
+    @Expose
+    private String question;
+
+    /**
+     * No args constructor for use in serialization
+     *
+     */
+    public User() {
+    }
+
+    /**
+     *
+     * @param id
+     * @param lastName
+     * @param username
+     * @param postalCode
+     * @param question
+     * @param firstName
+     */
+    public User(Integer id, String username, String firstName, String lastName, String postalCode, String question) {
+        super();
         this.id = id;
-        this.userName = userName;
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
-        this.postCode = postCode;
+        this.postalCode = postalCode;
+        this.question = question;
     }
 
-    public String getUserName() {
-        return userName;
+    public Integer getId() {
+        return id;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFirstName() {
@@ -45,27 +81,20 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getPostalCode() {
+        return postalCode;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
     }
 
-    public int getPostCode() {
-        return postCode;
+    public String getQuestion() {
+        return question;
     }
 
-    public void setPostCode(int postCode) {
-        this.postCode = postCode;
+    public void setQuestion(String question) {
+        this.question = question;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 }

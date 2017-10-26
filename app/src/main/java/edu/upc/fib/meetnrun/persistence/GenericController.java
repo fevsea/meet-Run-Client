@@ -153,7 +153,7 @@ public class GenericController implements IGenericController {
 
     @Override
     public User registerUser(String userName, String firstName, String lastName, String email, int postCode, String password, String question, String answer) throws ParamsException {
-        User u = new User(0,userName,firstName,lastName,email,postCode);
+        User u = new User(0,userName,firstName,lastName,String.valueOf(postCode),question);
         try {
             Response<User> ret = mServices.registerUser(u).execute();
             u = ret.body();
