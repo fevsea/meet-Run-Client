@@ -57,7 +57,15 @@ public class GenericController implements IGenericController {
 
     @Override
     public boolean updateUser(User obj) throws ParamsException, NotFoundException {
-        return false;
+        boolean ok = true;
+        try {
+            Response<Void> res = mServices.updateUser(obj.getId(),obj).execute();
+            if (res.isSuccessful()) ok = true;
+            //TODO check not foud exception
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ok;
     }
 
     @Override
@@ -75,7 +83,15 @@ public class GenericController implements IGenericController {
 
     @Override
     public boolean deleteUserByID(int id) throws NotFoundException {
-        return false;
+        boolean ok = true;
+        try {
+            Response<Void> res = mServices.deleteUser(id).execute();
+            if (res.isSuccessful()) ok = true;
+            //TODO check not foud exception
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ok;
     }
 
     @Override
@@ -131,7 +147,14 @@ public class GenericController implements IGenericController {
 
     @Override
     public User registerUser(String userName, String firstName, String lastName, String email, int postCode, String password) throws ParamsException {
-        return null;
+        User u = new User(0,userName,firstName,lastName,email,postCode);
+        try {
+            Response<User> ret = mServices.registerUser(u).execute();
+            u = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return u;
     }
 
     @Override
@@ -147,7 +170,7 @@ public class GenericController implements IGenericController {
     }
 
     @Override
-    public User getUserWithToken(String Token) {
+    public User getCurrentUser() {
         return null;
     }
 
