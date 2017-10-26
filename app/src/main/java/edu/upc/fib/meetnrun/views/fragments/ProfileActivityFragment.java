@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.GenericController;
 
@@ -20,6 +21,7 @@ public class ProfileActivityFragment extends Fragment {
     /*public ProfileActivityFragment() {
     }*/
 
+    User u;
     private View view;
 
 
@@ -28,11 +30,32 @@ public class ProfileActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        updateUser();
+        //updateUser();
+
+        User u = CurrentSession.getInstance().getCurrentUser();
+
+        //Log.e("MAIN","AGAFO USER" + u);
+
+        String userName = u.getUsername();
+        String name = u.getFirstName() + ' ' + u.getLastName();
+        String postCode = u.getPostalCode();
+
+
+        TextView userNameTextView = view.findViewById(R.id.userName);
+        TextView nameTextView = view.findViewById(R.id.name);
+        TextView userPostCodeTextView = view.findViewById(R.id.userPostCode);
+
+
+        userNameTextView.setText(userName);
+        nameTextView.setText(name);
+        userPostCodeTextView.setText(postCode);
+
+
+
         return view;
     }
 
-    private void updateUserView(User u) {
+    /*private void updateUserView(User u) {
 
         TextView userNameTextView = view.findViewById(R.id.userName);
         TextView nameTextView = view.findViewById(R.id.name);
@@ -55,20 +78,22 @@ public class ProfileActivityFragment extends Fragment {
     }
 
     private class GetUser extends AsyncTask<String,String,String> {
-        User u;
 
         @Override
         protected String doInBackground(String... strings) {
-            //Log.e("MAIN","DOINGGGG");
+            Log.e("MAIN","DOINGGGG");
             u = GenericController.getInstance().getCurrentUser();
+            Log.e("MAIN","HE AGAFAT EL USER");
+            Log.e("MAIN","AMB NOM USER" + u.getUsername());
+            Log.e("MAIN","AMB NOM" + u.getFirstName());
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            //System.err.println("FINISHED");
-            updateUserView(u);
+            Log.e("MAIN","FINISHED");
+            //updateUserView(u);
             super.onPostExecute(s);
         }
-    }
+    }*/
 }
