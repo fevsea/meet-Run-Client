@@ -82,12 +82,12 @@ public class MeetingListFragment extends Fragment {
                 Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
                 meetingInfoIntent.putExtra("description",meeting.getDescription());
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
-                meetingInfoIntent.putExtra("date",meeting.getDate());
-                simpleDateFormat = new SimpleDateFormat("h:mm a");
+                String datetime = meeting.getDate();
+                meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
+                meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
                 meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
-                meetingInfoIntent.putExtra("latitude",String.valueOf(meeting.getLatitude()));
-                meetingInfoIntent.putExtra("longitude",String.valueOf(meeting.getLongitude()));
+                meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
+                meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
                 startActivity(meetingInfoIntent);
 
             }
