@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (CurrentSession.getInstance().getToken() == null) {
             Intent i = new Intent(this, LoginActivity.class);
+            finish();
             startActivity(i);
         }
 
