@@ -2,9 +2,11 @@ package edu.upc.fib.meetnrun.views;
 
 import android.app.DatePickerDialog;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -31,6 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -51,6 +55,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
     private Marker marker;
     private Meeting meeting;
     private IGenericController controller;
+    private boolean thereWasAnAttemptToSave = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +64,14 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         this.controller = GenericController.getInstance();
         try {
             this.meeting = controller.getMeeting(getIntent().getIntExtra("id", -1));
-            if (this.meeting == null ) return; //TODO created to avoid exception before persistence, create a stub class for testings
-
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(EditMeetingActivity.this, getResources().getString(R.string.error_loading_meeting), Toast.LENGTH_SHORT).show();
+        }
+        if (this.meeting == null ) {
+            Toast.makeText(EditMeetingActivity.this, getResources().getString(R.string.error_loading_meeting), Toast.LENGTH_SHORT).show();
+            return;
+        }
         EditText titleText = (EditText) findViewById(R.id.meeting_title);
         titleText.setText(meeting.getTitle());
         EditText descriptionText = (EditText) findViewById(R.id.meeting_description);
@@ -98,10 +109,6 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         this.setTitle(getResources().getString(R.string.edit_meeting) + " " + meeting.getTitle());
-
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -202,23 +209,28 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onBackPressed() {
-        String title = getResources().getString(R.string.edit_meeting_close_dialog_title);
-        String message = getResources().getString(R.string.edit_meeting_close_dialog_message);
-        String ok = getResources().getString(R.string.ok);
-        String cancel = getResources().getString(R.string.cancel);
-        showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        EditMeetingActivity.super.onBackPressed();
+        if (!thereWasAnAttemptToSave) {
+            String title = getResources().getString(R.string.edit_meeting_close_dialog_title);
+            String message = getResources().getString(R.string.edit_meeting_close_dialog_message);
+            String ok = getResources().getString(R.string.ok);
+            String cancel = getResources().getString(R.string.cancel);
+            showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            EditMeetingActivity.super.onBackPressed();
+                        }
+                    },
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
                     }
-                },
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                }
-        );
+            );
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -248,24 +260,9 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.done_button) {
-            try {
-                this.controller.updateMeeting(this.meeting);
-            } catch (ParamsException | NotFoundException e) {
-                String title = getResources().getString(R.string.edit_meeting_error_dialog_title);
-                String message = getResources().getString(R.string.edit_meeting_error_dialog_message);
-                String ok = getResources().getString(R.string.ok);
-                String cancel = getResources().getString(R.string.cancel);
-                showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        },
-                        null
-                );
-                return false;
-            }
-            finish();
+            thereWasAnAttemptToSave = true;
+            SaveMeeting saveMeeting = new SaveMeeting();
+            saveMeeting.execute(this.meeting);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -286,5 +283,45 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         this.meeting.setPublic(isChecked);
     }
 
+    private class SaveMeeting extends AsyncTask<Meeting, String, Boolean> {
+
+        Exception exception = null;
+        ProgressDialog mProgressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog = new ProgressDialog(EditMeetingActivity.this);
+            mProgressDialog.setTitle(R.string.saving);
+            mProgressDialog.setMessage(getResources().getString(R.string.saving_meeting));
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Meeting... params) {
+            Boolean res = false;
+            try {
+                res = controller.updateMeeting(params[0]);
+            }
+            catch (NotFoundException | ParamsException e) {
+                exception = e;
+            }
+            return res;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            mProgressDialog.dismiss();
+            if (exception != null || !result) {
+                Toast.makeText(EditMeetingActivity.this, getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
+            }
+            else {
+                finish();
+            }
+        }
+
+    }
 
 }
