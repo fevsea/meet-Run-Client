@@ -156,7 +156,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements OnMapRea
         Date = date.getText().toString();
         Level = Integer.parseInt(level.getText().toString());
         String Hour = hour.getText().toString();
-        Description = description.toString();
+        Description = description.getText().toString();
         Date=Date+','+Hour;
         Latitude=String.valueOf(41.388576);
         Longitude=String.valueOf(2.112840);
@@ -172,6 +172,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements OnMapRea
             //DB stuff
             Toast.makeText(this,"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description, Toast.LENGTH_SHORT).show();
             create_meeting();
+            this.finish();
         }
     }
 
