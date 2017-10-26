@@ -29,20 +29,20 @@
         android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="login"
-        android:text="Log in"
         android:layout_above="@+id/signin"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="17dp" />
+        android:layout_marginBottom="17dp"
+        android:onClick="loginButton"
+        android:text="Log in" />
 
     <Button
         android:id="@+id/signin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="register"
-        android:text="Register"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="registerButton"
+        android:text="Register" />
 
     <TextView
         android:id="@+id/username"

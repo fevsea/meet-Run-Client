@@ -29,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         editPassword = (EditText) findViewById(R.id.editPassword);
     }
 
-    public void login(View v) {
+    public void loginButton(View v) {
 
         username = editUsername.getText().toString();
         password = editPassword.getText().toString();
@@ -40,22 +40,18 @@ public class LoginActivity extends AppCompatActivity {
         else if (password.equals("")) {
             Toast.makeText(getApplicationContext(), "Password field is empty", Toast.LENGTH_SHORT).show();
         }
-        else {
-
-            loginUser();
-
-        }
+        else loginUser();
 
     }
 
-    public void register(View v) {
+    public void registerButton(View v) {
         Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
 
     private void loginUser() {
         FormContainers.LoginUser lc = new FormContainers.LoginUser(username, password);
-        new loginUs().execute(lc);
+        new login().execute(lc);
     }
 
     private void changeToMainActivity() {
@@ -64,24 +60,28 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private class loginUs extends AsyncTask<FormContainers.LoginUser,String,String> {
+    private class login extends AsyncTask<FormContainers.LoginUser,String,String> {
 
         String token = null;
+        GenericController gc = GenericController.getInstance();
 
         @Override
         protected String doInBackground(FormContainers.LoginUser... logUser) {
             FormContainers.LoginUser lu = logUser[0];
-            token = GenericController.getInstance().login(lu.getUsername(), lu.getPassword());
+            token = gc.login(lu.getUsername(), lu.getPassword());
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
             if (token == null || token.equals("")) {
-                Toast.makeText(getApplicationContext(), "Token ERROR", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Login ERROR", Toast.LENGTH_SHORT).show();
             }
             else {
-                CurrentSession.getInstance().setToken(token);
+                CurrentSession cs = CurrentSession.getInstance();
+                cs.setToken(token);
+                User user = gc.getUserWithToken(token);
+                cs.setCurrentUser(user);
                 changeToMainActivity();
             }
             super.onPostExecute(s);
