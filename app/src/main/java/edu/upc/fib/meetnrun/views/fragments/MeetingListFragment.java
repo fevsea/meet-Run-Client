@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -100,10 +101,8 @@ public class MeetingListFragment extends Fragment {
     }
 
     private void createNewMeeting() {
-        meetingsAdapter.addItem(this.getContext());
-        /* TODO startactivity once createMeetingActivity is created
-        Intent intent = new Intent(this,createMeetingActivity.java);
-        startActivity(intent);*/
+        Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
+        startActivity(intent);
     }
 
     private class GetMeetings extends AsyncTask<String,String,String> {

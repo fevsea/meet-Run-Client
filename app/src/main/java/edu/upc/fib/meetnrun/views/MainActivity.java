@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.edit_meeting) {
             if(!cn.getClassName().equals(EditMeetingActivity.class.getName()))
             i = new Intent(this,EditMeetingActivity.class);
+            i.putExtra("id",3);
         } else if (id == R.id.user_profile) {
             if(!cn.getClassName().equals(ProfileActivity.class.getName()))
             i = new Intent(this,ProfileActivity.class);

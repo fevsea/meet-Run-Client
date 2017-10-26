@@ -33,7 +33,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
         return new MeetingsViewHolder(view,listener);
     }
 
-
+    /*
     public void addItem(Context context) {
         int id = 1;
         String title = "Meeting at this place";
@@ -46,7 +46,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
         notifyItemInserted(getItemCount());
         notifyDataSetChanged();
         Toast.makeText(context,"New meeting: " + getItemCount(), Toast.LENGTH_SHORT).show();
-    }
+    }*/
 
     @Override
     public void onBindViewHolder(final MeetingsViewHolder holder, int position) {
