@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (CurrentSession.getInstance().getToken() == null) {
             Intent i = new Intent(this, LoginActivity.class);
-            finish();
+            //finish();
             startActivity(i);
         }
 
@@ -112,10 +112,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.crete_meeting) {
             if(!cn.getClassName().equals(CreateMeetingActivity.class.getName()))
             i = new Intent(this,CreateMeetingActivity.class);
-            i = i.putExtra("id", 1);
         } else if (id == R.id.edit_meeting) {
             if(!cn.getClassName().equals(EditMeetingActivity.class.getName()))
             i = new Intent(this,EditMeetingActivity.class);
+            i = i.putExtra("id", 3);
         } else if (id == R.id.user_profile) {
             if(!cn.getClassName().equals(ProfileActivity.class.getName()))
             i = new Intent(this,ProfileActivity.class);
