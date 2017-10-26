@@ -14,16 +14,16 @@ import retrofit2.Callback;
  */
 
 public interface IGenericController {
-    public User getUser(int id) throws NotFoundException;
-    public Meeting getMeeting(int id) throws NotFoundException;
-    public boolean updateUser(User obj) throws ParamsException, NotFoundException;
-    public boolean updateMeeting(Meeting obj) throws ParamsException, NotFoundException;
-    public boolean deleteUserByID(int id) throws NotFoundException;
-    public boolean deleteMeetingByID(int id) throws NotFoundException;
     public List<Meeting> getAllMeetings();
+    public Meeting createMeetingPublic( String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException;
+    public Meeting getMeeting(int id) throws NotFoundException;
+    public boolean updateMeeting(Meeting obj) throws ParamsException, NotFoundException;
+    public boolean deleteMeetingByID(int id) throws NotFoundException;
     public List<User> getAllUsers();
     public User registerUser(String userName, String firstName, String lastName, String email, int postCode, String password, String question, String answer) throws ParamsException;
-    public Meeting createMeetingPublic( String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException;
+    public User getUser(int id) throws NotFoundException;
+    public boolean updateUser(User obj) throws ParamsException, NotFoundException;
+    public boolean deleteUserByID(int id) throws NotFoundException;
     public String login(String username, String password);
-    public User getUserWithToken(String Token);
+    public User getCurrentUser();
 }
