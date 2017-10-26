@@ -6,7 +6,7 @@ package edu.upc.fib.meetnrun.models;
 
 public class CurrentSession {
     private static CurrentSession instance = null;
-    private String token;
+    private String token ;
     private User currentUser;
 
 
@@ -33,5 +33,9 @@ public class CurrentSession {
         this.currentUser = currentUser;
     }
 
-    private CurrentSession() {}
+    private CurrentSession() {
+        //token = "54d5210bc172307ff887fafc7fc0407f75f4f0c4";
+        token = "";
+        User currentUser;
+    }
 }
