@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.persistence.GenericController;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
@@ -36,6 +37,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meeting_list);
+
+        if (CurrentSession.getInstance().getToken() == null) {
+            Intent i = new Intent(this, LoginActivity.class);
+            finish();
+            startActivity(i);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.meeting_list_toolbar);
         setSupportActionBar(toolbar);
@@ -63,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .add(R.id.meeting_list_contentFrame,meetingListFragment)
                     .commit();
         }
+
+
 
     }
 
@@ -104,15 +113,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.crete_meeting) {
             if(!cn.getClassName().equals(CreateMeetingActivity.class.getName()))
             i = new Intent(this,CreateMeetingActivity.class);
+            i = i.putExtra("id", 1);
         } else if (id == R.id.edit_meeting) {
             if(!cn.getClassName().equals(EditMeetingActivity.class.getName()))
             i = new Intent(this,EditMeetingActivity.class);
         } else if (id == R.id.user_profile) {
             if(!cn.getClassName().equals(ProfileActivity.class.getName()))
             i = new Intent(this,ProfileActivity.class);
-        } else if (id == R.id.register) {
-            if(!cn.getClassName().equals(RegisterActivity.class.getName()))
-            i = new Intent(this,RegisterActivity.class);
+        } else if (id == R.id.logout) {
+            CurrentSession cs = CurrentSession.getInstance();
+            cs.setToken(null);
+            cs.setCurrentUser(null);
+            i = new Intent(this,MainActivity.class);
+
         } else if (id == R.id.meetings) {
             if(!cn.getClassName().equals(MainActivity.class.getName()))
             i = new Intent(this,MainActivity.class);

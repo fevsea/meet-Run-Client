@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.upc.fib.meetnrun.views.LoginActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Meet and Run"
+        android:textSize="50dp"
+        android:gravity="center"
+        android:textColor="@color/blue"
+        android:id="@+id/title" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/mr"
+        android:id="@+id/img"
+        android:layout_marginBottom="240dp"
+        android:layout_above="@+id/signin"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/title" />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/signin"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="17dp"
+        android:onClick="loginButton"
+        android:text="Log in" />
+
+    <Button
+        android:id="@+id/signin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:onClick="registerButton"
+        android:text="Register" />
+
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textSize="17dp"
+        android:text="Username:"
+        android:layout_marginBottom="156dp"
+        android:layout_above="@+id/login"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:id="@+id/editUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/username"
+        android:layout_marginTop="22dp"
+        android:ems="10"
+        android:textSize="17dp"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/username"
+        android:layout_below="@+id/editUsername"
+        android:layout_marginTop="12dp"
+        android:textSize="17dp"
+        android:text="Password:" />
+
+    <EditText
+        android:id="@+id/editPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/editUsername"
+        android:layout_below="@+id/password"
+        android:layout_marginEnd="6dp"
+        android:ems="10"
+        android:textSize="17dp"
+        android:inputType="textPassword" />
+
+</RelativeLayout>

@@ -40,7 +40,13 @@ public class GenericController implements IGenericController {
     @Override
     public User getUser(int id) throws NotFoundException {
         User u = null;
-        return null;
+        try {
+            Response<User> ret = mServices.getUser(id).execute();
+            u = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return u;
     }
 
     @Override
@@ -146,8 +152,8 @@ public class GenericController implements IGenericController {
     }
 
     @Override
-    public User registerUser(String userName, String firstName, String lastName, String email, int postCode, String password) throws ParamsException {
-        User u = new User(0,userName,firstName,lastName,email,postCode);
+    public User registerUser(String userName, String firstName, String lastName, String email, int postCode, String password, String question, String answer) throws ParamsException {
+        User u = new User(0,userName,firstName,lastName,String.valueOf(postCode),question);
         try {
             Response<User> ret = mServices.registerUser(u).execute();
             u = ret.body();
@@ -155,6 +161,7 @@ public class GenericController implements IGenericController {
             e.printStackTrace();
         }
         return u;
+
     }
 
     @Override
@@ -171,7 +178,14 @@ public class GenericController implements IGenericController {
 
     @Override
     public User getCurrentUser() {
-        return null;
+        User u = null;
+        try {
+            Response<User> ret = mServices.getCurrentUser().execute();
+            u = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return u;
     }
 
 

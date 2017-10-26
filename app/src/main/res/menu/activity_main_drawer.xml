@@ -17,11 +17,11 @@
         <item
             android:id="@+id/user_profile"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="user profile" />
+            android:title="User profile" />
         <item
-            android:id="@+id/register"
+            android:id="@+id/logout"
             android:icon="@drawable/ic_menu_manage"
-            android:title="register" />
+            android:title="Log out" />
 
     </group>
 

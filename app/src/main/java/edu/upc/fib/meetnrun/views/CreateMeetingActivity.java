@@ -1,9 +1,14 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.app.DatePickerDialog;
+import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -12,10 +17,15 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.persistence.GenericController;
 import edu.upc.fib.meetnrun.views.fragments.DatePickerFragment;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.views.fragments.TimePickerFragment;
@@ -24,7 +34,9 @@ import edu.upc.fib.meetnrun.views.fragments.TimePickerFragment;
  * Created by Javier on 14/10/2017.
  */
 
-public class CreateMeetingActivity extends FragmentActivity {
+
+
+public class CreateMeetingActivity extends AppCompatActivity implements OnMapReadyCallback{
     private Integer year, month, day, hour2, minute;
 
     private GoogleMap maps;
@@ -36,18 +48,35 @@ public class CreateMeetingActivity extends FragmentActivity {
     EditText level;
     EditText description;
 
+    Integer Id;
+    String Name;
+    String Description;
+    Boolean Public;
+    Integer Level;
+    String Date;
+    String Latitude;
+    String Longitude;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
 
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_meeting);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.create_meeting_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_18dp);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         name = (EditText) findViewById(R.id.name);
         date = (EditText) findViewById(R.id.date);
         hour = (EditText) findViewById(R.id.hour);
         level = (EditText) findViewById(R.id.level);
         description = (EditText) findViewById(R.id.description);
-        Button dateButton = findViewById(R.id.pickDate);
+        Button dateButton = (Button) findViewById(R.id.pickDate);
         dateButton.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -55,65 +84,37 @@ public class CreateMeetingActivity extends FragmentActivity {
                 showDatePickerDialog();
             }
         });
-        Button hourButton = findViewById(R.id.pickHour);
+        Button hourButton = (Button) findViewById(R.id.pickHour);
         hourButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 showTimePickerDialog();
             }
         });
-
-        /*
+/*
         MapFragment mMapFragment = MapFragment.newInstance();
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.map, mMapFragment);
         fragmentTransaction.commit();
-        mMapFragment.getMapAsync(this);
-        
-        Location location = new Location();
-        double longitude = location.getLongitude();
-        double latitude = location.getLatitude();
-        myLocation = new LatLng(longitude, latitude);
-
-        MapFragment mMapFragment = MapFragment.newInstance();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.mapView, mMapFragment);
-        fragmentTransaction.commit();
-        mMapFragment.getMapAsync((OnMapReadyCallback) this);*/
+        mMapFragment.getMapAsync(this);*/
 
         this.setTitle("Create Meeting");
     }
 
-    public void create (View view){
-        String Name = name.getText().toString();
-        String Date = date.getText().toString();
-        int Level = Integer.parseInt(level.getText().toString());
-        String Hour = hour.getText().toString();
-        String Description = description.toString();
-        String Latitude = String.valueOf(myLocation.latitude);
-        String Longitude = String.valueOf(myLocation.longitude);
-        if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty()){
-            Toast.makeText(this, "@string/emptyCreate", Toast.LENGTH_SHORT).show();
-        }
-        else if(Name.length()>=100) Toast.makeText(this,"@string/bigName", Toast.LENGTH_SHORT).show();
-        else if(Description.length()>=500) Toast.makeText(this, "@string/bigDescription", Toast.LENGTH_SHORT).show();
-        else{
-            //DB stuff
-            Toast.makeText(this,"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description, Toast.LENGTH_SHORT);
-        }
-    }
 
+
+    @Override
     public void onMapReady(GoogleMap map) {
-      maps = map;
-      // Add some markers to the map, and add a data object to each marker.
-      myMarker = maps.addMarker(new MarkerOptions()
-                       .position(myLocation)
-                       .title("@string/location")
-                       .draggable(true));
-      myMarker.setTag(0);
-      // Set a listener for marker click
-      maps.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
-}
+        maps = map;
+        // Add some markers to the map, and add a data object to each marker.
+        myMarker = maps.addMarker(new MarkerOptions()
+                .position(myLocation)
+                .title("@string/location")
+                .draggable(true));
+        myMarker.setTag(0);
+        // Set a listener for marker click
+        maps.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
+    }
 
     private void showTimePickerDialog() {
         final EditText timeText = (EditText) findViewById(R.id.hour);
@@ -132,7 +133,7 @@ public class CreateMeetingActivity extends FragmentActivity {
     }
 
     private void showDatePickerDialog() {
-        final EditText dateText = findViewById(R.id.date);
+        final EditText dateText = (EditText) findViewById(R.id.date);
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -149,12 +150,54 @@ public class CreateMeetingActivity extends FragmentActivity {
         datePickerFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.create:
-                create(view);
-                break;
+
+    public void create (View view){
+        Name = name.getText().toString();
+        Date = date.getText().toString();
+        Level = Integer.parseInt(level.getText().toString());
+        String Hour = hour.getText().toString();
+        Description = description.getText().toString();
+        Date=Date+','+Hour;
+        Latitude=String.valueOf(41.388576);
+        Longitude=String.valueOf(2.112840);
+        Public=Boolean.TRUE;
+        Id=26102017;
+
+        if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() /*|| Latitude.isEmpty() || Longitude.isEmpty()*/){
+            Toast.makeText(this, "@string/emptyCreate", Toast.LENGTH_SHORT).show();
+        }
+        else if(Name.length()>=100) Toast.makeText(this,"@string/bigName", Toast.LENGTH_SHORT).show();
+        else if(Description.length()>=500) Toast.makeText(this, "@string/bigDescription", Toast.LENGTH_SHORT).show();
+        else{
+            //DB stuff
+            Toast.makeText(this,"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description, Toast.LENGTH_SHORT).show();
+            create_meeting();
+            this.finish();
         }
     }
-    
+
+    private void create_meeting(){
+        new newMeeting().execute();
+    }
+
+    private class newMeeting extends AsyncTask<String,String,String> {
+        Meeting m;
+        @Override
+        protected String doInBackground(String... strings){
+            try {
+                m= GenericController.getInstance().createMeetingPublic(Name,Description,Public,Level,Date,Latitude,Longitude);
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s){
+            ///?????////
+            super.onPostExecute(s);
+        }
+    }
+
+
 }
