@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_meeting_list);
 
         if (CurrentSession.getInstance().getToken() == null) {
-
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
         }
@@ -119,9 +118,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.user_profile) {
             if(!cn.getClassName().equals(ProfileActivity.class.getName()))
             i = new Intent(this,ProfileActivity.class);
-        } else if (id == R.id.register) {
-            if(!cn.getClassName().equals(RegisterActivity.class.getName()))
-            i = new Intent(this,RegisterActivity.class);
+        } else if (id == R.id.logout) {
+            CurrentSession cs = CurrentSession.getInstance();
+            cs.setToken(null);
+            cs.setCurrentUser(null);
+            i = new Intent(this,MainActivity.class);
+
         } else if (id == R.id.meetings) {
             if(!cn.getClassName().equals(MainActivity.class.getName()))
             i = new Intent(this,MainActivity.class);

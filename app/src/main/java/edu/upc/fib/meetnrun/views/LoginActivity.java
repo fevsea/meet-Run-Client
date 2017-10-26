@@ -73,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
             if(token != null && !token.equals("")){
                 u = gc.getCurrentUser();
             }
-
             return null;
         }
 
