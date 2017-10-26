@@ -6,18 +6,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.GenericController;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 
 public class ProfileActivity extends AppCompatActivity {
-
-    User u;
-    private IGenericController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,14 +22,6 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        int id = getIntent().getIntExtra("id", -1);
-        try {
-            u = controller.getUser(id);
-            if(u == null) return; // TODO created to avoid exception in tests, to do u how tests for the app u can create a stub with u = new User and test
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-        }
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
