@@ -64,11 +64,16 @@ public class LoginActivity extends AppCompatActivity {
 
         String token = null;
         GenericController gc = GenericController.getInstance();
+        User u = null;
 
         @Override
         protected String doInBackground(FormContainers.LoginUser... logUser) {
             FormContainers.LoginUser lu = logUser[0];
             token = gc.login(lu.getUsername(), lu.getPassword());
+            if(token != null && !token.equals("")){
+                u = gc.getCurrentUser();
+            }
+
             return null;
         }
 
@@ -80,8 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             else {
                 CurrentSession cs = CurrentSession.getInstance();
                 cs.setToken(token);
-                User user = gc.getUserWithToken(token);
-                cs.setCurrentUser(user);
+                cs.setCurrentUser(u);
                 changeToMainActivity();
             }
             super.onPostExecute(s);
