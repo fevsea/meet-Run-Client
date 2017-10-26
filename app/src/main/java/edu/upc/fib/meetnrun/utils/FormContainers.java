@@ -34,17 +34,15 @@ public class FormContainers {
         private String username;
         private String name;
         private String surname;
-        private String email;
-        private int postalCode;
+        private String postalCode;
         private String password;
         private String question;
         private String answer;
 
-        public RegisterUser(String username, String name, String surname, String email, int postalCode, String password, String question, String answer) {
+        public RegisterUser(String username, String name, String surname, String postalCode, String password, String question, String answer) {
             this.username = username;
             this.name = name;
             this.surname = surname;
-            this.email = email;
             this.postalCode = postalCode;
             this.password = password;
             this.question = question;
@@ -63,11 +61,7 @@ public class FormContainers {
             return surname;
         }
 
-        public String getEmail() {
-            return email;
-        }
-
-        public int getPostalCode() {
+        public String getPostalCode() {
             return postalCode;
         }
 
