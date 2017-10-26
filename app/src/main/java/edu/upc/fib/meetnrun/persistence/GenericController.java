@@ -12,6 +12,7 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.persistence.persistenceModels.Forms;
 import edu.upc.fib.meetnrun.remote.ApiUtils;
 import edu.upc.fib.meetnrun.remote.SOServices;
 import retrofit2.Response;
@@ -104,10 +105,8 @@ public class GenericController implements IGenericController {
     public boolean deleteMeetingByID(int id) throws NotFoundException {
         boolean ok = true;
         try {
-
             Response<Void> res = mServices.deletetMeeting(id).execute();
             if (res.isSuccessful()) ok = true;
-
             //TODO check not foud exception
         } catch (IOException e) {
             e.printStackTrace();
@@ -167,9 +166,10 @@ public class GenericController implements IGenericController {
     @Override
     public String login(String username, String password) {
         String token = "";
+        Forms.LoginUser lu = new Forms.LoginUser(username,password);
         try {
-            Response<String> ret = mServices.logIn(username,password).execute();
-            token = ret.body();
+            Response<Forms.Token> ret = mServices.logIn(lu).execute();
+            token = ret.body().getToken();
         } catch (IOException e) {
             e.printStackTrace();
         }

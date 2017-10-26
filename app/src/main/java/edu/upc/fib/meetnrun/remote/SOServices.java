@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.remote;
 
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.persistence.persistenceModels.Forms;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -22,7 +23,7 @@ public interface SOServices {
     @GET("/meetings")
     Call<Meeting[]> getMeetings();
 
-    @POST("/meetings")
+    @POST("/meetings/")
     Call<Meeting> createMeeting(@Body Meeting meeting);
 
     @GET("/meetings/{id}")
@@ -55,7 +56,7 @@ public interface SOServices {
     //LOGIN
 
     @POST("/login")
-    Call<String> logIn(@Field("username") String username, @Field("password") String password);
+    Call<Forms.Token> logIn(@Body Forms.LoginUser lu);
 
     @GET("/user/current")
     Call<User> getCurrentUser();
