@@ -29,10 +29,10 @@ public interface SOServices {
     @GET("/meetings/{id}")
     Call<Meeting> getMeeting(@Path("id") int id);
 
-    @PATCH("/meetings/{id}")
+    @PATCH("/meetings/{id}/")
     Call<Void> updateMeeting(@Path("id") int id, @Body Meeting meeting);
 
-    @DELETE("/meetings/{id}")
+    @DELETE("/meetings/{id}/")
     Call<Void> deletetMeeting(@Path("id") int id);
 
     //USERS
@@ -46,10 +46,10 @@ public interface SOServices {
     @GET("/users/{id}")
     Call<User> getUser(@Path("id") int id);
 
-    @PATCH("/users/{id}")
+    @PATCH("/users/{id}/")
     Call<Void> updateUser(@Path("id") int id, @Body User user);
 
-    @DELETE("/users/{id}")
+    @DELETE("/users/{id}/")
     Call<Void> deleteUser(@Path("id") int id);
 
 
@@ -58,7 +58,7 @@ public interface SOServices {
     @POST("/login")
     Call<Forms.Token> logIn(@Body Forms.LoginUser lu);
 
-    @GET("/user/current")
+    @GET("/users/current/")
     Call<User> getCurrentUser();
 
 
