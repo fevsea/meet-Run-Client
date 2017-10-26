@@ -66,24 +66,12 @@
                 android:text="Name" />
 
             <TextView
-                android:id="@+id/userEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/name"
-                android:layout_marginTop="12dp"
-                android:textColor="#000000"
-                android:textSize="20sp"
-                android:textStyle="italic"
-                android:text="Email" />
-
-            <TextView
                 android:id="@+id/userPostCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
-                android:layout_below="@+id/userEmail"
+                android:layout_below="@+id/name"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:text="Postcode" />

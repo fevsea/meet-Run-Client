@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
-import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.GenericController;
 
@@ -37,18 +36,16 @@ public class ProfileActivityFragment extends Fragment {
 
         TextView userNameTextView = view.findViewById(R.id.userName);
         TextView nameTextView = view.findViewById(R.id.name);
-        TextView userEmailTextView = view.findViewById(R.id.userEmail);
         TextView userPostCodeTextView = view.findViewById(R.id.userPostCode);
 
 
-        String userName = "MeetnRun"; //u.getUserName();
-        String name = "Meet and Run"; //u.getFirstName() + ' ' + u.getLastName();
-        String email = "meetnrun@meetnrun.com"; //u.getEmail();
-        String postCode = "080XX"; //u.getPostCode();
+        String userName = u.getUsername();
+        String name = u.getFirstName() + ' ' + u.getLastName();
+        String postCode = u.getPostalCode();
+
 
         userNameTextView.setText(userName);
         nameTextView.setText(name);
-        userEmailTextView.setText(email);
         userPostCodeTextView.setText(postCode);
 
     }
