@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.persistence.GenericController;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
@@ -36,6 +37,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meeting_list);
+
+        if (CurrentSession.getInstance().getToken() == null) {
+
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.meeting_list_toolbar);
         setSupportActionBar(toolbar);
@@ -63,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .add(R.id.meeting_list_contentFrame,meetingListFragment)
                     .commit();
         }
+
+
 
     }
 

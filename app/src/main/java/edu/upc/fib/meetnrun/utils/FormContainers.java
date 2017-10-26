@@ -30,4 +30,76 @@ public class FormContainers {
         }
     }
 
+    public static class RegisterUser{
+        private String username;
+        private String name;
+        private String surname;
+        private String email;
+        private int postalCode;
+        private String password;
+        private String question;
+        private String answer;
+
+        public RegisterUser(String username, String name, String surname, String email, int postalCode, String password, String question, String answer) {
+            this.username = username;
+            this.name = name;
+            this.surname = surname;
+            this.email = email;
+            this.postalCode = postalCode;
+            this.password = password;
+            this.question = question;
+            this.answer = answer;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getSurname() {
+            return surname;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public int getPostalCode() {
+            return postalCode;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getQuestion() {
+            return question;
+        }
+
+        public String getAnswer() {
+            return answer;
+        }
+    }
+
+    public static class LoginUser{
+        private String username;
+        private String password;
+
+        public LoginUser(String username, String password) {
+            this.username = username;
+            this.password = password;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+    }
+
 }

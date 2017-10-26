@@ -40,7 +40,13 @@ public class GenericController implements IGenericController {
     @Override
     public User getUser(int id) throws NotFoundException {
         User u = null;
-        return null;
+        try {
+            Response<User> ret = mServices.getUser(id).execute();
+            u = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return u;
     }
 
     @Override
@@ -57,7 +63,15 @@ public class GenericController implements IGenericController {
 
     @Override
     public boolean updateUser(User obj) throws ParamsException, NotFoundException {
-        return false;
+        boolean ok = true;
+        try {
+            Response<Void> res = mServices.updateUser(obj.getId(),obj).execute();
+            if (res.isSuccessful()) ok = true;
+            //TODO check not foud exception
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ok;
     }
 
     @Override
@@ -75,7 +89,15 @@ public class GenericController implements IGenericController {
 
     @Override
     public boolean deleteUserByID(int id) throws NotFoundException {
-        return false;
+        boolean ok = true;
+        try {
+            Response<Void> res = mServices.deleteUser(id).execute();
+            if (res.isSuccessful()) ok = true;
+            //TODO check not foud exception
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ok;
     }
 
     @Override
@@ -118,7 +140,7 @@ public class GenericController implements IGenericController {
     }
 
     @Override
-    public Meeting createMeetingPublic(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException {
+    public Meeting createMeetingPublic(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException {
         Meeting m = new Meeting(0, title, description, _public, level, date, latitude, longitude);
         try {
             Response<Meeting> ret = mServices.createMeeting(m).execute();
@@ -130,8 +152,16 @@ public class GenericController implements IGenericController {
     }
 
     @Override
-    public User registerUser(String userName, String firstName, String lastName, String email, int postCode, String password) throws ParamsException {
-        return null;
+    public User registerUser(String userName, String firstName, String lastName, String email, int postCode, String password, String question, String answer) throws ParamsException {
+        User u = new User(0,userName,firstName,lastName,email,postCode);
+        try {
+            Response<User> ret = mServices.registerUser(u).execute();
+            u = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return u;
+
     }
 
     @Override
@@ -144,6 +174,18 @@ public class GenericController implements IGenericController {
             e.printStackTrace();
         }
         return token;
+    }
+
+    @Override
+    public User getCurrentUser() {
+        User u = null;
+        try {
+            Response<User> ret = mServices.getCurrentUser().execute();
+            u = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return u;
     }
 
 
