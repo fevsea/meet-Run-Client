@@ -21,6 +21,7 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.GenericController;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
+import edu.upc.fib.meetnrun.utils.FormContainers;
 
 public class RegisterActivity extends AppCompatActivity{
 
@@ -106,23 +107,30 @@ public class RegisterActivity extends AppCompatActivity{
             pcInt = Integer.parseInt(pc);
 
             registerUser();
-
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
         }
 
     }
 
     private void registerUser() {
-        new register().execute();
+        FormContainers.RegisterUser fc = new FormContainers.RegisterUser(username, name, surname, email, pcInt, password1, quest, answ);
+        new register().execute(fc);
     }
 
-    private class register extends AsyncTask<String,String,String> {
+    private void changeToLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        finish();
+        startActivity(intent);
+    }
+
+    private class register extends AsyncTask<FormContainers.RegisterUser,String,String> {
+
+        User user = null;
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected String doInBackground(FormContainers.RegisterUser... registerUser) {
+            FormContainers.RegisterUser ru = registerUser[0];
             try {
-                GenericController.getInstance().registerUser(username, name, surname, email, pcInt, password1, quest, answ);
+                user = GenericController.getInstance().registerUser(ru.getUsername(), ru.getName(), ru.getSurname(), ru.getEmail(), ru.getPostalCode(), ru.getPassword(), ru.getQuestion(), ru.getAnswer());
             } catch (ParamsException e) {
                 e.printStackTrace();
             }
@@ -131,7 +139,12 @@ public class RegisterActivity extends AppCompatActivity{
 
         @Override
         protected void onPostExecute(String s) {
+            if (user == null) {
+                Toast.makeText(getApplicationContext(), "Register ERROR", Toast.LENGTH_SHORT).show();
+            }
+            else changeToLoginActivity();
             super.onPostExecute(s);
         }
+
     }
 }

@@ -10,7 +10,10 @@ import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.utils.FormContainers;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,8 +44,6 @@ public class LoginActivity extends AppCompatActivity {
 
             loginUser();
 
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
         }
 
     }
@@ -53,22 +54,38 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        new loginServer().execute();
+        FormContainers.LoginUser lc = new FormContainers.LoginUser(username, password);
+        new loginUs().execute(lc);
     }
 
-    private class loginServer extends AsyncTask<String,String,String> {
+    private void changeToMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        finish();
+        startActivity(intent);
+    }
+
+    private class loginUs extends AsyncTask<FormContainers.LoginUser,String,String> {
+
+        String token = null;
 
         @Override
-        protected String doInBackground(String... strings) {
-
-            GenericController.getInstance().login(username, password);
-
+        protected String doInBackground(FormContainers.LoginUser... logUser) {
+            FormContainers.LoginUser lu = logUser[0];
+            token = GenericController.getInstance().login(lu.getUsername(), lu.getPassword());
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
+            if (token == null || token.equals("")) {
+                Toast.makeText(getApplicationContext(), "Token ERROR", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                CurrentSession.getInstance().setToken(token);
+                changeToMainActivity();
+            }
             super.onPostExecute(s);
         }
+
     }
 }
