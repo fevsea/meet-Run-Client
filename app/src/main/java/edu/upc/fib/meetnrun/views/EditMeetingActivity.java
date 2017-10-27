@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -36,9 +37,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
@@ -59,23 +66,19 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
     EditText titleText;
     EditText descriptionText;
     EditText levelText;
+    ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_meeting);
         this.controller = GenericController.getInstance();
-        try {
-            Log.i("GET Meeting with ID: ", String.valueOf(getIntent().getIntExtra("id", -1)));
-            this.meeting = controller.getMeeting(getIntent().getIntExtra("id", -1));
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(EditMeetingActivity.this, getResources().getString(R.string.error_loading_meeting), Toast.LENGTH_SHORT).show();
-        }
-        if (this.meeting == null ) {
-            Toast.makeText(EditMeetingActivity.this, getResources().getString(R.string.error_loading_meeting), Toast.LENGTH_SHORT).show();
-            return;
-        }
+        Log.i("GET Meeting with ID: ", String.valueOf(getIntent().getIntExtra("id", -1)));
+        GetMeeting getMeeting = new GetMeeting();
+        getMeeting.execute(getIntent().getIntExtra("id", -1));
+    }
+
+    private void populateViews(){
         titleText = (EditText) findViewById(R.id.meeting_title);
         titleText.setText(meeting.getTitle());
         descriptionText = (EditText) findViewById(R.id.meeting_description);
@@ -83,7 +86,16 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         EditText dateText = (EditText) findViewById(R.id.meeting_date);
         Calendar date = new GregorianCalendar();
         //date.setTime(meeting.getDateTime());
-            date.setTime(new Date(meeting.getDate()));
+        Log.i("DATE", meeting.getDate());
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        Date dateTime = null;
+        try {
+            dateTime = inputFormat.parse(meeting.getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            dateTime = new Date();
+        }
+        date.setTime(dateTime);
         int year = date.get(Calendar.YEAR);
         int month = date.get(Calendar.MONTH);
         int day = date.get(Calendar.DAY_OF_MONTH);
@@ -96,6 +108,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         isPublic.setChecked(meeting.getPublic());
         levelText = (EditText) findViewById(R.id.meeting_level);
         levelText.setText(String.valueOf(meeting.getLevel()));
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
 
         Button changeDateButton = (Button) findViewById(R.id.change_date_button);
         changeDateButton.setOnClickListener(this);
@@ -139,21 +152,34 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         datePickerFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int yearSet, int monthSet, int daySet) {
-                Date dateTime = new Date(meeting.getDate());
-                //Date dateTime = meeting.getDateTime();
+                DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                Date dateTime = null;
+                try {
+                    dateTime = inputFormat.parse(meeting.getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    dateTime = new Date(meeting.getDate());
+                }                //Date dateTime = meeting.getDateTime();
                 Calendar date = new GregorianCalendar();
                 date.setTime(dateTime);
                 date.set(Calendar.YEAR, yearSet/* + 1900*/);
                 date.set(Calendar.MONTH, monthSet);
                 date.set(Calendar.DAY_OF_MONTH, daySet);
-                meeting.setDate(date.getTime().toString());
+                meeting.setDate(inputFormat.format(date.getTime()));
                 //meeting.setDateTime(date.getTime());
                 final String selectedDate = ((daySet<10)?"0"+daySet:daySet) + "/" + (((monthSet+1)<10)?"0"+(monthSet+1):(monthSet+1)) + "/" + yearSet;
                 dateText.setText(selectedDate);
             }
         });
         //Date dateTime = meeting.getDateTime();
-        Date dateTime = new Date(meeting.getDate());
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        Date dateTime = null;
+        try {
+            dateTime = inputFormat.parse(meeting.getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            dateTime = new Date(meeting.getDate());
+        }
         if (dateTime != null) {
             Calendar date = new GregorianCalendar();
             date.setTime(dateTime);
@@ -168,19 +194,33 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         timePickerFragment.setListener(new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hourSet, int minuteSet) {
-                Date dateTime = new Date(meeting.getDate());
+                DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                Date dateTime = null;
+                try {
+                    dateTime = inputFormat.parse(meeting.getDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    dateTime = new Date(meeting.getDate());
+                }
                 Calendar date = new GregorianCalendar();
                 date.setTime(dateTime);
                 date.set(Calendar.HOUR_OF_DAY, hourSet);
                 date.set(Calendar.MINUTE, minuteSet);
                 //meeting.setDateTime(date.getTime());
-                meeting.setDate(date.getTime().toString());
+                meeting.setDate(inputFormat.format(date.getTime()));
                 final String selectedTime = ((hourSet<10)?"0"+hourSet:hourSet) + ":" + ((minuteSet<10)?"0"+minuteSet:minuteSet);
                 timeText.setText(selectedTime);
             }
         });
         //Date dateTime = meeting.getDateTime();
-        Date dateTime = new Date(meeting.getDate());
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        Date dateTime = null;
+        try {
+            dateTime = inputFormat.parse(meeting.getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            dateTime = new Date(meeting.getDate());
+        }
         Calendar date = new GregorianCalendar();
         date.setTime(dateTime);
         timePickerFragment.setValues(date.get(Calendar.HOUR), date.get(Calendar.MINUTE));
@@ -204,6 +244,12 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         LatLng location = new LatLng(Double.valueOf(meeting.getLatitude()), Double.valueOf(meeting.getLongitude()));
         marker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
         moveMapCameraAndMarker(location);
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                scrollView.requestDisallowInterceptTouchEvent(true);
+            }
+        });
     }
 
     private void moveMapCameraAndMarker(LatLng location) {
@@ -330,6 +376,34 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
                 finish();
             }
         }
+
+    }
+
+    private class GetMeeting extends AsyncTask<Integer, String, Meeting> {
+
+        Exception exception = null;
+
+        @Override
+        protected Meeting doInBackground(Integer... params) {
+            Meeting res = null;
+            try {
+                res = controller.getMeeting(params[0]);
+            } catch (NotFoundException e) {
+                exception = e;
+            }
+            return res;
+        }
+
+        @Override
+        protected void onPostExecute(Meeting result) {
+            meeting = result;
+            if (meeting == null ) {
+                meeting = new Meeting(1, "HOLA", "Descr \n ipcion \n rand \n om", false, 5, new Date().toString(), "41", "2");
+                Toast.makeText(EditMeetingActivity.this, getResources().getString(R.string.error_loading_meeting), Toast.LENGTH_SHORT).show();
+            }
+            populateViews();
+        }
+
 
     }
 
