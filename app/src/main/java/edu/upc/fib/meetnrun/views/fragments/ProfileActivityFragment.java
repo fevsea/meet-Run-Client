@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
@@ -34,24 +35,22 @@ public class ProfileActivityFragment extends Fragment {
 
         u = CurrentSession.getInstance().getCurrentUser();
 
-        Log.e("USER","AGAFO USER" + " " + u);
+        /*if(u == null) {
+            Toast.makeText(view.getContext(), "User not found", Toast.LENGTH_SHORT).show();
+        }*/
 
-        String userName = u.getUsername(); Log.e("USER","AGAFO NAME USER" + " " + userName);
-        String name = u.getFirstName() + ' ' + u.getLastName(); Log.e("USER","AGAFO NAME" + " " + name);
-        String postCode = u.getPostalCode(); Log.e("USER","AGAFO POST CODE" + " " + postCode);
+        String userName = u.getUsername();
+        String name = u.getFirstName() + ' ' + u.getLastName();
+        String postCode = u.getPostalCode();
 
 
         TextView userNameTextView = (TextView) view.findViewById(R.id.userName);
-        Log.e("view","agafo view username");
         TextView nameTextView = (TextView) view.findViewById(R.id.completeName);
-        Log.e("view","agafo view name");
         TextView userPostCodeTextView = (TextView) view.findViewById(R.id.userPostCode);
-        Log.e("view","agafo view postcode");
 
-
-        userNameTextView.setText(userName); Log.e("Set text","poso username");
-        nameTextView.setText(name);Log.e("Set text","poso name");
-        userPostCodeTextView.setText(postCode); Log.e("Set text","poso post");
+        userNameTextView.setText(userName);
+        nameTextView.setText(name);
+        userPostCodeTextView.setText(postCode);
 
         return view;
     }
