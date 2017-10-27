@@ -124,8 +124,8 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
         fragmentTransaction.commit();
         mMapFragment.getMapAsync(this);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(true);
 
         this.setTitle(getResources().getString(R.string.edit_meeting) + " " + meeting.getTitle());
     }

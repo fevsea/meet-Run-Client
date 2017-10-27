@@ -70,8 +70,8 @@ public class CreateMeetingActivity extends AppCompatActivity implements OnMapRea
         Toolbar toolbar = (Toolbar) findViewById(R.id.create_meeting_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_18dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
 
         name = (EditText) findViewById(R.id.name);
         date = (EditText) findViewById(R.id.date);
@@ -195,6 +195,12 @@ public class CreateMeetingActivity extends AppCompatActivity implements OnMapRea
             //do something
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private class newMeeting extends AsyncTask<String,String,String> {
