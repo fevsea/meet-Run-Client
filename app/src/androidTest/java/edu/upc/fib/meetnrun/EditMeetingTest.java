@@ -1,6 +1,8 @@
 package edu.upc.fib.meetnrun;
 
+import android.content.Context;
 import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.assertion.ViewAssertions;
@@ -41,16 +43,15 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class EditMeetingTest {
 
     @Rule
-    public ActivityTestRule<EditMeetingActivity> mMainActivityTestRule = new ActivityTestRule<EditMeetingActivity>(EditMeetingActivity.class);
-
-    @Before
-    public void setUp() {
-
-        Intent i = new Intent();
-        i.putExtra("id", 3);
-        mMainActivityTestRule.launchActivity(i);
-
-    }
+    public ActivityTestRule<EditMeetingActivity> mMainActivityTestRule = new ActivityTestRule<EditMeetingActivity>(EditMeetingActivity.class) {
+        @Override
+        protected Intent getActivityIntent() {
+            Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+            Intent result = new Intent(targetContext, EditMeetingActivity.class);
+            result.putExtra("id", "3");
+            return result;
+        }
+    };
 
     @Test
     public void checkTimePickerShowsAndWorks() {

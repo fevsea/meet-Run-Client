@@ -41,10 +41,6 @@ public class MeetingInfoActivity extends AppCompatActivity {
                         public boolean onNavigationItemSelected(MenuItem menuItem) {
                             Intent i = null;
                             switch (menuItem.getItemId()) {
-                                case R.id.crete_meeting:
-                                    i = new Intent(getApplicationContext(),CreateMeetingActivity.class);
-                                    i = i.putExtra("id", 1);
-                                    break;
                                 case R.id.edit_meeting:
                                     i = new Intent(getApplicationContext(),EditMeetingActivity.class);
                                     i.putExtra("id",3);
