@@ -18,6 +18,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.GenericController;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
 
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (CurrentSession.getInstance().getToken() == null) {
             Intent i = new Intent(this, LoginActivity.class);
-            //finish();
+            finish();
             startActivity(i);
         }
 
@@ -59,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         am = (ActivityManager)getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
 
-
         MeetingListFragment meetingListFragment =
                 (MeetingListFragment) getSupportFragmentManager().findFragmentById(R.id.meeting_list_contentFrame);
         if (meetingListFragment == null) {
@@ -69,8 +72,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .add(R.id.meeting_list_contentFrame,meetingListFragment)
                     .commit();
         }
-
-
 
     }
 
@@ -123,10 +124,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(!cn.getClassName().equals(ProfileActivity.class.getName()))
             i = new Intent(this,ProfileActivity.class);
         } else if (id == R.id.logout) {
+            //GenericController.getInstance().logout();
             CurrentSession cs = CurrentSession.getInstance();
             cs.setToken(null);
             cs.setCurrentUser(null);
             i = new Intent(this,MainActivity.class);
+             finish();
 
         } else if (id == R.id.meetings) {
             if(!cn.getClassName().equals(MainActivity.class.getName()))
