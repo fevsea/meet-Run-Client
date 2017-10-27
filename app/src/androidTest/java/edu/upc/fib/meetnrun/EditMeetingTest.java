@@ -73,11 +73,11 @@ public class EditMeetingTest {
             }
         });
 
-        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(8, 10));
+        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(7, 10));
 
         onView(withId(android.R.id.button1)).perform(click());
 
-        onView(withId(R.id.meeting_time)).check(matches(withText("08:10")));
+        onView(withId(R.id.meeting_time)).check(matches(withText("07:10")));
 
     }
 
@@ -96,7 +96,6 @@ public class EditMeetingTest {
     @Test
     public void checkOnBackButtonADialogAppears() {
 
-        pressBack();
         pressBack();
 
         onView(withText(R.string.edit_meeting_close_dialog_message)).check(matches(isDisplayed()));

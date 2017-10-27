@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -178,6 +180,21 @@ public class CreateMeetingActivity extends AppCompatActivity implements OnMapRea
 
     private void create_meeting(){
         new newMeeting().execute();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_meeting_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.done_button) {
+            //do something
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private class newMeeting extends AsyncTask<String,String,String> {
