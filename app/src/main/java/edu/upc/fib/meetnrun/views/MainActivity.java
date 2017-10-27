@@ -109,11 +109,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent i = null;
         Log.e("Meetings","Entrando en onNav");
         ComponentName cn = am.getRunningTasks(1).get(0).topActivity;
-        if (id == R.id.crete_meeting) {
+        /*if (id == R.id.crete_meeting) {
             if(!cn.getClassName().equals(CreateMeetingActivity.class.getName()))
             i = new Intent(this,CreateMeetingActivity.class);
             i = i.putExtra("id", 1);
-        } else if (id == R.id.edit_meeting) {
+        }*/
+        if (id == R.id.edit_meeting) {
             if(!cn.getClassName().equals(EditMeetingActivity.class.getName()))
             i = new Intent(this,EditMeetingActivity.class);
         } else if (id == R.id.user_profile) {
