@@ -6,6 +6,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -63,12 +64,15 @@ public class LoginActivity extends AppCompatActivity {
 
         String token = null;
         GenericController gc = GenericController.getInstance();
+        CurrentSession cs = CurrentSession.getInstance();
         User u = null;
 
         @Override
         protected String doInBackground(String... logUser) {
             token = gc.login(username, password);
+
             if(token != null && !token.equals("")){
+                cs.setToken(token);
                 u = gc.getCurrentUser();
             }
             return null;
@@ -80,8 +84,6 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Login ERROR", Toast.LENGTH_SHORT).show();
             }
             else {
-                CurrentSession cs = CurrentSession.getInstance();
-                cs.setToken(token);
                 cs.setCurrentUser(u);
                 changeToMainActivity();
             }

@@ -33,21 +33,6 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
         return new MeetingsViewHolder(view,listener);
     }
 
-
-    public void addItem(Context context) {
-        int id = 1;
-        String title = "Meeting at this place";
-        String description = "Meeting description test";
-        String datetime = "yyyy-MM-ddTHH:mm:ssZ";
-        boolean isPublic = true;
-        int level = 10;
-        String latitude = "0"; String longitude = "0";
-        meetings.add(new Meeting(id,title,description,isPublic,level,datetime,latitude,longitude));
-        notifyItemInserted(getItemCount());
-        notifyDataSetChanged();
-        Toast.makeText(context,"New meeting: " + getItemCount(), Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public void onBindViewHolder(final MeetingsViewHolder holder, int position) {
         Meeting meeting = meetings.get(position);

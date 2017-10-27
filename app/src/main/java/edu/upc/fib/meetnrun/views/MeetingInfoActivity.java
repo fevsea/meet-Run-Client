@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views;
 
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.fragments.MeetingInfoFragment;
 
 public class MeetingInfoActivity extends AppCompatActivity {
@@ -37,12 +39,30 @@ public class MeetingInfoActivity extends AppCompatActivity {
                     new NavigationView.OnNavigationItemSelectedListener() {
                         @Override
                         public boolean onNavigationItemSelected(MenuItem menuItem) {
+                            Intent i = null;
                             switch (menuItem.getItemId()) {
-                                //TODO cases on drawerlayout
+                                case R.id.edit_meeting:
+                                    i = new Intent(getApplicationContext(),EditMeetingActivity.class);
+                                    i.putExtra("id",3);
+                                    break;
+                                case R.id.user_profile:
+                                    i = new Intent(getApplicationContext(),ProfileActivity.class);
+                                    break;
+                                case R.id.logout:
+                                    CurrentSession cs = CurrentSession.getInstance();
+                                    cs.setToken(null);
+                                    cs.setCurrentUser(null);
+                                    i = new Intent(getApplicationContext(),MainActivity.class);
+                                    break;
+
+                                case R.id.meetings:
+                                    i = new Intent(getApplicationContext(),MainActivity.class);
+                                    break;
                                 default:
                                     break;
                             }
                             menuItem.setChecked(true);
+                            if (i != null) startActivity(i);
                             drawerLayout.closeDrawers();
                             return true;
                         }
@@ -66,7 +86,7 @@ public class MeetingInfoActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
+        inflater.inflate(R.menu.empty_menu, menu);
         return true;
     }
 

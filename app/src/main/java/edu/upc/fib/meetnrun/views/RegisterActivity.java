@@ -31,6 +31,8 @@ public class RegisterActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        this.setTitle("Register");
+
         editName = (EditText) findViewById(R.id.editName);
         editSurname = (EditText) findViewById(R.id.editSurname);
         editUsername = (EditText) findViewById(R.id.editUsername);
