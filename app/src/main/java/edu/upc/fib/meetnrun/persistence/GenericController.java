@@ -64,7 +64,7 @@ public class GenericController implements IGenericController {
 
     @Override
     public boolean updateUser(User obj) throws ParamsException, NotFoundException {
-        boolean ok = true;
+        boolean ok = false;
         try {
             Response<Void> res = mServices.updateUser(obj.getId(),obj).execute();
             if (res.isSuccessful()) ok = true;
@@ -77,7 +77,7 @@ public class GenericController implements IGenericController {
 
     @Override
     public boolean updateMeeting(Meeting obj) throws ParamsException, NotFoundException {
-        boolean ok = true;
+        boolean ok = false;
         try {
             Response<Void> res = mServices.updateMeeting(obj.getId(),obj).execute();
             if (res.isSuccessful()) ok = true;
@@ -90,7 +90,7 @@ public class GenericController implements IGenericController {
 
     @Override
     public boolean deleteUserByID(int id) throws NotFoundException {
-        boolean ok = true;
+        boolean ok = false;
         try {
             Response<Void> res = mServices.deleteUser(id).execute();
             if (res.isSuccessful()) ok = true;
@@ -103,7 +103,7 @@ public class GenericController implements IGenericController {
 
     @Override
     public boolean deleteMeetingByID(int id) throws NotFoundException {
-        boolean ok = true;
+        boolean ok = false;
         try {
             Response<Void> res = mServices.deletetMeeting(id).execute();
             if (res.isSuccessful()) ok = true;
@@ -187,6 +187,19 @@ public class GenericController implements IGenericController {
             e.printStackTrace();
         }
         return u;
+    }
+
+    @Override
+    public boolean logout() {
+        boolean ok = false;
+        try {
+            Response<Void> res = mServices.logout().execute();
+            if (res.isSuccessful()) ok = true;
+            //TODO check not foud exception
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ok;
     }
 
 

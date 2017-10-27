@@ -27,4 +27,5 @@ public interface IGenericController {
     public boolean deleteUserByID(int id) throws NotFoundException;
     public String login(String username, String password);
     public User getCurrentUser();
+    public boolean logout();
 }
