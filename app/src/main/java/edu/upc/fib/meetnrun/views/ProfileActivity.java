@@ -8,11 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.NotFoundException;
-import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.GenericController;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
+
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -24,14 +20,15 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setBackgroundColor(0);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
 
     }
