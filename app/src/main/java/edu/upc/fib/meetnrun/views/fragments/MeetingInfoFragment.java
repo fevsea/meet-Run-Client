@@ -38,14 +38,12 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         Bundle meetingInfo = getActivity().getIntent().getExtras();
 
         TextView title = view.findViewById(R.id.meeting_info_title);
-        TextView creator = view.findViewById(R.id.meeting_info_creator);
         TextView level = view.findViewById(R.id.meeting_info_level);
         TextView description = view.findViewById(R.id.meeting_info_description);
         TextView date = view.findViewById(R.id.meeting_info_date);
         TextView time = view.findViewById(R.id.meeting_info_time);
 
         title.setText(meetingInfo.getString("title"));
-        creator.setText(meetingInfo.getString("creatorAuthor"));
         description.setText(meetingInfo.getString("description"));
         level.setText(meetingInfo.getString("level"));
         date.setText(meetingInfo.getString("date"));

@@ -48,7 +48,6 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
         TextView meetingDate = view.findViewById(R.id.meeting_item_date);
         String datetime = meeting.getDate();
         meetingDate.setText(datetime.substring(0,datetime.indexOf('T')));
-
         TextView meetingTime = view.findViewById(R.id.meeting_item_time);
         meetingTime.setText(datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
 
