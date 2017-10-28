@@ -1,6 +1,5 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
-import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -11,10 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.GenericController;
 
 
 public class ProfileActivityFragment extends Fragment {

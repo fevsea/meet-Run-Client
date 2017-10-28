@@ -1,58 +1,22 @@
 package edu.upc.fib.meetnrun.views;
 
-import android.app.DatePickerDialog;
-import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
-import android.app.TimePickerDialog;
+
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.AsyncTask;
+
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
+
 import android.widget.EditText;
 import android.widget.ScrollView;
-import android.widget.Switch;
-import android.widget.TimePicker;
-import android.widget.Toast;
-
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import com.google.android.gms.maps.model.Marker;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.NotFoundException;
-import edu.upc.fib.meetnrun.exceptions.ParamsException;
-import edu.upc.fib.meetnrun.persistence.GenericController;
+
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.views.fragments.EditMeetingFragment;
-import edu.upc.fib.meetnrun.views.fragments.TimePickerFragment;
-import edu.upc.fib.meetnrun.views.fragments.DatePickerFragment;
+
 import edu.upc.fib.meetnrun.models.Meeting;
 
 public class EditMeetingActivity extends BaseReturnActivity {
