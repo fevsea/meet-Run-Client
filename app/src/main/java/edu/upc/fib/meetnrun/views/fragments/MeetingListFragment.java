@@ -51,6 +51,7 @@ public class MeetingListFragment extends Fragment {
 
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setImageResource(R.drawable.add_group_512);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

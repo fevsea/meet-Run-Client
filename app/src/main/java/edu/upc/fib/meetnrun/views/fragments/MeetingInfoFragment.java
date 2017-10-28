@@ -46,6 +46,9 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         TextView description = view.findViewById(R.id.meeting_info_description);
         TextView date = view.findViewById(R.id.meeting_info_date);
         TextView time = view.findViewById(R.id.meeting_info_time);
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setVisibility(View.GONE);
 
         title.setText(meetingInfo.getString("title"));
         description.setText(meetingInfo.getString("description"));

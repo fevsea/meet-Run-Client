@@ -1,6 +1,7 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,6 +35,8 @@ public class ProfileActivityFragment extends Fragment {
 
         u = CurrentSession.getInstance().getCurrentUser();
 
+
+
         Log.e("USER","AGAFO USER" + " " + u);
 
         String userName = u.getUsername(); Log.e("USER","AGAFO NAME USER" + " " + userName);
@@ -48,6 +51,19 @@ public class ProfileActivityFragment extends Fragment {
         TextView userPostCodeTextView = (TextView) view.findViewById(R.id.userPostCode);
         Log.e("view","agafo view postcode");
 
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setImageResource(android.R.drawable.ic_menu_edit);
+
+        /*
+        fab.setBackgroundColor(0);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });*/
 
         userNameTextView.setText(userName); Log.e("Set text","poso username");
         nameTextView.setText(name);Log.e("Set text","poso name");
