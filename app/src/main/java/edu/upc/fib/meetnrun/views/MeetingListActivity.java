@@ -1,32 +1,31 @@
 package edu.upc.fib.meetnrun.views;
 
-import android.content.Intent;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.views.fragments.MeetingInfoFragment;
+import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
 
-public class MeetingInfoActivity extends BaseReturnActivity {
+public class MeetingListActivity extends BaseDrawerActivity {
+
 
     @Override
     protected Fragment createFragment() {
-        return new MeetingInfoFragment();
+        return new MeetingListFragment();
+    }
+
+    @Override
+    protected boolean finishOnChangeView() {
+        return false;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.empty_menu, menu);
+        inflater.inflate(R.menu.meeting_list_menu, menu);
         return true;
     }
 
@@ -34,11 +33,12 @@ public class MeetingInfoActivity extends BaseReturnActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                drawerLayout.openDrawer(GravityCompat.START);
+            case R.id.meeting_list_menu_search:
+                //TODO search (query on recyclerview adapter)
                 break;
         }
         return true;
     }
 
 }
-

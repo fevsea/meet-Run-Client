@@ -36,7 +36,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -44,8 +43,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
@@ -71,7 +68,7 @@ public class EditMeetingActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_meeting);
+        setContentView(R.layout.activity_edit_meeting);
         this.controller = GenericController.getInstance();
         Log.i("GET Meeting with ID: ", String.valueOf(getIntent().getIntExtra("id", -1)));
         GetMeeting getMeeting = new GetMeeting();

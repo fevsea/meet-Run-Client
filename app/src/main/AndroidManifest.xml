@@ -24,8 +24,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".views.MainActivity"
-            android:hardwareAccelerated="true"
+            android:name=".views.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
@@ -35,31 +34,36 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".views.MeetingInfoActivity"
+            android:label="@string/meeting_info_label"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".views.CreateMeetingActivity"
-            android:label="Create Meeting"
+            android:label="@string/create_meeting_label"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".views.EditMeetingActivity" />
-
         <activity
-            android:name=".views.RegisterActivity" />
-
+            android:name=".views.EditMeetingActivity"
+            android:label="@string/edit_meeting_label"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.RegisterActivity"
+            android:label="@string/register_label"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".views.ProfileActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_profile"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
-            android:name=".views.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:name=".views.MeetingListActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/meeting_list_label"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:hardwareAccelerated="true">
+        </activity>
 
     </application>
 

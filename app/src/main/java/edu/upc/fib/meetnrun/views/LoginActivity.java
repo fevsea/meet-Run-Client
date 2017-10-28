@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void changeToMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MeetingListActivity.class);
         finish();
         startActivity(intent);
     }

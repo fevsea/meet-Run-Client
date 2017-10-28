@@ -1,11 +1,9 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.app.DatePickerDialog;
-import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,7 +17,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -65,7 +62,7 @@ public class CreateMeetingActivity extends AppCompatActivity implements OnMapRea
 
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_meeting);
+        setContentView(R.layout.activity_create_meeting);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.create_meeting_toolbar);
         setSupportActionBar(toolbar);
@@ -217,7 +214,6 @@ public class CreateMeetingActivity extends AppCompatActivity implements OnMapRea
 
         @Override
         protected void onPostExecute(String s){
-            ///?????////
             super.onPostExecute(s);
         }
     }
