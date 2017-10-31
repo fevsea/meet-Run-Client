@@ -37,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
         CurrentSession cs = CurrentSession.getInstance();
         cs.setToken(token);
         if (cs.getToken() != null) {
+            User user = GenericController.getInstance().getCurrentUser();
+            cs.setCurrentUser(user);
             changeToMainActivity();
         }
     }

@@ -4,6 +4,7 @@ package edu.upc.fib.meetnrun.views;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.CursorIndexOutOfBoundsException;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -11,12 +12,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.fragments.Friends;
 
 public abstract class BaseDrawerActivity extends AppCompatActivity{
 
@@ -39,8 +44,6 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_18dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
-
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_drawerlayout);
         drawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
         NavigationView navigationView = (NavigationView) findViewById(R.id.activity_nav_view);
@@ -55,9 +58,6 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                     i = new Intent(getApplicationContext(),EditMeetingActivity.class);
                                     i.putExtra("id",3);
                                     break;
-                                case R.id.user_profile:
-                                    i = new Intent(getApplicationContext(),ProfileActivity.class);
-                                    break;
                                 case R.id.logout:
                                     CurrentSession cs = CurrentSession.getInstance();
                                     cs.setToken(null);
@@ -69,6 +69,9 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
 
                                 case R.id.meetings:
                                     i = new Intent(getApplicationContext(),MeetingListActivity.class);
+                                    break;
+                                case R.id.friends:
+                                    i = new Intent(getApplicationContext(),Friends.class);
                                     break;
                                 default:
                                     break;
@@ -82,6 +85,11 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                             return true;
                         }
                     });
+
+            TextView nav_user = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nameProfile);
+            User user = CurrentSession.getInstance().getCurrentUser();
+            String name = user.getFirstName()+" "+user.getLastName();
+            nav_user.setText(name);
 
             ImageButton profileButton = navigationView.getHeaderView(0).findViewById(R.id.imageView);
             profileButton.setOnClickListener(new View.OnClickListener() {
