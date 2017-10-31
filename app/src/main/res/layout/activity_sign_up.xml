@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -74,8 +74,8 @@
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:textSize="17dp"
-                android:layout_below="@+id/username"
-                android:layout_alignStart="@+id/username" />
+                android:layout_below="@+id/usernameR"
+                android:layout_alignStart="@+id/usernameR" />
 
             <TextView
                 android:id="@+id/postalCode"
@@ -84,8 +84,8 @@
                 android:text="Postal Code:"
                 android:textSize="17dp"
                 android:layout_marginTop="14dp"
-                android:layout_below="@+id/editUsername"
-                android:layout_alignStart="@+id/editUsername" />
+                android:layout_below="@+id/editUsernameR"
+                android:layout_alignStart="@+id/editUsernameR" />
 
             <EditText
                 android:id="@+id/editPostalCode"
@@ -190,4 +190,5 @@
 
     </ScrollView>
 
-</RelativeLayout>
+</LinearLayout>
+
