@@ -1,10 +1,13 @@
 package edu.upc.fib.meetnrun.views;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText editUsername, editPassword;
     private String username, password;
+    public static final String MY_PREFS_NAME = "TokenFile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +30,15 @@ public class LoginActivity extends AppCompatActivity {
 
         editUsername = (EditText) findViewById(R.id.editUsername);
         editPassword = (EditText) findViewById(R.id.editPassword);
+
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        String token = prefs.getString("token", null);
+
+        CurrentSession cs = CurrentSession.getInstance();
+        cs.setToken(token);
+        if (cs.getToken() != null) {
+            changeToMainActivity();
+        }
     }
 
     public void loginButton(View v) {
@@ -58,6 +71,13 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void saveToken() {
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("token", CurrentSession.getInstance().getToken());
+        editor.commit();
+    }
+
     private class login extends AsyncTask<String,String,String> {
 
         String token = null;
@@ -71,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
 
             if(token != null && !token.equals("")){
                 cs.setToken(token);
+                saveToken();
                 u = gc.getCurrentUser();
             }
             return null;
