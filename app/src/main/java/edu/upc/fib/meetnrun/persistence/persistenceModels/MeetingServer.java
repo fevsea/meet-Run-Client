@@ -1,24 +1,43 @@
-package edu.upc.fib.meetnrun.models;
+package edu.upc.fib.meetnrun.persistence.persistenceModels;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-public class Meeting {
+import edu.upc.fib.meetnrun.models.Meeting;
+
+public class MeetingServer {
+
+    @SerializedName("id")
+    @Expose
     private Integer id;
+    @SerializedName("title")
+    @Expose
     private String title;
+    @SerializedName("description")
+    @Expose
     private String description;
+    @SerializedName("public")
+    @Expose
     private Boolean _public;
+    @SerializedName("level")
+    @Expose
     private Integer level;
+    @SerializedName("date")
+    @Expose
     private String date;
+    @SerializedName("latitude")
+    @Expose
     private String latitude;
+    @SerializedName("longitude")
+    @Expose
     private String longitude;
 
     /**
      * No args constructor for use in serialization
      *
      */
-    public Meeting() {
+    public MeetingServer() {
     }
 
     /**
@@ -32,7 +51,7 @@ public class Meeting {
      * @param latitude
      * @param date
      */
-    public Meeting(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) {
+    public MeetingServer(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) {
         super();
         this.id = id;
         this.title = title;
@@ -42,6 +61,22 @@ public class Meeting {
         this.date = date;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public MeetingServer(Meeting m){
+        super();
+        this.id = m.getId();
+        this.title = m.getTitle();
+        this.description = m.getDescription();
+        this._public = m.getPublic();
+        this.level = m.getLevel();
+        this.date = m.getDate();
+        this.latitude = m.getLatitude();
+        this.longitude = m.getLongitude();
+    }
+
+    public Meeting toGenericModel(){
+        return new Meeting(id, title, description, _public, level, date, latitude, longitude);
     }
 
     public Integer getId() {

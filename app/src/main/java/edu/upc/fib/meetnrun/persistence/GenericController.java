@@ -1,17 +1,16 @@
 package edu.upc.fib.meetnrun.persistence;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.persistence.persistenceModels.MeetingServer;
+import edu.upc.fib.meetnrun.persistence.persistenceModels.UserServer;
 import edu.upc.fib.meetnrun.persistence.persistenceModels.Forms;
 import edu.upc.fib.meetnrun.remote.ApiUtils;
 import edu.upc.fib.meetnrun.remote.SOServices;
@@ -40,33 +39,35 @@ public class GenericController implements IGenericController {
 
     @Override
     public User getUser(int id) throws NotFoundException {
-        User u = null;
+        UserServer us = null;
         try {
-            Response<User> ret = mServices.getUser(id).execute();
-            u = ret.body();
+            Response<UserServer> ret = mServices.getUser(id).execute();
+            us = ret.body();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return u;
+        return us.toGenericModel();
     }
 
     @Override
     public Meeting getMeeting(int id) throws NotFoundException {
-        Meeting m = null;
+        MeetingServer m = null;
         try {
-            Response<Meeting> ret = mServices.getMeeting(id).execute();
+            Response<MeetingServer> ret = mServices.getMeeting(id).execute();
+
             m = ret.body();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return m;
+        return m.toGenericModel();
     }
 
     @Override
     public boolean updateUser(User obj) throws ParamsException, NotFoundException {
         boolean ok = false;
+        UserServer us = new UserServer(obj);
         try {
-            Response<Void> res = mServices.updateUser(obj.getId(),obj).execute();
+            Response<Void> res = mServices.updateUser(obj.getId(),us).execute();
             if (res.isSuccessful()) ok = true;
             //TODO check not foud exception
         } catch (IOException e) {
@@ -78,8 +79,9 @@ public class GenericController implements IGenericController {
     @Override
     public boolean updateMeeting(Meeting obj) throws ParamsException, NotFoundException {
         boolean ok = false;
+        MeetingServer ms = new MeetingServer(obj);
         try {
-            Response<Void> res = mServices.updateMeeting(obj.getId(),obj).execute();
+            Response<Void> res = mServices.updateMeeting(obj.getId(),ms).execute();
             if (res.isSuccessful()) ok = true;
             //TODO check not foud exception
         } catch (IOException e) {
@@ -118,8 +120,11 @@ public class GenericController implements IGenericController {
     public List<Meeting> getAllMeetings() {
         List<Meeting> l = new ArrayList<>();
         try {
-            Response<Meeting[]> res = mServices.getMeetings().execute();
-            l.addAll(Arrays.asList(res.body()));
+            Response<MeetingServer[]> res = mServices.getMeetings().execute();
+            MeetingServer[] array = res.body();
+            for (int i = 0; i < array.length; i++) {
+                l.add(array[i].toGenericModel());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -130,8 +135,11 @@ public class GenericController implements IGenericController {
     public List<User> getAllUsers() {
         List<User> l = new ArrayList<>();
         try {
-            Response<User[]> res = mServices.getUsers().execute();
-            l.addAll(Arrays.asList(res.body()));
+            Response<UserServer[]> res = mServices.getUsers().execute();
+            UserServer[] array = res.body();
+            for (int i = 0; i < array.length; i++) {
+                l.add(array[i].toGenericModel());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -140,27 +148,27 @@ public class GenericController implements IGenericController {
 
     @Override
     public Meeting createMeetingPublic(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException {
-        Meeting m = new Meeting(0, title, description, _public, level, date, latitude, longitude);
+        MeetingServer m = new MeetingServer(0, title, description, _public, level, date, latitude, longitude);
         try {
-            Response<Meeting> ret = mServices.createMeeting(m).execute();
+            Response<MeetingServer> ret = mServices.createMeeting(m).execute();
             m = ret.body();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return m;
+        return m.toGenericModel();
     }
 
     @Override
     public User registerUser(String userName, String firstName, String lastName, String postCode, String password, String question, String answer) throws ParamsException {
         Forms.UserRegistration ur = new Forms.UserRegistration(0,userName,firstName,lastName,postCode,question,answer,password);
-        User u = null;
+        UserServer u = null;
         try {
-            Response<User> ret = mServices.registerUser(ur).execute();
+            Response<UserServer> ret = mServices.registerUser(ur).execute();
             u = ret.body();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return u;
+        return u.toGenericModel();
 
     }
 
@@ -179,14 +187,14 @@ public class GenericController implements IGenericController {
 
     @Override
     public User getCurrentUser() {
-        User u = null;
+        UserServer u = null;
         try {
-            Response<User> ret = mServices.getCurrentUser().execute();
+            Response<UserServer> ret = mServices.getCurrentUser().execute();
             u = ret.body();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return u;
+        return u.toGenericModel();
     }
 
     @Override
