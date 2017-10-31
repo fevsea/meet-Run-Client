@@ -147,7 +147,7 @@ public class GenericController implements IGenericController {
     }
 
     @Override
-    public Meeting createMeetingPublic(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException {
+    public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException {
         MeetingServer m = new MeetingServer(0, title, description, _public, level, date, latitude, longitude);
         try {
             Response<MeetingServer> ret = mServices.createMeeting(m).execute();

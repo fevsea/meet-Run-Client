@@ -14,7 +14,7 @@ import edu.upc.fib.meetnrun.persistence.persistenceModels.UserServer;
 
 public interface IGenericController {
     public List<Meeting> getAllMeetings();
-    public Meeting createMeetingPublic(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException;
+    public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException;
     public Meeting getMeeting(int id) throws NotFoundException;
     public boolean updateMeeting(Meeting obj) throws ParamsException, NotFoundException;
     public boolean deleteMeetingByID(int id) throws NotFoundException;

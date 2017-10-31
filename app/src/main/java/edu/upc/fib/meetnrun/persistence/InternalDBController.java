@@ -20,16 +20,10 @@ import edu.upc.fib.meetnrun.persistence.persistenceModels.UserServer;
 
 public class InternalDBController implements IGenericController {
     private AppDatabase adb;
-
-    private static InternalDBController instance = null;
-
     public InternalDBController(Context context) {
-        /*if(instance == null) {
-            instance = new InternalDBController();
-        }*/
         adb = AppDatabase.getAppDatabase(context);
-
     }
+    private UserDB currentUser;
 
     @Override
     public List<Meeting> getAllMeetings() {
@@ -42,7 +36,7 @@ public class InternalDBController implements IGenericController {
     }
 
     @Override
-    public Meeting createMeetingPublic(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException {
+    public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException {
         MeetingDB m = new MeetingDB(title,description,_public,level,date,latitude,longitude);
         long insertedId = adb.meetingDao().insert(m);
         int id = (int) insertedId;
@@ -64,7 +58,14 @@ public class InternalDBController implements IGenericController {
 
     @Override
     public boolean deleteMeetingByID(int id) throws NotFoundException {
-        return false;
+        MeetingDB m = adb.meetingDao().findByID(id);
+        boolean b = false;
+        if(m != null){
+            adb.meetingDao().deleteByID(id);
+            m = adb.meetingDao().findByID(id);
+            b = m == null;
+        }
+        return b;
     }
 
     @Override
@@ -75,7 +76,6 @@ public class InternalDBController implements IGenericController {
             ul.add(mdb.get(i).toGenericModel());
         }
         return ul;
-
     }
 
     @Override
@@ -101,21 +101,30 @@ public class InternalDBController implements IGenericController {
 
     @Override
     public boolean deleteUserByID(int id) throws NotFoundException {
-        return false;
+        UserDB m = adb.userDao().findByID(id);
+        boolean b = false;
+        if(m != null){
+            adb.userDao().deleteByID(id);
+            m = adb.userDao().findByID(id);
+            b = m == null;
+        }
+        return b;
     }
 
     @Override
     public String login(String username, String password) {
-        return null;
+        currentUser = adb.userDao().login(username,password);
+        return "";
     }
 
     @Override
     public User getCurrentUser() {
-        return null;
+        return currentUser.toGenericModel();
     }
 
     @Override
     public boolean logout() {
-        return false;
+        currentUser = null;
+        return true;
     }
 }

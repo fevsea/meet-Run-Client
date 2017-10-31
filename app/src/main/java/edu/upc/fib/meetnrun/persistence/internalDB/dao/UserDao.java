@@ -27,10 +27,13 @@ public interface UserDao {
     @Query("DELETE FROM "+UserDB.TABLE_NAME+" where "+ UserDB.COLUMN_ID + " = :id")
     public int deleteByID(int id);
 
+    @Query("SELECT * FROM "+UserDB.TABLE_NAME+" where username = :username and password = :password")
+    public UserDB login(String username,String password);
+
     @Insert(onConflict = OnConflictStrategy.FAIL)
     public long[] insertAll(UserDB... users);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.FAIL)
     public long insert(UserDB user);
 
     @Update(onConflict = OnConflictStrategy.FAIL)

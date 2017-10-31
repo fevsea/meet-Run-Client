@@ -194,7 +194,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         @Override
         protected String doInBackground(String... strings){
             try {
-                m= GenericController.getInstance().createMeetingPublic(Name,Description,Public,Level,Date,Latitude,Longitude);
+                m= GenericController.getInstance().createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
             } catch (ParamsException e) {
                 e.printStackTrace();
             }
