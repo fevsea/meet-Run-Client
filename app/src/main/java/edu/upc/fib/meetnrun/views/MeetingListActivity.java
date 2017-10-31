@@ -15,16 +15,12 @@ public class MeetingListActivity extends BaseDrawerActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new MeetingListFragment();
+        return MeetingListFragment.newMeetingListInstance();
     }
 
     @Override
     protected boolean finishOnChangeView() {
-        String type = getIntent().getStringExtra("type");
-        if (type.equals("MyMeetings"))
-            return true;
-        else if (type.equals("MeetingList")) return false;
-        else throw new ActivityNotFoundException("LIST TYPE PARAMETER NEEDED");
+        return false;
     }
 
     @Override

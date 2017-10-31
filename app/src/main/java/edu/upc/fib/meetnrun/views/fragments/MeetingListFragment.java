@@ -34,20 +34,31 @@ public class MeetingListFragment extends Fragment {
     private View view;
     private String listType;
 
-    private static final String
-
     public MeetingListFragment() {
 
     }
 
+    public static MeetingListFragment newMeetingListInstance() {
+        MeetingListFragment meetingListFragment = new MeetingListFragment();
+        meetingListFragment.setType("MeetingList");
+        return meetingListFragment;
+    }
+
+    public static MeetingListFragment newMyMeetingsInstance() {
+        MeetingListFragment meetingListFragment = new MeetingListFragment();
+        meetingListFragment.setType("MyMeetings");
+        return meetingListFragment;
+    }
+
+    public void setType(String type) {
+        listType = type;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
-
-        listType = getActivity().getIntent().getStringExtra("type");
 
         setupRecyclerView();
 
@@ -81,7 +92,13 @@ public class MeetingListFragment extends Fragment {
         meetingsAdapter = new MeetingsAdapter(meetings, listType, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {
-                Toast.makeText(getContext(), getResources().getString(R.string.user_added_to_meeting), Toast.LENGTH_SHORT).show();
+                Meeting selectedMeeting = meetingsAdapter.getMeetingAtPosition(position);
+                if (listType.equals("MyMeetings")) {
+                    startMeeting(selectedMeeting);
+                }
+                else { //MeetingList
+                    joinMeeting(selectedMeeting);
+                }
             }
 
             @Override
@@ -106,12 +123,25 @@ public class MeetingListFragment extends Fragment {
     }
 
     private void updateMeetingList() {
-        new GetMeetings().execute();
+        if (listType.equals("MyMeetings")) {
+            new GetMyMeetings().execute();
+        }
+        else { //MeetingList
+            new GetMeetings().execute();
+        }
     }
 
     private void createNewMeeting() {
         Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
         startActivity(intent);
+    }
+
+    private void startMeeting(Meeting meeting) {
+        //TODO Start tracking
+    }
+
+    private void joinMeeting(Meeting meeting) {
+        //TODO Join meeting
     }
 
     private class GetMeetings extends AsyncTask<String,String,String> {
@@ -121,6 +151,23 @@ public class MeetingListFragment extends Fragment {
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
             l = GenericController.getInstance().getAllMeetings();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            System.err.println("FINISHED");
+            meetingsAdapter.updateMeetingsList(l);
+            super.onPostExecute(s);
+        }
+    }
+
+    private class GetMyMeetings extends AsyncTask<String,String,String> {
+        List<Meeting> l = new ArrayList<>();
+
+        @Override
+        protected String doInBackground(String... strings) {
+           //TODO  l = GenericController.getInstance().getMyMeetings();
             return null;
         }
 
