@@ -28,8 +28,7 @@
             android:layout_centerHorizontal="true"
             android:inputType="text"
             android:layout_marginTop="5dp"
-            android:layout_below="@+id/userName_label"
-            android:text="User Name" />
+            android:layout_below="@+id/userName_label"/>
 
         <TextView
             android:id="@+id/firstName_label"
@@ -48,8 +47,7 @@
             android:layout_centerHorizontal="true"
             android:inputType="text"
             android:layout_marginTop="5dp"
-            android:layout_below="@+id/firstName_label"
-            android:text="First Name" />
+            android:layout_below="@+id/firstName_label"/>
 
         <TextView
             android:id="@+id/lastName_label"
@@ -68,8 +66,7 @@
             android:layout_centerHorizontal="true"
             android:inputType="text"
             android:layout_marginTop="5dp"
-            android:layout_below="@+id/lastName_label"
-            android:text="Last Name" />
+            android:layout_below="@+id/lastName_label"/>
 
         <TextView
             android:id="@+id/postCode_label"
@@ -79,7 +76,7 @@
             android:layout_below="@+id/lastName_edit"
             android:labelFor="@+id/postCode"
             android:layout_marginTop="10dp"
-            android:text="@string/last_name" />
+            android:text="@string/post_code" />
 
         <EditText
             android:id="@+id/postCode_edit"
@@ -88,8 +85,7 @@
             android:layout_centerHorizontal="true"
             android:inputType="number"
             android:layout_marginTop="5dp"
-            android:layout_below="@+id/postCode_label"
-            android:text="Postal Code" />
+            android:layout_below="@+id/postCode_label" />
 
         <Button
             android:id="@+id/save_button"

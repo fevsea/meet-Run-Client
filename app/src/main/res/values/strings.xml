@@ -50,10 +50,9 @@
     <string name="user_name">User Name</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
+    <string name="post_code">Postal Code</string>
     <string name="save_changes">Save</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="hello_round">Hello Round World!</string>
-    <string name="hello_square">Hello Square World!</string>
+
 
 
 </resources>

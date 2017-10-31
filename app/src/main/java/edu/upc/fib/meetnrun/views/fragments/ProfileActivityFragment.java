@@ -1,6 +1,8 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.app.ActionBar;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,8 +29,6 @@ public class ProfileActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        Log.e("PROFILE","ENTRO AL PROFILE");
-
         u = CurrentSession.getInstance().getCurrentUser();
 
 
@@ -49,7 +49,6 @@ public class ProfileActivityFragment extends Fragment {
         final Button button = view.findViewById(R.id.editProfile_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.e("BUTTON","MEN VAIG A LA VIEW");
                 Intent intent;
                 intent = new Intent(getActivity(), EditProfileActivity.class);
                 startActivity(intent);
