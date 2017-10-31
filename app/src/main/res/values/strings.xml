@@ -38,6 +38,7 @@
     <string name="change_time">Change time</string>
     <string name="edit_meeting">Edit meeting</string>
     <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_edit_profile">Edit Profile</string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
@@ -45,5 +46,14 @@
     <string name="saving">Saving</string>
     <string name="saving_meeting">Saving Meeting</string>
     <string name="error_loading_meeting">Sorry, there was an error while loading this meeting</string>
+
+    <string name="user_name">User Name</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="save_changes">Save</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="hello_round">Hello Round World!</string>
+    <string name="hello_square">Hello Square World!</string>
+
 
 </resources>

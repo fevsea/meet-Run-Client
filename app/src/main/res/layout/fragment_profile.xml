@@ -78,6 +78,15 @@
 
             </RelativeLayout>
 
+        <Button
+            android:id="@+id/editProfile_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:layout_below="@+id/profile_layout"
+            android:text="Edit Profile" />
+
     </RelativeLayout>
 
 </ScrollView>

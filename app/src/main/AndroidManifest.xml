@@ -44,22 +44,26 @@
         <activity
             android:name=".views.EditMeetingActivity"
             android:label="@string/edit_meeting_label"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".views.RegisterActivity"
             android:label="@string/register_label"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".views.ProfileActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_profile" />
+            android:label="@string/title_activity_profile"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".views.MeetingListActivity"
-            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:label="@string/meeting_list_label"
-            android:hardwareAccelerated="true">
+            android:screenOrientation="portrait">
         </activity>
-
+        <activity
+            android:name=".views.EditProfileActivity"
+            android:label="@string/title_edit_profile"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>

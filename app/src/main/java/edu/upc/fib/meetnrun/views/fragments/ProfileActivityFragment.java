@@ -1,24 +1,22 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
-import android.support.design.widget.FloatingActionButton;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.EditProfileActivity;
 
 
 public class ProfileActivityFragment extends Fragment {
-
-    /*public ProfileActivityFragment() {
-    }*/
 
     User u;
     private View view;
@@ -27,13 +25,11 @@ public class ProfileActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        //updateUser();
+        Log.e("PROFILE","ENTRO AL PROFILE");
 
         u = CurrentSession.getInstance().getCurrentUser();
-
-        Log.e("USER","AGAFO USER" + " " + u);
 
 
         String userName = u.getUsername();
@@ -44,68 +40,24 @@ public class ProfileActivityFragment extends Fragment {
         TextView userNameTextView = (TextView) view.findViewById(R.id.userName);
         TextView nameTextView = (TextView) view.findViewById(R.id.completeName);
         TextView userPostCodeTextView = (TextView) view.findViewById(R.id.userPostCode);
-        Log.e("view","agafo view postcode");
 
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
-        fab.setImageResource(android.R.drawable.ic_menu_edit);
-
-        /*
-        fab.setBackgroundColor(0);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         userNameTextView.setText(userName);
         nameTextView.setText(name);
         userPostCodeTextView.setText(postCode);
+
+        final Button button = view.findViewById(R.id.editProfile_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Log.e("BUTTON","MEN VAIG A LA VIEW");
+                Intent intent;
+                intent = new Intent(getActivity(), EditProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         return view;
     }
 
-    /*private void updateUserView(User u) {
-
-        TextView userNameTextView = view.findViewById(R.id.userName);
-        TextView nameTextView = view.findViewById(R.id.name);
-        TextView userPostCodeTextView = view.findViewById(R.id.userPostCode);
-
-
-        String userName = u.getUsername();
-        String name = u.getFirstName() + ' ' + u.getLastName();
-        String postCode = u.getPostalCode();
-
-
-        userNameTextView.setText(userName);
-        nameTextView.setText(name);
-        userPostCodeTextView.setText(postCode);
-
-    }
-
-    private void updateUser() {
-        new GetUser().execute();
-    }
-
-    private class GetUser extends AsyncTask<String,String,String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            Log.e("MAIN","DOINGGGG");
-            u = GenericController.getInstance().getCurrentUser();
-            Log.e("MAIN","HE AGAFAT EL USER");
-            Log.e("MAIN","AMB NOM USER" + u.getUsername());
-            Log.e("MAIN","AMB NOM" + u.getFirstName());
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            Log.e("MAIN","FINISHED");
-            //updateUserView(u);
-            super.onPostExecute(s);
-        }
-    }*/
 }
