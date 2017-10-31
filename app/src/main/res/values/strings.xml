@@ -1,6 +1,11 @@
 <resources>
-    <string name="app_name">MeetNRun</string>
+    <string name="app_name">Meet&amp;Run</string>
 
+    <string name="meeting_list_label">Meeting List</string>
+    <string name="register_label">Register</string>
+    <string name="edit_meeting_label">Edit Meeting</string>
+    <string name="create_meeting_label">Create Meeting</string>
+    <string name="meeting_info_label">Meeting Information</string>
     <string name="home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
