@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views;
 
+import android.content.ActivityNotFoundException;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.view.Menu;
@@ -19,7 +20,11 @@ public class MeetingListActivity extends BaseDrawerActivity {
 
     @Override
     protected boolean finishOnChangeView() {
-        return false;
+        String type = getIntent().getStringExtra("type");
+        if (type.equals("MyMeetings"))
+            return true;
+        else if (type.equals("MeetingList")) return false;
+        else throw new ActivityNotFoundException("LIST TYPE PARAMETER NEEDED");
     }
 
     @Override

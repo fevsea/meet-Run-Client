@@ -20,7 +20,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
     private List<Meeting> meetings;
     private RecyclerViewOnClickListener listener;
 
-    public MeetingsAdapter(List<Meeting> meetings, RecyclerViewOnClickListener listener) {
+    public MeetingsAdapter(List<Meeting> meetings, String type, RecyclerViewOnClickListener listener) {
         this.meetings = meetings;
         this.listener = listener;
         notifyDataSetChanged();

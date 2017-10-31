@@ -2,6 +2,7 @@
     <string name="app_name">Meet&amp;Run</string>
 
     <string name="meeting_list_label">Meeting List</string>
+    <string name="mymeetings_label">My Meetings</string>
     <string name="register_label">Register</string>
     <string name="edit_meeting_label">Edit Meeting</string>
     <string name="create_meeting_label">Create Meeting</string>
@@ -38,7 +39,7 @@
     <string name="change_time">Change time</string>
     <string name="edit_meeting">Edit meeting</string>
     <string name="title_activity_profile">ProfileActivity</string>
-
+    <string name="user_added_to_meeting">User added to meeting</string>
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>

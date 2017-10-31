@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsViewHolder;
 
 public abstract class BaseDrawerActivity extends AppCompatActivity{
 
@@ -51,8 +52,8 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                     i = new Intent(getApplicationContext(),EditMeetingActivity.class);
                                     i.putExtra("id",3);
                                     break;
-                                case R.id.user_profile:
-                                    i = new Intent(getApplicationContext(),ProfileActivity.class);
+                                case R.id.mymeetings:
+                                    i = new Intent(getApplicationContext(),MyMeetingsActivity.class);
                                     break;
                                 case R.id.logout:
                                     CurrentSession cs = CurrentSession.getInstance();

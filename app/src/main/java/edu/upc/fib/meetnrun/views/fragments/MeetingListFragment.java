@@ -32,6 +32,9 @@ public class MeetingListFragment extends Fragment {
 
     private MeetingsAdapter meetingsAdapter;
     private View view;
+    private String listType;
+
+    private static final String
 
     public MeetingListFragment() {
 
@@ -43,6 +46,9 @@ public class MeetingListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
+
+        listType = getActivity().getIntent().getStringExtra("type");
+
         setupRecyclerView();
 
         FloatingActionButton fab =
@@ -72,10 +78,10 @@ public class MeetingListFragment extends Fragment {
 
         List<Meeting> meetings = new ArrayList<>();
         updateMeetingList();
-        meetingsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
+        meetingsAdapter = new MeetingsAdapter(meetings, listType, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {
-                Toast.makeText(view.getContext(), "Added user to meeting!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getResources().getString(R.string.user_added_to_meeting), Toast.LENGTH_SHORT).show();
             }
 
             @Override
