@@ -35,7 +35,7 @@ public class RegisterActivity extends AppCompatActivity{
 
         editName = (EditText) findViewById(R.id.editName);
         editSurname = (EditText) findViewById(R.id.editSurname);
-        editUsername = (EditText) findViewById(R.id.editUsername);
+        editUsername = (EditText) findViewById(R.id.editUsernameR);
         editPc = (EditText) findViewById(R.id.editPostalCode);
         editPassword1 = (EditText) findViewById(R.id.editPassword1);
         editPassword2 = (EditText) findViewById(R.id.editPassword2);
