@@ -52,7 +52,7 @@ public class RegisterTest {
         onView(withId(R.id.editPassword2)).perform(typeText(EXTRA_PASSWORD2));
         onView(withId(R.id.editAnswer)).perform(typeText(EXTRA_ANSWER));
 
-        onView(withId(R.id.register)).perform(scrollTo(),click());
+        
     }
 
 }

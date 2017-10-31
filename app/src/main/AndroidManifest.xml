@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_geo_key" />
@@ -24,42 +24,41 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".views.MainActivity"
-            android:hardwareAccelerated="true"
+            android:name=".views.LoginActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".views.MeetingInfoActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
+            android:label="@string/meeting_info_label"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".views.CreateMeetingActivity"
-            android:label="Create Meeting"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".views.EditMeetingActivity" />
-
+            android:label="@string/create_meeting_label"
+            android:screenOrientation="portrait" />
         <activity
-            android:name=".views.RegisterActivity" />
-
+            android:name=".views.EditMeetingActivity"
+            android:label="@string/edit_meeting_label"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.RegisterActivity"
+            android:label="@string/register_label"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".views.ProfileActivity"
-            android:label="@string/title_activity_profile"
-            android:theme="@style/AppTheme.NoActionBar" />
-
+            android:screenOrientation="portrait"
+            android:label="@string/title_activity_profile" />
         <activity
-            android:name=".views.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:name=".views.MeetingListActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/meeting_list_label"
+            android:hardwareAccelerated="true">
+        </activity>
 
     </application>
 

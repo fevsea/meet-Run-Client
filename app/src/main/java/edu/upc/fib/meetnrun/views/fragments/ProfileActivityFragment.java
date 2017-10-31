@@ -1,6 +1,6 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
-import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,10 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.GenericController;
 
 
 public class ProfileActivityFragment extends Fragment {
@@ -35,9 +33,8 @@ public class ProfileActivityFragment extends Fragment {
 
         u = CurrentSession.getInstance().getCurrentUser();
 
-        /*if(u == null) {
-            Toast.makeText(view.getContext(), "User not found", Toast.LENGTH_SHORT).show();
-        }*/
+        Log.e("USER","AGAFO USER" + " " + u);
+
 
         String userName = u.getUsername();
         String name = u.getFirstName() + ' ' + u.getLastName();
@@ -47,6 +44,21 @@ public class ProfileActivityFragment extends Fragment {
         TextView userNameTextView = (TextView) view.findViewById(R.id.userName);
         TextView nameTextView = (TextView) view.findViewById(R.id.completeName);
         TextView userPostCodeTextView = (TextView) view.findViewById(R.id.userPostCode);
+        Log.e("view","agafo view postcode");
+
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setImageResource(android.R.drawable.ic_menu_edit);
+
+        /*
+        fab.setBackgroundColor(0);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });*/
 
         userNameTextView.setText(userName);
         nameTextView.setText(name);
