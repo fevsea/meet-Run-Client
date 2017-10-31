@@ -93,9 +93,7 @@ public class RegisterActivity extends AppCompatActivity{
     }
 
     private void changeToLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
         finish();
-        startActivity(intent);
     }
 
     private class register extends AsyncTask<String,String,String> {
@@ -117,7 +115,10 @@ public class RegisterActivity extends AppCompatActivity{
             if (user == null) {
                 Toast.makeText(getApplicationContext(), "Register ERROR", Toast.LENGTH_SHORT).show();
             }
-            else changeToLoginActivity();
+            else {
+                Toast.makeText(getApplicationContext(), "Register complete!", Toast.LENGTH_SHORT).show();
+                changeToLoginActivity();
+            }
             super.onPostExecute(s);
         }
 
