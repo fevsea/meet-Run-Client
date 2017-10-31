@@ -1,7 +1,9 @@
 package edu.upc.fib.meetnrun.views;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -19,6 +21,8 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 public abstract class BaseDrawerActivity extends AppCompatActivity{
 
     protected DrawerLayout drawerLayout;
+
+    public static final String MY_PREFS_NAME = "TokenFile";
 
     protected abstract Fragment createFragment();
 
@@ -58,6 +62,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                     CurrentSession cs = CurrentSession.getInstance();
                                     cs.setToken(null);
                                     cs.setCurrentUser(null);
+                                    deleteToken();
                                     i = new Intent(getApplicationContext(),LoginActivity.class);
                                     finish();
                                     break;
@@ -101,6 +106,13 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                     .commit();
         }
 
+    }
+
+    private void deleteToken() {
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("token", CurrentSession.getInstance().getToken());
+        editor.commit();
     }
 
 }

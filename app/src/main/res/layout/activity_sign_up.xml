@@ -58,7 +58,7 @@
                 android:layout_alignStart="@+id/editName" />
 
             <TextView
-                android:id="@+id/username"
+                android:id="@+id/usernameR"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Username:"
@@ -68,7 +68,7 @@
                 android:layout_alignStart="@+id/editSurname" />
 
             <EditText
-                android:id="@+id/editUsername"
+                android:id="@+id/editUsernameR"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
