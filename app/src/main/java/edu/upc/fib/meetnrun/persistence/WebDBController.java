@@ -2,7 +2,6 @@ package edu.upc.fib.meetnrun.persistence;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
@@ -20,17 +19,17 @@ import retrofit2.Response;
  * Created by Awais Iqbal on 25/10/2017.
  */
 
-public class GenericController implements IGenericController {
+public class WebDBController implements IGenericController {
 
-    private static GenericController instance = null;
+    private static WebDBController instance = null;
 
-    private GenericController(){
+    private WebDBController(){
         mServices = ApiUtils.getSOService();
     }
 
-    public static GenericController getInstance() {
+    public static WebDBController getInstance() {
         if(instance == null) {
-            instance = new GenericController();
+            instance = new WebDBController();
         }
         return instance;
     }

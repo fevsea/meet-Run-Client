@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,7 +14,8 @@ import android.widget.Toast;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.IGenericController;
+import edu.upc.fib.meetnrun.persistence.WebDBController;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         CurrentSession cs = CurrentSession.getInstance();
         cs.setToken(token);
         if (cs.getToken() != null) {
-            User user = GenericController.getInstance().getCurrentUser();
+            User user = WebDBController.getInstance().getCurrentUser();
             cs.setCurrentUser(user);
             changeToMainActivity();
         }
@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
     private class login extends AsyncTask<String,String,String> {
 
         String token = null;
-        GenericController gc = GenericController.getInstance();
+        IGenericController gc = WebDBController.getInstance();
         CurrentSession cs = CurrentSession.getInstance();
         User u = null;
 

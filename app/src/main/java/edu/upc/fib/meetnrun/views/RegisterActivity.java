@@ -1,6 +1,5 @@
 package edu.upc.fib.meetnrun.views;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,7 +12,7 @@ import android.widget.Toast;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.WebDBController;
 
 public class RegisterActivity extends AppCompatActivity{
 
@@ -103,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity{
         @Override
         protected String doInBackground(String... registerUser) {
             try {
-                user = GenericController.getInstance().registerUser(username, name, surname, pcInt, password1, quest, answ);
+                user = WebDBController.getInstance().registerUser(username, name, surname, pcInt, password1, quest, answ);
             } catch (ParamsException e) {
                 e.printStackTrace();
             }

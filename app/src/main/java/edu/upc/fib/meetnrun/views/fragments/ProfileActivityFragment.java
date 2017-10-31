@@ -94,7 +94,7 @@ public class ProfileActivityFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            u = GenericController.getInstance().getCurrentUser();
+            u = WebDBController.getInstance().getCurrentUser();
             Log.e("MAIN","HE AGAFAT EL USER");
             Log.e("MAIN","AMB NOM USER" + u.getUsername());
             Log.e("MAIN","AMB NOM" + u.getFirstName());

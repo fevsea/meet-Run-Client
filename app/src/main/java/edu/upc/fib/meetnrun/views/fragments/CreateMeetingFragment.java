@@ -27,7 +27,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.WebDBController;
 
 
 public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback {
@@ -194,7 +194,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         @Override
         protected String doInBackground(String... strings){
             try {
-                m= GenericController.getInstance().createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
+                m= WebDBController.getInstance().createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
             } catch (ParamsException e) {
                 e.printStackTrace();
             }
