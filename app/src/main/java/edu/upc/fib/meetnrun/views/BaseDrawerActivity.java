@@ -54,10 +54,10 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                         public boolean onNavigationItemSelected(MenuItem menuItem) {
                             Intent i = null;
                             switch (menuItem.getItemId()) {
-                                case R.id.edit_meeting:
+                                /*case R.id.edit_meeting:
                                     i = new Intent(getApplicationContext(),EditMeetingActivity.class);
                                     i.putExtra("id",3);
-                                    break;
+                                    break;*/
                                 case R.id.logout:
                                     CurrentSession cs = CurrentSession.getInstance();
                                     cs.setToken(null);
@@ -70,9 +70,9 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                 case R.id.meetings:
                                     i = new Intent(getApplicationContext(),MeetingListActivity.class);
                                     break;
-                                case R.id.friends:
+                                /*case R.id.friends:
                                     i = new Intent(getApplicationContext(),Friends.class);
-                                    break;
+                                    break;*/
                                 default:
                                     break;
                             }
