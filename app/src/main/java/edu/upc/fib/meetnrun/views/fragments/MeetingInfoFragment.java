@@ -47,7 +47,9 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
 
         title.setText(meetingInfo.getString("title"));
         description.setText(meetingInfo.getString("description"));
-        level.setText(meetingInfo.getString("level"));
+        String levelValue = meetingInfo.getString("level");
+        if(levelValue.equals("null")) levelValue = "0";
+        level.setText(levelValue);
         date.setText(meetingInfo.getString("date"));
         time.setText(meetingInfo.getString("time"));
 

@@ -46,5 +46,6 @@
     <string name="saving">Saving</string>
     <string name="saving_meeting">Saving Meeting</string>
     <string name="error_loading_meeting">Sorry, there was an error while loading this meeting</string>
+    <string name="vertical_ellipsis">&#8942;</string>
 
 </resources>

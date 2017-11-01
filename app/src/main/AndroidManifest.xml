@@ -59,7 +59,12 @@
             android:label="@string/meeting_list_label"
             android:hardwareAccelerated="true">
         </activity>
-
+        <activity
+            android:name=".views.MyMeetingsActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/mymeetings_label"
+            android:hardwareAccelerated="true">
+        </activity>
     </application>
 
 </manifest>
