@@ -36,7 +36,13 @@ public class LoginActivity extends AppCompatActivity {
         controller = WebDBController.getInstance();
         cs = CurrentSession.getInstance();
 
-        new session().execute();
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        String token = prefs.getString("token",null);
+
+        cs.setToken(token);
+        if (cs.getToken() != null) {
+            new GetCurrentUser().execute();
+        }
     }
 
     public void loginButton(View v) {
@@ -104,31 +110,24 @@ public class LoginActivity extends AppCompatActivity {
             }
             super.onPostExecute(s);
         }
-
     }
 
-    private class session extends AsyncTask<String,String,String> {
+    private class GetCurrentUser extends AsyncTask<String,String,String> {
 
-        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
-        String token = prefs.getString("token", null);
         User user = null;
 
         @Override
-        protected String doInBackground(String... s) {
-            cs.setToken(token);
-            if(cs.getToken() != null){
-                //user = controller.getCurrentUser();
-            }
+        protected String doInBackground(String... logUser) {
+            user = controller.getCurrentUser();
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            //cs.setCurrentUser(user);
+            cs.setCurrentUser(user);
             changeToMainActivity();
             super.onPostExecute(s);
         }
-
     }
 
 }
