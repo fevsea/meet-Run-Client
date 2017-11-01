@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editUsername, editPassword;
     private String username, password;
     public static final String MY_PREFS_NAME = "TokenFile";
+    private IGenericController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +32,15 @@ public class LoginActivity extends AppCompatActivity {
         editUsername = (EditText) findViewById(R.id.editUsername);
         editPassword = (EditText) findViewById(R.id.editPassword);
 
+        controller = WebDBController.getInstance();
+
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         String token = prefs.getString("token", null);
 
         CurrentSession cs = CurrentSession.getInstance();
         cs.setToken(token);
         if (cs.getToken() != null) {
-            User user = WebDBController.getInstance().getCurrentUser();
+            User user = controller.getCurrentUser();
             cs.setCurrentUser(user);
             changeToMainActivity();
         }
@@ -83,18 +86,17 @@ public class LoginActivity extends AppCompatActivity {
     private class login extends AsyncTask<String,String,String> {
 
         String token = null;
-        IGenericController gc = WebDBController.getInstance();
         CurrentSession cs = CurrentSession.getInstance();
         User u = null;
 
         @Override
         protected String doInBackground(String... logUser) {
-            token = gc.login(username, password);
+            token = controller.login(username, password);
 
             if(token != null && !token.equals("")){
                 cs.setToken(token);
                 saveToken();
-                u = gc.getCurrentUser();
+                u = controller.getCurrentUser();
             }
             return null;
         }

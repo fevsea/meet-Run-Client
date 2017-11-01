@@ -70,9 +70,9 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                 case R.id.meetings:
                                     i = new Intent(getApplicationContext(),MeetingListActivity.class);
                                     break;
-                                case R.id.friends:
+                                /*case R.id.friends:
                                     i = new Intent(getApplicationContext(),Friends.class);
-                                    break;
+                                    break;*/
                                 default:
                                     break;
                             }
