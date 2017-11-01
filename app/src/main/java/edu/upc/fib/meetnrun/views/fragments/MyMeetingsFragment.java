@@ -23,17 +23,18 @@ import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
 
 
-public class MeetingListFragment extends Fragment {
+public class MyMeetingsFragment extends Fragment {
 
-    private MeetingsAdapter meetingsAdapter;
+    private MyMeetingsAdapter meetingsAdapter;
     private View view;
 
-    public MeetingListFragment() {
+    public MyMeetingsFragment() {
 
     }
 
@@ -51,7 +52,8 @@ public class MeetingListFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createNewMeeting();
+                meetingsAdapter.addItem(getContext());
+                //TODO createNewMeeting();
             }
         });
         final SwipeRefreshLayout swipeRefreshLayout =
@@ -72,11 +74,11 @@ public class MeetingListFragment extends Fragment {
 
         List<Meeting> meetings = new ArrayList<>();
         updateMeetingList();
-        meetingsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
+        meetingsAdapter = new MyMeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {
                 Meeting selectedMeeting = meetingsAdapter.getMeetingAtPosition(position);
-                    joinMeeting(selectedMeeting);
+                    startMeeting(selectedMeeting);
             }
 
             @Override
@@ -101,7 +103,7 @@ public class MeetingListFragment extends Fragment {
     }
 
     private void updateMeetingList() {
-            new GetMeetings().execute();
+            new GetMyMeetings().execute();
     }
 
     private void createNewMeeting() {
@@ -109,17 +111,16 @@ public class MeetingListFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void joinMeeting(Meeting meeting) {
-        //TODO Join meeting
+    private void startMeeting(Meeting meeting) {
+        //TODO Start tracking
     }
 
-    private class GetMeetings extends AsyncTask<String,String,String> {
+    private class GetMyMeetings extends AsyncTask<String,String,String> {
         List<Meeting> l = new ArrayList<>();
 
         @Override
         protected String doInBackground(String... strings) {
-            Log.e("MAIN","DOINGGGG");
-            l = GenericController.getInstance().getAllMeetings();
+            //TODO  l = GenericController.getInstance().getMyMeetings();
             return null;
         }
 
@@ -130,5 +131,4 @@ public class MeetingListFragment extends Fragment {
             super.onPostExecute(s);
         }
     }
-
 }

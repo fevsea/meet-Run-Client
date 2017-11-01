@@ -12,7 +12,7 @@
         android:id="@+id/mymeeting_item_cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/card_depth"
+        android:layout_margin="@dimen/cardview_margin"
         card_view:cardCornerRadius="@dimen/card_radius"
         card_view:cardElevation="@dimen/card_depth">
         <RelativeLayout
@@ -135,14 +135,15 @@
 
             </RelativeLayout>
 
-            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
+            <com.google.android.gms.maps.MapView
                 android:id="@+id/mymeeting_info_map"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/map_size"
                 android:layout_below="@+id/mymeeting_info"
-                android:layout_marginTop="20dp" >
-            </fragment>
+                android:layout_marginTop="@dimen/map_margin"
+                android:layout_marginEnd="@dimen/map_margin"
+                android:layout_marginStart="@dimen/map_margin">
+            </com.google.android.gms.maps.MapView>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -152,6 +153,7 @@
                 android:layout_alignParentEnd="true">
 
                 <TextView
+                    android:id="@+id/mymeeting_start_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -163,6 +165,7 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginTop="@dimen/meeting_item_margin"
+                    android:layout_marginEnd="@dimen/map_margin"
                     android:src="@drawable/ic_play_arrow_black_24dp"
                     android:background="@color/green"
                     android:scaleType="fitCenter"

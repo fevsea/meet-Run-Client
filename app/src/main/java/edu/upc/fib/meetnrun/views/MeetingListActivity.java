@@ -15,7 +15,7 @@ public class MeetingListActivity extends BaseDrawerActivity {
 
     @Override
     protected Fragment createFragment() {
-        return MeetingListFragment.newMeetingListInstance();
+        return new MeetingListFragment();
     }
 
     @Override

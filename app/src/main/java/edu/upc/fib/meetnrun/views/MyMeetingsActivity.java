@@ -8,11 +8,12 @@ import android.view.MenuItem;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
+import edu.upc.fib.meetnrun.views.fragments.MyMeetingsFragment;
 
 public class MyMeetingsActivity extends BaseDrawerActivity {
     @Override
     protected Fragment createFragment() {
-        return MeetingListFragment.newMyMeetingsInstance();
+        return new MyMeetingsFragment();
     }
 
     @Override
