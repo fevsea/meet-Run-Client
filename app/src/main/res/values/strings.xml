@@ -52,6 +52,8 @@
     <string name="last_name">Last Name</string>
     <string name="post_code">Postal Code</string>
     <string name="save_changes">Save</string>
+    <string name="error_edit_profile">Sorry, there was an error while updating your profile</string>
+
 
 
 
