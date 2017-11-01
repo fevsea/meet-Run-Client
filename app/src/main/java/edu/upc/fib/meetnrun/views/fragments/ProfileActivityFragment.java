@@ -55,6 +55,10 @@ public class ProfileActivityFragment extends Fragment {
             }
         });
 
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setImageResource(android.R.drawable.ic_menu_edit); fab.setVisibility(View.GONE);
+
 
         return view;
     }
