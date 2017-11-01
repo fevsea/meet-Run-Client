@@ -60,6 +60,11 @@
             android:label="@string/meeting_list_label"
             android:hardwareAccelerated="true">
         </activity>
+        <activity
+            android:name=".views.FriendsActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/friends_label">
+        </activity>
 
     </application>
 
