@@ -88,8 +88,8 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
 
             TextView nav_user = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nameProfile);
             User user = CurrentSession.getInstance().getCurrentUser();
-            String name = user.getFirstName()+" "+user.getLastName();
-            nav_user.setText(name);
+            //String name = user.getFirstName()+" "+user.getLastName();
+            //nav_user.setText(name);
 
             ImageButton profileButton = navigationView.getHeaderView(0).findViewById(R.id.imageView);
             profileButton.setOnClickListener(new View.OnClickListener() {

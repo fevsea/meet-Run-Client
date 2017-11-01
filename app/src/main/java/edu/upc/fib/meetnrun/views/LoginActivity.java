@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private String username, password;
     public static final String MY_PREFS_NAME = "TokenFile";
     private IGenericController controller;
-
+    private CurrentSession cs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,17 +34,9 @@ public class LoginActivity extends AppCompatActivity {
         editPassword = (EditText) findViewById(R.id.editPassword);
 
         controller = WebDBController.getInstance();
+        cs = CurrentSession.getInstance();
 
-        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
-        String token = prefs.getString("token", null);
-
-        CurrentSession cs = CurrentSession.getInstance();
-        cs.setToken(token);
-        if (cs.getToken() != null) {
-            User user = controller.getCurrentUser();
-            cs.setCurrentUser(user);
-            changeToMainActivity();
-        }
+        new session().execute();
     }
 
     public void loginButton(View v) {
@@ -86,7 +79,6 @@ public class LoginActivity extends AppCompatActivity {
     private class login extends AsyncTask<String,String,String> {
 
         String token = null;
-        CurrentSession cs = CurrentSession.getInstance();
         User u = null;
 
         @Override
@@ -110,6 +102,30 @@ public class LoginActivity extends AppCompatActivity {
                 cs.setCurrentUser(u);
                 changeToMainActivity();
             }
+            super.onPostExecute(s);
+        }
+
+    }
+
+    private class session extends AsyncTask<String,String,String> {
+
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        String token = prefs.getString("token", null);
+        User user = null;
+
+        @Override
+        protected String doInBackground(String... s) {
+            cs.setToken(token);
+            if(cs.getToken() != null){
+                //user = controller.getCurrentUser();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            //cs.setCurrentUser(user);
+            changeToMainActivity();
             super.onPostExecute(s);
         }
 
