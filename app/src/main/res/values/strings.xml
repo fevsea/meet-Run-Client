@@ -7,6 +7,7 @@
     <string name="create_meeting_label">Create Meeting</string>
     <string name="meeting_info_label">Meeting Information</string>
     <string name="friends_label">Friends</string>
+    <string name="users_label">Users</string>
     <string name="home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -39,6 +40,8 @@
     <string name="change_time">Change time</string>
     <string name="edit_meeting">Edit meeting</string>
     <string name="title_activity_profile">ProfileActivity</string>
+    <string name="friend_profile_label">Friend profile</string>
+    <string name="user_profile_label">User profile</string>
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>

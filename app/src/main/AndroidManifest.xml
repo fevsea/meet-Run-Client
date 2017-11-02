@@ -65,7 +65,15 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".views.FriendProfileActivity"
-            android:label="@string/title_activity_profile"
+            android:label="@string/friend_profile_label"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.UserProfileActivity"
+            android:label="@string/user_profile_label"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.UsersListActivity"
+            android:label="@string/users_label"
             android:screenOrientation="portrait"/>
 
     </application>
