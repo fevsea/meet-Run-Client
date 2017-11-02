@@ -4,7 +4,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -14,12 +13,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-
-import org.w3c.dom.Text;
 
 import java.lang.ref.WeakReference;
 import java.text.DateFormat;
@@ -37,6 +33,7 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
     private View view;
     private WeakReference<RecyclerViewOnClickListener> listener;
     private ImageButton startMeetingButton;
+    private ImageButton leaveMeetingButton
     private LatLng location;
     private GoogleMap map;
     private Marker marker;
@@ -55,10 +52,13 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
         TextView userIcon2 = view.findViewById(R.id.mymeeting_item_user_icon2);
         TextView userIcon3 = view.findViewById(R.id.mymeeting_item_user_icon3);
         TextView moreUsers = view.findViewById(R.id.mymeeting_item_more_users);
-        char letter = meeting.getTitle().charAt(0);
+        String title = meeting.getTitle();
+        if (title.equals("null")) title = "";
+        char letter = title.charAt(0);
         String firstLetter = String.valueOf(letter);
         userIcon.setBackground(getColoredCircularShape((letter)));
         userIcon.setText(firstLetter);
+        //TODO if there are more users in the meeting, set the background, else hide this icons
         userIcon1.setBackground(getColoredSmallCircularShape((letter)));
         userIcon1.setText(firstLetter);
         userIcon2.setBackground(getColoredSmallCircularShape((letter)));
@@ -67,13 +67,14 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
         userIcon3.setText(firstLetter);
 
         //TODO if there are more than 4 users in the meeting, add smth like +3,+10... in the moreUsers TextView
+        moreUsers.setText(view.getResources().getString(R.string.vertical_ellipsis));
 
         TextView userName = view.findViewById(R.id.mymeeting_item_title);
         userName.setText(meeting.getTitle());
 
         TextView meetingLevel = view.findViewById(R.id.mymeeting_item_level);
         String level = String.valueOf(meeting.getLevel());
-        if (level.equals("null")) level = "0";
+        if (level.equals("null") || level.isEmpty()) level = "0";
         meetingLevel.setText(String.valueOf(level));
 
         TextView meetingDate = view.findViewById(R.id.mymeeting_item_date);
@@ -84,14 +85,14 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
 
         location = new LatLng(Double.parseDouble(meeting.getLatitude()),Double.parseDouble(meeting.getLongitude()));
 
-        startMeetingButton = view.findViewById(R.id.mymeeting_item_button);
+        startMeetingButton = view.findViewById(R.id.mymeeting_item_start);
         TextView startMeetingLabel = view.findViewById(R.id.mymeeting_start_label);
 
         MapView mapView = view.findViewById(R.id.mymeeting_info_map);
         mapView.onCreate(new Bundle());
         mapView.setClickable(false);
         mapView.getMapAsync(this);
-
+        mapView.onResume();
 
         if (isMeetingAvailable(meeting.getDate())) {
             startMeetingButton.setOnClickListener(this);
@@ -148,10 +149,12 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
+        map.getUiSettings().setAllGesturesEnabled(false);
         marker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
         CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(location,13);
         map.moveCamera(camera);
         marker.remove();
         marker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
     }
+
 }

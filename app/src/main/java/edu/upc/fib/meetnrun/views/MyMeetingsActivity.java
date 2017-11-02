@@ -25,7 +25,7 @@ public class MyMeetingsActivity extends BaseDrawerActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.meeting_list_menu, menu);
+        inflater.inflate(R.menu.empty_menu, menu);
         return true;
     }
 

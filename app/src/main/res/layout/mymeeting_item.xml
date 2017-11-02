@@ -34,7 +34,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="M"
                         android:textSize="20sp"
                         android:layout_margin="@dimen/meeting_item_margin"
                         android:layout_gravity="start|center_vertical"
@@ -47,7 +46,6 @@
 
                         <TextView
                             android:id="@+id/mymeeting_item_title"
-                            android:text="Text de prova"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
@@ -61,7 +59,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="A"
                                 android:textSize="16sp"
                                 android:layout_gravity="center_vertical"
                                 android:background="@drawable/user_circular_text_view_small"/>
@@ -71,7 +68,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="B"
                                 android:layout_margin="@dimen/meeting_item_margin"
                                 android:textSize="16sp"
                                 android:layout_gravity="center_vertical"
@@ -82,7 +78,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="C"
                                 android:textSize="16sp"
                                 android:layout_gravity="center_vertical"
                                 android:background="@drawable/user_circular_text_view_small"/>
@@ -114,24 +109,36 @@
                     android:id="@+id/mymeeting_item_datetime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_margin="@dimen/meeting_item_margin"
                     android:orientation="vertical"
+                    android:layout_toEndOf="@id/mymeeting_item_iconslayout"
                     android:layout_gravity="end">
                     <TextView
                         android:id="@+id/mymeeting_item_date"
-                        android:layout_width="wrap_content"                    android:text="Hola"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"/>
                     <TextView
                         android:id="@+id/mymeeting_item_time"
-                        android:layout_width="wrap_content"                    android:text="Hola"
+                        android:layout_width="wrap_content"
 
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5" />
 
                 </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/mymeeting_item_delete"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/meeting_item_margin"
+                    android:layout_marginEnd="@dimen/map_margin"
+                    android:background="@null"
+                    android:src="@drawable/ic_close_black_24dp"
+                    android:scaleType="fitXY"
+                    android:adjustViewBounds="true" />
 
             </RelativeLayout>
 
@@ -139,6 +146,7 @@
                 android:id="@+id/mymeeting_info_map"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/map_size"
+                android:clickable="false"
                 android:layout_below="@+id/mymeeting_info"
                 android:layout_marginTop="@dimen/map_margin"
                 android:layout_marginEnd="@dimen/map_margin"
@@ -157,18 +165,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_margin="@dimen/meeting_item_margin"
-                    android:text="HOLA" />
+                    android:layout_margin="@dimen/meeting_item_margin" />
 
                 <ImageButton
-                    android:id="@+id/mymeeting_item_button"
+                    android:id="@+id/mymeeting_item_start"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginTop="@dimen/meeting_item_margin"
                     android:layout_marginEnd="@dimen/map_margin"
-                    android:src="@drawable/ic_play_arrow_black_24dp"
-                    android:background="@color/green"
-                    android:scaleType="fitCenter"
+                    android:background="@null"
+                    android:src="@drawable/ic_play_circle_outline_black_24dp"
                     android:adjustViewBounds="true" />
 
             </LinearLayout>
