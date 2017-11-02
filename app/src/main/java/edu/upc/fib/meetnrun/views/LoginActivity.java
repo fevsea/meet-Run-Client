@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
@@ -25,6 +27,8 @@ public class LoginActivity extends AppCompatActivity {
     public static final String MY_PREFS_NAME = "TokenFile";
     private IGenericController controller;
     private CurrentSession cs;
+    private ProgressBar progress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
 
         editUsername = (EditText) findViewById(R.id.editUsername);
         editPassword = (EditText) findViewById(R.id.editPassword);
+        progress = (ProgressBar) findViewById(R.id.progressBar);
 
         controller = WebDBController.getInstance();
         cs = CurrentSession.getInstance();
@@ -41,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
         cs.setToken(token);
         if (cs.getToken() != null) {
+            progress.setVisibility(View.VISIBLE);
             new GetCurrentUser().execute();
         }
     }
@@ -124,6 +130,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
+            progress.setVisibility(View.GONE);
             cs.setCurrentUser(user);
             changeToMainActivity();
             super.onPostExecute(s);
