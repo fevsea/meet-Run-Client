@@ -37,9 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         CurrentSession cs = CurrentSession.getInstance();
         cs.setToken(token);
         if (cs.getToken() != null) {
-            User user = WebDBController.getInstance().getCurrentUser();
-            cs.setCurrentUser(user);
-            changeToMainActivity();
+            new GetCurrentUser().execute();
         }
     }
 
@@ -110,7 +108,26 @@ public class LoginActivity extends AppCompatActivity {
             }
             super.onPostExecute(s);
         }
+    }
 
+    private class GetCurrentUser extends AsyncTask<String,String,String> {
+
+        IGenericController gc = WebDBController.getInstance();
+        CurrentSession cs = CurrentSession.getInstance();
+        User user = null;
+
+        @Override
+        protected String doInBackground(String... logUser) {
+            user = WebDBController.getInstance().getCurrentUser();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            cs.setCurrentUser(user);
+            changeToMainActivity();
+            super.onPostExecute(s);
+        }
     }
 
 }
