@@ -9,6 +9,8 @@
     <string name="meeting_info_label">Meeting Information</string>
     <string name="start_meeting_label">Start meeting</string>
     <string name="not_start_meeting_label">The meeting is not available</string>
+    <string name="leave_meeting_label">Leave meeting</string>
+    <string name="leave_meeting_message">Are you sure you want to leave the meeting?</string>
     <string name="home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

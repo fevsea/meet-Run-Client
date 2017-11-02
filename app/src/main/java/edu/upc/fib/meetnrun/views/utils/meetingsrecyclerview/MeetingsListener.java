@@ -2,7 +2,7 @@ package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 
 
-public interface RecyclerViewOnClickListener {
+public interface MeetingsListener {
 
     void onButtonClicked(int position);
 

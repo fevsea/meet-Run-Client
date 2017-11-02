@@ -1,14 +1,16 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -18,15 +20,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.upc.fib.meetnrun.persistence.GenericController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
+import edu.upc.fib.meetnrun.views.MyMeetingsActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsAdapter;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsListener;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsListener;
 
 
 public class MyMeetingsFragment extends Fragment {
@@ -53,7 +55,7 @@ public class MyMeetingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 meetingsAdapter.addItem(getContext());
-                //TODO createNewMeeting();
+                createNewMeeting();
             }
         });
         final SwipeRefreshLayout swipeRefreshLayout =
@@ -74,11 +76,17 @@ public class MyMeetingsFragment extends Fragment {
 
         List<Meeting> meetings = new ArrayList<>();
         updateMeetingList();
-        meetingsAdapter = new MyMeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
+        meetingsAdapter = new MyMeetingsAdapter(meetings, new MyMeetingsListener() {
             @Override
-            public void onButtonClicked(int position) {
+            public void onStartClicked(int position) {
                 Meeting selectedMeeting = meetingsAdapter.getMeetingAtPosition(position);
-                    startMeeting(selectedMeeting);
+                startMeeting(selectedMeeting);
+            }
+
+            @Override
+            public void onLeaveClicked(int position) {
+                Meeting selectedMeeting = meetingsAdapter.getMeetingAtPosition(position);
+                leaveMeeting(selectedMeeting);
             }
 
             @Override
@@ -108,11 +116,40 @@ public class MyMeetingsFragment extends Fragment {
 
     private void createNewMeeting() {
         Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
+        getActivity().finish();
         startActivity(intent);
     }
 
     private void startMeeting(Meeting meeting) {
         //TODO Start tracking
+    }
+
+    private void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(okButtonText, ok);
+        if (negativeButtonText != null && cancel != null)
+            builder.setNegativeButton(negativeButtonText, cancel);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void leaveMeeting(Meeting meeting) {
+        showDialog(getString(R.string.leave_meeting_label), getString(R.string.leave_meeting_message),
+                    getString(R.string.ok), getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO leave meeting call
+                    }
+                },
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }
+        );
     }
 
     private class GetMyMeetings extends AsyncTask<String,String,String> {

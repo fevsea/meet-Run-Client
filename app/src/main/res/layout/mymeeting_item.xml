@@ -129,7 +129,7 @@
                 </LinearLayout>
 
                 <ImageButton
-                    android:id="@+id/mymeeting_item_delete"
+                    android:id="@+id/mymeeting_item_leave"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_alignParentEnd="true"

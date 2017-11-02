@@ -31,14 +31,14 @@ import edu.upc.fib.meetnrun.models.Meeting;
 public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback{
 
     private View view;
-    private WeakReference<RecyclerViewOnClickListener> listener;
+    private WeakReference<MyMeetingsListener> listener;
     private ImageButton startMeetingButton;
-    private ImageButton leaveMeetingButton
+    private ImageButton leaveMeetingButton;
     private LatLng location;
     private GoogleMap map;
     private Marker marker;
 
-    public MyMeetingsViewHolder(View itemView, RecyclerViewOnClickListener listener) {
+    public MyMeetingsViewHolder(View itemView, MyMeetingsListener listener) {
         super(itemView);
         view = itemView;
         this.listener = new WeakReference<>(listener);
@@ -87,6 +87,9 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
 
         startMeetingButton = view.findViewById(R.id.mymeeting_item_start);
         TextView startMeetingLabel = view.findViewById(R.id.mymeeting_start_label);
+
+        leaveMeetingButton = view.findViewById(R.id.mymeeting_item_leave);
+        leaveMeetingButton.setOnClickListener(this);
 
         MapView mapView = view.findViewById(R.id.mymeeting_info_map);
         mapView.onCreate(new Bundle());
@@ -139,7 +142,10 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
     @Override
     public void onClick(View view) {
         if (view.getId() == startMeetingButton.getId()) {
-            listener.get().onButtonClicked(getAdapterPosition());
+            listener.get().onStartClicked(getAdapterPosition());
+        }
+        if (view.getId() == leaveMeetingButton.getId()) {
+            listener.get().onLeaveClicked(getAdapterPosition());
         }
         else {
             listener.get().onMeetingClicked(getAdapterPosition());

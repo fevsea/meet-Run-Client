@@ -9,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
-import java.text.SimpleDateFormat;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
@@ -18,10 +17,10 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
 
 
     private View view;
-    private WeakReference<RecyclerViewOnClickListener> listener;
+    private WeakReference<MeetingsListener> listener;
     private ImageButton addUserButton;
 
-    public MeetingsViewHolder(View itemView, RecyclerViewOnClickListener listener) {
+    public MeetingsViewHolder(View itemView, MeetingsListener listener) {
         super(itemView);
         view = itemView;
         this.listener = new WeakReference<>(listener);

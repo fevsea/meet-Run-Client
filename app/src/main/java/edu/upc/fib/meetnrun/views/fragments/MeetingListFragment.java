@@ -20,10 +20,9 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.persistence.GenericController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
-import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsListener;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
 
@@ -72,7 +71,7 @@ public class MeetingListFragment extends Fragment {
 
         List<Meeting> meetings = new ArrayList<>();
         updateMeetingList();
-        meetingsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
+        meetingsAdapter = new MeetingsAdapter(meetings, new MeetingsListener() {
             @Override
             public void onButtonClicked(int position) {
                 Meeting selectedMeeting = meetingsAdapter.getMeetingAtPosition(position);
