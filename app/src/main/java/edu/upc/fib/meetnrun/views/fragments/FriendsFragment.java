@@ -77,6 +77,7 @@ public class FriendsFragment extends Fragment {
 
                 Meeting friend = friendsAdapter.getMeetingAtPosition(position);
                 Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
+
                 friendProfileIntent.putExtra("userName",friend.getTitle());
                 friendProfileIntent.putExtra("name",friend.getDescription());
                 friendProfileIntent.putExtra("postCode",friend.getDescription());
