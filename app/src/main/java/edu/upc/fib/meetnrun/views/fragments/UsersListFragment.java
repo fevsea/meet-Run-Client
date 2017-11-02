@@ -19,9 +19,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
-import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
-import edu.upc.fib.meetnrun.views.UsersListActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
@@ -71,7 +69,6 @@ public class UsersListFragment extends Fragment {
 
                 Meeting user = usersAdapter.getMeetingAtPosition(position);
                 Intent userProfileIntent = new Intent(getActivity(),UserProfileActivity.class);
-
                 userProfileIntent.putExtra("userName",user.getTitle());
                 userProfileIntent.putExtra("name",user.getDescription());
                 userProfileIntent.putExtra("postCode",user.getDescription());
