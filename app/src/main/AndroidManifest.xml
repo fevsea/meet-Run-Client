@@ -44,27 +44,29 @@
         <activity
             android:name=".views.EditMeetingActivity"
             android:label="@string/edit_meeting_label"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".views.RegisterActivity"
             android:label="@string/register_label"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".views.ProfileActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/title_activity_profile" />
+            android:label="@string/title_activity_profile"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".views.MeetingListActivity"
-            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:label="@string/meeting_list_label"
-            android:hardwareAccelerated="true">
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".views.FriendsActivity"
-            android:screenOrientation="portrait"
-            android:label="@string/friends_label">
-        </activity>
+            android:label="@string/friends_label"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.FriendProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:screenOrientation="portrait"/>
 
     </application>
 

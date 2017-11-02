@@ -37,16 +37,15 @@ public class LoginActivity extends AppCompatActivity {
         editUsername = (EditText) findViewById(R.id.editUsername);
         editPassword = (EditText) findViewById(R.id.editPassword);
         progress = (ProgressBar) findViewById(R.id.progressBar);
+        progress.setVisibility(View.INVISIBLE);
 
         controller = WebDBController.getInstance();
         cs = CurrentSession.getInstance();
 
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         String token = prefs.getString("token",null);
-
         cs.setToken(token);
         if (cs.getToken() != null) {
-            progress.setVisibility(View.VISIBLE);
             new GetCurrentUser().execute();
         }
     }
@@ -123,6 +122,12 @@ public class LoginActivity extends AppCompatActivity {
         User user = null;
 
         @Override
+        protected void onPreExecute() {
+            progress.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
         protected String doInBackground(String... logUser) {
             user = controller.getCurrentUser();
             return null;
@@ -130,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            progress.setVisibility(View.GONE);
+            progress.setVisibility(View.INVISIBLE);
             cs.setCurrentUser(user);
             changeToMainActivity();
             super.onPostExecute(s);

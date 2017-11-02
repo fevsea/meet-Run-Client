@@ -22,7 +22,9 @@ import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
+import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
+import edu.upc.fib.meetnrun.views.ProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
@@ -57,8 +59,8 @@ public class FriendsFragment extends Fragment {
 
     private void setupRecyclerView() {
 
-        final RecyclerView meetingsList = view.findViewById(R.id.fragment_friends_container);
-        meetingsList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
+        friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         List<Meeting> meetings = new ArrayList<>();
         getFriendsList();
@@ -66,27 +68,23 @@ public class FriendsFragment extends Fragment {
         friendsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {
+
                 Toast.makeText(view.getContext(), "Added user to meeting!!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onMeetingClicked(int position) {
-                Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
-                Meeting meeting = friendsAdapter.getMeetingAtPosition(position);
-                Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
-                meetingInfoIntent.putExtra("title",meeting.getTitle());
-                meetingInfoIntent.putExtra("description",meeting.getDescription());
-                String datetime = meeting.getDate();
-                meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
-                meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
-                meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
-                meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
-                meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
-                startActivity(meetingInfoIntent);
+
+                Meeting friend = friendsAdapter.getMeetingAtPosition(position);
+                Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
+                friendProfileIntent.putExtra("userName",friend.getTitle());
+                friendProfileIntent.putExtra("name",friend.getDescription());
+                friendProfileIntent.putExtra("postCode",friend.getDescription());
+                startActivity(friendProfileIntent);
 
             }
         });
-        meetingsList.setAdapter(friendsAdapter);
+        friendsList.setAdapter(friendsAdapter);
 
     }
 
@@ -95,7 +93,7 @@ public class FriendsFragment extends Fragment {
     }
 
     private void addNewFriend() {
-        Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
+        Intent intent = new Intent(getActivity(),ProfileActivity.class);
         startActivity(intent);
     }
 
