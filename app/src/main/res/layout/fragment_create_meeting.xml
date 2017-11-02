@@ -58,13 +58,12 @@
             <TextView
                 android:id="@+id/dateTV"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:text="@string/date"
-                android:textAppearance="@android:style/TextAppearance.Material.Large"
+                android:layout_height="34dp"
                 android:layout_marginStart="16dp"
-                tools:layout_editor_absoluteY="67dp"
+                android:text="@string/date"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
                 tools:layout_editor_absoluteX="7dp"
-                android:layout_weight="0.75" />
+                tools:layout_editor_absoluteY="67dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -102,22 +101,21 @@
             </LinearLayout>
 
 
-
             <TextView
                 android:id="@+id/hourTV"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:text="@string/hour"
-                android:textAppearance="@android:style/TextAppearance.Material.Large"
-                android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginTop="13dp"
-                app:layout_constraintTop_toBottomOf="@+id/dateTV"
-                app:layout_constraintRight_toLeftOf="@+id/hour"
-                android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="13dp"
+                android:text="@string/hour"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintHorizontal_bias="0.0" />
+                app:layout_constraintRight_toLeftOf="@+id/hour"
+                app:layout_constraintTop_toBottomOf="@+id/dateTV" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -134,18 +132,19 @@
                     android:layout_marginEnd="8dp"
                     tools:layout_editor_absoluteY="120dp"
                     tools:layout_editor_absoluteX="116dp"
-                    android:layout_weight="0.93" />
+                    android:layout_weight="0.71" />
 
                 <Button
                     android:id="@+id/pickHour"
-                    android:layout_width="167dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="16dp"
                     android:layout_marginTop="8dp"
                     android:onClick="showTimePickerDialog"
                     android:text="@string/hour"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/pickDate" />
+                    app:layout_constraintTop_toBottomOf="@+id/pickDate"
+                    android:layout_weight="0.27" />
             </LinearLayout>
 
             <LinearLayout
@@ -158,16 +157,16 @@
                     android:id="@+id/levelTV"
                     android:layout_width="170dp"
                     android:layout_height="43dp"
-                    android:text="@string/minimum_level"
-                    android:textAppearance="@android:style/TextAppearance.Material.Large"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="9dp"
-                    app:layout_constraintTop_toBottomOf="@+id/hourTV"
-                    android:layout_marginLeft="8dp"
+                    android:text="@string/minimum_level"
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/level"
-                    android:layout_marginRight="8dp"
-                    app:layout_constraintHorizontal_bias="0.0" />
+                    app:layout_constraintTop_toBottomOf="@+id/hourTV" />
 
                 <EditText
                     android:id="@+id/level"
@@ -187,14 +186,14 @@
                 android:id="@+id/descriptionTV"
                 android:layout_width="387dp"
                 android:layout_height="42dp"
-                android:text="@string/meeting_description"
-                android:textAppearance="@android:style/TextAppearance.Material.Large"
-                android:layout_marginStart="16dp"
-                tools:layout_editor_absoluteY="220dp"
                 android:layout_marginLeft="8dp"
-                app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_marginRight="8dp"
-                app:layout_constraintRight_toRightOf="parent" />
+                android:layout_marginStart="16dp"
+                android:text="@string/meeting_description"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                tools:layout_editor_absoluteY="220dp" />
 
             <EditText
                 android:id="@+id/description"
@@ -213,12 +212,24 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@+id/descriptionTV" />
 
-            <TextView
-                android:id="@+id/locationTV"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/meeting_location"
-                android:textAppearance="@android:style/TextAppearance.Material.Large" />
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/locationTV"
+                    android:layout_width="250dp"
+                    android:layout_height="match_parent"
+                    android:text="@string/meeting_location"
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/location_button"/>
+             </LinearLayout>
 
             <fragment
                 android:id="@+id/mapView"

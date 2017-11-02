@@ -12,22 +12,40 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.widget.ScrollView;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.persistence.GenericController;
+
+import static android.R.layout.simple_spinner_item;
+import static edu.upc.fib.meetnrun.R.id.scrollView;
+import static edu.upc.fib.meetnrun.R.id.spinner;
 
 
 public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback {
@@ -37,6 +55,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     private GoogleMap maps;
     private LatLng myLocation;
     private Marker myMarker;
+    private final static String[] kind = {"@string/public_meeting","@string/private_meeting"};
     EditText name;
     EditText date;
     EditText hour;
@@ -51,6 +70,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     String Date;
     String Latitude;
     String Longitude;
+    ScrollView sV;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,31 +104,23 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
                 showTimePickerDialog();
             }
         });
+        sV=(ScrollView) view.findViewById(R.id.scrollView);
 
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
-/*
-        MapFragment mMapFragment = MapFragment.newInstance();
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.map, mMapFragment);
-        fragmentTransaction.commit();
-        mMapFragment.getMapAsync(this);*/
+
+        Spinner spin = (Spinner) view.findViewById(R.id.spinner);
+        spin.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+
+        spin.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, kind));
+
+        SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
+        getFragmentManager().beginTransaction().add(R.id.map, mMapFragment).commit();
+        mMapFragment.getMapAsync(this);
         return view;
     }
 
-    @Override
-    public void onMapReady(GoogleMap map) {
-        maps = map;
-        // Add some markers to the map, and add a data object to each marker.
-        myMarker = maps.addMarker(new MarkerOptions()
-                .position(myLocation)
-                .title("@string/location")
-                .draggable(true));
-        myMarker.setTag(0);
-        // Set a listener for marker click
-        maps.setOnMarkerClickListener((GoogleMap.OnMarkerClickListener) this);
-    }
 
     private void showTimePickerDialog() {
         final EditText timeText = (EditText) view.findViewById(R.id.hour);
@@ -145,7 +157,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     }
 
 
-    public void create (View view){
+    public void create (CreateMeetingFragment view){
         Name = name.getText().toString();
         Date = date.getText().toString();
         Level = Integer.parseInt(level.getText().toString());
@@ -180,9 +192,41 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.done_button) {
-            //TODO create_meeting();
+            create(this);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showLocationPicker() {
+        int PLACE_PICKER_REQUEST = 1;
+        try {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
+        }
+        catch (GooglePlayServicesRepairableException |GooglePlayServicesNotAvailableException e) {
+            GooglePlayServicesUtil.getErrorDialog(GooglePlayServicesUtil.isGooglePlayServicesAvailable(getActivity()), getActivity(), PLACE_PICKER_REQUEST);
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        this.maps = map;
+        LatLng location = new LatLng(41.388576, 2.112840);
+        myMarker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
+        moveMapCameraAndMarker(location);
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                sV.requestDisallowInterceptTouchEvent(true);
+            }
+        });
+    }
+
+    private void moveMapCameraAndMarker(LatLng location) {
+        CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(location, 15);
+        maps.moveCamera(camera);
+        myMarker.remove();
+        myMarker = maps.addMarker(new MarkerOptions().position(location).title("Meeting"));
     }
 
     private void create_meeting(){
