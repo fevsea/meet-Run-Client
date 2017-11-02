@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.views;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.icu.text.DecimalFormat;
 import android.location.Location;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -50,6 +51,7 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.LogRecord;
 
@@ -64,9 +66,11 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private List<LatLng> routePoints;
 
     private int steps = 0;
-    private int meters = 0;
+    private float distance = 0;
     private int calories = 0;
-    private int speed = 0;
+    private float speed = 0;
+    private double latitude;
+    private double longitude;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
@@ -75,26 +79,13 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
-    private Location mLastKnownLocation;
-
     private GoogleApiClient mClient = null;
 
     Chronometer chronometer;
     TextView stepsCounter;
     TextView speedCounter;
-
-    Handler mHandler;
-    Runnable getLastLocation = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                getDeviceLocation();
-            }
-            finally {
-                mHandler.postDelayed(getLastLocation, 100);
-            }
-        }
-    };
+    TextView distanceCounter;
+    TextView caloriesCounter;
 
     private OnDataPointListener locationListener =  new OnDataPointListener() {
         @Override
@@ -103,7 +94,19 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                 Value val = dataPoint.getValue(field);
                 Log.i(TAG, "Detected DataPoint field: " + field.getName());
                 Log.i(TAG, "Detected DataPoint value: " + val);
+                if (field.equals(Field.FIELD_LATITUDE)) {
+                    latitude = val.asFloat();
+                }
+                else if (field.equals(Field.FIELD_LONGITUDE)) {
+                    longitude = val.asFloat();
+                }
             }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateLocationViews(new LatLng(latitude, longitude));
+                }
+            });
         }
     };
 
@@ -137,11 +140,32 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                 Log.i(TAG, "Detected DataPoint value: " + val);
                 if (field.equals(Field.FIELD_SPEED)) {
                     Log.i(TAG, "Updating speed counter");
-                    speed = val.asInt();
+                    speed = val.asFloat();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            speedCounter.setText(speed + " m/s");
+                            speedCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f",speed) + " m/s");
+                        }
+                    });
+                }
+            }
+        }
+    };
+
+    private OnDataPointListener distanceListener = new OnDataPointListener() {
+        @Override
+        public void onDataPoint(DataPoint dataPoint) {
+            for (Field field : dataPoint.getDataType().getFields()) {
+                Value val = dataPoint.getValue(field);
+                Log.i(TAG, "Detected DataPoint field: " + field.getName());
+                Log.i(TAG, "Detected DataPoint value: " + val);
+                if (field.equals(Field.FIELD_DISTANCE)) {
+                    Log.i(TAG, "Updating distance counter");
+                    distance += val.asFloat();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            distanceCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", distance) + " m");
                         }
                     });
                 }
@@ -160,6 +184,9 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         routePoints = new ArrayList<>();
 
         buildFitnessClient();
+        if (!checkPermissions()) {
+            getLocationPermission();
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -172,6 +199,8 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         stepsCounter.setText(String.valueOf(steps) + " steps");
         speedCounter = findViewById(R.id.speed);
         speedCounter.setText("0 m/s");
+        distanceCounter = findViewById(R.id.distance);
+        distanceCounter.setText("0 m");
     }
 
 
@@ -222,11 +251,12 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     private void findFitnessDataSources() {
-        // [START find_data_sources]
-        // Note: Fitness.SensorsApi.findDataSources() requires the ACCESS_FINE_LOCATION permission.
+        /*
+        Find Data Sources and register the listeners.
+         */
         Fitness.SensorsApi.findDataSources(mClient, new DataSourcesRequest.Builder()
                 // At least one datatype must be specified.
-                .setDataTypes(/*DataType.TYPE_LOCATION_SAMPLE,*/ DataType.TYPE_STEP_COUNT_DELTA, DataType.TYPE_DISTANCE_DELTA, DataType.TYPE_CALORIES_EXPENDED, DataType.TYPE_SPEED)
+                .setDataTypes(DataType.TYPE_LOCATION_SAMPLE, DataType.TYPE_STEP_COUNT_DELTA, DataType.TYPE_DISTANCE_DELTA, DataType.TYPE_CALORIES_EXPENDED, DataType.TYPE_SPEED)
                 // Can specify whether data type is raw or derived.
                 .setDataSourceTypes(DataSource.TYPE_RAW, DataSource.TYPE_DERIVED)
                 .build())
@@ -251,6 +281,10 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                                 Log.i(TAG, "Data source for TYPE_SPEED found! Registering.");
                                 registerFitnessDataListener(speedListener, dataSource, DataType.TYPE_SPEED);
                             }
+                            else if (dataSource.getDataType().equals(DataType.TYPE_DISTANCE_DELTA)) {
+                                Log.i(TAG, "Data source for TYPE_DISTANCE_DELTA found! Registering.");
+                                registerFitnessDataListener(distanceListener, dataSource, DataType.TYPE_DISTANCE_DELTA);
+                            }
                         }
                     }
                 });
@@ -266,6 +300,8 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                         .setDataSource(dataSource) // Optional but recommended for custom data sets.
                         .setDataType(dataType) // Can't be omitted.
                         .setSamplingRate(100, TimeUnit.MILLISECONDS)
+                        .setAccuracyMode(SensorRequest.ACCURACY_MODE_HIGH)
+                        .setFastestRate(100, TimeUnit.MILLISECONDS)
                         .build(),
                 mListener)
                 .setResultCallback(new ResultCallback<Status>() {
@@ -294,12 +330,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        updateLocation();
-
-        getDeviceLocation();
-
-        mHandler = new Handler();
-        mHandler.postDelayed(getLastLocation, 100);
+        enableLocationButtonAndView();
     }
 
     private void getLocationPermission() {
@@ -311,7 +342,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
-            updateLocation();
+            enableLocationButtonAndView();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
@@ -329,10 +360,13 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                 }
             }
         }
-        updateLocation();
+        enableLocationButtonAndView();
     }
 
-    private void updateLocation() {
+    private void enableLocationButtonAndView() {
+        /*
+        Enables the 'center to location' button and enables showing the current location with a blue dot.
+         */
         if (mMap == null) {
             return;
         }
@@ -345,7 +379,6 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                 Log.e(TAG, "Location Permission not Granted!");
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                mLastKnownLocation = null;
                 getLocationPermission();
             }
         } catch (SecurityException e)  {
@@ -353,12 +386,12 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         }
     }
 
-    private void getDeviceLocation() {
+ //   private void getDeviceLocation() {
     /*
      * Get the best and most recent location of the device, which may be null in rare
      * cases when a location is not available.
      */
-        try {
+      /*  try {
             if (mLocationPermissionGranted) {
                 Task locationResult = mFusedLocationProviderClient.getLastLocation();
                 locationResult.addOnCompleteListener(this, new OnCompleteListener() {
@@ -366,28 +399,12 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
-                            mLastKnownLocation = (Location) task.getResult();
-                            if (route == null)
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                    new LatLng(mLastKnownLocation.getLatitude(),
-                                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                            //Log.e(TAG, "Current location: " + mLastKnownLocation.getLatitude() + " lat, " +  mLastKnownLocation.getLongitude());
-                            routePoints.add(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()));
-                            if (route == null)
-                                route = mMap.addPolyline(new PolylineOptions().add(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude())));
-                            else
-                                route.setPoints(routePoints);
+                            Location location = (Location) task.getResult();
+                            updateLocationViews(new LatLng(location.getLatitude(), location.getLongitude()));
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
-                            if (route == null)
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
-                            routePoints.add(mDefaultLocation);
-                            if (route == null)
-                                route = mMap.addPolyline(new PolylineOptions().add(mDefaultLocation));
-                            else
-                                route.setPoints(routePoints);
+                            updateLocationViews(mDefaultLocation);
                         }
                     }
                 });
@@ -395,12 +412,24 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         } catch(SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+    }*/
+
+    private void updateLocationViews(LatLng position) {
+        if (route == null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_ZOOM));
+        }
+        routePoints.add(position);
+        if (route == null) {
+            route = mMap.addPolyline(new PolylineOptions().add(position));
+        }
+        else {
+            route.setPoints(routePoints);
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mHandler.removeCallbacks(getLastLocation);
     }
 
 }
