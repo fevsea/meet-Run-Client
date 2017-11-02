@@ -5,10 +5,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,52 +19,46 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
-import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
-import edu.upc.fib.meetnrun.views.ProfileActivity;
 import edu.upc.fib.meetnrun.views.UsersListActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
+/**
+ * Created by eric on 2/11/17.
+ */
 
-public class FriendsFragment extends Fragment {
+public class UsersListFragment extends Fragment {
 
     private View view;
-    private MeetingsAdapter friendsAdapter;
+    private MeetingsAdapter usersAdapter;
     private IGenericController controller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        this.view = inflater.inflate(R.layout.fragment_friends, container, false);
+        this.view = inflater.inflate(R.layout.fragment_users_list, container, false);
         controller = WebDBController.getInstance();
 
         setupRecyclerView();
 
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
-        fab.setImageResource(R.drawable.add_user_512);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addNewFriend();
-            }
-        });
+        fab.setVisibility(View.GONE);
 
         return this.view;
     }
 
     private void setupRecyclerView() {
 
-        final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
+        final RecyclerView friendsList = view.findViewById(R.id.fragment_users_container);
         friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         List<Meeting> meetings = new ArrayList<>();
-        getFriendsList();
+        getUsersList();
 
-        friendsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
+        usersAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {
 
@@ -76,30 +68,25 @@ public class FriendsFragment extends Fragment {
             @Override
             public void onMeetingClicked(int position) {
 
-                Meeting friend = friendsAdapter.getMeetingAtPosition(position);
-                Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
+                Meeting user = usersAdapter.getMeetingAtPosition(position);
+                Intent userProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
 
-                friendProfileIntent.putExtra("userName",friend.getTitle());
-                friendProfileIntent.putExtra("name",friend.getDescription());
-                friendProfileIntent.putExtra("postCode",friend.getDescription());
-                startActivity(friendProfileIntent);
+                userProfileIntent.putExtra("userName",user.getTitle());
+                userProfileIntent.putExtra("name",user.getDescription());
+                userProfileIntent.putExtra("postCode",user.getDescription());
+                startActivity(userProfileIntent);
 
             }
         });
-        friendsList.setAdapter(friendsAdapter);
+        friendsList.setAdapter(usersAdapter);
 
     }
 
-    private void getFriendsList() {
-        new getFriends().execute();
+    private void getUsersList() {
+        new UsersListFragment.getUsers().execute();
     }
 
-    private void addNewFriend() {
-        Intent intent = new Intent(getActivity(),UsersListActivity.class);
-        startActivity(intent);
-    }
-
-    private class getFriends extends AsyncTask<String,String,String> {
+    private class getUsers extends AsyncTask<String,String,String> {
         List<Meeting> l = new ArrayList<>();
 
         @Override
@@ -110,7 +97,7 @@ public class FriendsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            friendsAdapter.updateMeetingsList(l);
+            usersAdapter.updateMeetingsList(l);
             super.onPostExecute(s);
         }
     }
