@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -64,7 +65,6 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     EditText level;
     EditText description;
 
-    Integer Id;
     String Name;
     String Description;
     Boolean Public;
@@ -159,7 +159,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
                 year = yearSet;
                 month = monthSet +1;
                 day = daySet;
-                final String selectedDate = day + "/" + month + "/" + year;
+                final String selectedDate = year + "/" + month + "/" + day;
                 dateText.setText(selectedDate);
             }
         });
@@ -176,8 +176,19 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         Description = description.getText().toString();
         Latitude= String.valueOf(myLocation.latitude);
         Longitude=String.valueOf(myLocation.longitude);
-        Date=Date+','+Hour;
-        Id=26102017;
+        String hourTxt,minuteTxt,secondTxt;
+        String yearTxt,monthTxt,dayTxt;
+        if (hour2 < 10) hourTxt = "0"+hour2;
+        else hourTxt = String.valueOf(hour2);
+        if (minute < 10) minuteTxt = "0"+minute;
+        else minuteTxt = String.valueOf(minute);
+        secondTxt = "00";
+        yearTxt = String.valueOf(year);
+        if (month < 10) monthTxt = "0"+month;
+        else monthTxt = String.valueOf(month);
+        if (day < 10) dayTxt = "0"+day;
+        else dayTxt = String.valueOf(day);
+        Date=yearTxt+"-"+monthTxt+"-"+dayTxt+"T"+hourTxt+":"+minuteTxt+":00Z";
 
         if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() /*|| Latitude.isEmpty() || Longitude.isEmpty()*/){
             Toast.makeText(this.getContext(), "@string/emptyCreate", Toast.LENGTH_SHORT).show();
@@ -256,6 +267,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         protected String doInBackground(String... strings){
             try {
                 IGenericController gc= GenericController.getInstance();
+                Log.e("DEBUG",Date + " " + Latitude + " " + Longitude);
                 m= gc.createMeetingPublic(Name,Description,Public,Level,Date,Latitude,Longitude);
             } catch (ParamsException e) {
                 e.printStackTrace();
