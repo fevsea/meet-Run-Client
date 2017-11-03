@@ -3,12 +3,13 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,6 +41,14 @@ public class FriendsFragment extends Fragment {
     private MeetingsAdapter friendsAdapter;
     private IGenericController controller;
     private List<Meeting> l;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,7 +132,7 @@ public class FriendsFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.e("ENTRAAAAAAAR","hola");
+
         inflater.inflate(R.menu.search_menu, menu);
         MenuItem item = menu.findItem(R.id.search_menu);
         SearchView searchView = (SearchView) item.getActionView();
@@ -136,7 +145,6 @@ public class FriendsFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Log.e("AQUIIIII","hola");
                 newText = newText.toLowerCase();
                 ArrayList<Meeting> newList = new ArrayList<>();
                 for (Meeting meeting : l) {
