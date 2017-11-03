@@ -22,9 +22,11 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
@@ -35,9 +37,9 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 public class UsersListFragment extends Fragment {
 
     private View view;
-    private MeetingsAdapter usersAdapter;
+    private FriendsAdapter usersAdapter;
     private IGenericController controller;
-    private List<Meeting> l;
+    private List<User> l;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,24 +70,22 @@ public class UsersListFragment extends Fragment {
         final RecyclerView friendsList = view.findViewById(R.id.fragment_users_container);
         friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        List<Meeting> meetings = new ArrayList<>();
+        List<User> users = new ArrayList<User>();
         getUsersList();
 
-        usersAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
+        usersAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
             @Override
-            public void onButtonClicked(int position) {
-
-                Toast.makeText(view.getContext(), "Added user to meeting!!", Toast.LENGTH_SHORT).show();
-            }
+            public void onButtonClicked(int position) {}
 
             @Override
             public void onMeetingClicked(int position) {
 
-                Meeting user = usersAdapter.getMeetingAtPosition(position);
+                User user = usersAdapter.getFriendAtPosition(position);
                 Intent userProfileIntent = new Intent(getActivity(),UserProfileActivity.class);
-                userProfileIntent.putExtra("userName",user.getTitle());
-                userProfileIntent.putExtra("name",user.getDescription());
-                userProfileIntent.putExtra("postCode",user.getDescription());
+                userProfileIntent.putExtra("userName",user.getUsername());
+                String name = user.getFirstName()+" "+user.getLastName();
+                userProfileIntent.putExtra("name",name);
+                userProfileIntent.putExtra("postCode",user.getPostalCode());
                 startActivity(userProfileIntent);
 
             }
@@ -102,13 +102,13 @@ public class UsersListFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            l = controller.getAllMeetings();
+            l = controller.getAllUsers();
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            usersAdapter.updateMeetingsList(l);
+            usersAdapter.updateFriendsList(l);
             super.onPostExecute(s);
         }
     }
@@ -129,12 +129,13 @@ public class UsersListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 newText = newText.toLowerCase();
-                ArrayList<Meeting> newList = new ArrayList<>();
-                for (Meeting meeting : l) {
-                    String name = meeting.getTitle().toLowerCase();
-                    if (name.contains(newText)) newList.add(meeting);
+                ArrayList<User> newList = new ArrayList<User>();
+                for (User user : l) {
+                    String userName = user.getUsername().toLowerCase();
+                    String name = (user.getFirstName()+" "+user.getLastName()).toLowerCase();
+                    if (name.contains(newText) || userName.contains(newText)) newList.add(user);
                 }
-                usersAdapter.updateMeetingsList(newList);
+                usersAdapter.updateFriendsList(newList);
                 return true;
             }
         });

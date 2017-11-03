@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/meeting_item_padding_horizontal"
+    android:paddingRight="@dimen/meeting_item_padding_horizontal"
+    android:paddingBottom="@dimen/meeting_item_padding_vertical"
+    android:paddingTop="@dimen/meeting_item_padding_vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/meeting_item_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/card_depth"
+        card_view:cardCornerRadius="@dimen/card_radius"
+        card_view:cardElevation="@dimen/card_depth">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/meeting_item_padding_vertical">
+            <!-- Once images are added refactor the first Textview to an Imageview
+            <ImageView
+                android:id="@+id/meeting_item_user_photo"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="center"
+                android:layout_centerVertical="true"
+                android:background="@android:color/black"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"/> -->
+            <!-- TODO imageview rounded and with another little imageview with the user level
+                 TODO check TextDrawable library to do it -->
+            <TextView
+                android:id="@+id/meeting_item_user_photo2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/meeting_item_margin"
+                android:background="@drawable/user_profile_circular_text_view"
+                android:gravity="center"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/meeting_item_level2"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/meeting_item_margin"
+                android:background="@drawable/level_circular_text_view"
+                android:gravity="center"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@id/meeting_item_user_photo2"
+                android:layout_toStartOf="@id/meeting_item_level2"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/meeting_item_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/meeting_item_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <!-- TODO add Styles for the Textview themes (textsize, font, etc) -->
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

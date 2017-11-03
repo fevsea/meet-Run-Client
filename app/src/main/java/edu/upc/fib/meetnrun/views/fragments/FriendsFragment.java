@@ -24,6 +24,7 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
@@ -31,6 +32,7 @@ import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.ProfileActivity;
 import edu.upc.fib.meetnrun.views.UsersListActivity;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
@@ -38,13 +40,13 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 public class FriendsFragment extends Fragment {
 
     private View view;
-    private MeetingsAdapter friendsAdapter;
+    private FriendsAdapter friendsAdapter;
     private IGenericController controller;
-    private List<Meeting> l;
+    private List<User> l;
 
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -57,7 +59,7 @@ public class FriendsFragment extends Fragment {
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
         controller = WebDBController.getInstance();
 
-        l = new ArrayList<>();
+        l = new ArrayList<User>();
 
         setupRecyclerView();
 
@@ -79,25 +81,23 @@ public class FriendsFragment extends Fragment {
         final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
         friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        List<Meeting> meetings = new ArrayList<>();
+        List<User> users = new ArrayList<User>();
         getFriendsList();
 
-        friendsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
-            @Override
-            public void onButtonClicked(int position) {
-
-                Toast.makeText(view.getContext(), "Added user to meeting!!", Toast.LENGTH_SHORT).show();
-            }
+        friendsAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
+                       @Override
+            public void onButtonClicked(int position) {}
 
             @Override
             public void onMeetingClicked(int position) {
 
-                Meeting friend = friendsAdapter.getMeetingAtPosition(position);
+                User friend = friendsAdapter.getFriendAtPosition(position);
                 Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
 
-                friendProfileIntent.putExtra("userName",friend.getTitle());
-                friendProfileIntent.putExtra("name",friend.getDescription());
-                friendProfileIntent.putExtra("postCode",friend.getDescription());
+                friendProfileIntent.putExtra("userName",friend.getUsername());
+                String name = friend.getFirstName()+" "+friend.getLastName();
+                friendProfileIntent.putExtra("name",name);
+                friendProfileIntent.putExtra("postCode",friend.getPostalCode());
                 startActivity(friendProfileIntent);
 
             }
@@ -119,13 +119,13 @@ public class FriendsFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            l = controller.getAllMeetings();
+            l = controller.getAllUsers();
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            friendsAdapter.updateMeetingsList(l);
+            friendsAdapter.updateFriendsList(l);
             super.onPostExecute(s);
         }
     }
@@ -146,12 +146,13 @@ public class FriendsFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 newText = newText.toLowerCase();
-                ArrayList<Meeting> newList = new ArrayList<>();
-                for (Meeting meeting : l) {
-                    String name = meeting.getTitle().toLowerCase();
-                    if (name.contains(newText)) newList.add(meeting);
+                ArrayList<User> newList = new ArrayList<User>();
+                for (User friend : l) {
+                    String userName = friend.getUsername().toLowerCase();
+                    String name = (friend.getFirstName()+" "+friend.getLastName()).toLowerCase();
+                    if (name.contains(newText) || userName.contains(newText)) newList.add(friend);
                 }
-                friendsAdapter.updateMeetingsList(newList);
+                friendsAdapter.updateFriendsList(newList);
                 return true;
             }
         });
