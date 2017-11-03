@@ -57,6 +57,7 @@
             android:name=".views.MeetingListActivity"
             android:screenOrientation="portrait"
             android:label="@string/meeting_list_label"
+            android:launchMode="singleTask"
             android:hardwareAccelerated="true">
         </activity>
         <activity

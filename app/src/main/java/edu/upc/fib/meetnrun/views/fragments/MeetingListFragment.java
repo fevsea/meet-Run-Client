@@ -5,12 +5,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -19,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
@@ -31,9 +37,16 @@ public class MeetingListFragment extends Fragment {
 
     private MeetingsAdapter meetingsAdapter;
     private View view;
+    private IGenericController controller;
 
     public MeetingListFragment() {
 
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -99,6 +112,45 @@ public class MeetingListFragment extends Fragment {
 
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        inflater.inflate(R.menu.meeting_list_menu, menu);
+        MenuItem item = menu.findItem(R.id.meeting_list_menu_search);
+        SearchView searchView = (SearchView) item.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                query = query.toLowerCase();
+                new GetMeetingsFiltered().execute();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                updateMeetingList();
+                return true; // Return true to collapse action view
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     private void updateMeetingList() {
             new GetMeetings().execute();
     }
@@ -129,5 +181,26 @@ public class MeetingListFragment extends Fragment {
             super.onPostExecute(s);
         }
     }
+
+
+    private class GetMeetingsFiltered extends AsyncTask<String,String,String> {
+        List<Meeting> l = new ArrayList<>();
+
+        @Override
+        protected String doInBackground(String... strings) {
+            Log.e("MAIN","DOINGGGG");
+            //TODO call to get meetings filtered
+            //l = GenericController.getInstance().getMeetingsFiltered(strings[0]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            System.err.println("FINISHED");
+            meetingsAdapter.updateMeetingsList(l);
+            super.onPostExecute(s);
+        }
+    }
+
 
 }
