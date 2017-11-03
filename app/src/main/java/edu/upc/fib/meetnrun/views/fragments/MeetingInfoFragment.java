@@ -53,7 +53,8 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         date.setText(meetingInfo.getString("date"));
         time.setText(meetingInfo.getString("time"));
 
-        location = new LatLng(meetingInfo.getDouble("latitude"),meetingInfo.getDouble("longitude"));
+
+        location = new LatLng(Double.parseDouble(meetingInfo.getString("latitude")),Double.parseDouble(meetingInfo.getString("longitude")));
 
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
         getFragmentManager()

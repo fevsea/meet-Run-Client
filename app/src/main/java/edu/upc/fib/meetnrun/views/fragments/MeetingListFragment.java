@@ -5,7 +5,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ActionProvider;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -119,7 +121,6 @@ public class MeetingListFragment extends Fragment {
         inflater.inflate(R.menu.meeting_list_menu, menu);
         MenuItem item = menu.findItem(R.id.meeting_list_menu_search);
         SearchView searchView = (SearchView) item.getActionView();
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -134,17 +135,11 @@ public class MeetingListFragment extends Fragment {
             }
         });
 
-        item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
+            public boolean onClose() {
                 updateMeetingList();
-                return true; // Return true to collapse action view
+                return false;
             }
         });
 
