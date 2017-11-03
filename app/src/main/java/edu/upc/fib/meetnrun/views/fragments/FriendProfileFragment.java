@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
@@ -26,9 +28,18 @@ public class FriendProfileFragment extends Fragment {
 
         Bundle profileInfo = getActivity().getIntent().getExtras();
 
-        TextView userName = view.findViewById(R.id.userName2);
+        final TextView userName = view.findViewById(R.id.userName2);
         TextView name = view.findViewById(R.id.completeName2);
         TextView postCode = view.findViewById(R.id.userPostCode2);
+        ImageView img = view.findViewById(R.id.delete_friend);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.e("delete friend", userName.getText().toString());
+
+            }
+        });
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
@@ -39,4 +50,5 @@ public class FriendProfileFragment extends Fragment {
 
         return this.view;
     }
+
 }
