@@ -11,6 +11,7 @@ import java.lang.ref.WeakReference;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 
 /**
  * Created by eric on 2/11/17.
@@ -20,7 +21,6 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
 
     private View view;
     private WeakReference<RecyclerViewOnClickListener> listener;
-    private ImageButton addUserButton;
 
     public FriendsViewHolder(View itemView, RecyclerViewOnClickListener listener) {
         super(itemView);
@@ -28,32 +28,23 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
         this.listener = new WeakReference<>(listener);
     }
 
-    public void bindMeeting(Meeting meeting) {
-        TextView userPhoto = view.findViewById(R.id.meeting_item_user_photo);
-        char letter = meeting.getTitle().charAt(0);
+    public void bindMeeting(User user) {
+        TextView userPhoto = view.findViewById(R.id.meeting_item_user_photo2);
+        char letter = user.getUsername().charAt(0);
         String firstLetter = String.valueOf(letter);
         userPhoto.setBackground(getColoredCircularShape((letter)));
         userPhoto.setText(firstLetter);
 
-        TextView userName = view.findViewById(R.id.meeting_item_title);
-        userName.setText(meeting.getTitle());
+        TextView userName = view.findViewById(R.id.meeting_item_username);
+        userName.setText(user.getUsername());
 
-        TextView meetingLocation = view.findViewById(R.id.meeting_item_description);
-        meetingLocation.setText(meeting.getDescription());
+        TextView meetingLocation = view.findViewById(R.id.meeting_item_name);
+        meetingLocation.setText(user.getFirstName()+" "+user.getLastName());
 
-        TextView meetingLevel = view.findViewById(R.id.meeting_item_level);
-        String level = String.valueOf(meeting.getLevel());
+        TextView meetingLevel = view.findViewById(R.id.meeting_item_level2);
+        String level = String.valueOf(/*user.getLevel()*/0);
         if (level.equals("null")) level = "0";
         meetingLevel.setText(String.valueOf(level));
-
-        TextView meetingDate = view.findViewById(R.id.meeting_item_date);
-        String datetime = meeting.getDate();
-        meetingDate.setText(datetime.substring(0,datetime.indexOf('T')));
-        TextView meetingTime = view.findViewById(R.id.meeting_item_time);
-        meetingTime.setText(datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
-
-        addUserButton = view.findViewById(R.id.meeting_item_meet);
-        addUserButton.setOnClickListener(this);
 
         view.setOnClickListener(this);
     }
@@ -68,12 +59,9 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == addUserButton.getId()) {
-            listener.get().onButtonClicked(getAdapterPosition());
-        }
-        else {
-            listener.get().onMeetingClicked(getAdapterPosition());
-        }
+
+        listener.get().onMeetingClicked(getAdapterPosition());
+
     }
 
 }
