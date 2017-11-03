@@ -108,6 +108,14 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
             }
         });
         sV=(ScrollView) view.findViewById(R.id.scrollView);
+        Button createButton=(Button) view.findViewById(R.id.create);
+        createButton.setOnClickListener(new View.OnClickListener (){
+
+            @Override
+            public void onClick(View view) {
+                create();
+            }
+        });
 
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
@@ -166,6 +174,8 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         Level = Integer.parseInt(level.getText().toString());
         String Hour = hour.getText().toString();
         Description = description.getText().toString();
+        Latitude= String.valueOf(myLocation.latitude);
+        Longitude=String.valueOf(myLocation.longitude);
         Date=Date+','+Hour;
         Id=26102017;
 
@@ -187,6 +197,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         inflater.inflate(R.menu.edit_meeting_menu, menu);
         super.onCreateOptionsMenu(menu,inflater);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -211,9 +222,9 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap map) {
         this.maps = map;
-        LatLng location = new LatLng(41.388576, 2.112840);
-        myMarker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
-        moveMapCameraAndMarker(location);
+        myLocation = new LatLng(41.388576, 2.112840);
+        myMarker = map.addMarker(new MarkerOptions().position(myLocation).title("Meeting"));
+        moveMapCameraAndMarker(myLocation);
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
