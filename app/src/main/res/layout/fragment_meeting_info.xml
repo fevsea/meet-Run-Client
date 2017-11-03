@@ -1,109 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="20dp">
-
-
-    <TextView
-        android:id="@+id/meeting_info_title"
-        android:layout_width="wrap_content"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Title" />
-
-    <LinearLayout
-        android:id="@+id/meeting_info_creatorlevel"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="5dp"
-        android:layout_below="@+id/meeting_info_title">
+        android:layout_height="match_parent"
+        android:padding="20dp">
+
 
         <TextView
-            android:id="@+id/meeting_info_creator"
-            android:layout_width="0dp"
+            android:id="@+id/meeting_info_title"
+            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:textSize="20sp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Creator username" />
+            android:layout_marginTop="5dp"
+            android:text="Title" />
+
+        <LinearLayout
+            android:id="@+id/meeting_info_creatorlevel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/meeting_info_title">
+
+            <TextView
+                android:id="@+id/meeting_info_creator"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Creator username" />
+            <TextView
+                android:id="@+id/meeting_info_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="50dp"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:background="@drawable/level_circular_text_view"/>
+
+        </LinearLayout>
+
         <TextView
-            android:id="@+id/meeting_info_level"
+            android:id="@+id/meeting_info_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="50dp"
-            android:gravity="center"
-            android:textSize="20sp"
-            android:background="@drawable/level_circular_text_view"/>
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/meeting_info_creatorlevel"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentEnd="true"
+            android:text="Description"/>
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/meeting_info_datelabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:labelFor="@+id/meeting_date"
+            android:layout_below="@+id/meeting_info_description"
+            android:layout_marginTop="10dp"
+            android:text="@string/date" />
 
-    <TextView
-        android:id="@+id/meeting_info_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/meeting_info_creatorlevel"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentEnd="true"
-        android:text="Description"/>
-
-    <TextView
-        android:id="@+id/meeting_info_datelabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:textStyle="bold"
-        android:labelFor="@+id/meeting_date"
-        android:layout_below="@+id/meeting_info_description"
-        android:layout_marginTop="10dp"
-        android:text="@string/date" />
-
-    <TextView
-        android:id="@+id/meeting_info_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/meeting_info_datelabel"
-        android:layout_marginTop="10dp"
-        android:inputType="none"
-        android:text="Date" />
+        <TextView
+            android:id="@+id/meeting_info_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/meeting_info_datelabel"
+            android:layout_marginTop="10dp"
+            android:inputType="none"
+            android:text="Date" />
 
 
-    <TextView
-        android:id="@+id/meeting_info_timelabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:textStyle="bold"
-        android:labelFor="@+id/meeting_time"
-        android:layout_below="@+id/meeting_info_date"
-        android:layout_marginTop="10dp"
-        android:text="@string/time" />
+        <TextView
+            android:id="@+id/meeting_info_timelabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:labelFor="@+id/meeting_time"
+            android:layout_below="@+id/meeting_info_date"
+            android:layout_marginTop="10dp"
+            android:text="@string/time" />
 
-    <TextView
-        android:id="@+id/meeting_info_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/meeting_info_timelabel"
-        android:layout_marginTop="10dp"
-        android:inputType="none"
-        android:text="Time" />
-
-
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:id="@+id/meeting_info_map"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/meeting_info_time"
-        android:layout_marginTop="20dp" >
-    </fragment>
+        <TextView
+            android:id="@+id/meeting_info_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/meeting_info_timelabel"
+            android:layout_marginTop="10dp"
+            android:inputType="none"
+            android:text="Time" />
 
 
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/meeting_info_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/meeting_info_time"
+            android:layout_marginTop="20dp" >
+        </fragment>
 
-</RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_friends_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/meeting_info_map"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:orientation="vertical">
+        </android.support.v7.widget.RecyclerView>
+
+
+
+    </RelativeLayout>
+</ScrollView>

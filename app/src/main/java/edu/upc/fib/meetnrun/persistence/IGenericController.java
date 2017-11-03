@@ -1,13 +1,12 @@
 package edu.upc.fib.meetnrun.persistence;
 
-import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
-import retrofit2.Callback;
+import edu.upc.fib.meetnrun.persistence.persistenceModels.UserServer;
 
 /**
  * Created by Awais Iqbal on 17/10/2017.
@@ -15,7 +14,7 @@ import retrofit2.Callback;
 
 public interface IGenericController {
     public List<Meeting> getAllMeetings();
-    public Meeting createMeetingPublic( String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException;
+    public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException;
     public Meeting getMeeting(int id) throws NotFoundException;
     public boolean updateMeeting(Meeting obj) throws ParamsException, NotFoundException;
     public boolean deleteMeetingByID(int id) throws NotFoundException;

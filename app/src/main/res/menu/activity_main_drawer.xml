@@ -15,6 +15,10 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/mymeetings_label" />
         <item
+            android:id="@+id/friends"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Friends" />
+        <item
             android:id="@+id/logout"
             android:icon="@drawable/ic_menu_manage"
             android:title="Log out" />
@@ -31,6 +35,19 @@
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
                 android:title="Send" />
+        </menu>
+    </item>
+
+    <item android:title="Configuration">
+        <menu>
+            <item
+                android:id="@+id/settings"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Settings" />
+            <item
+                android:id="@+id/help"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="Help and suggestions" />
         </menu>
     </item>
 

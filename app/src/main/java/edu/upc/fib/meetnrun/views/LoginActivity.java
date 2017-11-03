@@ -1,23 +1,33 @@
 package edu.upc.fib.meetnrun.views;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.IGenericController;
+import edu.upc.fib.meetnrun.persistence.WebDBController;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText editUsername, editPassword;
     private String username, password;
+    public static final String MY_PREFS_NAME = "TokenFile";
+    private IGenericController controller;
+    private CurrentSession cs;
+    private ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +36,18 @@ public class LoginActivity extends AppCompatActivity {
 
         editUsername = (EditText) findViewById(R.id.editUsername);
         editPassword = (EditText) findViewById(R.id.editPassword);
+        progress = (ProgressBar) findViewById(R.id.progressBar);
+        progress.setVisibility(View.INVISIBLE);
+
+        controller = WebDBController.getInstance();
+        cs = CurrentSession.getInstance();
+
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        String token = prefs.getString("token",null);
+        cs.setToken(token);
+        if (cs.getToken() != null) {
+            new GetCurrentUser().execute();
+        }
     }
 
     public void loginButton(View v) {
@@ -58,20 +80,26 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    private void saveToken() {
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("token", CurrentSession.getInstance().getToken());
+        editor.commit();
+    }
+
     private class login extends AsyncTask<String,String,String> {
 
         String token = null;
-        GenericController gc = GenericController.getInstance();
-        CurrentSession cs = CurrentSession.getInstance();
         User u = null;
 
         @Override
         protected String doInBackground(String... logUser) {
-            token = gc.login(username, password);
+            token = controller.login(username, password);
 
             if(token != null && !token.equals("")){
                 cs.setToken(token);
-                u = gc.getCurrentUser();
+                saveToken();
+                u = controller.getCurrentUser();
             }
             return null;
         }
@@ -87,7 +115,31 @@ public class LoginActivity extends AppCompatActivity {
             }
             super.onPostExecute(s);
         }
+    }
 
+    private class GetCurrentUser extends AsyncTask<String,String,String> {
+
+        User user = null;
+
+        @Override
+        protected void onPreExecute() {
+            progress.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... logUser) {
+            user = controller.getCurrentUser();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            progress.setVisibility(View.INVISIBLE);
+            cs.setCurrentUser(user);
+            changeToMainActivity();
+            super.onPostExecute(s);
+        }
     }
 
 }

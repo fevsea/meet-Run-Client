@@ -55,7 +55,7 @@ public class MyMeetingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 meetingsAdapter.addItem(getContext());
-                createNewMeeting();
+                //TODO createNewMeeting();
             }
         });
         final SwipeRefreshLayout swipeRefreshLayout =
