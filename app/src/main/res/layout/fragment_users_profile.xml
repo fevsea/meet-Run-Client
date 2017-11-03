@@ -76,6 +76,14 @@
                 android:textSize="20sp"
                 android:text="Postcode" />
 
+            <ImageView
+                android:id="@+id/friend_request"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/add_circle" />
+
         </RelativeLayout>
 
     </RelativeLayout>

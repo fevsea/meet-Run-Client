@@ -3,9 +3,11 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
@@ -25,9 +27,18 @@ public class UserProfileFragment extends Fragment {
 
         Bundle profileInfo = getActivity().getIntent().getExtras();
 
-        TextView userName = view.findViewById(R.id.userName3);
+        final TextView userName = view.findViewById(R.id.userName3);
         TextView name = view.findViewById(R.id.completeName3);
         TextView postCode = view.findViewById(R.id.userPostCode3);
+        ImageView img = view.findViewById(R.id.friend_request);
+        img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.e("request friend", userName.getText().toString());
+
+            }
+        });
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
