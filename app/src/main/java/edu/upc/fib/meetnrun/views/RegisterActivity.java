@@ -1,6 +1,5 @@
 package edu.upc.fib.meetnrun.views;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,13 +12,15 @@ import android.widget.Toast;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.IGenericController;
+import edu.upc.fib.meetnrun.persistence.WebDBController;
 
 public class RegisterActivity extends AppCompatActivity{
 
     private EditText editName, editSurname, editUsername, editPc, editPassword1, editPassword2, editAnswer;
     private Spinner spinnerQuestion;
     private String name, surname, username, password1, quest, answ,pcInt;
+    private IGenericController controller;
     private final static String[] questionsList = {"What is the first name of the person you first kissed?",
                                                                     "What was the name of your primary school?",
                                                                     "What time of the day were you born?",
@@ -29,13 +30,15 @@ public class RegisterActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in);
+        setContentView(R.layout.activity_sign_up);
 
         this.setTitle("Register");
 
+        controller = WebDBController.getInstance();
+
         editName = (EditText) findViewById(R.id.editName);
         editSurname = (EditText) findViewById(R.id.editSurname);
-        editUsername = (EditText) findViewById(R.id.editUsername);
+        editUsername = (EditText) findViewById(R.id.editUsernameR);
         editPc = (EditText) findViewById(R.id.editPostalCode);
         editPassword1 = (EditText) findViewById(R.id.editPassword1);
         editPassword2 = (EditText) findViewById(R.id.editPassword2);
@@ -93,9 +96,7 @@ public class RegisterActivity extends AppCompatActivity{
     }
 
     private void changeToLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
         finish();
-        startActivity(intent);
     }
 
     private class register extends AsyncTask<String,String,String> {
@@ -105,7 +106,7 @@ public class RegisterActivity extends AppCompatActivity{
         @Override
         protected String doInBackground(String... registerUser) {
             try {
-                user = GenericController.getInstance().registerUser(username, name, surname, pcInt, password1, quest, answ);
+                user = controller.registerUser(username, name, surname, pcInt, password1, quest, answ);
             } catch (ParamsException e) {
                 e.printStackTrace();
             }
@@ -117,7 +118,10 @@ public class RegisterActivity extends AppCompatActivity{
             if (user == null) {
                 Toast.makeText(getApplicationContext(), "Register ERROR", Toast.LENGTH_SHORT).show();
             }
-            else changeToLoginActivity();
+            else {
+                Toast.makeText(getApplicationContext(), "Register complete!", Toast.LENGTH_SHORT).show();
+                changeToLoginActivity();
+            }
             super.onPostExecute(s);
         }
 

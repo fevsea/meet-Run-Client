@@ -2,25 +2,23 @@ package edu.upc.fib.meetnrun.views;
 
 
 import android.support.v4.app.Fragment;
-
+import android.support.v4.view.GravityCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.views.fragments.MeetingInfoFragment;
+import edu.upc.fib.meetnrun.views.fragments.FriendsFragment;
 
-public class MeetingInfoActivity extends BaseReturnActivity {
+public class FriendsActivity extends BaseDrawerActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new MeetingInfoFragment();
+        return new FriendsFragment();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.empty_menu, menu);
+    protected boolean finishOnChangeView() {
         return true;
     }
 
@@ -28,11 +26,9 @@ public class MeetingInfoActivity extends BaseReturnActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                drawerLayout.openDrawer(GravityCompat.START);
                 break;
         }
         return true;
     }
-
 }
-

@@ -4,8 +4,6 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +27,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     private GoogleMap map;
     private Marker marker;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,6 +41,9 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         TextView description = view.findViewById(R.id.meeting_info_description);
         TextView date = view.findViewById(R.id.meeting_info_date);
         TextView time = view.findViewById(R.id.meeting_info_time);
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setVisibility(View.GONE);
 
         title.setText(meetingInfo.getString("title"));
         description.setText(meetingInfo.getString("description"));

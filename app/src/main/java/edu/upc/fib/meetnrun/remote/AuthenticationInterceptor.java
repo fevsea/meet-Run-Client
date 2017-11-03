@@ -31,7 +31,7 @@ public class AuthenticationInterceptor implements Interceptor {
             Request.Builder builder = original.newBuilder();
             builder = builder.header("Authorization","Token " + CurrentSession.getInstance().getToken());
             //builder = builder.header("Authorization","Token 54d5210bc172307ff887fafc7fc0407f75f4f0c4");
-            builder = builder.header("User-Agent","Android");
+            builder = builder.header("UserServer-Agent","Android");
             Request request = builder.build();
             r = chain.proceed(request);
         } else {

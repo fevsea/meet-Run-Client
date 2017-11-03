@@ -1,5 +1,8 @@
 package edu.upc.fib.meetnrun.models;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 /**
  * Created by Awais Iqbal on 24/10/2017.
  */
@@ -11,7 +14,6 @@ public class CurrentSession {
     private User currentUser;
 
     private CurrentSession() {
-        token = null;
     }
 
     public static CurrentSession getInstance() {

@@ -10,15 +10,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
@@ -36,6 +36,7 @@ public class MeetingListFragment extends Fragment {
 
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,7 +45,8 @@ public class MeetingListFragment extends Fragment {
         setupRecyclerView();
 
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.meeting_list_fab);
+                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setImageResource(R.drawable.add_group_512);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,7 +113,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            l = GenericController.getInstance().getAllMeetings();
+            l = WebDBController.getInstance().getAllMeetings();
             return null;
         }
 

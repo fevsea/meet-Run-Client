@@ -58,7 +58,7 @@
                 android:layout_alignStart="@+id/editName" />
 
             <TextView
-                android:id="@+id/username"
+                android:id="@+id/usernameR"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Username:"
@@ -68,14 +68,14 @@
                 android:layout_alignStart="@+id/editSurname" />
 
             <EditText
-                android:id="@+id/editUsername"
+                android:id="@+id/editUsernameR"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:textSize="17dp"
-                android:layout_below="@+id/username"
-                android:layout_alignStart="@+id/username" />
+                android:layout_below="@+id/usernameR"
+                android:layout_alignStart="@+id/usernameR" />
 
             <TextView
                 android:id="@+id/postalCode"
@@ -84,8 +84,8 @@
                 android:text="Postal Code:"
                 android:textSize="17dp"
                 android:layout_marginTop="14dp"
-                android:layout_below="@+id/editUsername"
-                android:layout_alignStart="@+id/editUsername" />
+                android:layout_below="@+id/editUsernameR"
+                android:layout_alignStart="@+id/editUsernameR" />
 
             <EditText
                 android:id="@+id/editPostalCode"
@@ -191,3 +191,4 @@
     </ScrollView>
 
 </LinearLayout>
+

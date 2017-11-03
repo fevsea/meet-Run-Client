@@ -1,6 +1,6 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
-import android.os.AsyncTask;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,12 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.GenericController;
 
 
 public class ProfileActivityFragment extends Fragment {
@@ -36,22 +35,34 @@ public class ProfileActivityFragment extends Fragment {
 
         Log.e("USER","AGAFO USER" + " " + u);
 
-        String userName = u.getUsername(); Log.e("USER","AGAFO NAME USER" + " " + userName);
-        String name = u.getFirstName() + ' ' + u.getLastName(); Log.e("USER","AGAFO NAME" + " " + name);
-        String postCode = u.getPostalCode(); Log.e("USER","AGAFO POST CODE" + " " + postCode);
+
+        String userName = u.getUsername();
+        String name = u.getFirstName() + ' ' + u.getLastName();
+        String postCode = u.getPostalCode();
 
 
         TextView userNameTextView = (TextView) view.findViewById(R.id.userName);
-        Log.e("view","agafo view username");
         TextView nameTextView = (TextView) view.findViewById(R.id.completeName);
-        Log.e("view","agafo view name");
         TextView userPostCodeTextView = (TextView) view.findViewById(R.id.userPostCode);
         Log.e("view","agafo view postcode");
 
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setImageResource(android.R.drawable.ic_menu_edit);
 
-        userNameTextView.setText(userName); Log.e("Set text","poso username");
-        nameTextView.setText(name);Log.e("Set text","poso name");
-        userPostCodeTextView.setText(postCode); Log.e("Set text","poso post");
+        /*
+        fab.setBackgroundColor(0);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });*/
+
+        userNameTextView.setText(userName);
+        nameTextView.setText(name);
+        userPostCodeTextView.setText(postCode);
 
         return view;
     }
@@ -83,7 +94,7 @@ public class ProfileActivityFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            u = GenericController.getInstance().getCurrentUser();
+            u = WebDBController.getInstance().getCurrentUser();
             Log.e("MAIN","HE AGAFAT EL USER");
             Log.e("MAIN","AMB NOM USER" + u.getUsername());
             Log.e("MAIN","AMB NOM" + u.getFirstName());

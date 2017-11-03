@@ -1,20 +1,22 @@
 package edu.upc.fib.meetnrun.views;
 
-
 import android.support.v4.app.Fragment;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.views.fragments.MeetingInfoFragment;
+import edu.upc.fib.meetnrun.views.fragments.UserProfileFragment;
 
-public class MeetingInfoActivity extends BaseReturnActivity {
+/**
+ * Created by eric on 2/11/17.
+ */
+
+public class UserProfileActivity extends BaseReturnActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new MeetingInfoFragment();
+        return new UserProfileFragment();
     }
 
     @Override
@@ -35,4 +37,3 @@ public class MeetingInfoActivity extends BaseReturnActivity {
     }
 
 }
-

@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="edu.upc.fib.meetnrun.views.fragments.ProfileActivityFragment">
+    tools:context="edu.upc.fib.meetnrun.views.fragments.FriendProfileFragment">
 
 
 
@@ -14,17 +14,17 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/headerImage"
+            android:id="@+id/headerImage2"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:scaleType="centerCrop"
             android:background="#BBCEDC" />
 
         <ImageView
-            android:id="@+id/userProfileImage"
+            android:id="@+id/userProfileImage2"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_below="@+id/headerImage"
+            android:layout_below="@+id/headerImage2"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="-60dp"
             android:background="@drawable/profile_circular_border_imageview"
@@ -32,18 +32,18 @@
             android:padding="20dp"
             android:scaleType="centerCrop"
             app:srcCompat="@mipmap/ic_launcher" />
-        
+
         <RelativeLayout
-            android:id="@+id/profile_layout"
+            android:id="@+id/profile_layout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/headerImage"
+            android:layout_below="@+id/headerImage2"
             android:background="#ffff"
             android:elevation="4dp"
             android:paddingBottom="24dp">
 
             <TextView
-                android:id="@+id/userName"
+                android:id="@+id/userName2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -54,11 +54,11 @@
                 android:text="User-name" />
 
             <TextView
-                android:id="@+id/completeName"
+                android:id="@+id/completeName2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@+id/userName"
+                android:layout_below="@+id/userName2"
                 android:layout_marginTop="12dp"
                 android:textColor="#000000"
                 android:textSize="20sp"
@@ -66,17 +66,17 @@
                 android:text="Name" />
 
             <TextView
-                android:id="@+id/userPostCode"
+                android:id="@+id/userPostCode2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
-                android:layout_below="@+id/completeName"
+                android:layout_below="@+id/completeName2"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:text="Postcode" />
 
-            </RelativeLayout>
+        </RelativeLayout>
 
     </RelativeLayout>
 

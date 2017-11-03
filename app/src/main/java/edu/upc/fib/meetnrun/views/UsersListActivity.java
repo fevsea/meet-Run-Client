@@ -1,27 +1,22 @@
 package edu.upc.fib.meetnrun.views;
 
-
 import android.support.v4.app.Fragment;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.views.fragments.MeetingInfoFragment;
+import edu.upc.fib.meetnrun.views.fragments.UsersListFragment;
 
-public class MeetingInfoActivity extends BaseReturnActivity {
+/**
+ * Created by eric on 2/11/17.
+ */
+
+public class UsersListActivity extends BaseReturnActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new MeetingInfoFragment();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.empty_menu, menu);
-        return true;
+        return new UsersListFragment();
     }
 
     @Override
@@ -33,6 +28,4 @@ public class MeetingInfoActivity extends BaseReturnActivity {
         }
         return true;
     }
-
 }
-
