@@ -243,6 +243,7 @@
                     android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
                 <Button
+                    android:id="@+id/pickLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/location_button" />

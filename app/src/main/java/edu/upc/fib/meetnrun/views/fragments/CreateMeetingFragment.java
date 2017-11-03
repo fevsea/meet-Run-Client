@@ -108,6 +108,15 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
             }
         });
         sV=(ScrollView) view.findViewById(R.id.scrollView);
+
+        Button pickLocation=(Button) view.findViewById(R.id.pickLocation);
+        pickLocation.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                showLocationPicker();
+            }
+        });
         Button createButton=(Button) view.findViewById(R.id.create);
         createButton.setOnClickListener(new View.OnClickListener (){
 
@@ -190,7 +199,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         else dayTxt = String.valueOf(day);
         Date=yearTxt+"-"+monthTxt+"-"+dayTxt+"T"+hourTxt+":"+minuteTxt+":00Z";
 
-        if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() /*|| Latitude.isEmpty() || Longitude.isEmpty()*/){
+        if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty()){
             Toast.makeText(this.getContext(), "@string/emptyCreate", Toast.LENGTH_SHORT).show();
         }
         else if(Name.length()>=100) Toast.makeText(this.getContext(),"@string/bigName", Toast.LENGTH_SHORT).show();
