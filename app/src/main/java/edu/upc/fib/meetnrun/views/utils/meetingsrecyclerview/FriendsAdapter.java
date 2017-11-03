@@ -1,28 +1,25 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
 
-public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
+/**
+ * Created by eric on 2/11/17.
+ */
+
+public class FriendsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
 
     private List<Meeting> meetings;
     private RecyclerViewOnClickListener listener;
 
-    public MeetingsAdapter(List<Meeting> meetings, RecyclerViewOnClickListener listener) {
+    public FriendsAdapter(List<Meeting> meetings, RecyclerViewOnClickListener listener) {
         this.meetings = meetings;
         this.listener = listener;
         notifyDataSetChanged();
@@ -55,4 +52,5 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
     public Meeting getMeetingAtPosition(int position) {
         return meetings.get(position);
     }
+
 }
