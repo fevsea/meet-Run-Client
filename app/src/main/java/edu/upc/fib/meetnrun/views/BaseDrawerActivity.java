@@ -61,7 +61,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                     cs.setCurrentUser(null);
                                     deleteToken();
                                     i = new Intent(getApplicationContext(),LoginActivity.class);
-                                    finish();
+                                    finishAffinity();
                                     break;
 
                                 case R.id.meetings:
