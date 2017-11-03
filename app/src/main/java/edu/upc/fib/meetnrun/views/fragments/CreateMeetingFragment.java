@@ -15,9 +15,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ScrollView;
@@ -42,13 +43,14 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.IGenericController;
 
 import static android.R.layout.simple_spinner_item;
+import static edu.upc.fib.meetnrun.R.id.isPublic;
 import static edu.upc.fib.meetnrun.R.id.scrollView;
-import static edu.upc.fib.meetnrun.R.id.spinner;
 
 
-public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback {
+public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
     private Integer year, month, day, hour2, minute;
 
     private View view;
@@ -71,6 +73,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     String Latitude;
     String Longitude;
     ScrollView sV;
+    Switch publicMeeting;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -110,13 +113,13 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        Spinner spin = (Spinner) view.findViewById(R.id.spinner);
-        spin.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+        publicMeeting = (Switch) view.findViewById(R.id.switch_create);
+        publicMeeting.setOnCheckedChangeListener(this);
 
-        spin.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, kind));
+        Public=false;
 
         SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
-        getFragmentManager().beginTransaction().add(R.id.map, mMapFragment).commit();
+        getFragmentManager().beginTransaction().add(R.id.mapView, mMapFragment).commit();
         mMapFragment.getMapAsync(this);
         return view;
     }
@@ -157,16 +160,13 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     }
 
 
-    public void create (CreateMeetingFragment view){
+    public void create(){
         Name = name.getText().toString();
         Date = date.getText().toString();
         Level = Integer.parseInt(level.getText().toString());
         String Hour = hour.getText().toString();
         Description = description.getText().toString();
         Date=Date+','+Hour;
-        Latitude=String.valueOf(41.388576);
-        Longitude=String.valueOf(2.112840);
-        Public=Boolean.TRUE;
         Id=26102017;
 
         if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() /*|| Latitude.isEmpty() || Longitude.isEmpty()*/){
@@ -176,7 +176,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         else if(Description.length()>=500) Toast.makeText(this.getContext(), "@string/bigDescription", Toast.LENGTH_SHORT).show();
         else{
             //DB stuff
-            Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description+", Kind of meeting: "+Public.toString(), Toast.LENGTH_SHORT).show();
             create_meeting();
             this.getActivity().finish();
         }
@@ -192,7 +192,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.done_button) {
-            create(this);
+            create();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -233,12 +233,19 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         new newMeeting().execute();
     }
 
+    @Override
+    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+        if (b) Public=true;
+        else Public=false;
+    }
+
     private class newMeeting extends AsyncTask<String,String,String> {
         Meeting m;
         @Override
         protected String doInBackground(String... strings){
             try {
-                m= GenericController.getInstance().createMeetingPublic(Name,Description,Public,Level,Date,Latitude,Longitude);
+                IGenericController gc= GenericController.getInstance();
+                m= gc.createMeetingPublic(Name,Description,Public,Level,Date,Latitude,Longitude);
             } catch (ParamsException e) {
                 e.printStackTrace();
             }
