@@ -46,7 +46,7 @@ public class EditProfileFragment extends Fragment {
     String lastName;
     String postCode;
 
-    boolean actualitzat_correctament = true;
+    //boolean actualitzat_correctament = true;
 
 
     @Override
@@ -65,14 +65,15 @@ public class EditProfileFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 changeProfile();
-                if(actualitzat_correctament) {
+                /*Boolean b = true;
+                if(b) {
                     Intent intent;
                     intent = new Intent(getActivity(), ProfileActivity.class);
                     startActivity(intent);
                 }
                 else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_edit_profile), Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
         });
 
@@ -109,41 +110,59 @@ public class EditProfileFragment extends Fragment {
         lastName = String.valueOf(lastNameText.getText());
         postCode = String.valueOf(userPostCodeText.getText());
 
-        u = CurrentSession.getInstance().getCurrentUser();
+        User newUser = CurrentSession.getInstance().getCurrentUser();
 
-        u.setUsername(userName);
-        u.setFirstName(firstName);
-        u.setLastName(lastName);
-        u.setPostalCode(postCode);
+        newUser.setUsername(userName);
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+        newUser.setPostalCode(postCode);
 
-        CurrentSession.getInstance().setCurrentUser(u);
+        //CurrentSession.getInstance().setCurrentUser(u);
 
-        //updateUserServer(u);
+        updateUserServer(u);
 
     }
 
-    /*private void updateUserServer(User u) {
-        new EditProfileFragment.updateUser().execute(u);
+    private void changeToNewUserProfile() {
+        Intent intent;
+        intent = new Intent(getActivity(), ProfileActivity.class);
+        startActivity(intent);
+    }
+
+    private void updateUserServer(User u) {
+        new updateUser().execute(u);
     }
 
 
-    private class updateUser extends AsyncTask<User,String,String> {
+    private class updateUser extends AsyncTask<User,String, Boolean> {
+
+        Exception exception = null;
+        Boolean actualitzat_correctament;
 
         @Override
-        protected String doInBackground(User... users) {
+        protected Boolean doInBackground(User... params) {
             try {
-                actualitzat_correctament = controller.updateUser(users[0]);
+                actualitzat_correctament = controller.updateUser(params[0]);
+                //Log.e("UPDATE USER", "SHA FET UPDATE" + actualitzat_correctament);
+            } catch (NotFoundException e) {
+                exception = e;
             } catch (ParamsException e) {
                 e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
             }
-            return null;
+            return actualitzat_correctament;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+        protected void onPostExecute(Boolean b) {
+
+            if(b) {
+                CurrentSession.getInstance().setCurrentUser(u);
+                changeToNewUserProfile();
+                }
+                else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.error_edit_profile), Toast.LENGTH_SHORT).show();
+                }
+            super.onPostExecute(b);
         }
-    }*/
+    }
 }
