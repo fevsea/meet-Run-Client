@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/add_circle" />
+                android:src="@drawable/send" />
 
         </RelativeLayout>
 
