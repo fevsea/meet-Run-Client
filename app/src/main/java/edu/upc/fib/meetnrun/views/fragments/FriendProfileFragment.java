@@ -1,9 +1,11 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.content.DialogInterface;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +38,23 @@ public class FriendProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Log.e("delete friend", userName.getText().toString());
+                String title = getResources().getString(R.string.delete_friend_dialog_title);
+                String message = getResources().getString(R.string.delete_friend_dialog_message);
+                String ok = getResources().getString(R.string.ok);
+                String cancel = getResources().getString(R.string.cancel);
+                showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.e("delete friend", userName.getText().toString());
+                            }
+                        },
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
 
             }
         });
@@ -49,6 +67,17 @@ public class FriendProfileFragment extends Fragment {
         postCode.setText(profileInfo.getString("postCode"));
 
         return this.view;
+    }
+
+    private void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(okButtonText, ok);
+        if (negativeButtonText != null && cancel != null)
+            builder.setNegativeButton(negativeButtonText, cancel);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }
