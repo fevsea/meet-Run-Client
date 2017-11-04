@@ -9,48 +9,49 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 
 /**
  * Created by eric on 2/11/17.
  */
 
-public class FriendsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
+public class FriendsAdapter extends RecyclerView.Adapter<FriendsViewHolder> {
 
-    private List<Meeting> meetings;
+    private List<User> users;
     private RecyclerViewOnClickListener listener;
 
-    public FriendsAdapter(List<Meeting> meetings, RecyclerViewOnClickListener listener) {
-        this.meetings = meetings;
+    public FriendsAdapter(List<User> users, RecyclerViewOnClickListener listener) {
+        this.users = users;
         this.listener = listener;
         notifyDataSetChanged();
     }
 
     @Override
-    public MeetingsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FriendsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.meeting_item, parent, false);
-        return new MeetingsViewHolder(view,listener);
+        View view = layoutInflater.inflate(R.layout.user_item, parent, false);
+        return new FriendsViewHolder(view,listener);
     }
 
     @Override
-    public void onBindViewHolder(final MeetingsViewHolder holder, int position) {
-        Meeting meeting = meetings.get(position);
-        holder.bindMeeting(meeting);
+    public void onBindViewHolder(final FriendsViewHolder holder, int position) {
+        User user = users.get(position);
+        holder.bindMeeting(user);
     }
 
     @Override
     public int getItemCount() {
-        return meetings.size();
+        return users.size();
     }
 
 
-    public void updateMeetingsList(List<Meeting> meetings) {
-        this.meetings = meetings;
+    public void updateFriendsList(List<User> users) {
+        this.users = users;
         notifyDataSetChanged();
     }
 
-    public Meeting getMeetingAtPosition(int position) {
-        return meetings.get(position);
+    public User getFriendAtPosition(int position) {
+        return users.get(position);
     }
 
 }
