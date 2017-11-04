@@ -35,7 +35,7 @@ public class EditProfileFragment extends Fragment {
 
     User u;
     private View view;
-    private IGenericController controller;
+    private WebDBController controller = WebDBController.getInstance();
     EditText userNameText;
     EditText firstNameText;
     EditText lastNameText;
@@ -46,7 +46,7 @@ public class EditProfileFragment extends Fragment {
     String lastName;
     String postCode;
 
-    //boolean actualitzat_correctament = true;
+    //boolean actualitzat_correctament;
 
 
     @Override
@@ -119,7 +119,7 @@ public class EditProfileFragment extends Fragment {
 
         //CurrentSession.getInstance().setCurrentUser(u);
 
-        updateUserServer(u);
+        updateUserServer();
 
     }
 
@@ -129,21 +129,22 @@ public class EditProfileFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void updateUserServer(User u) {
+    private void updateUserServer() {
         new updateUser().execute(u);
     }
 
 
-    private class updateUser extends AsyncTask<User,String, Boolean> {
+    private class updateUser extends AsyncTask<User, String, Boolean> {
 
         Exception exception = null;
         Boolean actualitzat_correctament;
 
         @Override
         protected Boolean doInBackground(User... params) {
+
             try {
+                Log.e("USER","ENVIARE USER" + params[0]);
                 actualitzat_correctament = controller.updateUser(params[0]);
-                //Log.e("UPDATE USER", "SHA FET UPDATE" + actualitzat_correctament);
             } catch (NotFoundException e) {
                 exception = e;
             } catch (ParamsException e) {
