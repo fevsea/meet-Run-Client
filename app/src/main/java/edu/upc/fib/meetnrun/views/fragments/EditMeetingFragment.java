@@ -47,6 +47,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
@@ -326,9 +327,12 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
             Boolean res = false;
             try {
                 res = controller.updateMeeting(params[0]);
+                //TODO Pending to catch correctly
             }
             catch (NotFoundException | ParamsException e) {
                 exception = e;
+            } catch (AutorizationException e) {
+                e.printStackTrace();
             }
             return res;
         }
