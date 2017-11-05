@@ -1,20 +1,18 @@
 package edu.upc.fib.meetnrun.views;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
@@ -94,12 +92,22 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... logUser) {
-            token = controller.login(username, password);
+            try {
+                token = controller.login(username, password);
+                //TODO Pending to catch correctly
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            }
 
             if(token != null && !token.equals("")){
                 cs.setToken(token);
                 saveToken();
-                u = controller.getCurrentUser();
+                try {
+                    u = controller.getCurrentUser();
+                    //TODO Pending to catch correctly
+                } catch (AutorizationException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
@@ -129,7 +137,12 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... logUser) {
-            user = controller.getCurrentUser();
+            try {
+                //TODO Pending to catch correctly
+                user = controller.getCurrentUser();
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
