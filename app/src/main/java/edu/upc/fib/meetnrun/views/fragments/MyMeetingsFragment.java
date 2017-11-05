@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -20,14 +19,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
-import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
-import edu.upc.fib.meetnrun.views.MyMeetingsActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsAdapter;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsListener;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsListener;
@@ -57,8 +56,7 @@ public class MyMeetingsFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                meetingsAdapter.addItem(getContext());
-                //TODO createNewMeeting();
+                createNewMeeting();
             }
         });
         final SwipeRefreshLayout swipeRefreshLayout =
@@ -114,7 +112,7 @@ public class MyMeetingsFragment extends Fragment {
     }
 
     private void updateMeetingList() {
-            new GetMyMeetings().execute();
+            new GetMyMeetings().execute(CurrentSession.getInstance().getCurrentUser().getId());
     }
 
     private void createNewMeeting() {
@@ -138,12 +136,12 @@ public class MyMeetingsFragment extends Fragment {
         dialog.show();
     }
 
-    private void leaveMeeting(Meeting meeting) {
+    private void leaveMeeting(final Meeting meeting) {
         showDialog(getString(R.string.leave_meeting_label), getString(R.string.leave_meeting_message),
                     getString(R.string.ok), getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //TODO leave meeting call
+                        new LeaveMeeting().execute(meeting.getId());
                     }
                 },
                 new DialogInterface.OnClickListener() {
@@ -155,12 +153,19 @@ public class MyMeetingsFragment extends Fragment {
         );
     }
 
-    private class GetMyMeetings extends AsyncTask<String,String,String> {
+    private class GetMyMeetings extends AsyncTask<Integer,String,String> {
         List<Meeting> l = new ArrayList<>();
 
         @Override
-        protected String doInBackground(String... strings) {
-            //TODO  l = controller.getMyMeetings();
+        protected String doInBackground(Integer... integers) {
+            //TODO handle exceptions
+            try {
+                l = controller.getUsersFutureMeetings(integers[0]);
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
@@ -168,6 +173,29 @@ public class MyMeetingsFragment extends Fragment {
         protected void onPostExecute(String s) {
             System.err.println("FINISHED");
             meetingsAdapter.updateMeetingsList(l);
+            super.onPostExecute(s);
+        }
+    }
+
+    private class LeaveMeeting extends AsyncTask<Integer,String,String> {
+
+        @Override
+        protected String doInBackground(Integer... integers) {
+            //TODO handle exceptions
+            try {
+                controller.leaveMeeting(integers[0]);
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            System.err.println("FINISHED");
+            updateMeetingList();
             super.onPostExecute(s);
         }
     }

@@ -9,32 +9,38 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 
 public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
 
     private View view;
-    private WeakReference<MeetingsListener> listener;
+    private WeakReference<RecyclerViewOnClickListener> listener;
     private ImageButton addUserButton;
 
-    public MeetingsViewHolder(View itemView, MeetingsListener listener) {
+    public MeetingsViewHolder(View itemView, RecyclerViewOnClickListener listener) {
         super(itemView);
         view = itemView;
         this.listener = new WeakReference<>(listener);
     }
 
     public void bindMeeting(Meeting meeting) {
-        TextView userPhoto = view.findViewById(R.id.meeting_item_user_photo);
-        char letter = meeting.getTitle().charAt(0);
+        TextView userIcon = view.findViewById(R.id.meeting_item_user_icon);
+        char letter = meeting.getOwner().getFirstName().charAt(0);
         String firstLetter = String.valueOf(letter);
-        userPhoto.setBackground(getColoredCircularShape((letter)));
-        userPhoto.setText(firstLetter);
+        userIcon.setBackground(getColoredCircularShape((letter)));
+        userIcon.setText(firstLetter);
 
-        TextView userName = view.findViewById(R.id.meeting_item_title);
-        userName.setText(meeting.getTitle());
+        TextView ownerName = view.findViewById(R.id.meeting_item_owner);
+        ownerName.setText(meeting.getOwner().getUsername());
+
+        TextView meetingTitle = view.findViewById(R.id.meeting_item_title);
+        meetingTitle.setText(meeting.getTitle());
 
         TextView meetingLocation = view.findViewById(R.id.meeting_item_description);
         meetingLocation.setText(meeting.getDescription());
@@ -48,12 +54,24 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
         String datetime = meeting.getDate();
         meetingDate.setText(datetime.substring(0,datetime.indexOf('T')));
         TextView meetingTime = view.findViewById(R.id.meeting_item_time);
-        meetingTime.setText(datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
+        meetingTime.setText(datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('T')+9));
 
         addUserButton = view.findViewById(R.id.meeting_item_meet);
-        addUserButton.setOnClickListener(this);
-
+        int userId = CurrentSession.getInstance().getCurrentUser().getId();
+        if (notParticipating(meeting.getParticipants(), userId)) {
+            addUserButton.setOnClickListener(this);
+        }
+        else {
+            addUserButton.setVisibility(View.GONE);
+        }
         view.setOnClickListener(this);
+    }
+
+    private boolean notParticipating(List<User> users, int id) {
+        for (User user : users) {
+            if (user.getId() == id) return false;
+        }
+        return true;
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {

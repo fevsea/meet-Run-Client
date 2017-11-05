@@ -5,9 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ActionProvider;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,15 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
-import edu.upc.fib.meetnrun.exceptions.GenericException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsListener;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 
 public class MeetingListFragment extends Fragment {
@@ -89,7 +86,7 @@ public class MeetingListFragment extends Fragment {
 
         List<Meeting> meetings = new ArrayList<>();
         updateMeetingList();
-        meetingsAdapter = new MeetingsAdapter(meetings, new MeetingsListener() {
+        meetingsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {
                 Meeting selectedMeeting = meetingsAdapter.getMeetingAtPosition(position);
@@ -101,7 +98,9 @@ public class MeetingListFragment extends Fragment {
                 Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
+                meetingInfoIntent.putExtra("id",meeting.getId());
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
+                meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
                 meetingInfoIntent.putExtra("description",meeting.getDescription());
                 String datetime = meeting.getDate();
                 meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
@@ -159,7 +158,7 @@ public class MeetingListFragment extends Fragment {
     }
 
     private void joinMeeting(Meeting meeting) {
-        //TODO Join meeting
+        new JoinMeeting().execute(meeting.getId());
     }
 
     private class GetMeetings extends AsyncTask<String,String,String> {
@@ -195,6 +194,32 @@ public class MeetingListFragment extends Fragment {
         protected void onPostExecute(String s) {
             System.err.println("FINISHED");
             meetingsAdapter.updateMeetingsList(l);
+            super.onPostExecute(s);
+        }
+    }
+
+//TODO solve error
+    private class JoinMeeting extends AsyncTask<Integer,String,String> {
+
+        @Override
+        protected String doInBackground(Integer... integers) {
+            Log.e("MAIN","DOINGGGG");
+            //TODO handle exceptions
+            try {
+                controller.joinMeeting(integers[0]);
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            System.err.println("FINISHED");
+            Toast.makeText(getActivity(),getString(R.string.joined_meeting),Toast.LENGTH_SHORT).show();
+            updateMeetingList();
             super.onPostExecute(s);
         }
     }

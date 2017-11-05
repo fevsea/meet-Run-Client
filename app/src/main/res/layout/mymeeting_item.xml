@@ -94,17 +94,6 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/mymeeting_item_level"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:layout_centerVertical="true"
-                    android:textSize="20sp"
-                    android:layout_toEndOf="@id/mymeeting_item_iconslayout"
-                    android:layout_margin="@dimen/meeting_item_margin"
-                    android:background="@drawable/level_circular_text_view"/>
-
                 <LinearLayout
                     android:id="@+id/mymeeting_item_datetime"
                     android:layout_width="wrap_content"

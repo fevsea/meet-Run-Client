@@ -14,9 +14,9 @@ import edu.upc.fib.meetnrun.models.Meeting;
 public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
 
     private List<Meeting> meetings;
-    private MeetingsListener listener;
+    private RecyclerViewOnClickListener listener;
 
-    public MeetingsAdapter(List<Meeting> meetings, MeetingsListener listener) {
+    public MeetingsAdapter(List<Meeting> meetings, RecyclerViewOnClickListener listener) {
         this.meetings = meetings;
         this.listener = listener;
         notifyDataSetChanged();

@@ -23,9 +23,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 
 
 public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback{
@@ -46,36 +48,47 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
 
     public void bindMeeting(Meeting meeting) {
 
-        //TODO the Meetings model still needs the users that joines the meeting and the owned of the meeting
         TextView userIcon = view.findViewById(R.id.mymeeting_item_user_icon);
         TextView userIcon1 = view.findViewById(R.id.mymeeting_item_user_icon1);
+        userIcon1.setVisibility(View.GONE);
         TextView userIcon2 = view.findViewById(R.id.mymeeting_item_user_icon2);
+        userIcon2.setVisibility(View.GONE);
         TextView userIcon3 = view.findViewById(R.id.mymeeting_item_user_icon3);
+        userIcon3.setVisibility(View.GONE);
         TextView moreUsers = view.findViewById(R.id.mymeeting_item_more_users);
-        String title = meeting.getTitle();
-        if (title.equals("null")) title = "";
-        char letter = title.charAt(0);
+        char letter = meeting.getOwner().getFirstName().charAt(0);
         String firstLetter = String.valueOf(letter);
         userIcon.setBackground(getColoredCircularShape((letter)));
         userIcon.setText(firstLetter);
-        //TODO if there are more users in the meeting, set the background, else hide this icons
-        userIcon1.setBackground(getColoredSmallCircularShape((letter)));
-        userIcon1.setText(firstLetter);
-        userIcon2.setBackground(getColoredSmallCircularShape((letter)));
-        userIcon2.setText(firstLetter);
-        userIcon3.setBackground(getColoredSmallCircularShape((letter)));
-        userIcon3.setText(firstLetter);
-
-        //TODO if there are more than 4 users in the meeting, add smth like +3,+10... in the moreUsers TextView
-        moreUsers.setText(view.getResources().getString(R.string.vertical_ellipsis));
-
+        List<User> participants = meeting.getParticipants();
+        int size = participants.size();
+        if (size > 4) size = 4;
+        for (int i = 0; i < size; ++i) {
+            User participant = participants.get(i);
+            letter = participant.getFirstName().charAt(0);
+            firstLetter = String.valueOf(letter);
+            if (i == 0) {
+                userIcon1.setVisibility(View.VISIBLE);
+                userIcon1.setBackground(getColoredCircularShape((letter)));
+                userIcon1.setText(firstLetter);
+            }
+            else if (i == 1) {
+                userIcon2.setVisibility(View.VISIBLE);
+                userIcon2.setBackground(getColoredCircularShape((letter)));
+                userIcon2.setText(firstLetter);
+            }
+            else if (i == 2) {
+                userIcon3.setVisibility(View.VISIBLE);
+                userIcon3.setBackground(getColoredCircularShape((letter)));
+                userIcon3.setText(firstLetter);
+            }
+            else {
+                int moreParticipants = participants.size() - 3;
+                moreUsers.setText("+" + moreParticipants);
+            }
+        }
         TextView userName = view.findViewById(R.id.mymeeting_item_title);
         userName.setText(meeting.getTitle());
-
-        TextView meetingLevel = view.findViewById(R.id.mymeeting_item_level);
-        String level = String.valueOf(meeting.getLevel());
-        if (level.equals("null") || level.isEmpty()) level = "0";
-        meetingLevel.setText(String.valueOf(level));
 
         TextView meetingDate = view.findViewById(R.id.mymeeting_item_date);
         String datetime = meeting.getDate();
@@ -83,7 +96,8 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
         TextView meetingTime = view.findViewById(R.id.mymeeting_item_time);
         meetingTime.setText(datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
 
-        location = new LatLng(Double.parseDouble(meeting.getLatitude()),Double.parseDouble(meeting.getLongitude()));
+        location = new LatLng(40,40);
+//TODO        location = new LatLng(Double.parseDouble(meeting.getLatitude()),Double.parseDouble(meeting.getLongitude()));
 
         startMeetingButton = view.findViewById(R.id.mymeeting_item_start);
         TextView startMeetingLabel = view.findViewById(R.id.mymeeting_start_label);
