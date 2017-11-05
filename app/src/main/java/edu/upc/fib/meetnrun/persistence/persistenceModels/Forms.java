@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Forms {
 
-    public static class LoginUser{
+    public static class LoginUser {
         @SerializedName("username")
         @Expose
         private String username;
@@ -39,7 +39,7 @@ public class Forms {
         }
     }
 
-    public static class Token{
+    public static class Token {
         @SerializedName("token")
         @Expose
         private String token;
@@ -57,7 +57,7 @@ public class Forms {
         }
     }
 
-    public static class UserRegistration{
+    public static class UserRegistration {
 
         @SerializedName("id")
         @Expose
@@ -83,6 +83,21 @@ public class Forms {
         @SerializedName("password")
         @Expose
         private String password;
+        @SerializedName("level")
+        @Expose
+        private Integer level;
+
+        public UserRegistration(Integer id, String username, String firstName, String lastName, String postalCode, String question, String answer, String password, Integer level) {
+            this.id = id;
+            this.username = username;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.postalCode = postalCode;
+            this.question = question;
+            this.answer = answer;
+            this.password = password;
+            this.level = level;
+        }
 
         public UserRegistration(Integer id, String username, String firstName, String lastName, String postalCode, String question, String answer, String password) {
             this.id = id;
@@ -158,7 +173,108 @@ public class Forms {
         public void setPassword(String password) {
             this.password = password;
         }
+
+        public Integer getLevel() {
+            return level;
+        }
+
+        public void setLevel(Integer level) {
+            this.level = level;
+        }
     }
 
+    public static class CreateMeeting {
+        @SerializedName("id")
+        @Expose
+        private Integer id;
+        @SerializedName("title")
+        @Expose
+        private String title;
+        @SerializedName("description")
+        @Expose
+        private String description;
+        @SerializedName("public")
+        @Expose
+        private Boolean _public;
+        @SerializedName("level")
+        @Expose
+        private Integer level;
+        @SerializedName("date")
+        @Expose
+        private String date;
+        @SerializedName("latitude")
+        @Expose
+        private String latitude;
+        @SerializedName("longitude")
+        @Expose
+        private String longitude;
+
+        public CreateMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) {
+            this.title = title;
+            this.description = description;
+            this._public = _public;
+            this.level = level;
+            this.date = date;
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public Boolean get_public() {
+            return _public;
+        }
+
+        public void set_public(Boolean _public) {
+            this._public = _public;
+        }
+
+        public Integer getLevel() {
+            return level;
+        }
+
+        public void setLevel(Integer level) {
+            this.level = level;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        public String getLatitude() {
+            return latitude;
+        }
+
+        public void setLatitude(String latitude) {
+            this.latitude = latitude;
+        }
+
+        public String getLongitude() {
+            return longitude;
+        }
+
+        public void setLongitude(String longitude) {
+            this.longitude = longitude;
+        }
+    }
 
 }
+
