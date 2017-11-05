@@ -1,8 +1,7 @@
 package edu.upc.fib.meetnrun.models;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
+import java.util.List;
 
 public class Meeting {
     private Integer id;
@@ -13,6 +12,8 @@ public class Meeting {
     private String date;
     private String latitude;
     private String longitude;
+    private User owner;
+    private List<User> participants;
 
     /**
      * No args constructor for use in serialization
@@ -21,19 +22,7 @@ public class Meeting {
     public Meeting() {
     }
 
-    /**
-     *
-     * @param id
-     * @param title
-     * @param level
-     * @param _public
-     * @param description
-     * @param longitude
-     * @param latitude
-     * @param date
-     */
     public Meeting(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) {
-        super();
         this.id = id;
         this.title = title;
         this.description = description;
@@ -42,6 +31,19 @@ public class Meeting {
         this.date = date;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public Meeting(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, User owner, List<User> participants) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this._public = _public;
+        this.level = level;
+        this.date = date;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.owner = owner;
+        this.participants = participants;
     }
 
     public Integer getId() {
@@ -114,5 +116,45 @@ public class Meeting {
 
     public void setDateTime(Date d){
 
+    }
+
+    public Boolean get_public() {
+        return _public;
+    }
+
+    public void set_public(Boolean _public) {
+        this._public = _public;
+    }
+
+    public List<User> getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(List<User> participants) {
+        this.participants = participants;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    @Override
+    public String toString() {
+        return "Meeting{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", _public=" + _public +
+                ", level=" + level +
+                ", date='" + date + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", owner=" + owner +
+                ", participants=" + participants +
+                '}';
     }
 }
