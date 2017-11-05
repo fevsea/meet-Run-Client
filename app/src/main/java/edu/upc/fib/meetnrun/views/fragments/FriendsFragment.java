@@ -150,7 +150,11 @@ public class FriendsFragment extends Fragment {
                 for (User friend : l) {
                     String userName = friend.getUsername().toLowerCase();
                     String name = (friend.getFirstName()+" "+friend.getLastName()).toLowerCase();
-                    if (name.contains(newText) || userName.contains(newText)) newList.add(friend);
+                    String postCode = friend.getPostalCode();
+                    if (userName != null && name != null && postCode != null) {
+                        if (name.contains(newText) || userName.contains(newText) || postCode.contains(newText)) newList.add(friend);
+                    }
+
                 }
                 friendsAdapter.updateFriendsList(newList);
                 return true;
