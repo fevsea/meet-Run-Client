@@ -29,4 +29,9 @@
         <item name="android:background">@color/black_overlay</item>
     </style>
 
+    <style name="TitleStyle" parent="TitleStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@</item>
+    </style>
+
 </resources>

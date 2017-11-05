@@ -25,6 +25,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
@@ -57,6 +59,7 @@ public class MeetingListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
 
+        controller = WebDBController.getInstance();
         setupRecyclerView();
 
         FloatingActionButton fab =
@@ -165,7 +168,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            l = WebDBController.getInstance().getAllMeetings();
+                l = controller.getAllMeetings();
             return null;
         }
 
@@ -184,8 +187,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            //TODO call to get meetings filtered
-            //l = GenericController.getInstance().getMeetingsFiltered(strings[0]);
+            //TODO controller.getMeetingsFiltered(strings[0]);
             return null;
         }
 

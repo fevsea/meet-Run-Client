@@ -20,6 +20,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.upc.fib.meetnrun.persistence.IGenericController;
+import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
@@ -35,6 +37,7 @@ public class MyMeetingsFragment extends Fragment {
 
     private MyMeetingsAdapter meetingsAdapter;
     private View view;
+    private IGenericController controller;
 
     public MyMeetingsFragment() {
 
@@ -45,7 +48,7 @@ public class MyMeetingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
-
+        controller = WebDBController.getInstance();
         setupRecyclerView();
 
         FloatingActionButton fab =
@@ -157,7 +160,7 @@ public class MyMeetingsFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            //TODO  l = GenericController.getInstance().getMyMeetings();
+            //TODO  l = controller.getMyMeetings();
             return null;
         }
 
