@@ -41,14 +41,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.persistence.GenericController;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
+
 
 import static android.R.layout.simple_spinner_item;
 import static edu.upc.fib.meetnrun.R.id.isPublic;
 import static edu.upc.fib.meetnrun.R.id.scrollView;
+import edu.upc.fib.meetnrun.persistence.WebDBController;
+
 
 
 public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
@@ -266,8 +268,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if (b) Public=true;
-        else Public=false;
+        Public=b;
     }
 
     private class newMeeting extends AsyncTask<String,String,String> {
@@ -275,10 +276,10 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         @Override
         protected String doInBackground(String... strings){
             try {
-                IGenericController gc= GenericController.getInstance();
-                Log.e("DEBUG",Date + " " + Latitude + " " + Longitude);
-                m= gc.createMeetingPublic(Name,Description,Public,Level,Date,Latitude,Longitude);
-            } catch (ParamsException e) {
+                 m= WebDBController.getInstance().createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
+            } catch (ParamsException  e) {
+                e.printStackTrace();
+            } catch (AutorizationException e) {
                 e.printStackTrace();
             }
             return null;

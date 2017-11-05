@@ -12,9 +12,14 @@ buildscript {
     }
 }
 
+ext {
+    archRoomVersion = "1.0.0-rc1"
+}
+
 allprojects {
     repositories {
         jcenter()
+        maven { url 'https://maven.google.com' }
     }
 }
 

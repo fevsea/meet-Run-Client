@@ -1,7 +1,9 @@
 package edu.upc.fib.meetnrun.views;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -12,13 +14,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.User;
 
 public abstract class BaseDrawerActivity extends AppCompatActivity{
 
     protected DrawerLayout drawerLayout;
+
+    public static final String MY_PREFS_NAME = "TokenFile";
 
     protected abstract Fragment createFragment();
 
@@ -35,8 +41,6 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_18dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
-
         drawerLayout = (DrawerLayout) findViewById(R.id.activity_drawerlayout);
         drawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
         NavigationView navigationView = (NavigationView) findViewById(R.id.activity_nav_view);
@@ -47,23 +51,24 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                         public boolean onNavigationItemSelected(MenuItem menuItem) {
                             Intent i = null;
                             switch (menuItem.getItemId()) {
-                                case R.id.edit_meeting:
+                                /*case R.id.edit_meeting:
                                     i = new Intent(getApplicationContext(),EditMeetingActivity.class);
                                     i.putExtra("id",3);
-                                    break;
-                                case R.id.user_profile:
-                                    i = new Intent(getApplicationContext(),ProfileActivity.class);
-                                    break;
+                                    break;*/
                                 case R.id.logout:
                                     CurrentSession cs = CurrentSession.getInstance();
                                     cs.setToken(null);
                                     cs.setCurrentUser(null);
+                                    deleteToken();
                                     i = new Intent(getApplicationContext(),LoginActivity.class);
-                                    finish();
+                                    finishAffinity();
                                     break;
 
                                 case R.id.meetings:
                                     i = new Intent(getApplicationContext(),MeetingListActivity.class);
+                                    break;
+                                case R.id.friends:
+                                    i = new Intent(getApplicationContext(),FriendsActivity.class);
                                     break;
                                 default:
                                     break;
@@ -77,6 +82,11 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                             return true;
                         }
                     });
+
+            TextView nav_user = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nameProfile);
+            User user = CurrentSession.getInstance().getCurrentUser();
+            String name = user.getFirstName()+" "+user.getLastName();
+            nav_user.setText(name);
 
             ImageButton profileButton = navigationView.getHeaderView(0).findViewById(R.id.imageView);
             profileButton.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +111,13 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                     .commit();
         }
 
+    }
+
+    private void deleteToken() {
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("token", CurrentSession.getInstance().getToken());
+        editor.commit();
     }
 
 }

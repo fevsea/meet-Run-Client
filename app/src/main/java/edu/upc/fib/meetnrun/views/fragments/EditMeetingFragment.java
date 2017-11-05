@@ -47,10 +47,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.persistence.GenericController;
+import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 
 import static android.app.Activity.RESULT_OK;
@@ -81,7 +82,7 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
         View view = inflater.inflate(R.layout.fragment_edit_meeting, container, false);
         this.view = view;
 
-        this.controller = GenericController.getInstance();
+        this.controller = WebDBController.getInstance();
         Log.i("GET Meeting with ID: ", String.valueOf(getActivity().getIntent().getIntExtra("id", -1)));
         GetMeeting getMeeting = new GetMeeting();
         getMeeting.execute(getActivity().getIntent().getIntExtra("id", -1));
@@ -326,9 +327,12 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
             Boolean res = false;
             try {
                 res = controller.updateMeeting(params[0]);
+                //TODO Pending to catch correctly
             }
             catch (NotFoundException | ParamsException e) {
                 exception = e;
+            } catch (AutorizationException e) {
+                e.printStackTrace();
             }
             return res;
         }
