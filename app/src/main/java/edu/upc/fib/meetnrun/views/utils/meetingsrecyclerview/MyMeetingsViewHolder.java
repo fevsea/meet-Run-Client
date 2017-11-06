@@ -69,17 +69,17 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
             firstLetter = String.valueOf(letter);
             if (i == 0) {
                 userIcon1.setVisibility(View.VISIBLE);
-                userIcon1.setBackground(getColoredCircularShape((letter)));
+                userIcon1.setBackground(getColoredSmallCircularShape((letter)));
                 userIcon1.setText(firstLetter);
             }
             else if (i == 1) {
                 userIcon2.setVisibility(View.VISIBLE);
-                userIcon2.setBackground(getColoredCircularShape((letter)));
+                userIcon2.setBackground(getColoredSmallCircularShape((letter)));
                 userIcon2.setText(firstLetter);
             }
             else if (i == 2) {
                 userIcon3.setVisibility(View.VISIBLE);
-                userIcon3.setBackground(getColoredCircularShape((letter)));
+                userIcon3.setBackground(getColoredSmallCircularShape((letter)));
                 userIcon3.setText(firstLetter);
             }
             else {
@@ -94,7 +94,7 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
         String datetime = meeting.getDate();
         meetingDate.setText(datetime.substring(0,datetime.indexOf('T')));
         TextView meetingTime = view.findViewById(R.id.mymeeting_item_time);
-        meetingTime.setText(datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
+        meetingTime.setText(datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('T')+9));
 
         location = new LatLng(40,40);
 //TODO        location = new LatLng(Double.parseDouble(meeting.getLatitude()),Double.parseDouble(meeting.getLongitude()));
@@ -117,6 +117,7 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
         }
         else {
             startMeetingButton.setEnabled(false);
+            startMeetingButton.setImageAlpha(45);
             startMeetingLabel.setText(view.getResources().getString(R.string.not_start_meeting_label));
         }
 

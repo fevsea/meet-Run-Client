@@ -96,6 +96,8 @@ public class MyMeetingsFragment extends Fragment {
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
+                meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
+                meetingInfoIntent.putExtra("id",meeting.getId());
                 meetingInfoIntent.putExtra("description",meeting.getDescription());
                 String datetime = meeting.getDate();
                 meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));

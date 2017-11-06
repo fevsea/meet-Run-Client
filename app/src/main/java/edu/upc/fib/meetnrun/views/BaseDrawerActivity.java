@@ -51,6 +51,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                         @Override
                         public boolean onNavigationItemSelected(MenuItem menuItem) {
                             Intent i = null;
+                            menuItem.setCheckable(false);
                             switch (menuItem.getItemId()) {
                                 case R.id.edit_meeting:
                                     i = new Intent(getApplicationContext(),EditMeetingActivity.class);
@@ -77,7 +78,6 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                 default:
                                     break;
                             }
-                            menuItem.setChecked(true);
                             if (i != null) {
                                 if (finishOnChangeView()) finish();
                                 startActivity(i);

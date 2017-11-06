@@ -62,7 +62,8 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
             addUserButton.setOnClickListener(this);
         }
         else {
-            addUserButton.setVisibility(View.GONE);
+            addUserButton.setEnabled(false);
+            addUserButton.setImageAlpha(45);
         }
         view.setOnClickListener(this);
     }

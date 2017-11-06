@@ -39,6 +39,7 @@ public class MeetingListFragment extends Fragment {
     private MeetingsAdapter meetingsAdapter;
     private View view;
     private IGenericController controller;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public MeetingListFragment() {
 
@@ -68,13 +69,12 @@ public class MeetingListFragment extends Fragment {
                 createNewMeeting();
             }
         });
-        final SwipeRefreshLayout swipeRefreshLayout =
+        swipeRefreshLayout =
                 (SwipeRefreshLayout) view.findViewById(R.id.fragment_meeting_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 updateMeetingList();
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
         return view;
@@ -114,6 +114,12 @@ public class MeetingListFragment extends Fragment {
         });
         meetingsList.setAdapter(meetingsAdapter);
 
+    }
+
+    @Override
+    public void onResume() {
+        updateMeetingList();
+        super.onResume();
     }
 
 
@@ -175,6 +181,7 @@ public class MeetingListFragment extends Fragment {
         protected void onPostExecute(String s) {
             System.err.println("FINISHED");
             meetingsAdapter.updateMeetingsList(l);
+            swipeRefreshLayout.setRefreshing(false);
             super.onPostExecute(s);
         }
     }
@@ -198,7 +205,6 @@ public class MeetingListFragment extends Fragment {
         }
     }
 
-//TODO solve error
     private class JoinMeeting extends AsyncTask<Integer,String,String> {
 
         @Override

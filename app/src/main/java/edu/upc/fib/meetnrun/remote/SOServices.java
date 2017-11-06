@@ -69,10 +69,10 @@ public interface SOServices {
     @GET("/meetings/{id}/participants")
     Call<List<UserServer>> getAllParticipantsFromMeeting(@Path("id") int id);
 
-    @POST("/meetings/{id}/participants/")
+    @POST("/meetings/{id}/participants")
     Call<Void> joinMeeting(@Path("id") int id);
 
-    @DELETE("/meetings/{id}/participants/")
+    @DELETE("/meetings/{id}/participants")
     Call<Void> leaveMeeting(@Path("id") int id);
 
     @GET("/users/{id}/meetings")
