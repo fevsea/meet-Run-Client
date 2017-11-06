@@ -78,14 +78,30 @@
 
             </RelativeLayout>
 
-        <Button
-            android:id="@+id/editProfile_button"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="12dp"
-            android:layout_below="@+id/profile_layout"
-            android:text="Edit Profile" />
+            android:layout_below="@+id/profile_layout">
+
+            <Button
+                android:id="@+id/changePass_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="@string/button_edit_password" />
+
+            <Button
+                android:id="@+id/editProfile_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="@string/button_edit_profile" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

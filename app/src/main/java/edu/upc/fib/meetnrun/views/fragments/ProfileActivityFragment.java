@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.*;
+import com.google.android.gms.location.places.Places;
+
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
@@ -37,6 +40,7 @@ public class ProfileActivityFragment extends Fragment {
         String postCode = u.getPostalCode();
 
 
+
         TextView userNameTextView = (TextView) view.findViewById(R.id.userName);
         TextView nameTextView = (TextView) view.findViewById(R.id.completeName);
         TextView userPostCodeTextView = (TextView) view.findViewById(R.id.userPostCode);
@@ -55,6 +59,15 @@ public class ProfileActivityFragment extends Fragment {
             }
         });
 
+        final Button button2 = view.findViewById(R.id.changePass_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent;
+                //intent = new Intent(getActivity(), EditProfileActivity.class);
+                //startActivity(intent);
+            }
+        });
+
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setImageResource(android.R.drawable.ic_menu_edit);
@@ -63,5 +76,15 @@ public class ProfileActivityFragment extends Fragment {
 
         return view;
     }
+
+    /*protected void getCityFromPostCode(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                String toastMsg = String.format("Place: %s", place.getName());
+                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            }
+        }
+    }*/
 
 }

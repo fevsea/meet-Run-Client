@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -46,7 +47,6 @@ public class EditProfileFragment extends Fragment {
     String lastName;
     String postCode;
 
-    //boolean actualitzat_correctament;
 
 
     @Override
@@ -65,15 +65,6 @@ public class EditProfileFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 changeProfile();
-                /*Boolean b = true;
-                if(b) {
-                    Intent intent;
-                    intent = new Intent(getActivity(), ProfileActivity.class);
-                    startActivity(intent);
-                }
-                else {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.error_edit_profile), Toast.LENGTH_SHORT).show();
-                }*/
             }
         });
 
@@ -117,8 +108,6 @@ public class EditProfileFragment extends Fragment {
         newUser.setLastName(lastName);
         newUser.setPostalCode(postCode);
 
-        //CurrentSession.getInstance().setCurrentUser(u);
-
         updateUserServer();
 
     }
@@ -143,8 +132,11 @@ public class EditProfileFragment extends Fragment {
         protected Boolean doInBackground(User... params) {
 
             try {
-                Log.e("USER","ENVIARE USER" + params[0]);
-                actualitzat_correctament = controller.updateUser(params[0]);
+                try {
+                    actualitzat_correctament = controller.updateUser(params[0]);
+                } catch (AutorizationException e) {
+                    e.printStackTrace();
+                }
             } catch (NotFoundException e) {
                 exception = e;
             } catch (ParamsException e) {
