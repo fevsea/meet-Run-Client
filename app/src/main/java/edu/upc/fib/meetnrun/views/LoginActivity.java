@@ -37,8 +37,8 @@ public class LoginActivity extends AppCompatActivity {
         progress = (ProgressBar) findViewById(R.id.progressBar);
         progress.setVisibility(View.INVISIBLE);
 
-        controller = WebDBController.getInstance();
         cs = CurrentSession.getInstance();
+        controller = cs.getController();
 
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         String token = prefs.getString("token",null);
@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             if (token == null || token.equals("")) {
-                Toast.makeText(getApplicationContext(), "Login ERROR", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "User not found", Toast.LENGTH_SHORT).show();
             }
             else {
                 cs.setCurrentUser(u);

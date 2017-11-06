@@ -10,7 +10,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
@@ -34,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity{
 
         this.setTitle("Register");
 
-        controller = WebDBController.getInstance();
+        controller = CurrentSession.getInstance().getController();
 
         editName = (EditText) findViewById(R.id.editName);
         editSurname = (EditText) findViewById(R.id.editSurname);
@@ -109,7 +111,9 @@ public class RegisterActivity extends AppCompatActivity{
                 user = controller.registerUser(username, name, surname, pcInt, password1, quest, answ);
             } catch (ParamsException e) {
                 e.printStackTrace();
-            }
+            } /*catch (AutorizationException e) {
+                Toast.makeText(getApplicationContext(), "User already registered", Toast.LENGTH_SHORT).show();
+            }*/
             return null;
         }
 

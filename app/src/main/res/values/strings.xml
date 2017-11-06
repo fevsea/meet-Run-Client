@@ -25,9 +25,9 @@
     <string name="create_button">Create</string>
     <string name="edit_meeting_close_dialog_message">Are you sure you want to close without saving?</string>
     <string name="edit_meeting_close_dialog_title">Closing without saving</string>
-    <string name="friend_request_dialog_message">Are you sure you want to send a friend request?</string>
+    <string name="friend_request_dialog_message">Are you sure you want to send a friend request to</string>
     <string name="friend_request_dialog_title">Friend request</string>
-    <string name="delete_friend_dialog_message">Are you sure you want to stop being friends?</string>
+    <string name="delete_friend_dialog_message">Are you sure you want to stop being friends with</string>
     <string name="delete_friend_dialog_title">Stop being friends</string>
     <string name="ok">OK</string>
     <string name="accept_request">Send request</string>

@@ -11,8 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.persistence.IGenericController;
 
 /**
  * Created by eric on 2/11/17.
@@ -21,13 +26,16 @@ import edu.upc.fib.meetnrun.R;
 public class UserProfileFragment extends Fragment {
 
     private View view;
+    private IGenericController controller;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_users_profile, container, false);
 
-        Bundle profileInfo = getActivity().getIntent().getExtras();
+        controller = CurrentSession.getInstance().getController();
+
+        final Bundle profileInfo = getActivity().getIntent().getExtras();
 
         final TextView userName = view.findViewById(R.id.userName3);
         TextView name = view.findViewById(R.id.completeName3);
@@ -38,13 +46,25 @@ public class UserProfileFragment extends Fragment {
             public void onClick(View v) {
 
                 String title = getResources().getString(R.string.friend_request_dialog_title);
-                String message = getResources().getString(R.string.friend_request_dialog_message);
+                String message = getResources().getString(R.string.friend_request_dialog_message)+" "+profileInfo.getString("userName")+"?";
                 String ok = getResources().getString(R.string.accept_request);
                 String cancel = getResources().getString(R.string.cancel);
                 showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.e("request friend", userName.getText().toString());
+                                boolean ok;
+                                try {
+                                    ok = controller.addFriend(Integer.parseInt(profileInfo.getString("id")));
+                                    if (ok) {
+                                        Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (AutorizationException e) {
+                                    e.printStackTrace();
+                                } catch (ParamsException e) {
+                                    e.printStackTrace();
+                                }
+
                             }
                         },
                         new DialogInterface.OnClickListener() {
