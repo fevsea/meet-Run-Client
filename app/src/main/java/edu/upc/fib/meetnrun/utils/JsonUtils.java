@@ -34,7 +34,7 @@ public class JsonUtils {
         JsonObject jObj = new Gson().fromJson(json, JsonObject.class);
         for (Map.Entry<String, JsonElement> entry : jObj.entrySet()) {
             String key = entry.getKey();
-            String value =entry.getValue().getAsJsonArray().get(0).toString();
+            String value =entry.getValue().toString();
             m.put(key,value);
             Log.d(TAG, "Key: " + key + "\tValue: " + value);
         }

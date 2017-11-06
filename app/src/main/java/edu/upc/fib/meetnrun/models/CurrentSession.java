@@ -1,9 +1,6 @@
 package edu.upc.fib.meetnrun.models;
 
-import android.content.Context;
-
 import edu.upc.fib.meetnrun.persistence.IGenericController;
-import edu.upc.fib.meetnrun.persistence.InternalDBController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
 
 /**
@@ -39,12 +36,6 @@ public class CurrentSession {
 
         public void setCurrentUser(User currentUser) {
             this.currentUser = currentUser;
-        }
-        public void setInternalDBController(Context context){
-            controller = new InternalDBController(context);
-        }
-        public void setWebDBController(){
-            controller = WebDBController.getInstance();
         }
 
         public IGenericController getController(){
