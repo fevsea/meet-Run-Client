@@ -1,37 +1,43 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
-import android.icu.text.DecimalFormat;
+import android.icu.text.DateFormat;
 import android.location.Location;
-import android.os.Handler;
+import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.View;
 import android.widget.Chronometer;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.api.Api;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Value;
+import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.request.DataSourcesRequest;
 import com.google.android.gms.fitness.request.OnDataPointListener;
 import com.google.android.gms.fitness.request.SensorRequest;
+import com.google.android.gms.fitness.result.DataReadResult;
 import com.google.android.gms.fitness.result.DataSourcesResult;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -39,53 +45,65 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.LogRecord;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.TrackingData;
 
-public class TrackingActivity extends FragmentActivity implements OnMapReadyCallback {
+import static android.icu.text.DateFormat.getTimeInstance;
+
+public class TrackingActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
 
     private static final String TAG = TrackingActivity.class.getSimpleName();
 
+    //Map, route line and route points
     private GoogleMap mMap;
     private Polyline route;
     private List<LatLng> routePoints;
 
+    //Current values of the Fitness data
     private int steps = 0;
-    private float distance = 0;
-    private int calories = 0;
-    private float speed = 0;
+    private float currentDistance = 0f;
+    private float calories = 0f;
+    private float speed = 0f;
     private double latitude;
     private double longitude;
 
-    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private boolean isPaused;
+    private boolean isOnBackground;
 
-    private final LatLng mDefaultLocation = new LatLng(41.4, 2.1);
+    private long startTimeMillis;
+    private long totalTimeMillis;
+    private long timeSinceBackground;
+
+    //Used to calculate speed
+    private float lastDistance = 0f;
+    private long timeSinceLastSpeedUpdate;
+
     private static final int DEFAULT_ZOOM = 17;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
     private GoogleApiClient mClient = null;
 
+    FusedLocationProviderClient mFusedLocationProviderClient;
+
     Chronometer chronometer;
     TextView stepsCounter;
     TextView speedCounter;
     TextView distanceCounter;
     TextView caloriesCounter;
+    FloatingActionButton pauseButton;
+    FloatingActionButton stopButton;
 
     private OnDataPointListener locationListener =  new OnDataPointListener() {
         @Override
@@ -144,7 +162,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            speedCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f",speed) + " m/s");
+                            //speedCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f",speed) + " m/s");
                         }
                     });
                 }
@@ -161,14 +179,41 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                 Log.i(TAG, "Detected DataPoint value: " + val);
                 if (field.equals(Field.FIELD_DISTANCE)) {
                     Log.i(TAG, "Updating distance counter");
-                    distance += val.asFloat();
+                    currentDistance += val.asFloat();
+                    long currentTime = SystemClock.elapsedRealtime();
+                    float timeDelta = (currentTime - timeSinceLastSpeedUpdate)/1000.0f;
+                    if (timeDelta > 0)
+                        speed = (currentDistance-lastDistance)/(timeDelta);
+                    else
+                        speed = 0;
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            distanceCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", distance) + " m");
+                            distanceCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", currentDistance) + " m");
+                            speedCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", speed) + " m/s");
                         }
                     });
+                    lastDistance = currentDistance;
+                    timeSinceLastSpeedUpdate = currentTime;
                 }
+            }
+        }
+    };
+
+    private OnDataPointListener caloriesListener = new OnDataPointListener() {
+        @Override
+        public void onDataPoint(DataPoint dataPoint) {
+            for (Field field : dataPoint.getDataType().getFields()) {
+                Value val = dataPoint.getValue(field);
+                Log.i(TAG, "Detected DataPoint field: " + field.getName());
+                Log.i(TAG, "Detected DataPoint value: " + val);
+                calories = val.asFloat();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        caloriesCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", calories) + " kcal");
+                    }
+                });
             }
         }
     };
@@ -179,8 +224,6 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracking);
 
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
         routePoints = new ArrayList<>();
 
         buildFitnessClient();
@@ -188,10 +231,16 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
             getLocationPermission();
         }
 
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        startTimeMillis = SystemClock.elapsedRealtime();
+        timeSinceLastSpeedUpdate = startTimeMillis;
+        totalTimeMillis = 0;
 
         chronometer = findViewById(R.id.chronometer);
         chronometer.start();
@@ -201,13 +250,25 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         speedCounter.setText("0 m/s");
         distanceCounter = findViewById(R.id.distance);
         distanceCounter.setText("0 m");
+        caloriesCounter = findViewById(R.id.calories);
+        caloriesCounter.setText("0 kcal");
+
+        pauseButton = findViewById(R.id.pause_fab);
+        stopButton = findViewById(R.id.stop_fab);
+
+        pauseButton.setOnClickListener(this);
+        stopButton.setOnClickListener(this);
+
+        isPaused = false;
+        isOnBackground = false;
     }
 
-
     private void buildFitnessClient() {
-        if (mClient == null && checkPermissions()) {
+        if ((mClient == null || (!mClient.isConnected() && !mClient.isConnecting())) && checkPermissions()) {
             mClient = new GoogleApiClient.Builder(this)
                     .addApi(Fitness.SENSORS_API)
+                    .addApi(Fitness.RECORDING_API)
+                    .addApi(Fitness.HISTORY_API)
                     .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
                     .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ))
                     .addConnectionCallbacks(
@@ -216,6 +277,13 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                                 public void onConnected(Bundle bundle) {
                                     Log.i(TAG, "Connected!!!");
                                     // Now you can make calls to the Fitness APIs.
+                                    if (isOnBackground) {
+                                        unsubscribeFitnessDataOnBackground(DataType.TYPE_LOCATION_SAMPLE);
+                                        unsubscribeFitnessDataOnBackground(DataType.TYPE_DISTANCE_DELTA);
+                                        unsubscribeFitnessDataOnBackground(DataType.TYPE_STEP_COUNT_DELTA);
+                                        readBackgroundData();
+                                        isOnBackground = false;
+                                    }
                                     findFitnessDataSources();
                                 }
 
@@ -245,8 +313,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     private boolean checkPermissions() {
-        int permissionState = ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionState = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -285,6 +352,10 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                                 Log.i(TAG, "Data source for TYPE_DISTANCE_DELTA found! Registering.");
                                 registerFitnessDataListener(distanceListener, dataSource, DataType.TYPE_DISTANCE_DELTA);
                             }
+                            else if (dataSource.getDataType().equals(DataType.TYPE_CALORIES_EXPENDED)) {
+                                Log.i(TAG, "Data source for TYPE_CALORIES_EXPENDED found! Registering.");
+                                registerFitnessDataListener(caloriesListener, dataSource, DataType.TYPE_CALORIES_EXPENDED);
+                            }
                         }
                     }
                 });
@@ -312,9 +383,95 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                         } else {
                             Log.i(TAG, "Listener not registered.");
                         }
+                        Log.i(TAG, "Status info " + status);
                     }
                 });
         // [END register_data_listener]
+    }
+
+    private void unregisterFitnessDataListener(OnDataPointListener onDataPointListener) {
+        Fitness.SensorsApi.remove(mClient, onDataPointListener);
+    }
+
+    private void subscribeFitnessDataOnBackground(final DataType dataType) {
+        Fitness.RecordingApi.subscribe(mClient, dataType)
+                .setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(@NonNull Status status) {
+                        if (status.isSuccess()) {
+                            if (status.getStatusCode() == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED) {
+                                Log.i(TAG, dataType.getName() + " already subscribed on background (SUCCESS)");
+                            }
+                            else {
+                                Log.i(TAG, dataType.getName() + " subscribed on background (SUCCESS)");
+                            }
+                        }
+                        else {
+                            Log.i(TAG, dataType.getName() + " could not be subscribed on background (FAIL!)");
+                        }
+                    }
+                });
+    }
+
+    private void unsubscribeFitnessDataOnBackground(final DataType dataType) {
+        Fitness.RecordingApi.unsubscribe(mClient, dataType)
+                .setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        if (status.isSuccess()) {
+                            Log.i(TAG, "Successfully unsubscribed for data type: " + dataType.getName());
+                        } else {
+                            // Subscription not removed
+                            Log.i(TAG, "Failed to unsubscribe for data type: " + dataType.getName());
+                        }
+                    }
+                });
+    }
+
+    private void readBackgroundData() {
+        DataReadRequest stepDataRequest = new DataReadRequest.Builder()
+                .aggregate(DataType.TYPE_STEP_COUNT_DELTA, DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .bucketByTime(100, TimeUnit.MILLISECONDS)
+                .setTimeRange(timeSinceBackground, SystemClock.elapsedRealtime(), TimeUnit.MILLISECONDS)
+                .build();
+        DataReadRequest distanceDataRequest = new DataReadRequest.Builder()
+                .aggregate(DataType.TYPE_DISTANCE_DELTA, DataType.AGGREGATE_DISTANCE_DELTA)
+                .bucketByTime(100, TimeUnit.MILLISECONDS)
+                .setTimeRange(timeSinceBackground, SystemClock.elapsedRealtime(), TimeUnit.MILLISECONDS)
+                .build();
+        /*DataReadRequest locationDataRequest = new DataReadRequest.Builder()
+                .aggregate(DataType.TYPE_LOCATION_SAMPLE, DataType.TYPE_LOCATION_SAMPLE)
+                .bucketByTime(100, TimeUnit.MILLISECONDS)
+                .setTimeRange(timeSinceBackground, SystemClock.elapsedRealtime(), TimeUnit.MILLISECONDS)
+                .build();*/
+
+        for (DataType dt : DataType.getAggregatesForInput(DataType.TYPE_LOCATION_SAMPLE)) {
+            Log.i(TAG, "Aggregate for TYPE_LOCATION_SAMPLE: " + dt.getName());
+        }
+
+        //DataReadResult stepReadResult = Fitness.HistoryApi.readData(mClient, stepDataRequest).await();
+        //DataReadResult distanceReadResult = Fitness.HistoryApi.readData(mClient, distanceDataRequest).await();
+        //DataReadResult locationReadResult = Fitness.HistoryApi.readData(mClient, locationDataRequest).await();
+
+        //dumpDataSet(stepReadResult.getDataSet(DataType.AGGREGATE_STEP_COUNT_DELTA));
+        //dumpDataSet(distanceReadResult.getDataSet(DataType.AGGREGATE_DISTANCE_DELTA));
+        //dumpDataSet(locationReadResult.getDataSet(DataType.TYPE_LOCATION_SAMPLE));
+    }
+
+    private static void dumpDataSet(DataSet dataSet) {
+        Log.i(TAG, "Data returned for Data type: " + dataSet.getDataType().getName());
+        DateFormat dateFormat = getTimeInstance();
+
+        for (DataPoint dp : dataSet.getDataPoints()) {
+            Log.i(TAG, "Data point:");
+            Log.i(TAG, "\tType: " + dp.getDataType().getName());
+            Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
+            Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
+            for(Field field : dp.getDataType().getFields()) {
+                Log.i(TAG, "\tField: " + field.getName() +
+                        " Value: " + dp.getValue(field));
+            }
+        }
     }
 
     /**
@@ -330,7 +487,12 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        if(!checkPermissions()) {
+            getLocationPermission();
+        }
+
         enableLocationButtonAndView();
+        centerMapToStartPosition();
     }
 
     private void getLocationPermission() {
@@ -386,13 +548,13 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         }
     }
 
- //   private void getDeviceLocation() {
+    private void centerMapToStartPosition() {
     /*
      * Get the best and most recent location of the device, which may be null in rare
      * cases when a location is not available.
      */
-      /*  try {
-            if (mLocationPermissionGranted) {
+    try {
+        if (mLocationPermissionGranted) {
                 Task locationResult = mFusedLocationProviderClient.getLastLocation();
                 locationResult.addOnCompleteListener(this, new OnCompleteListener() {
                     @Override
@@ -401,10 +563,6 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                             // Set the map's camera position to the current location of the device.
                             Location location = (Location) task.getResult();
                             updateLocationViews(new LatLng(location.getLatitude(), location.getLongitude()));
-                        } else {
-                            Log.d(TAG, "Current location is null. Using defaults.");
-                            Log.e(TAG, "Exception: %s", task.getException());
-                            updateLocationViews(mDefaultLocation);
                         }
                     }
                 });
@@ -412,7 +570,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         } catch(SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
-    }*/
+    }
 
     private void updateLocationViews(LatLng position) {
         if (route == null) {
@@ -429,7 +587,125 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
     @Override
     public void onDestroy() {
+        unregisterFitnessDataListener(distanceListener);
+        unregisterFitnessDataListener(locationListener);
+        unregisterFitnessDataListener(speedListener);
+        unregisterFitnessDataListener(stepListener);
         super.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        unregisterFitnessDataListener(distanceListener);
+        unregisterFitnessDataListener(locationListener);
+        unregisterFitnessDataListener(speedListener);
+        unregisterFitnessDataListener(stepListener);
+        subscribeFitnessDataOnBackground(DataType.TYPE_LOCATION_SAMPLE);
+        subscribeFitnessDataOnBackground(DataType.TYPE_DISTANCE_DELTA);
+        subscribeFitnessDataOnBackground(DataType.TYPE_STEP_COUNT_DELTA);
+        isOnBackground = true;
+        timeSinceBackground = SystemClock.elapsedRealtime();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        buildFitnessClient();
+    }
+
+    @Override
+    public void onBackPressed() {
+        save();
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.pause_fab: {
+                if (isPaused) {
+                    stopButton.setVisibility(View.INVISIBLE);
+                    pauseButton.setImageResource(R.drawable.ic_pause);
+                    resumeTracking();
+                }
+                else {
+                    stopButton.setVisibility(View.VISIBLE);
+                    pauseButton.setImageResource(R.drawable.ic_play);
+                    pauseTracking();
+                }
+                isPaused = !isPaused;
+                break;
+            }
+            case R.id.stop_fab: {
+                save();
+            }
+        }
+    }
+
+    private void pauseTracking() {
+        chronometer.stop();
+        unregisterFitnessDataListener(distanceListener);
+        unregisterFitnessDataListener(locationListener);
+        unregisterFitnessDataListener(speedListener);
+        unregisterFitnessDataListener(stepListener);
+        long currentTime = SystemClock.elapsedRealtime();
+        totalTimeMillis += (currentTime - startTimeMillis);
+        timeSinceLastSpeedUpdate = currentTime;
+        startTimeMillis = currentTime;
+    }
+
+    private void resumeTracking() {
+        chronometer.start();
+        startTimeMillis = SystemClock.elapsedRealtime();
+        findFitnessDataSources();
+    }
+
+    private void save() {
+        SaveTrackingData saveTrackingData = new SaveTrackingData();
+        long time = SystemClock.elapsedRealtime();
+        totalTimeMillis += (time - startTimeMillis);
+        saveTrackingData.execute(new TrackingData(currentDistance/(totalTimeMillis/1000.0f),currentDistance,steps,routePoints, totalTimeMillis));
+    }
+
+    private class SaveTrackingData extends AsyncTask<TrackingData, String, Boolean> {
+
+        Exception exception = null;
+        ProgressDialog mProgressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog = new ProgressDialog(TrackingActivity.this);
+            mProgressDialog.setTitle(R.string.saving);
+            mProgressDialog.setMessage(getResources().getString(R.string.saving_tracking_data));
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(TrackingData... params) {
+            try {
+                Thread.sleep(3000);
+                Log.i(TAG, params[0].toString());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            mProgressDialog.dismiss();
+            if (exception != null || !result) {
+                Toast.makeText(TrackingActivity.this, getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
+            }
+            else {
+                TrackingActivity.this.finish();
+            }
+        }
+
     }
 
 }
