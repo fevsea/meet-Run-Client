@@ -133,7 +133,10 @@ public class UsersListFragment extends Fragment {
                 for (User user : l) {
                     String userName = user.getUsername().toLowerCase();
                     String name = (user.getFirstName()+" "+user.getLastName()).toLowerCase();
-                    if (name.contains(newText) || userName.contains(newText)) newList.add(user);
+                    String postCode = user.getPostalCode();
+                    if (userName != null && name != null && postCode != null) {
+                        if (name.contains(newText) || userName.contains(newText) || postCode.contains(newText)) newList.add(user);
+                    }
                 }
                 usersAdapter.updateFriendsList(newList);
                 return true;

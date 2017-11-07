@@ -1,9 +1,10 @@
 package edu.upc.fib.meetnrun.remote;
 
-import edu.upc.fib.meetnrun.models.Meeting;
+import java.util.List;
+
+import edu.upc.fib.meetnrun.persistence.persistenceModels.Forms;
 import edu.upc.fib.meetnrun.persistence.persistenceModels.MeetingServer;
 import edu.upc.fib.meetnrun.persistence.persistenceModels.UserServer;
-import edu.upc.fib.meetnrun.persistence.persistenceModels.Forms;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -23,7 +24,7 @@ public interface SOServices {
     Call<MeetingServer[]> getMeetings();
 
     @POST("/meetings/")
-    Call<MeetingServer> createMeeting(@Body MeetingServer meeting);
+    Call<MeetingServer> createMeeting(@Body Forms.CreateMeeting meeting);
 
     @GET("/meetings/{id}")
     Call<MeetingServer> getMeeting(@Path("id") int id);
@@ -54,7 +55,7 @@ public interface SOServices {
 
     //LOGIN
 
-    @POST("/users/login")
+    @POST("/users/login/")
     Call<Forms.Token> logIn(@Body Forms.LoginUser lu);
 
     @GET("/users/logout")
@@ -62,6 +63,34 @@ public interface SOServices {
 
     @GET("/users/current/")
     Call<UserServer> getCurrentUser();
+
+    //PARTICIPANTS
+
+    @GET("/meetings/{id}/participants")
+    Call<List<UserServer>> getAllParticipantsFromMeeting(@Path("id") int id);
+
+    @POST("/meetings/{id}/participants/")
+    Call<Void> joinMeeting(@Path("id") int id);
+
+    @DELETE("/meetings/{id}/participants/")
+    Call<Void> leaveMeeting(@Path("id") int id);
+
+    @GET("/users/{id}/meetings")
+    Call<List<MeetingServer>> getAllFutureMeetings(@Path("id") int id);
+
+
+    //FRIENDS
+    @GET("/users/friends/")
+    Call<List<UserServer>> getCurrentUserFriends();
+
+    @POST("/users/friends/{id}/")
+    Call<Void> addFriend(@Path("id") int id);
+
+    @DELETE("/users/friends/{id}/")
+    Call<Void> removeFriend(@Path("id") int id);
+
+    @GET("/users/{id}/friends/")
+    Call<List<UserServer>> getFriendsOfUser(@Path("id") int id);
 
 
 }
