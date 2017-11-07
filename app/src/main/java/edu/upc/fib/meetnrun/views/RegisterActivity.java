@@ -104,6 +104,7 @@ public class RegisterActivity extends AppCompatActivity{
     private class register extends AsyncTask<String,String,String> {
 
         User user = null;
+        boolean uar = false;
 
         @Override
         protected String doInBackground(String... registerUser) {
@@ -111,15 +112,17 @@ public class RegisterActivity extends AppCompatActivity{
                 user = controller.registerUser(username, name, surname, pcInt, password1, quest, answ);
             } catch (ParamsException e) {
                 e.printStackTrace();
-            } /*catch (AutorizationException e) {
-                Toast.makeText(getApplicationContext(), "User already registered", Toast.LENGTH_SHORT).show();
-            }*/
+                uar = true;
+            }
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            if (user == null) {
+            if (uar) {
+                Toast.makeText(getApplicationContext(), "User already registered", Toast.LENGTH_SHORT).show();
+            }
+            else if (user == null) {
                 Toast.makeText(getApplicationContext(), "Register ERROR", Toast.LENGTH_SHORT).show();
             }
             else {

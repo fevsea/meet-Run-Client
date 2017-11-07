@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -42,9 +43,8 @@ public class LoginActivity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         String token = prefs.getString("token",null);
-        cs.setToken(token);
-        if (cs.getToken() != null) {
-            new GetCurrentUser().execute();
+        if (token != null) {
+            new GetCurrentUser().execute(token);
         }
     }
 
@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
     private void saveToken() {
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("token", CurrentSession.getInstance().getToken());
+        editor.putString("token", cs.getToken());
         editor.commit();
     }
 
@@ -128,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
     private class GetCurrentUser extends AsyncTask<String,String,String> {
 
         User user = null;
+        boolean ok = false;
 
         @Override
         protected void onPreExecute() {
@@ -136,10 +137,11 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... logUser) {
+        protected String doInBackground(String... s) {
             try {
-                //TODO Pending to catch correctly
+                cs.setToken(s[0]);
                 user = controller.getCurrentUser();
+                if (user != null) ok = true;
             } catch (AutorizationException e) {
                 e.printStackTrace();
                 deleteToken();
@@ -150,14 +152,16 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             progress.setVisibility(View.INVISIBLE);
-            cs.setCurrentUser(user);
-            changeToMainActivity();
+            if (ok) {
+                cs.setCurrentUser(user);
+                changeToMainActivity();
+            }
+
             super.onPostExecute(s);
         }
     }
 
     private void deleteToken() {
-        CurrentSession cs = CurrentSession.getInstance();
         cs.setToken(null);
         cs.setCurrentUser(null);
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
