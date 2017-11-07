@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.DialogInterface;
 import android.media.Image;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 
 /**
@@ -54,17 +56,7 @@ public class FriendProfileFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.e("delete friend", userName.getText().toString());
-                                boolean ok;
-                                try {
-                                    ok = controller.removeFriend(Integer.parseInt(profileInfo.getString("id")));
-                                    if (ok) {
-                                        Toast.makeText(getContext(), "Friend removed", Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (AutorizationException e) {
-                                    e.printStackTrace();
-                                } catch (ParamsException e) {
-                                    e.printStackTrace();
-                                }
+                                new addFriend().execute(profileInfo.getString("id"));
                             }
                         },
                         new DialogInterface.OnClickListener() {
@@ -97,6 +89,31 @@ public class FriendProfileFragment extends Fragment {
             builder.setNegativeButton(negativeButtonText, cancel);
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private class addFriend extends AsyncTask<String,String,String> {
+
+        boolean ok;
+
+        @Override
+        protected String doInBackground(String... s) {
+            try {
+                ok = controller.removeFriend(Integer.parseInt(s[0]));
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (ok) {
+                Toast.makeText(getContext(), "Friend removed", Toast.LENGTH_SHORT).show();
+            }
+            super.onPostExecute(s);
+        }
     }
 
 }

@@ -56,9 +56,6 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                     i.putExtra("id",3);
                                     break;*/
                                 case R.id.logout:
-                                    CurrentSession cs = CurrentSession.getInstance();
-                                    cs.setToken(null);
-                                    cs.setCurrentUser(null);
                                     deleteToken();
                                     i = new Intent(getApplicationContext(),LoginActivity.class);
                                     finishAffinity();
@@ -114,6 +111,9 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
     }
 
     private void deleteToken() {
+        CurrentSession cs = CurrentSession.getInstance();
+        cs.setToken(null);
+        cs.setCurrentUser(null);
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("token", CurrentSession.getInstance().getToken());

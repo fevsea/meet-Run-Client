@@ -1,6 +1,7 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -53,18 +54,7 @@ public class UserProfileFragment extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Log.e("request friend", userName.getText().toString());
-                                boolean ok;
-                                try {
-                                    ok = controller.addFriend(Integer.parseInt(profileInfo.getString("id")));
-                                    if (ok) {
-                                        Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
-                                    }
-                                } catch (AutorizationException e) {
-                                    e.printStackTrace();
-                                } catch (ParamsException e) {
-                                    e.printStackTrace();
-                                }
-
+                                new addFriend().execute(profileInfo.getString("id"));
                             }
                         },
                         new DialogInterface.OnClickListener() {
@@ -97,5 +87,30 @@ public class UserProfileFragment extends Fragment {
             builder.setNegativeButton(negativeButtonText, cancel);
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private class addFriend extends AsyncTask<String,String,String> {
+
+        boolean ok;
+
+        @Override
+        protected String doInBackground(String... s) {
+            try {
+                ok = controller.addFriend(Integer.parseInt(s[0]));
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (ok) {
+                Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
+            }
+            super.onPostExecute(s);
+        }
     }
 }

@@ -142,6 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                 user = controller.getCurrentUser();
             } catch (AutorizationException e) {
                 e.printStackTrace();
+                deleteToken();
             }
             return null;
         }
@@ -153,6 +154,16 @@ public class LoginActivity extends AppCompatActivity {
             changeToMainActivity();
             super.onPostExecute(s);
         }
+    }
+
+    private void deleteToken() {
+        CurrentSession cs = CurrentSession.getInstance();
+        cs.setToken(null);
+        cs.setCurrentUser(null);
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("token", CurrentSession.getInstance().getToken());
+        editor.commit();
     }
 
 }
