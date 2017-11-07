@@ -4,14 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
@@ -22,6 +23,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText editUsername, editPassword;
     private String username, password;
     public static final String MY_PREFS_NAME = "TokenFile";
+    private IGenericController controller;
+    private CurrentSession cs;
+    private ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,11 +34,14 @@ public class LoginActivity extends AppCompatActivity {
 
         editUsername = (EditText) findViewById(R.id.editUsername);
         editPassword = (EditText) findViewById(R.id.editPassword);
+        progress = (ProgressBar) findViewById(R.id.progressBar);
+        progress.setVisibility(View.INVISIBLE);
+
+        controller = WebDBController.getInstance();
+        cs = CurrentSession.getInstance();
 
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
-        String token = prefs.getString("token", null);
-
-        CurrentSession cs = CurrentSession.getInstance();
+        String token = prefs.getString("token",null);
         cs.setToken(token);
         if (cs.getToken() != null) {
             new GetCurrentUser().execute();
@@ -81,18 +88,26 @@ public class LoginActivity extends AppCompatActivity {
     private class login extends AsyncTask<String,String,String> {
 
         String token = null;
-        IGenericController gc = WebDBController.getInstance();
-        CurrentSession cs = CurrentSession.getInstance();
         User u = null;
 
         @Override
         protected String doInBackground(String... logUser) {
-            token = gc.login(username, password);
+            try {
+                token = controller.login(username, password);
+                //TODO Pending to catch correctly
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            }
 
             if(token != null && !token.equals("")){
                 cs.setToken(token);
                 saveToken();
-                u = gc.getCurrentUser();
+                try {
+                    u = controller.getCurrentUser();
+                    //TODO Pending to catch correctly
+                } catch (AutorizationException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
@@ -112,18 +127,28 @@ public class LoginActivity extends AppCompatActivity {
 
     private class GetCurrentUser extends AsyncTask<String,String,String> {
 
-        IGenericController gc = WebDBController.getInstance();
-        CurrentSession cs = CurrentSession.getInstance();
         User user = null;
 
         @Override
+        protected void onPreExecute() {
+            progress.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
+
+        @Override
         protected String doInBackground(String... logUser) {
-            user = WebDBController.getInstance().getCurrentUser();
+            try {
+                //TODO Pending to catch correctly
+                user = controller.getCurrentUser();
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
+            progress.setVisibility(View.INVISIBLE);
             cs.setCurrentUser(user);
             changeToMainActivity();
             super.onPostExecute(s);
