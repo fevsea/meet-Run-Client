@@ -35,6 +35,7 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
+import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -64,9 +65,6 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         TextView date = view.findViewById(R.id.meeting_info_date);
         TextView time = view.findViewById(R.id.meeting_info_time);
         TextView owner = view.findViewById(R.id.meeting_info_creator);
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
-        fab.setVisibility(View.GONE);
 
         meetingId = meetingInfo.getInt("id");
         title.setText(meetingInfo.getString("title"));
@@ -77,6 +75,20 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         level.setText(levelValue);
         date.setText(meetingInfo.getString("date"));
         time.setText(meetingInfo.getString("time"));
+
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setImageResource(android.R.drawable.ic_menu_edit);
+        fab.setBackgroundColor(0);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent editMeetingIntent = new Intent(getActivity(),EditMeetingActivity.class);
+                editMeetingIntent.putExtra("id",meetingId);
+                getActivity().finish();
+                startActivity(editMeetingIntent);
+            }
+        });
 
         setupRecyclerView();
         setupScrollView();
