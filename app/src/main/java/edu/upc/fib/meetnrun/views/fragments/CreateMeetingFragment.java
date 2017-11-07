@@ -2,6 +2,8 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -37,8 +39,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
@@ -66,6 +70,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     EditText hour;
     EditText level;
     EditText description;
+    EditText location;
 
     String Name;
     String Description;
@@ -94,7 +99,11 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         hour = (EditText) view.findViewById(R.id.hour);
         level = (EditText) view.findViewById(R.id.level);
         description = (EditText) view.findViewById(R.id.description);
+        location = (EditText) view.findViewById(R.id.meetingLocation);
         Button dateButton = (Button) view.findViewById(R.id.pickDate);
+
+        myLocation = new LatLng(41.388576, 2.112840);
+
         dateButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -201,6 +210,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         else dayTxt = String.valueOf(day);
         Date=yearTxt+"-"+monthTxt+"-"+dayTxt+"T"+hourTxt+":"+minuteTxt+":00Z";
 
+
         if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty()){
             Toast.makeText(this.getContext(), "@string/emptyCreate", Toast.LENGTH_SHORT).show();
         }
@@ -244,9 +254,26 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap map) {
         this.maps = map;
-        myLocation = new LatLng(41.388576, 2.112840);
+
         myMarker = map.addMarker(new MarkerOptions().position(myLocation).title("Meeting"));
         moveMapCameraAndMarker(myLocation);
+
+        Geocoder geocoder = new Geocoder(this.getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(myLocation.latitude, myLocation.longitude, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                location.setText(strReturnedAddress.toString());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
