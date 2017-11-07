@@ -93,7 +93,7 @@ public class FriendProfileFragment extends Fragment {
 
     private class addFriend extends AsyncTask<String,String,String> {
 
-        boolean ok;
+        boolean ok = false;
 
         @Override
         protected String doInBackground(String... s) {
