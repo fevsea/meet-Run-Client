@@ -38,8 +38,11 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
         TextView userName = view.findViewById(R.id.meeting_item_username);
         userName.setText(user.getUsername());
 
-        TextView meetingLocation = view.findViewById(R.id.meeting_item_name);
-        meetingLocation.setText(user.getFirstName()+" "+user.getLastName());
+        TextView name = view.findViewById(R.id.meeting_item_name);
+        name.setText(user.getFirstName()+" "+user.getLastName());
+
+        TextView postCode = view.findViewById(R.id.meeting_item_postcode);
+        postCode.setText(user.getPostalCode());
 
         TextView meetingLevel = view.findViewById(R.id.meeting_item_level2);
         String level = String.valueOf(/*user.getLevel()*/0);
