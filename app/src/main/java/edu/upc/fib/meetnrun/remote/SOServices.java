@@ -23,16 +23,16 @@ public interface SOServices {
     @GET("/meetings")
     Call<MeetingServer[]> getMeetings();
 
-    @POST("/meetings/")
+    @POST("/meetings")
     Call<MeetingServer> createMeeting(@Body Forms.CreateMeeting meeting);
 
     @GET("/meetings/{id}")
     Call<MeetingServer> getMeeting(@Path("id") int id);
 
-    @PATCH("/meetings/{id}/")
+    @PATCH("/meetings/{id}")
     Call<Void> updateMeeting(@Path("id") int id, @Body MeetingServer meeting);
 
-    @DELETE("/meetings/{id}/")
+    @DELETE("/meetings/{id}")
     Call<Void> deletetMeeting(@Path("id") int id);
 
     //USERS
@@ -40,28 +40,28 @@ public interface SOServices {
     @GET("/users")
     Call<UserServer[]> getUsers();
 
-    @POST("/users/")
+    @POST("/users")
     Call<UserServer> registerUser(@Body Forms.UserRegistration user);
 
     @GET("/users/{id}")
     Call<UserServer> getUser(@Path("id") int id);
 
-    @PATCH("/users/{id}/")
+    @PATCH("/users/{id}")
     Call<Void> updateUser(@Path("id") int id, @Body UserServer userServer);
 
-    @DELETE("/users/{id}/")
+    @DELETE("/users/{id}")
     Call<Void> deleteUser(@Path("id") int id);
 
 
     //LOGIN
 
-    @POST("/users/login/")
+    @POST("/users/login")
     Call<Forms.Token> logIn(@Body Forms.LoginUser lu);
 
     @GET("/users/logout")
     Call<Void> logout();
 
-    @GET("/users/current/")
+    @GET("/users/current")
     Call<UserServer> getCurrentUser();
 
     //PARTICIPANTS
@@ -80,16 +80,16 @@ public interface SOServices {
 
 
     //FRIENDS
-    @GET("/users/friends/")
+    @GET("/users/friends")
     Call<List<UserServer>> getCurrentUserFriends();
 
-    @POST("/users/friends/{id}/")
+    @POST("/users/friends/{id}")
     Call<Void> addFriend(@Path("id") int id);
 
-    @DELETE("/users/friends/{id}/")
+    @DELETE("/users/friends/{id}")
     Call<Void> removeFriend(@Path("id") int id);
 
-    @GET("/users/{id}/friends/")
+    @GET("/users/{id}/friends")
     Call<List<UserServer>> getFriendsOfUser(@Path("id") int id);
 
 

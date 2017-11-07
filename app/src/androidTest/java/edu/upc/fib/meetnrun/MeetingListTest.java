@@ -51,7 +51,7 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class MeetingListTest{
-
+/*
     @Rule
     public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
     private MeetingListFragment getActivityFragment() {
@@ -130,5 +130,5 @@ public class MeetingListTest{
             }
         };
     }
-
+*/
 }
