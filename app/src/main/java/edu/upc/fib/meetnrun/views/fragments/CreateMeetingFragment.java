@@ -82,6 +82,8 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     ScrollView sV;
     Switch publicMeeting;
 
+    Geocoder geocoder;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,6 +148,23 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
         Public=false;
 
+        geocoder = new Geocoder(this.getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(myLocation.latitude, myLocation.longitude, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                location.setText(strReturnedAddress.toString());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
         getFragmentManager().beginTransaction().add(R.id.mapView, mMapFragment).commit();
         mMapFragment.getMapAsync(this);
@@ -196,13 +215,12 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         Description = description.getText().toString();
         Latitude= String.valueOf(myLocation.latitude);
         Longitude=String.valueOf(myLocation.longitude);
-        String hourTxt,minuteTxt,secondTxt;
+        String hourTxt,minuteTxt;
         String yearTxt,monthTxt,dayTxt;
         if (hour2 < 10) hourTxt = "0"+hour2;
         else hourTxt = String.valueOf(hour2);
         if (minute < 10) minuteTxt = "0"+minute;
         else minuteTxt = String.valueOf(minute);
-        secondTxt = "00";
         yearTxt = String.valueOf(year);
         if (month < 10) monthTxt = "0"+month;
         else monthTxt = String.valueOf(month);
@@ -257,23 +275,22 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
         myMarker = map.addMarker(new MarkerOptions().position(myLocation).title("Meeting"));
         moveMapCameraAndMarker(myLocation);
-
-        Geocoder geocoder = new Geocoder(this.getContext(), Locale.getDefault());
+        List<Address> addresses = null;
         try {
-            List<Address> addresses = geocoder.getFromLocation(myLocation.latitude, myLocation.longitude, 1);
-            if (addresses != null) {
-                Address returnedAddress = addresses.get(0);
-                StringBuilder strReturnedAddress = new StringBuilder("");
-
-                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
-                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
-                }
-                location.setText(strReturnedAddress.toString());
-            }
-
+            addresses = geocoder.getFromLocation(myLocation.latitude, myLocation.longitude, 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (addresses != null) {
+            Address returnedAddress = addresses.get(0);
+            StringBuilder strReturnedAddress = new StringBuilder("");
+
+            for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+            }
+            location.setText(strReturnedAddress.toString());
+        }
+
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
