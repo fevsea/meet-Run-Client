@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -19,6 +20,8 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.EditProfileActivity;
+
+import com.google.android.gms.maps.*;
 
 
 public class ProfileActivityFragment extends Fragment {
@@ -63,7 +66,7 @@ public class ProfileActivityFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent;
-                //intent = new Intent(getActivity(), EditProfileActivity.class);
+                //intent = new Intent(getActivity(), ChangePasswordActivity.class);
                 //startActivity(intent);
             }
         });
@@ -76,6 +79,13 @@ public class ProfileActivityFragment extends Fragment {
 
         return view;
     }
+
+    /*public void getCityFromPostCode() {
+        Geocoder geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'address': '110021'}, function(results, status) {
+            console.log(results);
+        });
+    }*/
 
     /*protected void getCityFromPostCode(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_PICKER_REQUEST) {

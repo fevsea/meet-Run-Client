@@ -40,8 +40,9 @@
     <string name="change_time">Change time</string>
     <string name="edit_meeting">Edit meeting</string>
     <string name="title_activity_profile">User Profile</string>
+    <string name="title_edit_profile">Edit Profile</string>
     <string name="button_edit_profile">Edit Profile</string>
-    <string name="button_edit_password">Change Prassword</string>
+    <string name="button_edit_password">Change Password</string>
     <string name="friend_profile_label">Friend profile</string>
     <string name="user_profile_label">User profile</string>
 
