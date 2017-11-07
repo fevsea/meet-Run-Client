@@ -13,6 +13,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="search">Search</string>
     <string name="action_settings">Settings</string>
+
     <string name="hour">Hour</string>
     <string name="meeting_name">Meeting name</string>
     <string name="minimum_level">Minimum level</string>
@@ -23,6 +24,10 @@
     <string name="location">Your last known location</string>
     <string name="meeting_location">Location of the meeting</string>
     <string name="create_button">Create</string>
+    <string name="public_meeting">Public</string>
+    <string name="private_meeting">Private</string>
+    <string name="location_button">Location</string>
+
     <string name="edit_meeting_close_dialog_message">Are you sure you want to close without saving?</string>
     <string name="edit_meeting_close_dialog_title">Closing without saving</string>
     <string name="friend_request_dialog_message">Are you sure you want to send a friend request to</string>
