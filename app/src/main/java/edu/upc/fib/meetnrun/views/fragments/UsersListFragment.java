@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
@@ -52,7 +53,7 @@ public class UsersListFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         this.view = inflater.inflate(R.layout.fragment_users_list, container, false);
-        controller = WebDBController.getInstance();
+        controller = CurrentSession.getInstance().getController();
 
         l = new ArrayList<>();
 
@@ -82,10 +83,11 @@ public class UsersListFragment extends Fragment {
 
                 User user = usersAdapter.getFriendAtPosition(position);
                 Intent userProfileIntent = new Intent(getActivity(),UserProfileActivity.class);
-                userProfileIntent.putExtra("userName",user.getUsername());
+                userProfileIntent.putExtra("id", String.valueOf(user.getId()));
+                userProfileIntent.putExtra("userName", user.getUsername());
                 String name = user.getFirstName()+" "+user.getLastName();
-                userProfileIntent.putExtra("name",name);
-                userProfileIntent.putExtra("postCode",user.getPostalCode());
+                userProfileIntent.putExtra("name", name);
+                userProfileIntent.putExtra("postCode", user.getPostalCode());
                 startActivity(userProfileIntent);
 
             }

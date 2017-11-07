@@ -10,7 +10,9 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
@@ -34,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity{
 
         this.setTitle("Register");
 
-        controller = WebDBController.getInstance();
+        controller = CurrentSession.getInstance().getController();
 
         editName = (EditText) findViewById(R.id.editName);
         editSurname = (EditText) findViewById(R.id.editSurname);
@@ -102,6 +104,7 @@ public class RegisterActivity extends AppCompatActivity{
     private class register extends AsyncTask<String,String,String> {
 
         User user = null;
+        boolean uar = false;
 
         @Override
         protected String doInBackground(String... registerUser) {
@@ -109,13 +112,17 @@ public class RegisterActivity extends AppCompatActivity{
                 user = controller.registerUser(username, name, surname, pcInt, password1, quest, answ);
             } catch (ParamsException e) {
                 e.printStackTrace();
+                uar = true;
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            if (user == null) {
+            if (uar) {
+                Toast.makeText(getApplicationContext(), "User already registered", Toast.LENGTH_SHORT).show();
+            }
+            else if (user == null) {
                 Toast.makeText(getApplicationContext(), "Register ERROR", Toast.LENGTH_SHORT).show();
             }
             else {

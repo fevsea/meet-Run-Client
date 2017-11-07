@@ -501,7 +501,7 @@ public class WebDBController implements IGenericController {
     private void checkErrorCodeAndThowException(int code, String string) throws GenericException {
         switch (code) {
             case 400:
-                throw JsonUtils.CreateNotFoundExceptionFromJson(string);
+                throw JsonUtils.CreateParamExceptionFromJson(string);
             case 401:
                 throw JsonUtils.CreateAutorizationExceptionFromJson(string);
             case 404:

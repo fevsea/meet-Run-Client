@@ -45,7 +45,7 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
         postCode.setText(user.getPostalCode());
 
         TextView meetingLevel = view.findViewById(R.id.meeting_item_level2);
-        String level = String.valueOf(/*user.getLevel()*/0);
+        String level = String.valueOf(user.getLevel());
         if (level.equals("null")) level = "0";
         meetingLevel.setText(String.valueOf(level));
 

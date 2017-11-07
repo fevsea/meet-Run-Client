@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
@@ -57,7 +59,7 @@ public class FriendsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
-        controller = WebDBController.getInstance();
+        controller = CurrentSession.getInstance().getController();
 
         l = new ArrayList<User>();
 
@@ -94,6 +96,7 @@ public class FriendsFragment extends Fragment {
                 User friend = friendsAdapter.getFriendAtPosition(position);
                 Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
 
+                friendProfileIntent.putExtra("id",String.valueOf(friend.getId()));
                 friendProfileIntent.putExtra("userName",friend.getUsername());
                 String name = friend.getFirstName()+" "+friend.getLastName();
                 friendProfileIntent.putExtra("name",name);
@@ -119,7 +122,11 @@ public class FriendsFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            l = controller.getAllUsers();
+            try {
+                l = controller.getUserFriends();
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 

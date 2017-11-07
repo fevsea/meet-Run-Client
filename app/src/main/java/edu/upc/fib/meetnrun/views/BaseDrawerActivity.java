@@ -30,10 +30,14 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
 
     protected abstract boolean finishOnChangeView();
 
+    private CurrentSession cs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
+
+        cs = CurrentSession.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
         setSupportActionBar(toolbar);
@@ -56,9 +60,6 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                     i.putExtra("id",3);
                                     break;*/
                                 case R.id.logout:
-                                    CurrentSession cs = CurrentSession.getInstance();
-                                    cs.setToken(null);
-                                    cs.setCurrentUser(null);
                                     deleteToken();
                                     i = new Intent(getApplicationContext(),LoginActivity.class);
                                     finishAffinity();
@@ -84,7 +85,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                     });
 
             TextView nav_user = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nameProfile);
-            User user = CurrentSession.getInstance().getCurrentUser();
+            User user = cs.getCurrentUser();
             String name = user.getFirstName()+" "+user.getLastName();
             nav_user.setText(name);
 
@@ -114,9 +115,11 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
     }
 
     private void deleteToken() {
+        cs.setToken(null);
+        cs.setCurrentUser(null);
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("token", CurrentSession.getInstance().getToken());
+        editor.putString("token", cs.getToken());
         editor.commit();
     }
 

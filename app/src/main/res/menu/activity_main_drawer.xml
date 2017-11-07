@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/meetings"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/add_group_512"
             android:title="Meetings" />
         <item
             android:id="@+id/edit_meeting"
@@ -12,11 +12,11 @@
             android:title="Edit meeting" />
         <item
             android:id="@+id/friends"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/friends"
             android:title="Friends" />
         <item
             android:id="@+id/logout"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/exit"
             android:title="Log out" />
 
     </group>
@@ -42,7 +42,7 @@
                 android:title="Settings" />
             <item
                 android:id="@+id/help"
-                android:icon="@drawable/ic_menu_gallery"
+                android:icon="@drawable/help"
                 android:title="Help and suggestions" />
         </menu>
     </item>

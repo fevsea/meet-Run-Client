@@ -68,6 +68,7 @@ public class RetrofitClient {
                     connectTimeout(100, TimeUnit.SECONDS)
                     .readTimeout(100, TimeUnit.SECONDS)
                     .addInterceptor(new AuthenticationInterceptor())
+                    .addInterceptor(contentType)
                     .addInterceptor(retry)
                     .retryOnConnectionFailure(true)
                     .addInterceptor(logging)
