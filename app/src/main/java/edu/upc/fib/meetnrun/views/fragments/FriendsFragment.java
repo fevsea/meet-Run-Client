@@ -178,4 +178,10 @@ public class FriendsFragment extends Fragment {
 
         super.onCreateOptionsMenu(menu, inflater);
     }
+
+    @Override
+    public void onResume() {
+        updateFriendsList();
+        super.onResume();
+    }
 }
