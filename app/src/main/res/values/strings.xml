@@ -27,6 +27,12 @@
     <string name="public_meeting">Public</string>
     <string name="private_meeting">Private</string>
     <string name="location_button">Location</string>
+    <string name="public_friends">Do you want to add some friends in this meeting?</string>
+    <string name="private_friends">Do you want to run with friends, or alone?</string>
+    <string name="public_yes_friends">Yes, I want to add friends</string>
+    <string name="public_no_friends">No, just create it</string>
+    <string name="private_yes_friends">I want to add friends</string>
+    <string name="private_no_friends">I want to run alone</string>
 
     <string name="edit_meeting_close_dialog_message">Are you sure you want to close without saving?</string>
     <string name="edit_meeting_close_dialog_title">Closing without saving</string>

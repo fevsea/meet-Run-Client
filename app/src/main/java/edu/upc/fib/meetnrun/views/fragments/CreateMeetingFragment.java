@@ -1,13 +1,17 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,7 +58,7 @@ import static android.R.layout.simple_spinner_item;
 import static edu.upc.fib.meetnrun.R.id.isPublic;
 import static edu.upc.fib.meetnrun.R.id.scrollView;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
-
+import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 
 
 public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
@@ -236,9 +240,9 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         else if(Description.length()>=500) Toast.makeText(this.getContext(), "@string/bigDescription", Toast.LENGTH_SHORT).show();
         else{
             //DB stuff
-            Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description+", Kind of meeting: "+Public.toString(), Toast.LENGTH_SHORT).show();
-            create_meeting();
-            this.getActivity().finish();
+            if (Public)  onCreateDialog(getActivity(), "@string/public_friends", "@string/public_yes_friends", "@string/public_no_friends");
+            else onCreateDialog(getActivity(), "@string/private_friends", "@string/private_yes_friends", "@string/private_no_friends");
+            //Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description+", Kind of meeting: "+Public.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -304,6 +308,27 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         maps.moveCamera(camera);
         myMarker.remove();
         myMarker = maps.addMarker(new MarkerOptions().position(location).title("Meeting"));
+    }
+
+    public Dialog onCreateDialog(final FragmentActivity fa, String message, String pos, String neg) {
+        // Use the Builder class for convenient dialog construction
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(message)
+                .setPositiveButton(pos, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //TODO: Llamada a pantalla de añadir amigos
+                        create_meeting();
+                    }
+                })
+                .setNegativeButton(neg, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        create_meeting();
+                        fa.finish();
+                    }});
+                    // Create the AlertDialog object and return it
+        return builder.create();
+
     }
 
     private void create_meeting(){
