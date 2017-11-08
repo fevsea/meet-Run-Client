@@ -74,7 +74,15 @@ public class FriendsFragment extends Fragment {
                 addNewFriend();
             }
         });
-
+        final SwipeRefreshLayout swipeRefreshLayout =
+                (SwipeRefreshLayout) view.findViewById(R.id.fragment_friends_swipe);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateFriendsList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
         return this.view;
     }
 
@@ -84,7 +92,7 @@ public class FriendsFragment extends Fragment {
         friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         List<User> users = new ArrayList<User>();
-        getFriendsList();
+        updateFriendsList();
 
         friendsAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
                        @Override
@@ -109,7 +117,7 @@ public class FriendsFragment extends Fragment {
 
     }
 
-    private void getFriendsList() {
+    private void updateFriendsList() {
         new getFriends().execute();
     }
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.SearchView;
@@ -63,6 +64,16 @@ public class UsersListFragment extends Fragment {
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
+        final SwipeRefreshLayout swipeRefreshLayout =
+                (SwipeRefreshLayout) view.findViewById(R.id.fragment_users_swipe);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateUsersList();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         return this.view;
     }
 
@@ -72,7 +83,7 @@ public class UsersListFragment extends Fragment {
         friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         List<User> users = new ArrayList<User>();
-        getUsersList();
+        updateUsersList();
 
         usersAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
             @Override
@@ -96,7 +107,7 @@ public class UsersListFragment extends Fragment {
 
     }
 
-    private void getUsersList() {
+    private void updateUsersList() {
         new UsersListFragment.getUsers().execute();
     }
 
