@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
@@ -82,10 +84,9 @@ public class UsersListFragment extends Fragment {
         final RecyclerView friendsList = view.findViewById(R.id.fragment_users_container);
         friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        List<User> users = new ArrayList<User>();
-        updateUsersList();
+        //updateUsersList();
 
-        usersAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
+        usersAdapter = new FriendsAdapter(l, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
@@ -108,14 +109,36 @@ public class UsersListFragment extends Fragment {
     }
 
     private void updateUsersList() {
-        new UsersListFragment.getUsers().execute();
+        l.clear();
+        new getUsers().execute();
     }
 
     private class getUsers extends AsyncTask<String,String,String> {
 
+        List<User> friends = new ArrayList<User>();
+        List<User> users = new ArrayList<User>();
+
         @Override
         protected String doInBackground(String... strings) {
-            l = controller.getAllUsers();
+            users = controller.getAllUsers();
+            try {
+                friends = controller.getUserFriends();
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            }
+            for (User user: users) {
+                boolean equal = false;
+                for (User friend: friends) {
+                    if (user.getUsername().equals(friend.getUsername())) {
+                        equal = true;
+                        friends.remove(friend);
+                        break;
+                    }
+                }
+                if (!equal) {
+                    l.add(user);
+                }
+            }
             return null;
         }
 
@@ -157,5 +180,12 @@ public class UsersListFragment extends Fragment {
         });
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onResume() {
+        Log.e("AQUIIII","ESTOYY");
+        updateUsersList();
+        super.onResume();
     }
 }
