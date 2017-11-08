@@ -111,6 +111,7 @@ public class FriendProfileFragment extends Fragment {
         protected void onPostExecute(String s) {
             if (ok) {
                 Toast.makeText(getContext(), "Friend removed", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
             }
             super.onPostExecute(s);
         }

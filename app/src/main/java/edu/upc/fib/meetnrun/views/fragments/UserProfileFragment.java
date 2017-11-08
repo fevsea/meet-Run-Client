@@ -109,6 +109,7 @@ public class UserProfileFragment extends Fragment {
         protected void onPostExecute(String s) {
             if (ok) {
                 Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
             }
             super.onPostExecute(s);
         }
