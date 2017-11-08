@@ -1,7 +1,6 @@
 package edu.upc.fib.meetnrun.models;
 
-import edu.upc.fib.meetnrun.persistence.IGenericController;
-import edu.upc.fib.meetnrun.persistence.WebDBController;
+import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
 
 /**
  * Created by Awais Iqbal on 24/10/2017.
@@ -10,36 +9,42 @@ import edu.upc.fib.meetnrun.persistence.WebDBController;
 public class CurrentSession {
 
     private static final CurrentSession instance = new CurrentSession();
-        private String token;
-        private User currentUser;
-        private IGenericController controller;
+    private String token;
+    private User currentUser;
+    private AdaptersContainer adapterContainer;
 
-        private CurrentSession() {
-            controller = WebDBController.getInstance();
-        }
+    private CurrentSession() {
+        adapterContainer = AdaptersContainer.getInstance();
+    }
 
-        public static CurrentSession getInstance() {
-            return instance;
-        }
+    public static CurrentSession getInstance() {
+        return instance;
+    }
 
-        public String getToken() {
-            return token;
-        }
+    public String getToken() {
+        return token;
+    }
 
-        public void setToken(String token) {
-            this.token = token;
-        }
+    public void setToken(String token) {
+        this.token = token;
+    }
 
-        public User getCurrentUser() {
-            return currentUser;
-        }
+    public User getCurrentUser() {
+        return currentUser;
+    }
 
-        public void setCurrentUser(User currentUser) {
-            this.currentUser = currentUser;
-        }
+    public void setCurrentUser(User currentUser) {
+        this.currentUser = currentUser;
+    }
 
-        public IGenericController getController(){
-            return this.controller;
-        }
+    public AdaptersContainer getAdapterContainer() {
+        return adapterContainer;
+    }
+
+    public void setAdapterContainer(AdaptersContainer adapterContainer) {
+        this.adapterContainer = adapterContainer;
+    }
+
+    public void get
 
 }

@@ -15,8 +15,8 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
-import edu.upc.fib.meetnrun.persistence.WebDBController;
+import edu.upc.fib.meetnrun.adapters.IGenericController;
+import edu.upc.fib.meetnrun.adapters.WebDBController;
 
 public class LoginActivity extends AppCompatActivity {
 
