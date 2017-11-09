@@ -79,6 +79,8 @@ package="edu.upc.fib.meetnrun">
         android:name=".views.UsersListActivity"
         android:label="@string/users_label"
         android:screenOrientation="portrait"/>
+    <service android:name=".services.TrackingService">
+        </service>
 </application>
 
 </manifest>

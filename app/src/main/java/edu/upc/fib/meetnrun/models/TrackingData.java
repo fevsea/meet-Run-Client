@@ -1,5 +1,8 @@
 package edu.upc.fib.meetnrun.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -8,21 +11,59 @@ import java.util.List;
  * Created by guillemcastro on 03/11/2017.
  */
 
-public class TrackingData {
+public class TrackingData implements Parcelable {
 
-    public TrackingData(float averageSpeed, float distance, int steps, List<LatLng> routePoints, long totalTimeMillis) {
+    public TrackingData(float averageSpeed, float distance, int steps, float calories ,List<LatLng> routePoints, long totalTimeMillis) {
         this.averageSpeed = averageSpeed;
         this.distance = distance;
         this.steps = steps;
         this.routePoints = routePoints;
         this.totalTimeMillis = totalTimeMillis;
+        this.calories = calories;
     }
 
     private float averageSpeed;
     private float distance;
     private int steps;
     private long totalTimeMillis;
+    private float calories;
     private List<LatLng> routePoints;
+
+    protected TrackingData(Parcel in) {
+        averageSpeed = in.readFloat();
+        distance = in.readFloat();
+        steps = in.readInt();
+        totalTimeMillis = in.readLong();
+        calories = in.readFloat();
+        routePoints = in.createTypedArrayList(LatLng.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeFloat(averageSpeed);
+        dest.writeFloat(distance);
+        dest.writeInt(steps);
+        dest.writeLong(totalTimeMillis);
+        dest.writeFloat(calories);
+        dest.writeTypedList(routePoints);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<TrackingData> CREATOR = new Creator<TrackingData>() {
+        @Override
+        public TrackingData createFromParcel(Parcel in) {
+            return new TrackingData(in);
+        }
+
+        @Override
+        public TrackingData[] newArray(int size) {
+            return new TrackingData[size];
+        }
+    };
 
     public float getAverageSpeed() {
         return averageSpeed;
@@ -62,6 +103,14 @@ public class TrackingData {
 
     public void setTotalTimeMillis(long totalTimeMillis) {
         this.totalTimeMillis = totalTimeMillis;
+    }
+
+    public float getCalories() {
+        return calories;
+    }
+
+    public void setCalories(float calories) {
+        this.calories = calories;
     }
 
     @Override
