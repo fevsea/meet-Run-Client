@@ -84,8 +84,6 @@ public class UsersListFragment extends Fragment {
         final RecyclerView friendsList = view.findViewById(R.id.fragment_users_container);
         friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        //updateUsersList();
-
         usersAdapter = new FriendsAdapter(l, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
@@ -184,7 +182,6 @@ public class UsersListFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.e("AQUIIII","ESTOYY");
         updateUsersList();
         super.onResume();
     }
