@@ -133,6 +133,9 @@ public class UsersListFragment extends Fragment {
                         break;
                     }
                 }
+                if (user.getUsername().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) {
+                    equal = true;
+                }
                 if (!equal) {
                     l.add(user);
                 }
