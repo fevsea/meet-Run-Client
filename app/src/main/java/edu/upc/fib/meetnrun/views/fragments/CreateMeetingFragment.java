@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -59,6 +60,7 @@ import static edu.upc.fib.meetnrun.R.id.isPublic;
 import static edu.upc.fib.meetnrun.R.id.scrollView;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
+import edu.upc.fib.meetnrun.views.MeetingFriendsActivity;
 
 
 public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
@@ -214,7 +216,9 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     public void create(){
         Name = name.getText().toString();
         Date = date.getText().toString();
-        Level = Integer.parseInt(level.getText().toString());
+        if (level.getText().toString().isEmpty()) Level=0;
+        else Level = Integer.parseInt(level.getText().toString());
+
         String Hour = hour.getText().toString();
         Description = description.getText().toString();
         Latitude= String.valueOf(myLocation.latitude);
@@ -316,8 +320,11 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         builder.setMessage(message)
                 .setPositiveButton(pos, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //TODO: Llamada a pantalla de añadir amigos
                         create_meeting();
+                        Intent i=new Intent(getActivity(), MeetingFriendsActivity.class);
+                        i.getIntExtra("level", Level);
+                        startActivity(i);
+
                     }
                 })
                 .setNegativeButton(neg, new DialogInterface.OnClickListener() {
