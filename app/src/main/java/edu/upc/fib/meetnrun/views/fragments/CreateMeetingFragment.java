@@ -234,14 +234,14 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
 
         if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty()){
-            Toast.makeText(this.getContext(), "@string/emptyCreate", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getContext(), this.getString(R.string.empty_create_error), Toast.LENGTH_SHORT).show();
         }
-        else if(Name.length()>=100) Toast.makeText(this.getContext(),"@string/bigName", Toast.LENGTH_SHORT).show();
-        else if(Description.length()>=500) Toast.makeText(this.getContext(), "@string/bigDescription", Toast.LENGTH_SHORT).show();
+        else if(Name.length()>=100) Toast.makeText(this.getContext(),this.getString(R.string.big_name_error), Toast.LENGTH_SHORT).show();
+        else if(Description.length()>=500) Toast.makeText(this.getContext(), this.getString(R.string.big_description_error), Toast.LENGTH_SHORT).show();
         else{
             //DB stuff
-            if (Public)  onCreateDialog(getActivity(), "@string/public_friends", "@string/public_yes_friends", "@string/public_no_friends");
-            else onCreateDialog(getActivity(), "@string/private_friends", "@string/private_yes_friends", "@string/private_no_friends");
+            if (Public)  onCreateDialog(getActivity(), this.getString(R.string.public_friends), this.getString(R.string.public_yes_friends), this.getString(R.string.public_no_friends));
+            else onCreateDialog(getActivity(), this.getString(R.string.private_friends), this.getString(R.string.private_yes_friends), this.getString(R.string.private_no_friends));
             //Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description+", Kind of meeting: "+Public.toString(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -327,9 +327,12 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
                         fa.finish();
                     }});
                     // Create the AlertDialog object and return it
+        builder.show();
         return builder.create();
 
     }
+
+
 
     private void create_meeting(){
         new newMeeting().execute();
