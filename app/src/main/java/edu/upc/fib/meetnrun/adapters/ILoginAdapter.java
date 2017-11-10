@@ -1,6 +1,7 @@
 package edu.upc.fib.meetnrun.adapters;
 
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.models.User;
 
 /**
@@ -13,4 +14,7 @@ public interface ILoginAdapter {
     public User getCurrentUser() throws AutorizationException;
 
     public boolean logout() throws AutorizationException;
+
+    public boolean changePassword(String oldPassword, String newPassword) throws AutorizationException, ForbiddenException;
+    
 }
