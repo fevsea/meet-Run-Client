@@ -1,8 +1,13 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.os.AsyncTask;
-import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -20,7 +25,7 @@ public class RegisterActivity extends AppCompatActivity{
     private EditText editName, editSurname, editUsername, editPc, editPassword1, editPassword2, editAnswer;
     private Spinner spinnerQuestion;
     private String name, surname, username, password1, quest, answ,pcInt;
-    private IUserAdapter userAdapter;
+    private IUserAdapter controller;
     private final static String[] questionsList = {"What is the first name of the person you first kissed?",
                                                                     "What was the name of your primary school?",
                                                                     "What time of the day were you born?",
@@ -34,7 +39,12 @@ public class RegisterActivity extends AppCompatActivity{
 
         this.setTitle("Register");
 
-        userAdapter = CurrentSession.getInstance().getUserAdapter();
+        controller = CurrentSession.getInstance().getUserAdapter();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         editName = (EditText) findViewById(R.id.editName);
         editSurname = (EditText) findViewById(R.id.editSurname);
@@ -107,7 +117,7 @@ public class RegisterActivity extends AppCompatActivity{
         @Override
         protected String doInBackground(String... registerUser) {
             try {
-                user = userAdapter.registerUser(username, name, surname, pcInt, password1, quest, answ);
+                user = controller.registerUser(username, name, surname, pcInt, password1, quest, answ);
             } catch (ParamsException e) {
                 e.printStackTrace();
                 uar = true;
@@ -129,6 +139,22 @@ public class RegisterActivity extends AppCompatActivity{
             }
             super.onPostExecute(s);
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.empty_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 }
