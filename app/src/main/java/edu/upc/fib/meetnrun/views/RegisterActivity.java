@@ -1,8 +1,13 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.os.AsyncTask;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -10,17 +15,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
-import edu.upc.fib.meetnrun.persistence.WebDBController;
 
 public class RegisterActivity extends AppCompatActivity{
 
     private EditText editName, editSurname, editUsername, editPc, editPassword1, editPassword2, editAnswer;
     private Spinner spinnerQuestion;
     private String name, surname, username, password1, quest, answ,pcInt;
-    private IGenericController controller;
+    private IUserAdapter controller;
     private final static String[] questionsList = {"What is the first name of the person you first kissed?",
                                                                     "What was the name of your primary school?",
                                                                     "What time of the day were you born?",
@@ -34,7 +39,12 @@ public class RegisterActivity extends AppCompatActivity{
 
         this.setTitle("Register");
 
-        controller = WebDBController.getInstance();
+        controller = CurrentSession.getInstance().getUserAdapter();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         editName = (EditText) findViewById(R.id.editName);
         editSurname = (EditText) findViewById(R.id.editSurname);
@@ -102,6 +112,7 @@ public class RegisterActivity extends AppCompatActivity{
     private class register extends AsyncTask<String,String,String> {
 
         User user = null;
+        boolean uar = false;
 
         @Override
         protected String doInBackground(String... registerUser) {
@@ -109,13 +120,17 @@ public class RegisterActivity extends AppCompatActivity{
                 user = controller.registerUser(username, name, surname, pcInt, password1, quest, answ);
             } catch (ParamsException e) {
                 e.printStackTrace();
+                uar = true;
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            if (user == null) {
+            if (uar) {
+                Toast.makeText(getApplicationContext(), "User already registered", Toast.LENGTH_SHORT).show();
+            }
+            else if (user == null) {
                 Toast.makeText(getApplicationContext(), "Register ERROR", Toast.LENGTH_SHORT).show();
             }
             else {
@@ -124,6 +139,22 @@ public class RegisterActivity extends AppCompatActivity{
             }
             super.onPostExecute(s);
         }
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.empty_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 }

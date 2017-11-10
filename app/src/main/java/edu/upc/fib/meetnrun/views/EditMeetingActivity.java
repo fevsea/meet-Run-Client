@@ -14,7 +14,7 @@ import com.google.android.gms.maps.model.Marker;
 
 import edu.upc.fib.meetnrun.R;
 
-import edu.upc.fib.meetnrun.persistence.IGenericController;
+import edu.upc.fib.meetnrun.adapters.IGenericController;
 import edu.upc.fib.meetnrun.views.fragments.EditMeetingFragment;
 
 import edu.upc.fib.meetnrun.models.Meeting;
