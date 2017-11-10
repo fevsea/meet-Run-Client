@@ -220,8 +220,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     public void create(){
         Name = name.getText().toString();
         Date = date.getText().toString();
-        Level=0;
-        Level += Integer.parseInt(level.getText().toString());
+        Level = Integer.parseInt(level.getText().toString());
 
         String Hour = hour.getText().toString();
         Description = description.getText().toString();
@@ -241,7 +240,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         Date=yearTxt+"-"+monthTxt+"-"+dayTxt+"T"+hourTxt+":"+minuteTxt+":00Z";
 
 
-        if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty()){
+        if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty() || Level.toString().isEmpty()){
             Toast.makeText(this.getContext(), this.getString(R.string.empty_create_error), Toast.LENGTH_SHORT).show();
         }
         else if(Name.length()>=100) Toast.makeText(this.getContext(),this.getString(R.string.big_name_error), Toast.LENGTH_SHORT).show();

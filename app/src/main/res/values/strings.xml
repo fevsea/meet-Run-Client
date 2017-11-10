@@ -19,7 +19,7 @@
     <string name="meeting_name">Meeting name</string>
     <string name="minimum_level">Minimum level</string>
     <string name="meeting_description">Meeting description</string>
-    <string name="empty_create_error">You left some important fields empty. You MUST fill name, date, hour and meeting location.</string>
+    <string name="empty_create_error">You left some important fields empty. You MUST fill name, level, date, hour and meeting location.</string>
     <string name="big_name_error">Name of the meeting should be shorter than 100 characters.</string>
     <string name="big_description_error">Description of the meeting should be shorter than 500 characters.</string>
     <string name="location">Your last known location</string>
