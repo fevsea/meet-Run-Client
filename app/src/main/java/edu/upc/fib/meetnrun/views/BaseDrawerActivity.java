@@ -19,6 +19,7 @@ import android.widget.TextView;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.fragments.SettingsFragment;
 
 public abstract class BaseDrawerActivity extends AppCompatActivity{
 
@@ -70,6 +71,9 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                     break;
                                 case R.id.friends:
                                     i = new Intent(getApplicationContext(),FriendsActivity.class);
+                                    break;
+                                case R.id.settings:
+                                    i = new Intent(getApplicationContext(),SettingsActivity.class);
                                     break;
                                 default:
                                     break;

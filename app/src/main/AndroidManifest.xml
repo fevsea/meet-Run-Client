@@ -48,8 +48,7 @@
         <activity
             android:name=".views.RegisterActivity"
             android:label="@string/register_label"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".views.ProfileActivity"
             android:label="@string/title_activity_profile"
@@ -74,6 +73,10 @@
         <activity
             android:name=".views.UsersListActivity"
             android:label="@string/users_label"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.SettingsActivity"
+            android:label="@string/action_settings"
             android:screenOrientation="portrait"/>
 
     </application>
