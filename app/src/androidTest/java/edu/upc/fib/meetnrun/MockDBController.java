@@ -136,7 +136,14 @@ public class MockDBController implements IGenericController {
     @Override
     public List<User> getParticipantsFromMeeting(int meetingId) throws AutorizationException, ParamsException {
         List<User> ul = new ArrayList<>();
-        //TODO
+        User user1 = new User(1,"user1","FirstName1","LastName1","08758", "What is the first name of the person you first kissed?", 4);
+        User user2 = new User(2,"user2","FirstName2","LastName2","08198", "What is the first name of the person you first kissed?", 2);
+        User user3 = new User(3,"user3","FirstName3","LastName3","08019", "What is the first name of the person you first kissed?", 10);
+        User user4 = new User(4,"user4","FirstName4","LastName4","08830", "What is the first name of the person you first kissed?", 1);
+        ul.add(user1);
+        ul.add(user2);
+        ul.add(user3);
+        ul.add(user4);
         return ul;
     }
 

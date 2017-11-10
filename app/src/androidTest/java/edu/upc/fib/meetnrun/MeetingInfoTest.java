@@ -11,7 +11,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.fragments.MeetingInfoFragment;
 
@@ -28,9 +30,11 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class MeetingInfoTest{
-/*
+
+    private static final int EXTRA_ID = 1;
     private static final String EXTRA_TITLE = "Quedada en Barcelona";
     private static final String EXTRA_DESCRIPTION = "La idea es salir por la mañana para hacer unos kms";
+    private static final String EXTRA_OWNER = "owner";
     private static final String EXTRA_DATE = "2017-10-10";
     private static final String EXTRA_TIME = "19:04:32";
     private static final String EXTRA_LEVEL = "5";
@@ -44,7 +48,9 @@ public class MeetingInfoTest{
         protected Intent getActivityIntent() {
             Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
             Intent meetingInfoIntent = new Intent(targetContext, MeetingInfoActivity.class);
+            meetingInfoIntent.putExtra("id",EXTRA_ID);
             meetingInfoIntent.putExtra("title",EXTRA_TITLE);
+            meetingInfoIntent.putExtra("owner",EXTRA_OWNER);
             meetingInfoIntent.putExtra("description",EXTRA_DESCRIPTION);
             meetingInfoIntent.putExtra("date",EXTRA_DATE);
             meetingInfoIntent.putExtra("time",EXTRA_TIME);
@@ -53,18 +59,27 @@ public class MeetingInfoTest{
             meetingInfoIntent.putExtra("longitude",EXTRA_LONGITUDE);
             return meetingInfoIntent;
         }
+
+
+        protected void beforeActivityLaunched() {
+            CurrentSession.getInstance().setController(new MockDBController());
+            User user = new User(1,"user","name","lastname","08028","Question",5);
+
+            CurrentSession.getInstance().setToken("AAAA");
+            CurrentSession.getInstance().setCurrentUser(user);
+        }
     };
 
     private MeetingInfoFragment getActivityFragment() {
         MeetingInfoFragment meetingInfoFragment =
                 (MeetingInfoFragment) activityRule.getActivity()
                         .getSupportFragmentManager()
-                        .findFragmentById(R.id.meeting_info_contentFrame);
+                        .findFragmentById(R.id.activity_contentFrame);
         if (meetingInfoFragment == null) {
             meetingInfoFragment = new MeetingInfoFragment();
             activityRule.getActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.meeting_info_contentFrame,meetingInfoFragment)
+                    .add(R.id.activity_contentFrame,meetingInfoFragment)
                     .commit();
         }
         return meetingInfoFragment;
@@ -79,12 +94,8 @@ public class MeetingInfoTest{
         onView(withId(R.id.meeting_info_description)).check(matches(withText(EXTRA_DESCRIPTION)));
         onView(withId(R.id.meeting_info_date)).check(matches(withText(EXTRA_DATE)));
         onView(withId(R.id.meeting_info_time)).check(matches(withText(EXTRA_TIME)));
+        onView(withId(R.id.meeting_info_creator)).check(matches(withText(EXTRA_OWNER)));
 
-
-        //    onView(withId(R.id.changeTextBt)).perform(click());
-
-        // Check that the text was changed.
-      //  onView(withId(R.id.textToBeChanged)).check(matches(withText(STRING_TO_BE_TYPED)));
     }
 
     @Test
@@ -92,5 +103,5 @@ public class MeetingInfoTest{
         MeetingInfoFragment meetingInfoFragment = getActivityFragment();
         onView(withId(R.id.meeting_info_map)).check(matches(isDisplayed()));
     }
-*/
+
 }
