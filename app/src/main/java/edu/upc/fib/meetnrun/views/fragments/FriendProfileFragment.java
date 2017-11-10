@@ -1,7 +1,6 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.DialogInterface;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,11 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
 
 /**
  * Created by eric on 2/11/17.
@@ -29,14 +27,14 @@ import edu.upc.fib.meetnrun.persistence.IGenericController;
 public class FriendProfileFragment extends Fragment {
 
     private View view;
-    private IGenericController controller;
+    private IFriendsAdapter friendsDBAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_friends_profile, container, false);
 
-        controller = CurrentSession.getInstance().getController();
+        friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
         final Bundle profileInfo = getActivity().getIntent().getExtras();
 
@@ -98,7 +96,7 @@ public class FriendProfileFragment extends Fragment {
         @Override
         protected String doInBackground(String... s) {
             try {
-                ok = controller.removeFriend(Integer.parseInt(s[0]));
+                ok = friendsDBAdapter.removeFriend(Integer.parseInt(s[0]));
             } catch (AutorizationException e) {
                 e.printStackTrace();
             } catch (ParamsException e) {

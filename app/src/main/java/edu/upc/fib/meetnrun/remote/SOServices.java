@@ -2,9 +2,9 @@ package edu.upc.fib.meetnrun.remote;
 
 import java.util.List;
 
-import edu.upc.fib.meetnrun.persistence.persistenceModels.Forms;
-import edu.upc.fib.meetnrun.persistence.persistenceModels.MeetingServer;
-import edu.upc.fib.meetnrun.persistence.persistenceModels.UserServer;
+import edu.upc.fib.meetnrun.adapters.models.Forms;
+import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
+import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
