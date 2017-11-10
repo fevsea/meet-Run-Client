@@ -92,7 +92,7 @@ public class LoginAdapterImpl implements ILoginAdapter {
     public boolean changePassword(String oldPassword, String newPassword) throws AutorizationException, ForbiddenException {
         boolean ok = false;
         try {
-            Response<Void> ret = mServices.changePassword(oldPassword,newPassword).execute();
+            Response<Void> ret = mServices.changePassword(new Forms.ChangePassword(oldPassword,newPassword)).execute();
             if (ret.isSuccessful()) {
                 ok = true;
             } else {

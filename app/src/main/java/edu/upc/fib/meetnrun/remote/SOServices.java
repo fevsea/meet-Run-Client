@@ -53,7 +53,7 @@ public interface SOServices {
     Call<Void> deleteUser(@Path("id") int id);
 
     @POST("/users/changePassword")
-    Call<Void> changePassword(String oldPassword, String newPassword);
+    Call<Void> changePassword(@Body Forms.ChangePassword sp);
 
 
     //LOGIN
