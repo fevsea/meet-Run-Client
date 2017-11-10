@@ -23,9 +23,10 @@ import org.junit.runner.RunWith;
 
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
-import edu.upc.fib.meetnrun.views.MainActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
+import edu.upc.fib.meetnrun.views.MeetingListActivity;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsViewHolder;
 
@@ -34,6 +35,7 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
@@ -51,38 +53,39 @@ import static org.hamcrest.Matchers.not;
 @RunWith(AndroidJUnit4.class)
 @SmallTest
 public class MeetingListTest{
-/*
+
     @Rule
-    public ActivityTestRule<MainActivity> activityRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<MeetingListActivity> activityRule = new ActivityTestRule<MeetingListActivity>(MeetingListActivity.class) {
+        protected void beforeActivityLaunched() {
+            CurrentSession.getInstance().setController(new MockDBController());
+            User user = new User(1,"user","name","lastname","08028","Question",5);
+
+            CurrentSession.getInstance().setToken("AAAA");
+            CurrentSession.getInstance().setCurrentUser(user);
+        }
+    };
     private MeetingListFragment getActivityFragment() {
         MeetingListFragment meetingListFragment =
                 (MeetingListFragment) activityRule.getActivity()
                         .getSupportFragmentManager()
-                        .findFragmentById(R.id.meeting_list_contentFrame);
+                        .findFragmentById(R.id.activity_contentFrame);
         if (meetingListFragment == null) {
             meetingListFragment = new MeetingListFragment();
             activityRule.getActivity().getSupportFragmentManager()
                     .beginTransaction()
-                    .add(R.id.meeting_list_contentFrame,meetingListFragment)
+                    .add(R.id.activity_contentFrame,meetingListFragment)
                     .commit();
         }
         return meetingListFragment;
     }
 
-    @Before
-    public void setup() {
-
-    }
 
     @Test
     public void testFragmentFab() {
         Intents.init();
-        activityRule.launchActivity(new Intent());
-        onView(isRoot()).perform(ViewActions.pressBack());
         MeetingListFragment meetingListFragment = getActivityFragment();
-        onView(withId(R.id.meeting_list_fab)).check(matches(isDisplayed()));
-        onView(withId(R.id.meeting_list_fab)).perform(click());
-        intended(hasComponent(MainActivity.class.getName()));
+        onView(withId(R.id.activity_fab)).check(matches(isDisplayed()));
+        onView(withId(R.id.activity_fab)).perform(click());
         intended(hasComponent(CreateMeetingActivity.class.getName()));
         Intents.release();
     }
@@ -90,27 +93,22 @@ public class MeetingListTest{
     @Test
     public void testRecyclerViewIntent() {
         Intents.init();
-        activityRule.launchActivity(new Intent());
-        onView(isRoot()).perform(ViewActions.pressBack());
         MeetingListFragment meetingListFragment = getActivityFragment();
         onView(withId(R.id.fragment_meeting_container)).check(matches(isDisplayed()));
         onView(withId(R.id.fragment_meeting_container))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
-        intended(hasComponent(MainActivity.class.getName()));
         intended(hasComponent(MeetingInfoActivity.class.getName()));
         Intents.release();
     }
 
     @Test
     public void testRecyclerViewHolder() {
-        onView(isRoot()).perform(ViewActions.pressBack());
         MeetingListFragment meetingListFragment = getActivityFragment();
         onView(withId(R.id.fragment_meeting_container))
                 .perform(RecyclerViewActions.scrollToHolder(
-                        withViewHolder("m")
+                        withViewHolder("Ruta de fibers")
                 ));
     }
-
 
     public static Matcher<RecyclerView.ViewHolder> withViewHolder(final String text) {
         return new BoundedMatcher<RecyclerView.ViewHolder, MeetingsViewHolder>(MeetingsViewHolder.class) {
@@ -130,5 +128,5 @@ public class MeetingListTest{
             }
         };
     }
-*/
+
 }

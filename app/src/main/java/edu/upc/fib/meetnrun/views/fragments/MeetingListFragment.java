@@ -24,6 +24,7 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
@@ -40,6 +41,7 @@ public class MeetingListFragment extends Fragment {
     private View view;
     private IGenericController controller;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private List<Meeting> meetings;
 
     public MeetingListFragment() {
 
@@ -57,7 +59,7 @@ public class MeetingListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
 
-        controller = WebDBController.getInstance();
+        controller = CurrentSession.getInstance().getController();
         setupRecyclerView();
 
         FloatingActionButton fab =
@@ -84,8 +86,6 @@ public class MeetingListFragment extends Fragment {
         final RecyclerView meetingsList = view.findViewById(R.id.fragment_meeting_container);
         meetingsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        List<Meeting> meetings = new ArrayList<>();
-        updateMeetingList();
         meetingsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {
@@ -168,19 +168,18 @@ public class MeetingListFragment extends Fragment {
     }
 
     private class GetMeetings extends AsyncTask<String,String,String> {
-        List<Meeting> l = new ArrayList<>();
 
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-                l = controller.getAllMeetings();
+                meetings = controller.getAllMeetings();
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
             System.err.println("FINISHED");
-            meetingsAdapter.updateMeetingsList(l);
+            meetingsAdapter.updateMeetingsList(meetings);
             swipeRefreshLayout.setRefreshing(false);
             super.onPostExecute(s);
         }
@@ -188,8 +187,6 @@ public class MeetingListFragment extends Fragment {
 
 
     private class GetMeetingsFiltered extends AsyncTask<String,String,String> {
-        List<Meeting> l = new ArrayList<>();
-
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
@@ -200,7 +197,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             System.err.println("FINISHED");
-            meetingsAdapter.updateMeetingsList(l);
+            meetingsAdapter.updateMeetingsList(meetings);
             super.onPostExecute(s);
         }
     }

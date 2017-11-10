@@ -47,7 +47,7 @@ public class MyMeetingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
-        controller = WebDBController.getInstance();
+        controller = CurrentSession.getInstance().getController();
         setupRecyclerView();
 
         FloatingActionButton fab =

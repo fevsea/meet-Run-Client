@@ -32,6 +32,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
@@ -56,7 +57,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         View view = inflater.inflate(R.layout.fragment_meeting_info,container,false);
         this.view = view;
 
-        controller = WebDBController.getInstance();
+        controller = CurrentSession.getInstance().getController();
         Bundle meetingInfo = getActivity().getIntent().getExtras();
 
         TextView title = view.findViewById(R.id.meeting_info_title);

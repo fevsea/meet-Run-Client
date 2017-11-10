@@ -42,4 +42,8 @@ public class CurrentSession {
             return this.controller;
         }
 
+        public void setController(IGenericController controller) {
+            this.controller = controller;
+        }
+
 }
