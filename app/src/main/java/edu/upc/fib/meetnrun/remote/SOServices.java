@@ -52,6 +52,9 @@ public interface SOServices {
     @DELETE("/users/{id}")
     Call<Void> deleteUser(@Path("id") int id);
 
+    @POST("/users/changePassword")
+    Call<Void> changePassword(@Body Forms.ChangePassword sp);
+
 
     //LOGIN
 

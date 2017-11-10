@@ -6,6 +6,7 @@ import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.remote.SOServices;
@@ -82,6 +83,29 @@ public class LoginAdapterImpl implements ILoginAdapter {
             e.printStackTrace();
             if (e instanceof AutorizationException) {
                 throw (AutorizationException) e;
+            }
+        }
+        return ok;
+    }
+
+    @Override
+    public boolean changePassword(String oldPassword, String newPassword) throws AutorizationException, ForbiddenException {
+        boolean ok = false;
+        try {
+            Response<Void> ret = mServices.changePassword(new Forms.ChangePassword(oldPassword,newPassword)).execute();
+            if (ret.isSuccessful()) {
+                ok = true;
+            } else {
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GenericException e) {
+            e.printStackTrace();
+            if (e instanceof AutorizationException) {
+                throw (AutorizationException) e;
+            } else if (e instanceof ForbiddenException){
+                throw (ForbiddenException) e;
             }
         }
         return ok;
