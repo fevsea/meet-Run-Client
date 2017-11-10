@@ -11,17 +11,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -44,6 +44,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +56,16 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
 
 
+/*
 import static android.R.layout.simple_spinner_item;
 import static edu.upc.fib.meetnrun.R.id.isPublic;
 import static edu.upc.fib.meetnrun.R.id.scrollView;
 import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
+*/
 import edu.upc.fib.meetnrun.views.MeetingFriendsActivity;
+
+import edu.upc.fib.meetnrun.adapters.WebDBController;
 
 
 public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
@@ -91,7 +96,6 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     Switch publicMeeting;
 
     Geocoder geocoder;
-    Meeting m;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -220,7 +224,6 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     public void create(){
         Name = name.getText().toString();
         Date = date.getText().toString();
-        Level = Integer.parseInt(level.getText().toString());
 
         String Hour = hour.getText().toString();
         Description = description.getText().toString();
@@ -240,13 +243,14 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         Date=yearTxt+"-"+monthTxt+"-"+dayTxt+"T"+hourTxt+":"+minuteTxt+":00Z";
 
 
-        if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty() || Level.toString().isEmpty()){
+        if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty() ||level.getText().toString().isEmpty()){
             Toast.makeText(this.getContext(), this.getString(R.string.empty_create_error), Toast.LENGTH_SHORT).show();
         }
         else if(Name.length()>=100) Toast.makeText(this.getContext(),this.getString(R.string.big_name_error), Toast.LENGTH_SHORT).show();
         else if(Description.length()>=500) Toast.makeText(this.getContext(), this.getString(R.string.big_description_error), Toast.LENGTH_SHORT).show();
         else{
             //DB stuff
+            Level = Integer.parseInt(level.getText().toString());
             if (Public)  onCreateDialog(getActivity(), this.getString(R.string.public_friends), this.getString(R.string.public_yes_friends), this.getString(R.string.public_no_friends));
             else onCreateDialog(getActivity(), this.getString(R.string.private_friends), this.getString(R.string.private_yes_friends), this.getString(R.string.private_no_friends));
             //Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description+", Kind of meeting: "+Public.toString(), Toast.LENGTH_SHORT).show();
@@ -351,7 +355,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     }
 
     private class newMeeting extends AsyncTask<String,String,String> {
-        //Meeting m;
+        Meeting m;
         @Override
         protected String doInBackground(String... strings){
             try {
