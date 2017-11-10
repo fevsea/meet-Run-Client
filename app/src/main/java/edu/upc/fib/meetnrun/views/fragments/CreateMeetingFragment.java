@@ -71,7 +71,7 @@ import edu.upc.fib.meetnrun.adapters.WebDBController;
 public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
     private Integer year, month, day, hour2, minute;
 
-
+    Meeting m;
     private boolean friends;
     private View view;
     private GoogleMap maps;
@@ -355,7 +355,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     }
 
     private class newMeeting extends AsyncTask<String,String,String> {
-        Meeting m;
+        //Meeting m;
         @Override
         protected String doInBackground(String... strings){
             try {
@@ -370,17 +370,15 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
         @Override
         protected void onPostExecute(String s){
-
-            getActivity().finish();
+            super.onPostExecute(s);
             if (friends){
                 Intent i=new Intent(getActivity(), MeetingFriendsActivity.class);
                 Integer MeetingId=m.getId();
-                i.getIntExtra("level", Level);
-                i.getIntExtra("meetingId",MeetingId);
+                i.putExtra("level", Level);
+                i.putExtra("meetingId",MeetingId);
                 startActivity(i);
             }
-            super.onPostExecute(s);
-
+            getActivity().finish();
         }
     }
 
