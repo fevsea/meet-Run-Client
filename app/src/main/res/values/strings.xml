@@ -39,6 +39,8 @@
     <string name="friend_request_dialog_title">Friend request</string>
     <string name="delete_friend_dialog_message">Are you sure you want to stop being friends with</string>
     <string name="delete_friend_dialog_title">Stop being friends</string>
+    <string name="delete_account_message">Are you sure you want to delete your account?</string>
+    <string name="delete_account_title">Delete account</string>
     <string name="ok">OK</string>
     <string name="accept_request">Send request</string>
     <string name="cancel">Cancel</string>

@@ -19,15 +19,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
+
+import edu.upc.fib.meetnrun.adapters.IGenericController;
+import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
-import edu.upc.fib.meetnrun.persistence.WebDBController;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.R;
@@ -39,7 +39,7 @@ public class MeetingListFragment extends Fragment {
 
     private MeetingsAdapter meetingsAdapter;
     private View view;
-    private IGenericController controller;
+    private IMeetingAdapter controller;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetings;
 
@@ -59,7 +59,7 @@ public class MeetingListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
 
-        controller = CurrentSession.getInstance().getController();
+        controller = CurrentSession.getInstance().getMeetingAdapter();
         setupRecyclerView();
 
         FloatingActionButton fab =

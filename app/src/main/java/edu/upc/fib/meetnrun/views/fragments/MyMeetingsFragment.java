@@ -19,11 +19,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
-import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsAdapter;
@@ -36,8 +36,8 @@ public class MyMeetingsFragment extends Fragment {
 
     private MyMeetingsAdapter meetingsAdapter;
     private View view;
-    private IGenericController controller;
-
+    private IMeetingAdapter meetingController;
+    private IUserAdapter userController;
     public MyMeetingsFragment() {
 
     }
@@ -47,7 +47,8 @@ public class MyMeetingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
-        controller = CurrentSession.getInstance().getController();
+        meetingController = CurrentSession.getInstance().getMeetingAdapter();
+        userController = CurrentSession.getInstance().getUserAdapter();
         setupRecyclerView();
 
         FloatingActionButton fab =
@@ -162,7 +163,7 @@ public class MyMeetingsFragment extends Fragment {
         protected String doInBackground(Integer... integers) {
             //TODO handle exceptions
             try {
-                l = controller.getUsersFutureMeetings(integers[0]);
+                l = userController.getUsersFutureMeetings(integers[0]);
             } catch (AutorizationException e) {
                 e.printStackTrace();
             } catch (ParamsException e) {
@@ -185,7 +186,7 @@ public class MyMeetingsFragment extends Fragment {
         protected String doInBackground(Integer... integers) {
             //TODO handle exceptions
             try {
-                controller.leaveMeeting(integers[0]);
+                meetingController.leaveMeeting(integers[0]);
             } catch (AutorizationException e) {
                 e.printStackTrace();
             } catch (ParamsException e) {

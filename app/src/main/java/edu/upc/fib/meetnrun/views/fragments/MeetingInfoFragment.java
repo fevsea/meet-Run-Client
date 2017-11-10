@@ -30,12 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
-import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
@@ -48,7 +47,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     private GoogleMap map;
     private Marker marker;
     private FriendsAdapter participantsAdapter;
-    private IGenericController controller;
+    private IMeetingAdapter controller;
     private int meetingId;
 
     @Override
@@ -57,7 +56,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         View view = inflater.inflate(R.layout.fragment_meeting_info,container,false);
         this.view = view;
 
-        controller = CurrentSession.getInstance().getController();
+        controller = CurrentSession.getInstance().getMeetingAdapter();
         Bundle meetingInfo = getActivity().getIntent().getExtras();
 
         TextView title = view.findViewById(R.id.meeting_info_title);

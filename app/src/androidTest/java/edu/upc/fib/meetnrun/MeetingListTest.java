@@ -21,6 +21,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
@@ -28,6 +29,7 @@ import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.MeetingListActivity;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsViewHolder;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -57,7 +59,9 @@ public class MeetingListTest{
     @Rule
     public ActivityTestRule<MeetingListActivity> activityRule = new ActivityTestRule<MeetingListActivity>(MeetingListActivity.class) {
         protected void beforeActivityLaunched() {
-            CurrentSession.getInstance().setController(new MockDBController());
+            AdaptersContainer adaptersContainer = AdaptersContainer.getInstance();
+            adaptersContainer.setMeetingAdapter(CurrentSession.getInstance().getMeetingAdapter());
+            CurrentSession.getInstance().setAdapterContainer(adaptersContainer);
             User user = new User(1,"user","name","lastname","08028","Question",5);
 
             CurrentSession.getInstance().setToken("AAAA");
