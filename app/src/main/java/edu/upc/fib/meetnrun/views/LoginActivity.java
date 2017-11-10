@@ -12,18 +12,17 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.adapters.IGenericController;
-import edu.upc.fib.meetnrun.adapters.WebDBController;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText editUsername, editPassword;
     private String username, password;
     public static final String MY_PREFS_NAME = "TokenFile";
-    private IGenericController controller;
+    private ILoginAdapter loginAdapter;
     private CurrentSession cs;
     private ProgressBar progress;
 
@@ -37,14 +36,13 @@ public class LoginActivity extends AppCompatActivity {
         progress = (ProgressBar) findViewById(R.id.progressBar);
         progress.setVisibility(View.INVISIBLE);
 
-        controller = WebDBController.getInstance();
         cs = CurrentSession.getInstance();
+        loginAdapter = cs.getLoginAdapter();
 
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         String token = prefs.getString("token",null);
-        cs.setToken(token);
-        if (cs.getToken() != null) {
-            new GetCurrentUser().execute();
+        if (token != null) {
+            new GetCurrentUser().execute(token);
         }
     }
 
@@ -81,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
     private void saveToken() {
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("token", CurrentSession.getInstance().getToken());
+        editor.putString("token", cs.getToken());
         editor.commit();
     }
 
@@ -93,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... logUser) {
             try {
-                token = controller.login(username, password);
+                token = loginAdapter.login(username, password);
                 //TODO Pending to catch correctly
             } catch (AutorizationException e) {
                 e.printStackTrace();
@@ -103,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                 cs.setToken(token);
                 saveToken();
                 try {
-                    u = controller.getCurrentUser();
+                    u = loginAdapter.getCurrentUser();
                     //TODO Pending to catch correctly
                 } catch (AutorizationException e) {
                     e.printStackTrace();
@@ -115,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             if (token == null || token.equals("")) {
-                Toast.makeText(getApplicationContext(), "Login ERROR", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "User not found", Toast.LENGTH_SHORT).show();
             }
             else {
                 cs.setCurrentUser(u);
@@ -128,6 +126,7 @@ public class LoginActivity extends AppCompatActivity {
     private class GetCurrentUser extends AsyncTask<String,String,String> {
 
         User user = null;
+        boolean ok = false;
 
         @Override
         protected void onPreExecute() {
@@ -136,12 +135,14 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         @Override
-        protected String doInBackground(String... logUser) {
+        protected String doInBackground(String... s) {
             try {
-                //TODO Pending to catch correctly
-                user = controller.getCurrentUser();
+                cs.setToken(s[0]);
+                user = loginAdapter.getCurrentUser();
+                if (user != null) ok = true;
             } catch (AutorizationException e) {
                 e.printStackTrace();
+                deleteToken();
             }
             return null;
         }
@@ -149,10 +150,22 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             progress.setVisibility(View.INVISIBLE);
-            cs.setCurrentUser(user);
-            changeToMainActivity();
+            if (ok) {
+                cs.setCurrentUser(user);
+                changeToMainActivity();
+            }
+
             super.onPostExecute(s);
         }
+    }
+
+    private void deleteToken() {
+        cs.setToken(null);
+        cs.setCurrentUser(null);
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("token", CurrentSession.getInstance().getToken());
+        editor.commit();
     }
 
 }
