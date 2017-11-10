@@ -17,6 +17,8 @@ import edu.upc.fib.meetnrun.R;
 public class MeetingFriendsFragment extends Fragment {
 
     private View view;
+    private int level;
+    private int meetingId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,12 +31,12 @@ public class MeetingFriendsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_friends, container, false);
         this.view = view;
-/*
-        Intent intent = this.getIntent();
-        .getExtras();
-        String dato=bundle.getString("direccion");
-        web1.loadUrl("http://" + dato);
-        */
+
+        Bundle meetingLevel= getActivity().getIntent().getExtras();
+        meetingId=meetingLevel.getInt("meetingId");
+        level=meetingLevel.getInt("level");
+
+        return view;
     }
 
 }

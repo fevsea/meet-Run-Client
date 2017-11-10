@@ -66,6 +66,8 @@ import edu.upc.fib.meetnrun.views.MeetingFriendsActivity;
 public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
     private Integer year, month, day, hour2, minute;
 
+
+    private boolean friends;
     private View view;
     private GoogleMap maps;
     private LatLng myLocation;
@@ -89,6 +91,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     Switch publicMeeting;
 
     Geocoder geocoder;
+    Meeting m;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,6 +114,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         Button dateButton = (Button) view.findViewById(R.id.pickDate);
 
         myLocation = new LatLng(41.388576, 2.112840);
+        friends=false;
 
         dateButton.setOnClickListener(new View.OnClickListener() {
 
@@ -216,8 +220,8 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     public void create(){
         Name = name.getText().toString();
         Date = date.getText().toString();
-        if (level.getText().toString().isEmpty()) Level=0;
-        else Level = Integer.parseInt(level.getText().toString());
+        Level=0;
+        Level += Integer.parseInt(level.getText().toString());
 
         String Hour = hour.getText().toString();
         Description = description.getText().toString();
@@ -320,11 +324,8 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         builder.setMessage(message)
                 .setPositiveButton(pos, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        friends=true;
                         create_meeting();
-                        Intent i=new Intent(getActivity(), MeetingFriendsActivity.class);
-                        i.getIntExtra("level", Level);
-                        startActivity(i);
-
                     }
                 })
                 .setNegativeButton(neg, new DialogInterface.OnClickListener() {
@@ -351,7 +352,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     }
 
     private class newMeeting extends AsyncTask<String,String,String> {
-        Meeting m;
+        //Meeting m;
         @Override
         protected String doInBackground(String... strings){
             try {
@@ -366,8 +367,17 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
         @Override
         protected void onPostExecute(String s){
+
             getActivity().finish();
+            if (friends){
+                Intent i=new Intent(getActivity(), MeetingFriendsActivity.class);
+                Integer MeetingId=m.getId();
+                i.getIntExtra("level", Level);
+                i.getIntExtra("meetingId",MeetingId);
+                startActivity(i);
+            }
             super.onPostExecute(s);
+
         }
     }
 
