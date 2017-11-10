@@ -47,7 +47,7 @@ public class ChangePasswordFragment extends Fragment {
         /*final Button button = newView.findViewById(R.id.save_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                changeProfile();
+                saveNewPass();
             }
         });*/
 
