@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -18,22 +17,24 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.upc.fib.meetnrun.adapters.WebDBController;
+import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
-import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.Meeting;
 
 
 public class MeetingListFragment extends Fragment {
 
     private MeetingsAdapter meetingsAdapter;
+    private IMeetingAdapter meetingDBAdapter;
     private View view;
 
     public MeetingListFragment() {
-
+        meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
     }
 
 
@@ -113,7 +114,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            l = WebDBController.getInstance().getAllMeetings();
+            l = meetingDBAdapter.getAllMeetings();
             return null;
         }
 
