@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun.persistence.persistenceModels;
+package edu.upc.fib.meetnrun.adapters.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

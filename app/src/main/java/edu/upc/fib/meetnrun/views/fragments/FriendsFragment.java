@@ -3,37 +3,29 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
-import edu.upc.fib.meetnrun.persistence.WebDBController;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
-import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
-import edu.upc.fib.meetnrun.views.ProfileActivity;
 import edu.upc.fib.meetnrun.views.UsersListActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 
@@ -41,7 +33,7 @@ public class FriendsFragment extends Fragment {
 
     private View view;
     private FriendsAdapter friendsAdapter;
-    private IGenericController controller;
+    private IFriendsAdapter friendsDBAdapter;
     private List<User> l;
 
 
@@ -57,7 +49,7 @@ public class FriendsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
-        controller = WebDBController.getInstance();
+        friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
         l = new ArrayList<User>();
 
@@ -94,6 +86,7 @@ public class FriendsFragment extends Fragment {
                 User friend = friendsAdapter.getFriendAtPosition(position);
                 Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
 
+                friendProfileIntent.putExtra("id",String.valueOf(friend.getId()));
                 friendProfileIntent.putExtra("userName",friend.getUsername());
                 String name = friend.getFirstName()+" "+friend.getLastName();
                 friendProfileIntent.putExtra("name",name);
@@ -119,7 +112,11 @@ public class FriendsFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            l = controller.getAllUsers();
+            try {
+                l = friendsDBAdapter.getUserFriends();
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 

@@ -3,31 +3,27 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
-import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 /**
@@ -38,7 +34,7 @@ public class UsersListFragment extends Fragment {
 
     private View view;
     private FriendsAdapter usersAdapter;
-    private IGenericController controller;
+    private IUserAdapter userDBAdapter;
     private List<User> l;
 
     @Override
@@ -52,7 +48,7 @@ public class UsersListFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         this.view = inflater.inflate(R.layout.fragment_users_list, container, false);
-        controller = WebDBController.getInstance();
+        userDBAdapter = CurrentSession.getInstance().getUserAdapter();
 
         l = new ArrayList<>();
 
@@ -82,10 +78,11 @@ public class UsersListFragment extends Fragment {
 
                 User user = usersAdapter.getFriendAtPosition(position);
                 Intent userProfileIntent = new Intent(getActivity(),UserProfileActivity.class);
-                userProfileIntent.putExtra("userName",user.getUsername());
+                userProfileIntent.putExtra("id", String.valueOf(user.getId()));
+                userProfileIntent.putExtra("userName", user.getUsername());
                 String name = user.getFirstName()+" "+user.getLastName();
-                userProfileIntent.putExtra("name",name);
-                userProfileIntent.putExtra("postCode",user.getPostalCode());
+                userProfileIntent.putExtra("name", name);
+                userProfileIntent.putExtra("postCode", user.getPostalCode());
                 startActivity(userProfileIntent);
 
             }
@@ -102,7 +99,7 @@ public class UsersListFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            l = controller.getAllUsers();
+            l = userDBAdapter.getAllUsers();
             return null;
         }
 
