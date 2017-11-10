@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun.persistence;
+package edu.upc.fib.meetnrun.adapters;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,9 +10,9 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.persistenceModels.Forms;
-import edu.upc.fib.meetnrun.persistence.persistenceModels.MeetingServer;
-import edu.upc.fib.meetnrun.persistence.persistenceModels.UserServer;
+import edu.upc.fib.meetnrun.adapters.models.Forms;
+import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
+import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import edu.upc.fib.meetnrun.remote.ApiUtils;
 import edu.upc.fib.meetnrun.remote.SOServices;
 import edu.upc.fib.meetnrun.utils.JsonUtils;

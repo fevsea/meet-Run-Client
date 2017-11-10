@@ -15,19 +15,17 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
-import edu.upc.fib.meetnrun.persistence.WebDBController;
 
 public class RegisterActivity extends AppCompatActivity{
 
     private EditText editName, editSurname, editUsername, editPc, editPassword1, editPassword2, editAnswer;
     private Spinner spinnerQuestion;
     private String name, surname, username, password1, quest, answ,pcInt;
-    private IGenericController controller;
+    private IUserAdapter controller;
     private final static String[] questionsList = {"What is the first name of the person you first kissed?",
                                                                     "What was the name of your primary school?",
                                                                     "What time of the day were you born?",
@@ -41,7 +39,7 @@ public class RegisterActivity extends AppCompatActivity{
 
         this.setTitle("Register");
 
-        controller = CurrentSession.getInstance().getController();
+        controller = CurrentSession.getInstance().getUserAdapter();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
         setSupportActionBar(toolbar);

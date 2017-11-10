@@ -6,25 +6,23 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
-import edu.upc.fib.meetnrun.persistence.WebDBController;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText editUsername, editPassword;
     private String username, password;
     public static final String MY_PREFS_NAME = "TokenFile";
-    private IGenericController controller;
+    private ILoginAdapter loginAdapter;
     private CurrentSession cs;
     private ProgressBar progress;
 
@@ -39,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         progress.setVisibility(View.INVISIBLE);
 
         cs = CurrentSession.getInstance();
-        controller = cs.getController();
+        loginAdapter = cs.getLoginAdapter();
 
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         String token = prefs.getString("token",null);
@@ -93,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... logUser) {
             try {
-                token = controller.login(username, password);
+                token = loginAdapter.login(username, password);
                 //TODO Pending to catch correctly
             } catch (AutorizationException e) {
                 e.printStackTrace();
@@ -103,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                 cs.setToken(token);
                 saveToken();
                 try {
-                    u = controller.getCurrentUser();
+                    u = loginAdapter.getCurrentUser();
                     //TODO Pending to catch correctly
                 } catch (AutorizationException e) {
                     e.printStackTrace();
@@ -140,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
         protected String doInBackground(String... s) {
             try {
                 cs.setToken(s[0]);
-                user = controller.getCurrentUser();
+                user = loginAdapter.getCurrentUser();
                 if (user != null) ok = true;
             } catch (AutorizationException e) {
                 e.printStackTrace();

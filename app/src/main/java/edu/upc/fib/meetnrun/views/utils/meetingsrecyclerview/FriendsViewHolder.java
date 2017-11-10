@@ -4,13 +4,11 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 
 /**

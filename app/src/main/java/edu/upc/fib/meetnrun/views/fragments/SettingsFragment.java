@@ -18,11 +18,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.views.LoginActivity;
 
 /**
@@ -32,7 +32,7 @@ import edu.upc.fib.meetnrun.views.LoginActivity;
 public class SettingsFragment extends Fragment {
 
     private View view;
-    private IGenericController controller;
+    private IUserAdapter controller;
     private CurrentSession cs;
     public static final String MY_PREFS_NAME = "TokenFile";
 
@@ -42,7 +42,7 @@ public class SettingsFragment extends Fragment {
         this.view = inflater.inflate(R.layout.fragment_settings, container, false);
 
         cs = CurrentSession.getInstance();
-        controller = cs.getController();
+        controller = cs.getUserAdapter();
 
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
