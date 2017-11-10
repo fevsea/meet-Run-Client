@@ -16,7 +16,7 @@ public class Utils {
                 case 401:
                     throw JsonUtils.CreateAutorizationExceptionFromJson(string);
                 case 403:
-                    throw JsonUtils.CreateNotFoundExceptionFromJson(string);
+                    throw JsonUtils.CreateForbiddenExceptionFromJson();
                 case 404:
                     throw JsonUtils.CreateNotFoundExceptionFromJson(string);
             }
