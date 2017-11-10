@@ -212,6 +212,7 @@ public class TrackingService extends Service {
             List<LatLng> routePoints = trackingData.getRoutePoints();
             routePoints.add(currentPosition);
             trackingData.setRoutePoints(routePoints);
+            trackingData.setTotalTimeMillis(SystemClock.elapsedRealtime() - startTimeMillis);
             notifyUI();
         }
     };
@@ -230,6 +231,7 @@ public class TrackingService extends Service {
             }
             int steps = trackingData.getSteps() + currentStep;
             trackingData.setSteps(steps);
+            trackingData.setTotalTimeMillis(SystemClock.elapsedRealtime() - startTimeMillis);
             notifyUI();
         }
     };
@@ -255,6 +257,7 @@ public class TrackingService extends Service {
             }
             trackingData.setDistance(distance);
             trackingData.setAverageSpeed(speed);
+            trackingData.setTotalTimeMillis(SystemClock.elapsedRealtime() - startTimeMillis);
             notifyUI();
         }
     };
@@ -270,6 +273,7 @@ public class TrackingService extends Service {
                 calories = val.asFloat();
             }
             trackingData.setCalories(calories);
+            trackingData.setTotalTimeMillis(SystemClock.elapsedRealtime() - startTimeMillis);
             notifyUI();
         }
     };

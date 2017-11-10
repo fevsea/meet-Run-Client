@@ -56,5 +56,6 @@
     <string name="error_loading_meeting">Sorry, there was an error while loading this meeting</string>
     <string name="title_activity_tracking">Tracking</string>
     <string name="saving_tracking_data">Saving tracking data</string>
-
+    <string name="tracking_error_toast_message">There was an error saving the tracking data!</string>
+    <string name="tracking_error_loading">There was an error loading the tracking!</string>
 </resources>

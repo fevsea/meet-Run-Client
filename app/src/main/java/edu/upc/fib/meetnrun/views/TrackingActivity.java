@@ -73,10 +73,18 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     TextView caloriesCounter;
     FloatingActionButton pauseButton;
 
+    private Integer meetingId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracking);
+
+        Integer meetingId = getIntent().getIntExtra("id", -1);
+        if (meetingId == -1) {
+            Toast.makeText(this, R.string.tracking_error_loading, Toast.LENGTH_LONG).show();
+            finish();
+        }
 
         routePoints = new ArrayList<>();
 
@@ -108,7 +116,6 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         pauseButton.setOnClickListener(this);
 
         isPaused = false;
-        //isOnBackground = false;
 
         trackingData = new TrackingData(0f, 0f, 0, 0f, new ArrayList<LatLng>(), 0);
 
@@ -304,7 +311,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         protected void onPostExecute(Boolean result) {
             mProgressDialog.dismiss();
             if (exception != null || !result) {
-                Toast.makeText(TrackingActivity.this, getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
+                Toast.makeText(TrackingActivity.this, getResources().getString(R.string.tracking_error_toast_message), Toast.LENGTH_LONG).show();
             }
         }
 
