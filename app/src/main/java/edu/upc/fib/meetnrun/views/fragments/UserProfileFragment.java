@@ -91,7 +91,7 @@ public class UserProfileFragment extends Fragment {
 
     private class addFriend extends AsyncTask<String,String,String> {
 
-        boolean ok;
+        boolean ok = false;
 
         @Override
         protected String doInBackground(String... s) {
@@ -109,6 +109,7 @@ public class UserProfileFragment extends Fragment {
         protected void onPostExecute(String s) {
             if (ok) {
                 Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
             }
             super.onPostExecute(s);
         }
