@@ -16,5 +16,5 @@ public interface ILoginAdapter {
     public boolean logout() throws AutorizationException;
 
     public boolean changePassword(String oldPassword, String newPassword) throws AutorizationException, ForbiddenException;
-    
+
 }

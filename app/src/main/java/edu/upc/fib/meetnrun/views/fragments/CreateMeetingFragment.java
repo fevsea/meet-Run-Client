@@ -35,12 +35,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 
 
-import edu.upc.fib.meetnrun.adapters.WebDBController;
 
 
 
@@ -67,11 +68,13 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     String Longitude;
     ScrollView sV;
     Switch publicMeeting;
+    private IMeetingAdapter meetingAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
     }
 
     @Override
@@ -267,7 +270,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         @Override
         protected String doInBackground(String... strings){
             try {
-                 m= WebDBController.getInstance().createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
+                 m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
             } catch (ParamsException  e) {
                 e.printStackTrace();
             } catch (AutorizationException e) {

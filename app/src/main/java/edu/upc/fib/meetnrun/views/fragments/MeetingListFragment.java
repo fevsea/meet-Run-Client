@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
-
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,29 +21,29 @@ import android.widget.Toast;
 import java.util.List;
 
 
-import edu.upc.fib.meetnrun.adapters.IGenericController;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
-import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 
 public class MeetingListFragment extends Fragment {
 
     private MeetingsAdapter meetingsAdapter;
+    private IMeetingAdapter meetingDBAdapter;
     private View view;
-    private IMeetingAdapter controller;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetings;
 
     public MeetingListFragment() {
-
+        meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
     }
 
     @Override
@@ -59,7 +58,7 @@ public class MeetingListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
 
-        controller = CurrentSession.getInstance().getMeetingAdapter();
+        meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
         setupRecyclerView();
 
         FloatingActionButton fab =
@@ -133,7 +132,7 @@ public class MeetingListFragment extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 query = query.toLowerCase();
-                new GetMeetingsFiltered().execute();
+                new GetMeetingsFiltered().execute(query);
                 return true;
             }
 
@@ -172,7 +171,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-                meetings = controller.getAllMeetings();
+                meetings = meetingDBAdapter.getAllMeetings();
             return null;
         }
 
@@ -190,7 +189,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            //TODO controller.getMeetingsFiltered(strings[0]);
+           //TODO  meetingDBAdapter.(strings[0]);
             return null;
         }
 
@@ -209,7 +208,7 @@ public class MeetingListFragment extends Fragment {
             Log.e("MAIN","DOINGGGG");
             //TODO handle exceptions
             try {
-                controller.joinMeeting(integers[0]);
+                meetingDBAdapter.joinMeeting(integers[0]);
             } catch (AutorizationException e) {
                 e.printStackTrace();
             } catch (ParamsException e) {

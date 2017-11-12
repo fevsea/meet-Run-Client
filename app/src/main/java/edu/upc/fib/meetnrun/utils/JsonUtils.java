@@ -58,8 +58,8 @@ public class JsonUtils {
         return pe;
     }
 
-    public static ForbiddenException CreateForbiddenExceptionFromJson(String jSON) {
-        ForbiddenException pe = new ForbiddenException(JsonUtils.ParseJsonToGetProblems(jSON));
+    public static ForbiddenException CreateForbiddenExceptionFromJson() {
+        ForbiddenException pe = new ForbiddenException();
         return pe;
     }
 }
