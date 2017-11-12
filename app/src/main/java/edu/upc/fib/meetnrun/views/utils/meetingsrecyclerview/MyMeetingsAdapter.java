@@ -30,19 +30,6 @@ public class MyMeetingsAdapter extends RecyclerView.Adapter<MyMeetingsViewHolder
         View view = layoutInflater.inflate(R.layout.mymeeting_item, parent, false);
         return new MyMeetingsViewHolder(view,listener);    }
 
-    public void addItem(Context context) {
-        int id = 1;
-        String title = "Meeting at this place";
-        String description = "Meeting description test";
-        String datetime = "yyyy-MM-ddTHH:mm:ssZ";
-        boolean isPublic = true;
-        int level = 10;
-        String latitude = "40.3"; String longitude = "32.5";
-        meetings.add(new Meeting(id,title,description,isPublic,level,datetime,latitude,longitude));
-        notifyItemInserted(getItemCount());
-        notifyDataSetChanged();
-    }
-
     @Override
     public void onBindViewHolder(MyMeetingsViewHolder holder, int position) {
         Meeting meeting = meetings.get(position);

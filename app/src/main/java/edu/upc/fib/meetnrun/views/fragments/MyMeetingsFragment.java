@@ -77,7 +77,6 @@ public class MyMeetingsFragment extends Fragment {
         meetingsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         List<Meeting> meetings = new ArrayList<>();
-        updateMeetingList();
         meetingsAdapter = new MyMeetingsAdapter(meetings, new MyMeetingsListener() {
             @Override
             public void onStartClicked(int position) {
@@ -110,6 +109,7 @@ public class MyMeetingsFragment extends Fragment {
 
             }
         });
+        updateMeetingList();
         meetingsList.setAdapter(meetingsAdapter);
 
     }

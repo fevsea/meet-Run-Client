@@ -63,8 +63,4 @@ public class CurrentSession {
         return adapterContainer.getUserAdapter();
     }
 
-        public void setController(IGenericController controller) {
-            this.controller = controller;
-        }
-
 }

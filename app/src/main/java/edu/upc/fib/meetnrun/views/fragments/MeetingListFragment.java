@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -84,7 +85,7 @@ public class MeetingListFragment extends Fragment {
     private void setupRecyclerView() {
         final RecyclerView meetingsList = view.findViewById(R.id.fragment_meeting_container);
         meetingsList.setLayoutManager(new LinearLayoutManager(getActivity()));
-
+        meetings = new ArrayList<>();
         meetingsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {
@@ -189,7 +190,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-           //TODO  meetingDBAdapter.(strings[0]);
+            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0]);
             return null;
         }
 
