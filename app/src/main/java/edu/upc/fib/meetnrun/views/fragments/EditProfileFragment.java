@@ -19,16 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.persistence.WebDBController;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.EditProfileActivity;
-import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.views.ProfileActivity;
 
 
@@ -36,7 +35,7 @@ public class EditProfileFragment extends Fragment {
 
     User u;
     private View view;
-    private WebDBController controller = WebDBController.getInstance();
+    private IUserAdapter controller = CurrentSession.getInstance().getUserAdapter();
     EditText userNameText;
     EditText firstNameText;
     EditText lastNameText;

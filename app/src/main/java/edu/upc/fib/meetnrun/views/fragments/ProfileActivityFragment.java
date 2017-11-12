@@ -24,6 +24,7 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.ChangePasswordActivity;
 import edu.upc.fib.meetnrun.views.EditProfileActivity;
 
 import com.google.android.gms.maps.*;
@@ -82,14 +83,14 @@ public class ProfileActivityFragment extends Fragment {
             }
         });
 
-        /*Button button2 = view.findViewById(R.id.changePass_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        Button button2 = view.findViewById(R.id.changePass_button);
+        button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent;
                 intent = new Intent(getActivity(), ChangePasswordActivity.class);
                 startActivity(intent);
             }
-        });*/
+        });
 
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
@@ -127,7 +128,6 @@ public class ProfileActivityFragment extends Fragment {
 
 
     private void getCityFromPostcode(String p) {
-        Log.e("URL", "vamos a pasar el postcode!");
         new ProfileActivityFragment.getCity().execute(p);
     }
 
@@ -142,7 +142,7 @@ public class ProfileActivityFragment extends Fragment {
 
             // build a URL
             try {
-                url = new URL("https://maps.googleapis.com/maps/api/geocode/json?address=" + params[0] + "&region=es&key=AIzaSyDm6Bt_p5gn3F7DAJJLMYSEOR0kyqNL800");
+                url = new URL("https://maps.googleapis.com/maps/api/geocode/json?address=" + params[0] + "&components=country:ES&region=es&key=AIzaSyDm6Bt_p5gn3F7DAJJLMYSEOR0kyqNL800");
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }

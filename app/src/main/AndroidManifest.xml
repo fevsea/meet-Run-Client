@@ -82,6 +82,10 @@
             android:name=".views.SettingsActivity"
             android:label="@string/action_settings"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.ChangePasswordActivity"
+            android:label="@string/action_change_pass"
+            android:screenOrientation="portrait"/>
 
     </application>
 
