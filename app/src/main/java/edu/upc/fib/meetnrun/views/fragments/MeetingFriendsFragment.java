@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
@@ -18,9 +21,12 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
+
+import static android.R.layout.simple_list_item_1;
 
 
 /**
@@ -32,10 +38,12 @@ public class MeetingFriendsFragment extends Fragment {
     private View view;
     private int level;
     private int meetingId;
+    private FragmentActivity context;
 
-    private FriendsAdapter friendsAdapter;
     private IFriendsAdapter friendsDBAdapter;
     private List<User> l;
+
+    ListView lv;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,11 +56,13 @@ public class MeetingFriendsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_friends, container, false);
         this.view = view;
-        friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
+        context=this.getActivity();
 
+        lv = (ListView) view.findViewById(R.id.myFriends);
         Bundle meetingLevel= getActivity().getIntent().getExtras();
         meetingId=meetingLevel.getInt("meetingId");
         level=meetingLevel.getInt("level");
+        new getFriends().execute();
 
         return view;
     }
@@ -62,6 +72,7 @@ public class MeetingFriendsFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
+                friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
                 l = friendsDBAdapter.getUserFriends();
             } catch (AutorizationException e) {
                 e.printStackTrace();
@@ -71,10 +82,12 @@ public class MeetingFriendsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            friendsAdapter.updateFriendsList(l);
+            ArrayAdapter<User> adapter = new ArrayAdapter<User>(context, simple_list_item_1,l);
+            lv.setAdapter(adapter);
             super.onPostExecute(s);
         }
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -102,7 +115,7 @@ public class MeetingFriendsFragment extends Fragment {
                     }
 
                 }
-                friendsAdapter.updateFriendsList(newList);
+                //friendsAdapter.updateFriendsList(newList);
                 return true;
             }
         });

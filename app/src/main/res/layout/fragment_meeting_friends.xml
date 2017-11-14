@@ -3,12 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_friends_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:orientation="vertical">
-    </android.support.v7.widget.RecyclerView>
 
+    <ListView
+        android:id="@+id/myFriends"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>

@@ -34,6 +34,7 @@ import android.widget.ScrollView;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -67,6 +68,7 @@ import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 */
 import edu.upc.fib.meetnrun.views.MeetingFriendsActivity;
 
+import static android.app.Activity.RESULT_OK;
 
 
 public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
@@ -266,6 +268,17 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         super.onCreateOptionsMenu(menu,inflater);
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) { //Retrieve the result from the PlacePicker
+                Place place = PlacePicker.getPlace(getActivity(), data);
+                LatLng location = place.getLatLng();
+                m.setLatitude(String.valueOf(location.latitude));
+                m.setLongitude(String.valueOf(location.longitude));
+                moveMapCameraAndMarker(location);
+            }
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
