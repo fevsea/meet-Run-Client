@@ -56,25 +56,18 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private static final String TAG = TrackingActivity.class.getSimpleName();
     public static final String BROADCAST_TRACKING_DATA_ACTION = "edu.upc.fib.meetnrun.trackingdata";
     public static final String BROADCAST_TRACKING_ERROR = "edu.upc.fib.meetnrun.trackingerror";
-    public static final int ERROR_WITH_GOOGLE_API = 0;
 
     //Map, route line and route points
     private GoogleMap mMap;
     private Polyline route;
-    private List<LatLng> routePoints;
 
     private IntentFilter mIntentFilter;
 
     private TrackingData trackingData;
 
-    private boolean isPaused;
-
     private static final int DEFAULT_ZOOM = 17;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
-
-    private GoogleApiClient mClient = null;
-
     FusedLocationProviderClient mFusedLocationProviderClient;
 
     Chronometer chronometer;
@@ -83,8 +76,6 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     TextView distanceCounter;
     TextView caloriesCounter;
     FloatingActionButton pauseButton;
-
-    private boolean triedToReconnect = false;
 
     private Integer meetingId;
 
@@ -96,13 +87,11 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracking);
 
-        /*Integer meetingId = getIntent().getIntExtra("id", -1);
+        Integer meetingId = getIntent().getIntExtra("id", -1);
         if (meetingId == -1) {
             Toast.makeText(this, R.string.tracking_error_loading, Toast.LENGTH_LONG).show();
             finish();
-        }*/
-
-        routePoints = new ArrayList<>();
+        }
 
         if (!checkPermissions()) {
             getLocationPermission();
@@ -130,8 +119,6 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         pauseButton = findViewById(R.id.pause_fab);
 
         pauseButton.setOnClickListener(this);
-
-        isPaused = false;
 
         trackingData = new TrackingData(0f, 0f, 0, 0f, new ArrayList<LatLng>(), 0);
 
@@ -349,13 +336,10 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         if (requestCode == ConnectionResult.SIGN_IN_REQUIRED) {
 
             if (resultCode == ConnectionResult.SUCCESS) {
-
-                Log.i(TAG, "SIGN IN SUCCESS, Re-Launching service");
-                //startService(new Intent(TrackingActivity.this, TrackingService.class));
+                Log.i(TAG, "SIGN IN SUCCESS");
                 if (trackingService != null) {
                     trackingService.onLogInDone();
                 }
-
             }
 
         }
@@ -394,8 +378,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
+        public void onServiceConnected(ComponentName className, IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             TrackingService.TrackingBinder binder = (TrackingService.TrackingBinder) service;
             trackingService = binder.getService();

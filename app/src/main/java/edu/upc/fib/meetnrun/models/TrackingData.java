@@ -11,7 +11,7 @@ import java.util.List;
  * Created by guillemcastro on 03/11/2017.
  */
 
-public class TrackingData implements Parcelable {
+public class TrackingData implements Parcelable, Cloneable {
 
     public TrackingData(float averageSpeed, float distance, int steps, float calories ,List<LatLng> routePoints, long totalTimeMillis) {
         this.averageSpeed = averageSpeed;
@@ -118,4 +118,8 @@ public class TrackingData implements Parcelable {
         return "avSpeed: " + averageSpeed + " distance: " + distance + " steps: " + steps + " time: " + totalTimeMillis;
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

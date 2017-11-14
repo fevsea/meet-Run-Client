@@ -51,9 +51,7 @@ public class TrackingService extends Service {
 
     private TrackingData trackingData;
 
-    public TrackingService() {
-
-    }
+    public TrackingService() {}
 
     @Override
     public void onCreate() {
@@ -300,7 +298,12 @@ public class TrackingService extends Service {
     }
 
     public TrackingData getTrackingData() {
-        return this.trackingData;
+        try {
+            return (TrackingData) this.trackingData.clone();
+        }
+        catch (CloneNotSupportedException e) {
+            return null;
+        }
     }
 
     public class TrackingBinder extends Binder {
