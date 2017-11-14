@@ -7,7 +7,6 @@ import android.view.MenuItem;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.views.fragments.SettingsFragment;
-import edu.upc.fib.meetnrun.views.fragments.UserProfileFragment;
 
 /**
  * Created by eric on 9/11/17.
