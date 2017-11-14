@@ -12,6 +12,7 @@ import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Awais Iqbal on 24/10/2017.
@@ -35,6 +36,9 @@ public interface SOServices {
     @DELETE("/meetings/{id}")
     Call<Void> deletetMeeting(@Path("id") int id);
 
+    @GET("/meetings")
+    Call<MeetingServer[]> getAllMeetingsFiltered(@Query("search") String query);
+
     //USERS
 
     @GET("/users")
@@ -51,6 +55,9 @@ public interface SOServices {
 
     @DELETE("/users/{id}")
     Call<Void> deleteUser(@Path("id") int id);
+
+    @POST("/users/changePassword")
+    Call<Void> changePassword(@Body Forms.ChangePassword sp);
 
 
     //LOGIN

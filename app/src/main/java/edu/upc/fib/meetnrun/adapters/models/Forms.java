@@ -9,6 +9,36 @@ import com.google.gson.annotations.SerializedName;
 
 public class Forms {
 
+    public static class ChangePassword {
+        @SerializedName("old")
+        @Expose
+        private String oldPasword;
+        @SerializedName("new")
+        @Expose
+        private String newPassword;
+
+        public ChangePassword(String oldPasword, String newPassword) {
+            this.oldPasword = oldPasword;
+            this.newPassword = newPassword;
+        }
+
+        public String getOldPasword() {
+            return oldPasword;
+        }
+
+        public void setOldPasword(String oldPasword) {
+            this.oldPasword = oldPasword;
+        }
+
+        public String getNewPassword() {
+            return newPassword;
+        }
+
+        public void setNewPassword(String newPassword) {
+            this.newPassword = newPassword;
+        }
+    }
+
     public static class LoginUser {
         @SerializedName("username")
         @Expose
