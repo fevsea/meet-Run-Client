@@ -56,11 +56,16 @@
     <string name="change_date">Change date</string>
     <string name="change_time">Change time</string>
     <string name="edit_meeting">Edit meeting</string>
-    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_profile">User Profile</string>
+    <string name="title_edit_profile">Edit Profile</string>
+    <string name="button_edit_profile">Edit Profile</string>
+    <string name="button_edit_password">Change Password</string>
+
     <string name="user_added_to_meeting">User added to meeting</string>
     <string name="friend_profile_label">Friend profile</string>
     <string name="user_profile_label">User profile</string>
     <string name="joined_meeting">Meeting joined succesfully</string>
+
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
@@ -69,5 +74,22 @@
     <string name="saving_meeting">Saving Meeting</string>
     <string name="error_loading_meeting">Sorry, there was an error while loading this meeting</string>
     <string name="vertical_ellipsis">&#8942;</string>
+
+    <string name="user_name">User Name</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="post_code">Postal Code</string>
+    <string name="save_changes">Save</string>
+    <string name="error_edit_profile">Sorry, there was an error while updating your profile</string>
+
+    <string name="current_password">Your current password:</string>
+    <string name="new_password">Introduce your new password:</string>
+    <string name="repeat_new_password">Introduce again your new password:</string>
+    <string name="error_change_pass">Sorry, there was an error while changing your password</string>
+    <string name="action_change_pass">Change password</string>
+
+
+
+
 
 </resources>
