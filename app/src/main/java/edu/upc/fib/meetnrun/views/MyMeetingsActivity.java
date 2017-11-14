@@ -1,6 +1,5 @@
 package edu.upc.fib.meetnrun.views;
 
-import android.content.ActivityNotFoundException;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.view.Menu;
@@ -9,18 +8,25 @@ import android.view.MenuItem;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
+import edu.upc.fib.meetnrun.views.fragments.MyMeetingsFragment;
 
-public class MeetingListActivity extends BaseDrawerActivity {
-
-
+public class MyMeetingsActivity extends BaseDrawerActivity {
     @Override
     protected Fragment createFragment() {
-        return new MeetingListFragment();
+        return new MyMeetingsFragment();
     }
 
     @Override
     protected boolean finishOnChangeView() {
-        return false;
+        return true;
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.empty_menu, menu);
+        return true;
     }
 
     @Override
