@@ -28,4 +28,6 @@ public interface IMeetingAdapter {
     public boolean joinMeeting(int targetMeetingId) throws AutorizationException, ParamsException;
 
     public boolean leaveMeeting(int targetMeetingId) throws AutorizationException, ParamsException;
+
+    public List<Meeting> getAllMeetingsFilteredByName(String query);
 }

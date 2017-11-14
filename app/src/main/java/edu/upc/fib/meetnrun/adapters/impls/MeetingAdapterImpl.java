@@ -202,4 +202,19 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
         }
         return ok;
     }
+
+    @Override
+    public List<Meeting> getAllMeetingsFilteredByName(String query) {
+        List<Meeting> l = new ArrayList<>();
+        try {
+            Response<MeetingServer[]> res = mServices.getAllMeetingsFiltered(query).execute();
+            MeetingServer[] array = res.body();
+            for (int i = 0; i < array.length; i++) {
+                l.add(array[i].toGenericModel());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return l;
+    }
 }
