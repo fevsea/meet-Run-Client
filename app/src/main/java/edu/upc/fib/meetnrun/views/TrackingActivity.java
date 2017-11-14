@@ -302,7 +302,6 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         SaveTrackingData saveTrackingData = new SaveTrackingData();
         saveTrackingData.execute(trackingData);
         stopService(new Intent(this, TrackingService.class));
-        this.finish();
     }
 
     private class SaveTrackingData extends AsyncTask<TrackingData, String, Boolean> {
@@ -338,6 +337,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
             if (exception != null || !result) {
                 Toast.makeText(TrackingActivity.this, getResources().getString(R.string.tracking_error_toast_message), Toast.LENGTH_LONG).show();
             }
+            finish();
         }
 
     }
