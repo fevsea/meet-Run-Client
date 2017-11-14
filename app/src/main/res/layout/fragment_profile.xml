@@ -73,7 +73,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_below="@+id/completeName"
                 android:textColor="#000000"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="Postcode" />
 
             </RelativeLayout>
