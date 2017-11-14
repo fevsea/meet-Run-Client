@@ -65,4 +65,6 @@
     <string name="saving_tracking_data">Saving tracking data</string>
     <string name="tracking_error_toast_message">There was an error saving the tracking data!</string>
     <string name="tracking_error_loading">There was an error loading the tracking!</string>
+    <string name="error_connecting_google_reconnect">Error connecting with the Google API, trying to reconnect</string>
+    <string name="error_connecting_google">Could not connect with Google</string>
 </resources>

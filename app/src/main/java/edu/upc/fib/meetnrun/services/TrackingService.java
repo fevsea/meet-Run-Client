@@ -1,8 +1,9 @@
 package edu.upc.fib.meetnrun.services;
 
-import android.app.IntentService;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
@@ -30,7 +31,6 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import edu.upc.fib.meetnrun.models.TrackingData;
@@ -41,6 +41,8 @@ import edu.upc.fib.meetnrun.views.TrackingActivity;
  */
 
 public class TrackingService extends Service {
+
+    private IBinder binder = new TrackingBinder();
 
     private static final String TAG = "TrackingService";
     private GoogleApiClient mClient;
@@ -63,7 +65,7 @@ public class TrackingService extends Service {
 
     @Override
     public void onDestroy() {
-        if (mClient.isConnected()) {
+        if (mClient != null && mClient.isConnected()) {
             mClient.disconnect();
             Log.d(TAG, "GoogleApiClient disconnected");
         }
@@ -74,11 +76,11 @@ public class TrackingService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return binder;
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, int flags, int startId) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -86,6 +88,10 @@ public class TrackingService extends Service {
             }
         }).start();
         return START_REDELIVER_INTENT;
+    }
+
+    public void onLogInDone() {
+        buildFitnessClient();
     }
 
     private void buildFitnessClient() {
@@ -121,6 +127,7 @@ public class TrackingService extends Service {
                         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                             Log.e(TAG, "Google APIs unable to connect");
                             Log.e(TAG, "Reason: " + connectionResult);
+                            notifyUIError(connectionResult.getResolution());
                         }
                     })
                     .build();
@@ -213,7 +220,7 @@ public class TrackingService extends Service {
             routePoints.add(currentPosition);
             trackingData.setRoutePoints(routePoints);
             trackingData.setTotalTimeMillis(SystemClock.elapsedRealtime() - startTimeMillis);
-            notifyUI();
+            notifyUIData();
         }
     };
 
@@ -232,7 +239,7 @@ public class TrackingService extends Service {
             int steps = trackingData.getSteps() + currentStep;
             trackingData.setSteps(steps);
             trackingData.setTotalTimeMillis(SystemClock.elapsedRealtime() - startTimeMillis);
-            notifyUI();
+            notifyUIData();
         }
     };
 
@@ -258,7 +265,7 @@ public class TrackingService extends Service {
             trackingData.setDistance(distance);
             trackingData.setAverageSpeed(speed);
             trackingData.setTotalTimeMillis(SystemClock.elapsedRealtime() - startTimeMillis);
-            notifyUI();
+            notifyUIData();
         }
     };
 
@@ -274,15 +281,33 @@ public class TrackingService extends Service {
             }
             trackingData.setCalories(calories);
             trackingData.setTotalTimeMillis(SystemClock.elapsedRealtime() - startTimeMillis);
-            notifyUI();
+            notifyUIData();
         }
     };
 
-    private void notifyUI() {
+    private void notifyUIData() {
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(TrackingActivity.BROADCAST_TRACKING_DATA_ACTION);
         broadcastIntent.putExtra("Data", trackingData);
         sendBroadcast(broadcastIntent);
     }
 
+    private void notifyUIError(PendingIntent pendingIntent) {
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(TrackingActivity.BROADCAST_TRACKING_ERROR);
+        broadcastIntent.putExtra("error", pendingIntent);
+        sendBroadcast(broadcastIntent);
+    }
+
+    public TrackingData getTrackingData() {
+        return this.trackingData;
+    }
+
+    public class TrackingBinder extends Binder {
+
+        public TrackingService getService() {
+            return TrackingService.this;
+        }
+
+    }
 }

@@ -1,14 +1,19 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.Manifest;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -21,7 +26,11 @@ import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -46,6 +55,8 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
     private static final String TAG = TrackingActivity.class.getSimpleName();
     public static final String BROADCAST_TRACKING_DATA_ACTION = "edu.upc.fib.meetnrun.trackingdata";
+    public static final String BROADCAST_TRACKING_ERROR = "edu.upc.fib.meetnrun.trackingerror";
+    public static final int ERROR_WITH_GOOGLE_API = 0;
 
     //Map, route line and route points
     private GoogleMap mMap;
@@ -73,18 +84,23 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     TextView caloriesCounter;
     FloatingActionButton pauseButton;
 
+    private boolean triedToReconnect = false;
+
     private Integer meetingId;
+
+    private TrackingService trackingService;
+    private boolean mBound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracking);
 
-        Integer meetingId = getIntent().getIntExtra("id", -1);
+        /*Integer meetingId = getIntent().getIntExtra("id", -1);
         if (meetingId == -1) {
             Toast.makeText(this, R.string.tracking_error_loading, Toast.LENGTH_LONG).show();
             finish();
-        }
+        }*/
 
         routePoints = new ArrayList<>();
 
@@ -121,6 +137,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
         mIntentFilter = new IntentFilter();
         mIntentFilter.addAction(BROADCAST_TRACKING_DATA_ACTION);
+        mIntentFilter.addAction(BROADCAST_TRACKING_ERROR);
 
         Intent serviceIntent = new Intent(this, TrackingService.class);
         startService(serviceIntent);
@@ -232,10 +249,23 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         }
     }
 
-    @Override
+    public void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, TrackingService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
     public void onDestroy() {
         stopService(new Intent(this, TrackingService.class));
         super.onDestroy();
+    }
+
+    public void onStop() {
+        super.onStop();
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
     }
 
     @Override
@@ -247,6 +277,9 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     @Override
     protected void onResume() {
         super.onResume();
+        if(mBound && trackingService != null) {
+            updateUI(trackingService.getTrackingData());
+        }
         registerReceiver(mReceiver, mIntentFilter);
     }
 
@@ -263,14 +296,6 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                 save();
             }
         }
-    }
-
-    private void pauseTracking() {
-        chronometer.stop();
-    }
-
-    private void resumeTracking() {
-        chronometer.start();
     }
 
     private void save() {
@@ -300,7 +325,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         protected Boolean doInBackground(TrackingData... params) {
             try {
                 Thread.sleep(3000);
-                Log.i(TAG, params[0].toString());
+                Log.i(TAG, "Saving... " + params[0].toString());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -317,18 +342,69 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.e(TAG, "onActivityResult" + resultCode);
+
+        if (requestCode == ConnectionResult.SIGN_IN_REQUIRED) {
+
+            if (resultCode == ConnectionResult.SUCCESS) {
+
+                Log.i(TAG, "SIGN IN SUCCESS, Re-Launching service");
+                //startService(new Intent(TrackingActivity.this, TrackingService.class));
+                if (trackingService != null) {
+                    trackingService.onLogInDone();
+                }
+
+            }
+
+        }
+
+    }
+
+    private void updateUI(TrackingData trackingData) {
+        distanceCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", trackingData.getDistance()) + " m");
+        speedCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", trackingData.getAverageSpeed()) + " m/s");
+        caloriesCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", trackingData.getCalories()) + " kcal");
+        stepsCounter.setText(String.valueOf(trackingData.getSteps()) + " steps");
+        updateLocationViews(trackingData.getRoutePoints());
+    }
+
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-
             trackingData = intent.getParcelableExtra("Data");
+            if (trackingData != null) {
+                updateUI(trackingData);
+            }
+            else {
 
-            distanceCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", trackingData.getDistance()) + " m");
-            speedCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", trackingData.getAverageSpeed()) + " m/s");
-            caloriesCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", trackingData.getCalories()) + " kcal");
-            stepsCounter.setText(String.valueOf(trackingData.getSteps()) + " steps");
+                PendingIntent pendingIntent = intent.getParcelableExtra("error");
+                try {
+                    startIntentSenderForResult(pendingIntent.getIntentSender(), ConnectionResult.SIGN_IN_REQUIRED,null,0,0,0);
+                }
+                catch (IntentSender.SendIntentException ex) {
+                    Log.e(TAG, ex.toString());
+                }
 
-            updateLocationViews(trackingData.getRoutePoints());
+            }
+        }
+    };
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            TrackingService.TrackingBinder binder = (TrackingService.TrackingBinder) service;
+            trackingService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
         }
     };
 
