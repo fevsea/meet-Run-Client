@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.fragments.SettingsFragment;
 
@@ -55,11 +56,15 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                         @Override
                         public boolean onNavigationItemSelected(MenuItem menuItem) {
                             Intent i = null;
+                            menuItem.setCheckable(false);
                             switch (menuItem.getItemId()) {
-                                /*case R.id.edit_meeting:
+                                case R.id.edit_meeting:
                                     i = new Intent(getApplicationContext(),EditMeetingActivity.class);
                                     i.putExtra("id",3);
-                                    break;*/
+                                    break;
+                                case R.id.mymeetings:
+                                    i = new Intent(getApplicationContext(),MyMeetingsActivity.class);
+                                    break;
                                 case R.id.logout:
                                     deleteToken();
                                     i = new Intent(getApplicationContext(),LoginActivity.class);
@@ -78,7 +83,6 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                 default:
                                     break;
                             }
-                            menuItem.setChecked(true);
                             if (i != null) {
                                 if (finishOnChangeView()) finish();
                                 startActivity(i);

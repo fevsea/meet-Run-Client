@@ -78,6 +78,10 @@
             android:name=".views.SettingsActivity"
             android:label="@string/action_settings"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.MyMeetingsActivity"
+            android:label="@string/mymeetings_label"
+            android:screenOrientation="portrait"/>
 
     </application>
 
