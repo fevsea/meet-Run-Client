@@ -4,13 +4,11 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 
 /**
@@ -45,7 +43,7 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
         postCode.setText(user.getPostalCode());
 
         TextView meetingLevel = view.findViewById(R.id.meeting_item_level2);
-        String level = String.valueOf(/*user.getLevel()*/0);
+        String level = String.valueOf(user.getLevel());
         if (level.equals("null")) level = "0";
         meetingLevel.setText(String.valueOf(level));
 
