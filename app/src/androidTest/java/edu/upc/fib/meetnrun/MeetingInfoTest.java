@@ -12,15 +12,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.fragments.MeetingInfoFragment;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -62,7 +59,7 @@ public class MeetingInfoTest{
 
 
         protected void beforeActivityLaunched() {
-            CurrentSession.getInstance().setController(new MockDBController());
+            CurrentSession.getInstance().setController(new MockMeetingAdapter());
             User user = new User(1,"user","name","lastname","08028","Question",5);
 
             CurrentSession.getInstance().setToken("AAAA");
