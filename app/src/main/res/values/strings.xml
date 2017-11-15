@@ -73,8 +73,13 @@
     <string name="saving">Saving</string>
     <string name="saving_meeting">Saving Meeting</string>
     <string name="error_loading_meeting">Sorry, there was an error while loading this meeting</string>
+    <string name="title_activity_tracking">Tracking</string>
+    <string name="saving_tracking_data">Saving tracking data</string>
+    <string name="tracking_error_toast_message">There was an error saving the tracking data!</string>
+    <string name="tracking_error_loading">There was an error loading the tracking!</string>
+    <string name="error_connecting_google_reconnect">Error connecting with the Google API, trying to reconnect</string>
+    <string name="error_connecting_google">Could not connect with Google</string>
     <string name="vertical_ellipsis">&#8942;</string>
-
     <string name="user_name">User Name</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
@@ -87,9 +92,4 @@
     <string name="repeat_new_password">Introduce again your new password:</string>
     <string name="error_change_pass">Sorry, there was an error while changing your password</string>
     <string name="action_change_pass">Change password</string>
-
-
-
-
-
 </resources>
