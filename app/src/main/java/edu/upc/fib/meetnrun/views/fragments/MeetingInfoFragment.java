@@ -78,17 +78,24 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
 
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
-        fab.setImageResource(android.R.drawable.ic_menu_edit);
-        fab.setBackgroundColor(0);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent editMeetingIntent = new Intent(getActivity(),EditMeetingActivity.class);
-                editMeetingIntent.putExtra("id",meetingId);
-                getActivity().finish();
-                startActivity(editMeetingIntent);
-            }
-        });
+        if (CurrentSession.getInstance().getCurrentUser().getId() == meetingInfo.getInt("ownerId")) {
+
+            fab.setImageResource(android.R.drawable.ic_menu_edit);
+            fab.setBackgroundColor(0);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent editMeetingIntent = new Intent(getActivity(),EditMeetingActivity.class);
+                    editMeetingIntent.putExtra("id",meetingId);
+                    getActivity().finish();
+                    startActivity(editMeetingIntent);
+                }
+            });
+        }
+        else {
+            fab.setVisibility(View.INVISIBLE);
+        }
+
 
         setupRecyclerView();
         setupScrollView();
