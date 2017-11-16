@@ -47,8 +47,8 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
                              Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
-        
-        init();
+
+        ini(inflater, container);
         
         friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
@@ -78,7 +78,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
 
     protected abstract void floatingbutton();
 
-    protected abstract void init();
+    protected abstract void ini(LayoutInflater inflater, ViewGroup container);
 
     private void setupRecyclerView() {
 
