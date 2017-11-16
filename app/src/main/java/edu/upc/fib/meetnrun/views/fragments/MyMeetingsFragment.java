@@ -1,19 +1,17 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -21,36 +19,27 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
-import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsAdapter;
+import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsListener;
 
 
-public class MeetingListFragment extends Fragment {
+public class MyMeetingsFragment extends Fragment {
 
-    private MeetingsAdapter meetingsAdapter;
-    private IMeetingAdapter meetingDBAdapter;
+    private MyMeetingsAdapter meetingsAdapter;
     private View view;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private List<Meeting> meetings;
+    private IMeetingAdapter meetingController;
+    private IUserAdapter userController;
+    public MyMeetingsFragment() {
 
-    public MeetingListFragment() {
-        meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -58,8 +47,8 @@ public class MeetingListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
-
-        meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
+        meetingController = CurrentSession.getInstance().getMeetingAdapter();
+        userController = CurrentSession.getInstance().getUserAdapter();
         setupRecyclerView();
 
         FloatingActionButton fab =
@@ -71,12 +60,13 @@ public class MeetingListFragment extends Fragment {
                 createNewMeeting();
             }
         });
-        swipeRefreshLayout =
+        final SwipeRefreshLayout swipeRefreshLayout =
                 (SwipeRefreshLayout) view.findViewById(R.id.fragment_meeting_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 updateMeetingList();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
         return view;
@@ -85,12 +75,19 @@ public class MeetingListFragment extends Fragment {
     private void setupRecyclerView() {
         final RecyclerView meetingsList = view.findViewById(R.id.fragment_meeting_container);
         meetingsList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        meetings = new ArrayList<>();
-        meetingsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
+
+        List<Meeting> meetings = new ArrayList<>();
+        meetingsAdapter = new MyMeetingsAdapter(meetings, new MyMeetingsListener() {
             @Override
-            public void onButtonClicked(int position) {
+            public void onStartClicked(int position) {
                 Meeting selectedMeeting = meetingsAdapter.getMeetingAtPosition(position);
-                    joinMeeting(selectedMeeting);
+                startMeeting(selectedMeeting);
+            }
+
+            @Override
+            public void onLeaveClicked(int position) {
+                Meeting selectedMeeting = meetingsAdapter.getMeetingAtPosition(position);
+                leaveMeeting(selectedMeeting);
             }
 
             @Override
@@ -98,10 +95,9 @@ public class MeetingListFragment extends Fragment {
                 Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
-                meetingInfoIntent.putExtra("id",meeting.getId());
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
                 meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
-                meetingInfoIntent.putExtra("ownerId",meeting.getOwner().getId());
+                meetingInfoIntent.putExtra("id",meeting.getId());
                 meetingInfoIntent.putExtra("description",meeting.getDescription());
                 String datetime = meeting.getDate();
                 meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
@@ -113,104 +109,61 @@ public class MeetingListFragment extends Fragment {
 
             }
         });
+        updateMeetingList();
         meetingsList.setAdapter(meetingsAdapter);
 
     }
 
-    @Override
-    public void onResume() {
-        updateMeetingList();
-        super.onResume();
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.meeting_list_menu, menu);
-        MenuItem item = menu.findItem(R.id.meeting_list_menu_search);
-        SearchView searchView = (SearchView) item.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                query = query.toLowerCase();
-                new GetMeetingsFiltered().execute(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                updateMeetingList();
-                return false;
-            }
-        });
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
     private void updateMeetingList() {
-            new GetMeetings().execute();
+            new GetMyMeetings().execute(CurrentSession.getInstance().getCurrentUser().getId());
     }
 
     private void createNewMeeting() {
         Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
+        getActivity().finish();
         startActivity(intent);
     }
 
-    private void joinMeeting(Meeting meeting) {
-        new JoinMeeting().execute(meeting.getId());
+    private void startMeeting(Meeting meeting) {
+        //TODO Start tracking
     }
 
-    private class GetMeetings extends AsyncTask<String,String,String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            Log.e("MAIN","DOINGGGG");
-                meetings = meetingDBAdapter.getAllMeetings();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            meetingsAdapter.updateMeetingsList(meetings);
-            swipeRefreshLayout.setRefreshing(false);
-            super.onPostExecute(s);
-        }
+    private void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(okButtonText, ok);
+        if (negativeButtonText != null && cancel != null)
+            builder.setNegativeButton(negativeButtonText, cancel);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
-
-    private class GetMeetingsFiltered extends AsyncTask<String,String,String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0]);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            meetingsAdapter.updateMeetingsList(meetings);
-            super.onPostExecute(s);
-        }
+    private void leaveMeeting(final Meeting meeting) {
+        showDialog(getString(R.string.leave_meeting_label), getString(R.string.leave_meeting_message),
+                    getString(R.string.ok), getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new LeaveMeeting().execute(meeting.getId());
+                    }
+                },
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }
+        );
     }
 
-    private class JoinMeeting extends AsyncTask<Integer,String,String> {
+    private class GetMyMeetings extends AsyncTask<Integer,String,String> {
+        List<Meeting> l = new ArrayList<>();
 
         @Override
         protected String doInBackground(Integer... integers) {
-            Log.e("MAIN","DOINGGGG");
             //TODO handle exceptions
             try {
-                meetingDBAdapter.joinMeeting(integers[0]);
+                l = userController.getUsersFutureMeetings(integers[0]);
             } catch (AutorizationException e) {
                 e.printStackTrace();
             } catch (ParamsException e) {
@@ -222,11 +175,31 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             System.err.println("FINISHED");
-            Toast.makeText(getActivity(),getString(R.string.joined_meeting),Toast.LENGTH_SHORT).show();
-            updateMeetingList();
+            meetingsAdapter.updateMeetingsList(l);
             super.onPostExecute(s);
         }
     }
 
+    private class LeaveMeeting extends AsyncTask<Integer,String,String> {
 
+        @Override
+        protected String doInBackground(Integer... integers) {
+            //TODO handle exceptions
+            try {
+                meetingController.leaveMeeting(integers[0]);
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            System.err.println("FINISHED");
+            updateMeetingList();
+            super.onPostExecute(s);
+        }
+    }
 }

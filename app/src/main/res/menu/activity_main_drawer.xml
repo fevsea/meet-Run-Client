@@ -7,9 +7,9 @@
             android:icon="@drawable/add_group_512"
             android:title="Meetings" />
         <item
-            android:id="@+id/edit_meeting"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Edit meeting" />
+            android:id="@+id/mymeetings"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/mymeetings_label" />
         <item
             android:id="@+id/friends"
             android:icon="@drawable/friends"

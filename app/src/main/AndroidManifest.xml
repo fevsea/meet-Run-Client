@@ -58,7 +58,11 @@
             android:name=".views.MeetingListActivity"
             android:hardwareAccelerated="true"
             android:label="@string/meeting_list_label"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.EditProfileActivity"
+            android:label="@string/title_edit_profile"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".views.FriendsActivity"
             android:label="@string/friends_label"
@@ -82,6 +86,14 @@
         <activity
             android:name=".views.SettingsActivity"
             android:label="@string/action_settings"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.ChangePasswordActivity"
+            android:label="@string/action_change_pass"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.MyMeetingsActivity"
+            android:label="@string/mymeetings_label"
             android:screenOrientation="portrait"/>
 
     </application>
