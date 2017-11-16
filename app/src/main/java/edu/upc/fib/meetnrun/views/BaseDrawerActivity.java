@@ -58,10 +58,6 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                             Intent i = null;
                             menuItem.setCheckable(false);
                             switch (menuItem.getItemId()) {
-                                case R.id.edit_meeting:
-                                    i = new Intent(getApplicationContext(),EditMeetingActivity.class);
-                                    i.putExtra("id",3);
-                                    break;
                                 case R.id.mymeetings:
                                     i = new Intent(getApplicationContext(),MyMeetingsActivity.class);
                                     break;

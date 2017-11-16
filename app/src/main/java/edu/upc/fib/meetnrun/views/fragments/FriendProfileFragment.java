@@ -14,6 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Scanner;
+
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
@@ -28,6 +36,7 @@ public class FriendProfileFragment extends Fragment {
 
     private View view;
     private IFriendsAdapter friendsDBAdapter;
+    TextView postCode;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,7 +49,7 @@ public class FriendProfileFragment extends Fragment {
 
         final TextView userName = view.findViewById(R.id.userName2);
         TextView name = view.findViewById(R.id.completeName2);
-        TextView postCode = view.findViewById(R.id.userPostCode2);
+        postCode = view.findViewById(R.id.userPostCode2);
         ImageView img = view.findViewById(R.id.delete_friend);
         img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +84,8 @@ public class FriendProfileFragment extends Fragment {
         name.setText(profileInfo.getString("name"));
         postCode.setText(profileInfo.getString("postCode"));
 
+        getCityFromPostcode(profileInfo.getString("postCode"));
+
         return this.view;
     }
 
@@ -87,6 +98,10 @@ public class FriendProfileFragment extends Fragment {
             builder.setNegativeButton(negativeButtonText, cancel);
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void getCityFromPostcode(String p) {
+        new getCity().execute(p);
     }
 
     private class addFriend extends AsyncTask<String,String,String> {
@@ -114,5 +129,69 @@ public class FriendProfileFragment extends Fragment {
             super.onPostExecute(s);
         }
     }
+
+    private class getCity extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            URL url = null;
+            String result = null;
+
+            // build a URL
+            try {
+                url = new URL("https://maps.googleapis.com/maps/api/geocode/json?address=" + params[0] + "&components=country:ES&region=es&key=AIzaSyDm6Bt_p5gn3F7DAJJLMYSEOR0kyqNL800");
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            // read from the URL
+            Scanner scan = null;
+            try {
+                scan = new Scanner(url.openStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String str = new String();
+
+            while (scan.hasNext()) str += scan.nextLine();
+            scan.close();
+
+            // build a JSON object
+            JSONObject obj = null;
+            try {
+                obj = new JSONObject(str);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            //if (! obj.getString("status").equals("OK"))
+            //return;
+
+            // get the first result
+            JSONObject res = null;
+            try {
+                res = obj.getJSONArray("results").getJSONObject(0);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                result = res.getString("formatted_address");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            Log.e("URL", result);
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Log.e("URL", "change view");
+            postCode.setText(s);
+        }
+    }
+
 
 }

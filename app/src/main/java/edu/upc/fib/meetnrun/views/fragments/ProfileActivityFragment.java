@@ -53,6 +53,7 @@ public class ProfileActivityFragment extends Fragment {
 
         userNameTextView.setText(userName);
         nameTextView.setText(name);
+        userPostCodeTextView.setText(postCode);
 
         getCityFromPostcode(postCode);
 
