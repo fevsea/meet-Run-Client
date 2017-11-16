@@ -60,7 +60,7 @@ public class MeetingListTest{
     public ActivityTestRule<MeetingListActivity> activityRule = new ActivityTestRule<MeetingListActivity>(MeetingListActivity.class) {
         protected void beforeActivityLaunched() {
             AdaptersContainer adaptersContainer = AdaptersContainer.getInstance();
-            adaptersContainer.setMeetingAdapter(CurrentSession.getInstance().getMeetingAdapter());
+            adaptersContainer.setMeetingAdapter(new MockMeetingAdapter());
             CurrentSession.getInstance().setAdapterContainer(adaptersContainer);
             User user = new User(1,"user","name","lastname","08028","Question",5);
 

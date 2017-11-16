@@ -3,18 +3,28 @@ package edu.upc.fib.meetnrun;
 import android.content.Context;
 import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.fragments.MeetingInfoFragment;
+import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsViewHolder;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -57,9 +67,10 @@ public class MeetingInfoTest{
             return meetingInfoIntent;
         }
 
-
         protected void beforeActivityLaunched() {
-            CurrentSession.getInstance().setController(new MockMeetingAdapter());
+            AdaptersContainer adaptersContainer = AdaptersContainer.getInstance();
+            adaptersContainer.setMeetingAdapter(new MockMeetingAdapter());
+            CurrentSession.getInstance().setAdapterContainer(adaptersContainer);
             User user = new User(1,"user","name","lastname","08028","Question",5);
 
             CurrentSession.getInstance().setToken("AAAA");
@@ -92,13 +103,41 @@ public class MeetingInfoTest{
         onView(withId(R.id.meeting_info_date)).check(matches(withText(EXTRA_DATE)));
         onView(withId(R.id.meeting_info_time)).check(matches(withText(EXTRA_TIME)));
         onView(withId(R.id.meeting_info_creator)).check(matches(withText(EXTRA_OWNER)));
-
     }
 
     @Test
     public void testMapFragmentIsVisible() {
         MeetingInfoFragment meetingInfoFragment = getActivityFragment();
         onView(withId(R.id.meeting_info_map)).check(matches(isDisplayed()));
+    }
+
+    @Ignore
+    @Test
+    public void testRecyclerViewHolder() {
+        MeetingInfoFragment meetingListFragment = getActivityFragment();
+        onView(withId(R.id.fragment_friends_container))
+                .perform(RecyclerViewActions.scrollToHolder(
+                        withViewHolder("user1")
+                ));
+    }
+
+    public static Matcher<RecyclerView.ViewHolder> withViewHolder(final String text) {
+        return new BoundedMatcher<RecyclerView.ViewHolder, MeetingsViewHolder>(MeetingsViewHolder.class) {
+
+            @Override
+            public void describeTo(Description description) {
+
+            }
+
+            @Override
+            protected boolean matchesSafely(MeetingsViewHolder item) {
+                TextView timeViewText = (TextView) item.itemView.findViewById(R.id.meeting_item_username);
+                if (timeViewText == null) {
+                    return false;
+                }
+                return timeViewText.getText().toString().contains(text);
+            }
+        };
     }
 
 }
