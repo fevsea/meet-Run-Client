@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -40,6 +41,7 @@ public class UsersListFragment extends Fragment {
     private IUserAdapter userController;
     private IFriendsAdapter friendController;
     private List<User> l;
+    private ProgressBar progress;
 
 
     @Override
@@ -50,6 +52,9 @@ public class UsersListFragment extends Fragment {
         this.view = inflater.inflate(R.layout.fragment_users_list, container, false);
         userController = CurrentSession.getInstance().getUserAdapter();
         friendController = CurrentSession.getInstance().getFriendsAdapter();
+
+        progress = (ProgressBar) view.findViewById(R.id.progressBarUsers);
+        progress.setVisibility(View.INVISIBLE);
 
         l = new ArrayList<>();
 
@@ -86,6 +91,7 @@ public class UsersListFragment extends Fragment {
 
                 User user = usersAdapter.getFriendAtPosition(position);
                 Intent userProfileIntent = new Intent(getActivity(),UserProfileActivity.class);
+
                 userProfileIntent.putExtra("id", String.valueOf(user.getId()));
                 userProfileIntent.putExtra("userName", user.getUsername());
                 String name = user.getFirstName()+" "+user.getLastName();
@@ -108,6 +114,12 @@ public class UsersListFragment extends Fragment {
 
         List<User> friends = new ArrayList<User>();
         List<User> users = new ArrayList<User>();
+
+        @Override
+        protected void onPreExecute() {
+            progress.setVisibility(View.VISIBLE);
+            super.onPreExecute();
+        }
 
         @Override
         protected String doInBackground(String... strings) {
@@ -139,6 +151,7 @@ public class UsersListFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             usersAdapter.updateFriendsList(l);
+            progress.setVisibility(View.INVISIBLE);
             super.onPostExecute(s);
         }
     }

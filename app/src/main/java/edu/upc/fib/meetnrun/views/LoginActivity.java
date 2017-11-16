@@ -154,7 +154,6 @@ public class LoginActivity extends AppCompatActivity {
                 cs.setCurrentUser(user);
                 changeToMainActivity();
             }
-
             super.onPostExecute(s);
         }
     }

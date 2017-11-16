@@ -30,8 +30,11 @@ import edu.upc.fib.meetnrun.views.UsersListActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
+/**
+ * Created by eric on 16/11/17.
+ */
 
-public class FriendsFragment extends Fragment {
+public abstract class FriendUserListFragmentTemplate extends Fragment{
 
     private View view;
     private FriendsAdapter friendsAdapter;
@@ -44,7 +47,9 @@ public class FriendsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
-        this.view = inflater.inflate(R.layout.fragment_friends, container, false);
+        
+        init();
+        
         friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
         progress = (ProgressBar) view.findViewById(R.id.progressBarFriends);
@@ -56,24 +61,24 @@ public class FriendsFragment extends Fragment {
 
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
-        fab.setImageResource(R.drawable.add_user_512);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addNewFriend();
-            }
-        });
+        
+        floatingbutton();
+        
         final SwipeRefreshLayout swipeRefreshLayout =
                 (SwipeRefreshLayout) view.findViewById(R.id.fragment_friends_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                updateFriendsList();
+                getMethod();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
         return this.view;
     }
+
+    protected abstract void floatingbutton();
+
+    protected abstract void init();
 
     private void setupRecyclerView() {
 
@@ -83,14 +88,14 @@ public class FriendsFragment extends Fragment {
         List<User> users = new ArrayList<User>();
 
         friendsAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
-                       @Override
+            @Override
             public void onButtonClicked(int position) {}
 
             @Override
             public void onMeetingClicked(int position) {
 
                 User friend = friendsAdapter.getFriendAtPosition(position);
-                Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
+                Intent friendProfileIntent = selectIntent();
 
                 friendProfileIntent.putExtra("id",String.valueOf(friend.getId()));
                 friendProfileIntent.putExtra("userName",friend.getUsername());
@@ -105,40 +110,9 @@ public class FriendsFragment extends Fragment {
 
     }
 
-    private void updateFriendsList() {
-        new getFriends().execute();
-    }
+    protected abstract Intent selectIntent();
 
-    private void addNewFriend() {
-        Intent intent = new Intent(getActivity(),UsersListActivity.class);
-        startActivity(intent);
-    }
-
-    private class getFriends extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            progress.setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                l = friendsDBAdapter.getUserFriends();
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            friendsAdapter.updateFriendsList(l);
-            progress.setVisibility(View.INVISIBLE);
-            super.onPostExecute(s);
-        }
-    }
+    protected abstract void getMethod();
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -176,7 +150,7 @@ public class FriendsFragment extends Fragment {
 
     @Override
     public void onResume() {
-        updateFriendsList();
+        getMethod();
         super.onResume();
     }
 }

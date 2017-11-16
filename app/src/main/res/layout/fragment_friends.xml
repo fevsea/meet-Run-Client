@@ -4,6 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ProgressBar
+        android:id="@+id/progressBarFriends"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="10px"
+        android:layout_height="10px" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragment_friends_container"
         android:layout_width="match_parent"
