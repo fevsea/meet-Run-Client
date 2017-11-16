@@ -37,18 +37,11 @@ public class FriendsFragment extends Fragment {
     private IFriendsAdapter friendsDBAdapter;
     private List<User> l;
 
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        setHasOptionsMenu(true);
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
         friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
