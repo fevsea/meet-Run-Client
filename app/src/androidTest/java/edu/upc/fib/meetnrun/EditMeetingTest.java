@@ -23,10 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
-<<<<<<< HEAD
-=======
 
->>>>>>> 10f3b51822d09086e20bd6d8a812ab77192fe266
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.Espresso.pressBack;
