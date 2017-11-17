@@ -96,8 +96,7 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
         TextView meetingTime = view.findViewById(R.id.mymeeting_item_time);
         meetingTime.setText(datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('T')+9));
 
-        location = new LatLng(40,40);
-//TODO        location = new LatLng(Double.parseDouble(meeting.getLatitude()),Double.parseDouble(meeting.getLongitude()));
+        location = new LatLng(Double.parseDouble(meeting.getLatitude()),Double.parseDouble(meeting.getLongitude()));
 
         startMeetingButton = view.findViewById(R.id.mymeeting_item_start);
         TextView startMeetingLabel = view.findViewById(R.id.mymeeting_start_label);
