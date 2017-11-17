@@ -68,26 +68,12 @@ public class MeetingListTest{
             CurrentSession.getInstance().setCurrentUser(user);
         }
     };
-    private MeetingListFragment getActivityFragment() {
-        MeetingListFragment meetingListFragment =
-                (MeetingListFragment) activityRule.getActivity()
-                        .getSupportFragmentManager()
-                        .findFragmentById(R.id.activity_contentFrame);
-        if (meetingListFragment == null) {
-            meetingListFragment = new MeetingListFragment();
-            activityRule.getActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.activity_contentFrame,meetingListFragment)
-                    .commit();
-        }
-        return meetingListFragment;
-    }
+
 
 
     @Test
     public void testFragmentFab() {
         Intents.init();
-        MeetingListFragment meetingListFragment = getActivityFragment();
         onView(withId(R.id.activity_fab)).check(matches(isDisplayed()));
         onView(withId(R.id.activity_fab)).perform(click());
         intended(hasComponent(CreateMeetingActivity.class.getName()));
@@ -97,7 +83,6 @@ public class MeetingListTest{
     @Test
     public void testRecyclerViewIntent() {
         Intents.init();
-        MeetingListFragment meetingListFragment = getActivityFragment();
         onView(withId(R.id.fragment_meeting_container)).check(matches(isDisplayed()));
         onView(withId(R.id.fragment_meeting_container))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
@@ -107,7 +92,6 @@ public class MeetingListTest{
 
     @Test
     public void testRecyclerViewHolder() {
-        MeetingListFragment meetingListFragment = getActivityFragment();
         onView(withId(R.id.fragment_meeting_container))
                 .perform(RecyclerViewActions.scrollToHolder(
                         withViewHolder("Ruta de fibers")
