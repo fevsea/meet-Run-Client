@@ -18,7 +18,7 @@ public class MockFriendsAdapter implements IFriendsAdapter {
     public static MockFriendsAdapter getInstance() {
         if (instance == null) {
             instance = new MockFriendsAdapter();
-            cont = 0;
+            cont = 2;
             l = new ArrayList<>();
             l.add(new User(cont, "ericR", "Eric", "Rodriguez", "08830", "question", 2));
             cont++;

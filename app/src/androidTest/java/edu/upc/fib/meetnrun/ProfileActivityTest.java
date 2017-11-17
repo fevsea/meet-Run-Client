@@ -25,7 +25,6 @@ import org.junit.runner.RunWith;
 
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
-import edu.upc.fib.meetnrun.views.MainActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.ProfileActivity;
 import edu.upc.fib.meetnrun.models.User;
@@ -44,34 +43,4 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @SmallTest
 public class ProfileActivityTest {
 
-    private User u;
-
-    @Rule
-    public ActivityTestRule<ProfileActivity> activityRule = new ActivityTestRule<ProfileActivity>(
-            ProfileActivity.class) {
-        @Override
-        protected void beforeActivityLaunched() {
-            u = new User();
-            u.setId(1);
-            u.setUsername("Monica");
-            u.setFirstName("Monica");
-            u.setLastName("Follana");
-            u.setPostalCode("08028");
-            u.setQuestion("Question");
-
-            CurrentSession.getInstance().setCurrentUser(u);
-        }
-    };
-
-    @Test
-    public void testVisibility() {
-        onView(withId(R.id.fragment)).check(matches(isDisplayed()));
-    }
-
-    @Test
-    public void testFragmentTestView() {
-        onView(withId(R.id.userName)).check(matches(withText(u.getUsername())));
-        onView(withId(R.id.completeName)).check(matches(withText(u.getFirstName() + " " + u.getLastName())));
-        onView(withId(R.id.userName)).check(matches(withText(u.getUsername())));
-    }
 }
