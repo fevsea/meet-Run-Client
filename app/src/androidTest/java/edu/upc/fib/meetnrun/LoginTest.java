@@ -28,8 +28,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @SmallTest
 public class LoginTest {
 
-    private static final String EXTRA_USERNAME = "ericR";
-    private static final String EXTRA_PASSWORD = "ericR";
+    private static final String EXTRA_USERNAME = "erick29496";
+    private static final String EXTRA_PASSWORD = "erick";
 
     @Rule
     public ActivityTestRule<LoginActivity> activityRule = new ActivityTestRule<LoginActivity>(LoginActivity.class);
@@ -38,7 +38,7 @@ public class LoginTest {
     public void testLoginFields() {
 
         onView(withId(R.id.editUsername)).check(matches(withText(EXTRA_USERNAME)));
-        onView(withId(R.id.editPassword)).check(matches(withText(EXTRA_PASSWORD)));
+        onView(withId(R.id.editPassword)).check(matches(withText(EXTRA_USERNAME)));
         onView(withId(R.id.login)).perform(scrollTo(),click());
     }
 }

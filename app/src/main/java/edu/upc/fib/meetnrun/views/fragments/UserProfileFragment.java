@@ -1,68 +1,41 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
-import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
-import edu.upc.fib.meetnrun.exceptions.ParamsException;
 
 /**
  * Created by eric on 2/11/17.
  */
 
-public class UserProfileFragment extends ProfileFragmentTemplate {
+public class UserProfileFragment extends Fragment {
+
+    private View view;
 
     @Override
-    protected String setDialogTitle() {
-        return getResources().getString(R.string.friend_request_dialog_title);
-    }
-
-    @Override
-    protected String setDialogMessage() {
-        return getResources().getString(R.string.friend_request_dialog_message)+" "+profileInfo.getString("userName")+"?";
-    }
-
-    @Override
-    protected void ini(LayoutInflater inflater, ViewGroup container) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_users_profile, container, false);
 
-        this.userName = view.findViewById(R.id.userName3);
-        this.name = view.findViewById(R.id.completeName3);
-        this.postCode = view.findViewById(R.id.userPostCode3);
-        this.img = view.findViewById(R.id.friend_request);
-    }
+        Bundle profileInfo = getActivity().getIntent().getExtras();
 
-    @Override
-    protected void getMethod(String s) {
-        new addFriend().execute(s);
-    }
+        TextView userName = view.findViewById(R.id.userName3);
+        TextView name = view.findViewById(R.id.completeName3);
+        TextView postCode = view.findViewById(R.id.userPostCode3);
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setVisibility(View.GONE);
 
-    private class addFriend extends AsyncTask<String,String,String> {
+        userName.setText(profileInfo.getString("userName"));
+        name.setText(profileInfo.getString("name"));
+        postCode.setText(profileInfo.getString("postCode"));
 
-        boolean ok = false;
-
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                ok = friendsDBAdapter.addFriend(Integer.parseInt(s[0]));
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (ok) {
-                Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
-                getActivity().finish();
-            }
-            super.onPostExecute(s);
-        }
+        return this.view;
     }
 }

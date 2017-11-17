@@ -1,6 +1,5 @@
 package edu.upc.fib.meetnrun.views;
 
-import android.content.ActivityNotFoundException;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.view.Menu;
@@ -24,10 +23,19 @@ public class MeetingListActivity extends BaseDrawerActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.meeting_list_menu, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
+            case R.id.meeting_list_menu_search:
+                //TODO search (query on recyclerview adapter)
                 break;
         }
         return true;

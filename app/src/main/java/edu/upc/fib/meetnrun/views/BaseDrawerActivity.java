@@ -18,9 +18,7 @@ import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.fragments.SettingsFragment;
 
 public abstract class BaseDrawerActivity extends AppCompatActivity{
 
@@ -32,14 +30,10 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
 
     protected abstract boolean finishOnChangeView();
 
-    private CurrentSession cs;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
-
-        cs = CurrentSession.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
         setSupportActionBar(toolbar);
@@ -56,12 +50,15 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                         @Override
                         public boolean onNavigationItemSelected(MenuItem menuItem) {
                             Intent i = null;
-                            menuItem.setCheckable(false);
                             switch (menuItem.getItemId()) {
-                                case R.id.mymeetings:
-                                    i = new Intent(getApplicationContext(),MyMeetingsActivity.class);
-                                    break;
+                                /*case R.id.edit_meeting:
+                                    i = new Intent(getApplicationContext(),EditMeetingActivity.class);
+                                    i.putExtra("id",3);
+                                    break;*/
                                 case R.id.logout:
+                                    CurrentSession cs = CurrentSession.getInstance();
+                                    cs.setToken(null);
+                                    cs.setCurrentUser(null);
                                     deleteToken();
                                     i = new Intent(getApplicationContext(),LoginActivity.class);
                                     finishAffinity();
@@ -73,12 +70,10 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                 case R.id.friends:
                                     i = new Intent(getApplicationContext(),FriendsActivity.class);
                                     break;
-                                case R.id.settings:
-                                    i = new Intent(getApplicationContext(),SettingsActivity.class);
-                                    break;
                                 default:
                                     break;
                             }
+                            menuItem.setChecked(true);
                             if (i != null) {
                                 if (finishOnChangeView()) finish();
                                 startActivity(i);
@@ -89,7 +84,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                     });
 
             TextView nav_user = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nameProfile);
-            User user = cs.getCurrentUser();
+            User user = CurrentSession.getInstance().getCurrentUser();
             String name = user.getFirstName()+" "+user.getLastName();
             nav_user.setText(name);
 
@@ -119,11 +114,9 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
     }
 
     private void deleteToken() {
-        cs.setToken(null);
-        cs.setCurrentUser(null);
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("token", cs.getToken());
+        editor.putString("token", CurrentSession.getInstance().getToken());
         editor.commit();
     }
 

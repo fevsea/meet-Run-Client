@@ -2,23 +2,29 @@ package edu.upc.fib.meetnrun.views;
 
 
 import android.content.DialogInterface;
+
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+
 import android.widget.EditText;
 import android.widget.ScrollView;
-
 import com.google.android.gms.maps.GoogleMap;
+
 import com.google.android.gms.maps.model.Marker;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.Meeting;
+
+import edu.upc.fib.meetnrun.persistence.IGenericController;
 import edu.upc.fib.meetnrun.views.fragments.EditMeetingFragment;
+
+import edu.upc.fib.meetnrun.models.Meeting;
 
 public class EditMeetingActivity extends BaseReturnActivity {
 
     private GoogleMap map;
     private Marker marker;
     private Meeting meeting; //= new Meeting(1, "HOLA", "Descr \n ipcion \n rand \n om", false, 5, new Date().toString(), "41", "2");
+    private IGenericController controller;
     private boolean thereWasAnAttemptToSave = false;
     EditText titleText;
     EditText descriptionText;

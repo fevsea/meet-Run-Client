@@ -5,22 +5,20 @@ package edu.upc.fib.meetnrun.models;
  */
 
 public class User {
-    private Integer id;
-    private String username;
-    private String firstName;
-    private String lastName;
-    private String postalCode;
-    private String question;
-    private Integer level;
+    protected Integer id;
+    protected String username;
+    protected String firstName;
+    protected String lastName;
+    protected String postalCode;
+    protected String question;
 
-    public User(Integer id, String username, String firstName, String lastName, String postalCode, String question,Integer level) {
+    public User(Integer id, String username, String firstName, String lastName, String postalCode, String question) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.postalCode = postalCode;
         this.question = question;
-        this.level = level;
     }
 
     public Integer getId() {
@@ -69,26 +67,5 @@ public class User {
 
     public void setQuestion(String question) {
         this.question = question;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", postalCode='" + postalCode + '\'' +
-                ", question='" + question + '\'' +
-                ", level=" + level +
-                '}';
     }
 }

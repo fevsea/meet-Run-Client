@@ -11,7 +11,4 @@
     <dimen name="meeting_item_margin">8dp</dimen>
     <dimen name="card_depth">2dp</dimen>
     <dimen name="card_radius">4dp</dimen>
-    <dimen name="map_size">150dp</dimen>
-    <dimen name="map_margin">20dp</dimen>
-    <dimen name="cardview_margin">4dp</dimen>
 </resources>

@@ -76,14 +76,6 @@
                 android:textSize="20sp"
                 android:text="Postcode" />
 
-            <ImageView
-                android:id="@+id/delete_friend"
-                android:layout_width="200px"
-                android:layout_height="200px"
-                android:layout_alignParentEnd="true"
-                android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_delete" />
-
         </RelativeLayout>
 
     </RelativeLayout>
