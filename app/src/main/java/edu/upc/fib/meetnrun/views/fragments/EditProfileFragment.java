@@ -5,8 +5,6 @@ import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +13,13 @@ import android.widget.TextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
-import edu.upc.fib.meetnrun.views.EditProfileActivity;
 import edu.upc.fib.meetnrun.views.ProfileActivity;
 
 
