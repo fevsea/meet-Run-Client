@@ -101,6 +101,7 @@ public class MeetingListFragment extends Fragment {
                 meetingInfoIntent.putExtra("id",meeting.getId());
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
                 meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
+                meetingInfoIntent.putExtra("ownerId",meeting.getOwner().getId());
                 meetingInfoIntent.putExtra("description",meeting.getDescription());
                 String datetime = meeting.getDate();
                 meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
