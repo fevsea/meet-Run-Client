@@ -1,7 +1,6 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
@@ -22,11 +20,8 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.FriendProfileActivity;
-import edu.upc.fib.meetnrun.views.UsersListActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
@@ -36,11 +31,11 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 
 public abstract class FriendUserListFragmentTemplate extends Fragment{
 
-    private View view;
-    private FriendsAdapter friendsAdapter;
-    private IFriendsAdapter friendsDBAdapter;
-    private List<User> l;
-    private ProgressBar progress;
+    protected View view;
+    protected FriendsAdapter friendsAdapter;
+    protected IFriendsAdapter friendsDBAdapter;
+    protected List<User> l;
+    FloatingActionButton fab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,20 +47,15 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         
         friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
-        progress = (ProgressBar) view.findViewById(R.id.progressBarFriends);
-        progress.setVisibility(View.INVISIBLE);
-
         l = new ArrayList<User>();
 
         setupRecyclerView();
 
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         
         floatingbutton();
         
-        final SwipeRefreshLayout swipeRefreshLayout =
-                (SwipeRefreshLayout) view.findViewById(R.id.fragment_friends_swipe);
+        final SwipeRefreshLayout swipeRefreshLayout = getSwipe();
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -76,13 +66,15 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         return this.view;
     }
 
+    protected abstract SwipeRefreshLayout getSwipe();
+
     protected abstract void floatingbutton();
 
     protected abstract void ini(LayoutInflater inflater, ViewGroup container);
 
     private void setupRecyclerView() {
 
-        final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
+        final RecyclerView friendsList = getRecycler();
         friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         List<User> users = new ArrayList<User>();
@@ -109,6 +101,8 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         friendsList.setAdapter(friendsAdapter);
 
     }
+
+    protected abstract RecyclerView getRecycler();
 
     protected abstract Intent selectIntent();
 

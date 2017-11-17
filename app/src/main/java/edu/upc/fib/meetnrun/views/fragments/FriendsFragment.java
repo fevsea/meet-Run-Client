@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
@@ -31,31 +30,15 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 
-public class FriendsFragment extends Fragment {
-
-    private View view;
-    private FriendsAdapter friendsAdapter;
-    private IFriendsAdapter friendsDBAdapter;
-    private List<User> l;
-    private ProgressBar progress;
+public class FriendsFragment extends FriendUserListFragmentTemplate {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected SwipeRefreshLayout getSwipe() {
+        return (SwipeRefreshLayout) view.findViewById(R.id.fragment_friends_swipe);
+    }
 
-        setHasOptionsMenu(true);
-        this.view = inflater.inflate(R.layout.fragment_friends, container, false);
-        friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
-
-        progress = (ProgressBar) view.findViewById(R.id.progressBarFriends);
-        progress.setVisibility(View.INVISIBLE);
-
-        l = new ArrayList<User>();
-
-        setupRecyclerView();
-
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+    @Override
+    protected void floatingbutton() {
         fab.setImageResource(R.drawable.add_user_512);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,49 +46,25 @@ public class FriendsFragment extends Fragment {
                 addNewFriend();
             }
         });
-        final SwipeRefreshLayout swipeRefreshLayout =
-                (SwipeRefreshLayout) view.findViewById(R.id.fragment_friends_swipe);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                updateFriendsList();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-        return this.view;
     }
 
-    private void setupRecyclerView() {
-
-        final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
-        friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        List<User> users = new ArrayList<User>();
-
-        friendsAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
-                       @Override
-            public void onButtonClicked(int position) {}
-
-            @Override
-            public void onMeetingClicked(int position) {
-
-                User friend = friendsAdapter.getFriendAtPosition(position);
-                Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
-
-                friendProfileIntent.putExtra("id",String.valueOf(friend.getId()));
-                friendProfileIntent.putExtra("userName",friend.getUsername());
-                String name = friend.getFirstName()+" "+friend.getLastName();
-                friendProfileIntent.putExtra("name",name);
-                friendProfileIntent.putExtra("postCode",friend.getPostalCode());
-                startActivity(friendProfileIntent);
-
-            }
-        });
-        friendsList.setAdapter(friendsAdapter);
-
+    @Override
+    protected void ini(LayoutInflater inflater, ViewGroup container) {
+        this.view = inflater.inflate(R.layout.fragment_friends, container, false);
     }
 
-    private void updateFriendsList() {
+    @Override
+    protected RecyclerView getRecycler() {
+        return view.findViewById(R.id.fragment_friends_container);
+    }
+
+    @Override
+    protected Intent selectIntent() {
+        return new Intent(getActivity(),FriendProfileActivity.class);
+    }
+
+    @Override
+    protected void getMethod() {
         new getFriends().execute();
     }
 
@@ -115,12 +74,6 @@ public class FriendsFragment extends Fragment {
     }
 
     private class getFriends extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            progress.setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
 
         @Override
         protected String doInBackground(String... strings) {
@@ -135,48 +88,7 @@ public class FriendsFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             friendsAdapter.updateFriendsList(l);
-            progress.setVisibility(View.INVISIBLE);
             super.onPostExecute(s);
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.search_menu, menu);
-        MenuItem item = menu.findItem(R.id.search_menu);
-        SearchView searchView = (SearchView) item.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                newText = newText.toLowerCase();
-                ArrayList<User> newList = new ArrayList<User>();
-                for (User friend : l) {
-                    String userName = friend.getUsername().toLowerCase();
-                    String name = (friend.getFirstName()+" "+friend.getLastName()).toLowerCase();
-                    String postCode = friend.getPostalCode();
-                    if (userName != null && name != null && postCode != null) {
-                        if (name.contains(newText) || userName.contains(newText) || postCode.contains(newText)) newList.add(friend);
-                    }
-
-                }
-                friendsAdapter.updateFriendsList(newList);
-                return true;
-            }
-        });
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onResume() {
-        updateFriendsList();
-        super.onResume();
     }
 }
