@@ -44,16 +44,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/meeting_item_date" />
+
+
                 <ImageButton
                     android:id="@+id/meeting_item_meet"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_marginTop="@dimen/meeting_item_margin"
                     android:src="@drawable/add_user_512"
-                    android:background="@android:color/white"
+                    android:background="@android:color/transparent"
+                    android:layout_below="@id/meeting_item_time"
                     android:scaleType="fitCenter"
-                    android:adjustViewBounds="true"
-                    android:layout_below="@id/meeting_item_time" />
+                    android:adjustViewBounds="true" />
 
             </RelativeLayout>
             <TextView

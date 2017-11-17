@@ -135,7 +135,7 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
         }
 
         Date currentDate = Calendar.getInstance().getTime();
-        return currentDate.before(date);
+        return currentDate.after(date);
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {
