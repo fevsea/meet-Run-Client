@@ -26,6 +26,7 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
+import edu.upc.fib.meetnrun.views.TrackingActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsAdapter;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
@@ -125,7 +126,9 @@ public class MyMeetingsFragment extends Fragment {
     }
 
     private void startMeeting(Meeting meeting) {
-        //TODO Start tracking
+        Intent intent = new Intent(getActivity(), TrackingActivity.class);
+        intent.putExtra("id", meeting.getId());
+        startActivity(intent);
     }
 
     private void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
