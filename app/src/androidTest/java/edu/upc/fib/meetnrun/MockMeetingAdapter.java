@@ -37,13 +37,11 @@ public class MockMeetingAdapter implements IMeetingAdapter {
 
     @Override
     public boolean updateMeeting(Meeting obj) throws ParamsException, NotFoundException, AutorizationException {
-        //TODO
         return true;
     }
 
     @Override
     public boolean deleteMeetingByID(int id) throws NotFoundException, AutorizationException {
-        //TODO
         return true;
     }
 
@@ -67,7 +65,6 @@ public class MockMeetingAdapter implements IMeetingAdapter {
 
     @Override
     public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException, AutorizationException {
-        //TODO
         //return m.toGenericModel();
         return new Meeting();
     }
@@ -91,14 +88,12 @@ public class MockMeetingAdapter implements IMeetingAdapter {
     @Override
     public boolean joinMeeting(int meetingId) throws AutorizationException, ParamsException {
         boolean ok = false;
-        //TODO
         return ok;
     }
 
     @Override
     public boolean leaveMeeting(int meetingId) throws AutorizationException, ParamsException {
         boolean ok = false;
-        //TODO
         return ok;
     }
 

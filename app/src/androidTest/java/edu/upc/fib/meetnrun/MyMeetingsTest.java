@@ -54,7 +54,7 @@ import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class MeetingListTest{
+public class MyMeetingsTest{
 
     @Rule
     public ActivityTestRule<MeetingListActivity> activityRule = new ActivityTestRule<MeetingListActivity>(MeetingListActivity.class) {
