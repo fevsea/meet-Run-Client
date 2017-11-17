@@ -73,10 +73,35 @@
                 android:layout_marginTop="12dp"
                 android:layout_below="@+id/completeName"
                 android:textColor="#000000"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="Postcode" />
 
             </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/profile_layout">
+
+            <Button
+                android:id="@+id/changePass_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="@string/button_edit_password" />
+
+            <Button
+                android:id="@+id/editProfile_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="@string/button_edit_profile" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

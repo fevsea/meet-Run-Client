@@ -1,42 +1,69 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 
 /**
  * Created by eric on 2/11/17.
  */
 
-public class FriendProfileFragment extends Fragment {
-
-    private View view;
+public class FriendProfileFragment extends ProfileFragmentTemplate {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected String setDialogTitle() {
+        return getResources().getString(R.string.delete_friend_dialog_title);
+    }
+
+    @Override
+    protected String setDialogMessage() {
+        return getResources().getString(R.string.delete_friend_dialog_message)+" "+profileInfo.getString("userName")+"?";
+    }
+
+    @Override
+    protected void ini(LayoutInflater inflater, ViewGroup container) {
         this.view = inflater.inflate(R.layout.fragment_friends_profile, container, false);
 
-        Bundle profileInfo = getActivity().getIntent().getExtras();
-
-        TextView userName = view.findViewById(R.id.userName2);
-        TextView name = view.findViewById(R.id.completeName2);
-        TextView postCode = view.findViewById(R.id.userPostCode2);
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
-        fab.setVisibility(View.GONE);
-
-        userName.setText(profileInfo.getString("userName"));
-        name.setText(profileInfo.getString("name"));
-        postCode.setText(profileInfo.getString("postCode"));
-
-        return this.view;
+        this.userName = view.findViewById(R.id.userName2);
+        this.name = view.findViewById(R.id.completeName2);
+        this.postCode = view.findViewById(R.id.userPostCode2);
+        this.img = view.findViewById(R.id.delete_friend);
     }
+
+    @Override
+    protected void getMethod(String s) {
+        new removeFriend().execute(s);
+    }
+
+    private class removeFriend extends AsyncTask<String,String,String> {
+
+        boolean ok = false;
+
+        @Override
+        protected String doInBackground(String... s) {
+            try {
+                ok = friendsDBAdapter.removeFriend(Integer.parseInt(s[0]));
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (ok) {
+                Toast.makeText(getContext(), "Friend removed", Toast.LENGTH_SHORT).show();
+                getActivity().finish();
+            }
+            super.onPostExecute(s);
+        }
+    }
+
 }
