@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
+import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -99,5 +100,14 @@ public interface SOServices {
     @GET("/users/{id}/friends")
     Call<List<UserServer>> getFriendsOfUser(@Path("id") int id);
 
+    //TRACKING
+    @GET("/meetings/{idMeeting}/tracking/{idUser}")
+    Call<TrackServer> getTracking(@Path("idUser") int userID,@Path("idMeeting") int meetingID);
+
+    @POST("/meetings/{idMeeting}/tracking/{idUser}")
+    Call<Void> addTracking(@Path("idUser") int userID,@Path("idMeeting") int meetingID,@Body TrackServer ts);
+
+    @DELETE("/meetings/{idMeeting}/tracking/{idUser}")
+    Call<Void> deleteTracking(@Path("idUser") int userID,@Path("idMeeting") int meetingID);
 
 }
