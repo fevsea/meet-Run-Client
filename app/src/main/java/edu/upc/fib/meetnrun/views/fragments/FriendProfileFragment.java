@@ -16,6 +16,9 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 public class FriendProfileFragment extends ProfileFragmentTemplate {
 
     @Override
+    protected void setImage() {}
+
+    @Override
     protected String setDialogTitle() {
         return getResources().getString(R.string.delete_friend_dialog_title);
     }
@@ -23,16 +26,6 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
     @Override
     protected String setDialogMessage() {
         return getResources().getString(R.string.delete_friend_dialog_message)+" "+profileInfo.getString("userName")+"?";
-    }
-
-    @Override
-    protected void ini(LayoutInflater inflater, ViewGroup container) {
-        this.view = inflater.inflate(R.layout.fragment_friends_profile, container, false);
-
-        this.userName = view.findViewById(R.id.userName2);
-        this.name = view.findViewById(R.id.completeName2);
-        this.postCode = view.findViewById(R.id.userPostCode2);
-        this.img = view.findViewById(R.id.delete_friend);
     }
 
     @Override

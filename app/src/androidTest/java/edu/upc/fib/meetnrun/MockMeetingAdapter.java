@@ -1,15 +1,19 @@
 package edu.upc.fib.meetnrun;
 
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.TrackingData;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.utils.JsonUtils;
 
@@ -102,6 +106,20 @@ public class MockMeetingAdapter implements IMeetingAdapter {
         return null;
     }
 
+    @Override
+    public boolean addTracking(Integer userID, Integer meetingID, Float averageSpeed, Float distance, Integer steps, Long totalTimeMillis, Float calories, List<LatLng> routePoints) throws ForbiddenException, AutorizationException {
+        return false;
+    }
+
+    @Override
+    public TrackingData getTracking(int userID, int meetingID) throws AutorizationException, NotFoundException {
+        return null;
+    }
+
+    @Override
+    public boolean deleteTrackingInMeeting(int userID, int meetingID) throws AutorizationException, NotFoundException {
+        return false;
+    }
 
 
     private void checkErrorCodeAndThowException(int code, String string) throws GenericException {
