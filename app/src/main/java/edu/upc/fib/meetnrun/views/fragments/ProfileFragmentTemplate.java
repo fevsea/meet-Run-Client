@@ -43,7 +43,13 @@ public abstract class ProfileFragmentTemplate extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ini(inflater, container);
+        this.view = inflater.inflate(R.layout.fragment_friends_profile, container, false);
+
+        this.userName = view.findViewById(R.id.userName2);
+        this.name = view.findViewById(R.id.completeName2);
+        this.postCode = view.findViewById(R.id.userPostCode2);
+        this.img = view.findViewById(R.id.action_friend);
+        setImage();
 
         this.profileInfo = getActivity().getIntent().getExtras();
         this.friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
@@ -86,11 +92,11 @@ public abstract class ProfileFragmentTemplate extends Fragment {
         return this.view;
     }
 
+    protected abstract void setImage();
+
     protected abstract String setDialogTitle();
 
     protected abstract String setDialogMessage();
-
-    protected abstract void ini(LayoutInflater inflater, ViewGroup container);
 
     protected abstract void getMethod(String s);
 

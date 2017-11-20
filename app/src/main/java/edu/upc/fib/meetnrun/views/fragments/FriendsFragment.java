@@ -33,11 +33,6 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 public class FriendsFragment extends FriendUserListFragmentTemplate {
 
     @Override
-    protected SwipeRefreshLayout getSwipe() {
-        return (SwipeRefreshLayout) view.findViewById(R.id.fragment_friends_swipe);
-    }
-
-    @Override
     protected void floatingbutton() {
         fab.setImageResource(R.drawable.add_user_512);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -49,14 +44,7 @@ public class FriendsFragment extends FriendUserListFragmentTemplate {
     }
 
     @Override
-    protected void ini(LayoutInflater inflater, ViewGroup container) {
-        this.view = inflater.inflate(R.layout.fragment_friends, container, false);
-    }
-
-    @Override
-    protected RecyclerView getRecycler() {
-        return view.findViewById(R.id.fragment_friends_container);
-    }
+    protected void adapter() {}
 
     @Override
     protected Intent selectIntent() {

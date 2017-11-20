@@ -37,10 +37,6 @@ public class UsersListFragment extends FriendUserListFragmentTemplate {
 
     private IUserAdapter usersDBAdapter;
 
-    @Override
-    protected SwipeRefreshLayout getSwipe() {
-        return (SwipeRefreshLayout) view.findViewById(R.id.fragment_users_swipe);
-    }
 
     @Override
     protected void floatingbutton() {
@@ -48,14 +44,8 @@ public class UsersListFragment extends FriendUserListFragmentTemplate {
     }
 
     @Override
-    protected void ini(LayoutInflater inflater, ViewGroup container) {
-        this.view = inflater.inflate(R.layout.fragment_users_list, container, false);
+    protected void adapter() {
         usersDBAdapter = CurrentSession.getInstance().getUserAdapter();
-    }
-
-    @Override
-    protected RecyclerView getRecycler() {
-        return view.findViewById(R.id.fragment_users_container);
     }
 
     @Override

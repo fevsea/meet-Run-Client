@@ -43,7 +43,8 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
 
         setHasOptionsMenu(true);
 
-        ini(inflater, container);
+        this.view = inflater.inflate(R.layout.fragment_friends, container, false);
+        adapter();
         
         friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
@@ -55,7 +56,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         
         floatingbutton();
         
-        final SwipeRefreshLayout swipeRefreshLayout = getSwipe();
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_friends_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -66,15 +67,13 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         return this.view;
     }
 
-    protected abstract SwipeRefreshLayout getSwipe();
-
     protected abstract void floatingbutton();
 
-    protected abstract void ini(LayoutInflater inflater, ViewGroup container);
+    protected abstract void adapter();
 
     private void setupRecyclerView() {
 
-        final RecyclerView friendsList = getRecycler();
+        final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
         friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         List<User> users = new ArrayList<User>();
@@ -101,8 +100,6 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         friendsList.setAdapter(friendsAdapter);
 
     }
-
-    protected abstract RecyclerView getRecycler();
 
     protected abstract Intent selectIntent();
 

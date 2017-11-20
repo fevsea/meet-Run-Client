@@ -16,6 +16,11 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 public class UserProfileFragment extends ProfileFragmentTemplate {
 
     @Override
+    protected void setImage() {
+        img.setImageResource(R.drawable.send);
+    }
+
+    @Override
     protected String setDialogTitle() {
         return getResources().getString(R.string.friend_request_dialog_title);
     }
@@ -23,16 +28,6 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
     @Override
     protected String setDialogMessage() {
         return getResources().getString(R.string.friend_request_dialog_message)+" "+profileInfo.getString("userName")+"?";
-    }
-
-    @Override
-    protected void ini(LayoutInflater inflater, ViewGroup container) {
-        this.view = inflater.inflate(R.layout.fragment_users_profile, container, false);
-
-        this.userName = view.findViewById(R.id.userName3);
-        this.name = view.findViewById(R.id.completeName3);
-        this.postCode = view.findViewById(R.id.userPostCode3);
-        this.img = view.findViewById(R.id.friend_request);
     }
 
     @Override
