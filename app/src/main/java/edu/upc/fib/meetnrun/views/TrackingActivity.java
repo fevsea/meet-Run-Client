@@ -48,6 +48,10 @@ import java.util.List;
 import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.TrackingData;
 import edu.upc.fib.meetnrun.services.TrackingService;
 
@@ -310,10 +314,14 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         @Override
         protected Boolean doInBackground(TrackingData... params) {
             try {
-                Thread.sleep(3000);
                 Log.i(TAG, "Saving... " + params[0].toString());
-            } catch (InterruptedException e) {
+                IMeetingAdapter meetingAdapter = CurrentSession.getInstance().getAdapterContainer().getMeetingAdapter();
+                Integer userID = CurrentSession.getInstance().getCurrentUser().getId();
+                TrackingData td = params[0];
+                meetingAdapter.addTracking(userID, meetingId, td.getAverageSpeed(), td.getDistance(), td.getSteps(), td.getTotalTimeMillis(), td.getCalories(), td.getRoutePoints());
+            } catch (ForbiddenException | AutorizationException e) {
                 e.printStackTrace();
+                exception = e;
             }
             return true;
         }
