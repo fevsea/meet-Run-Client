@@ -31,6 +31,7 @@ package="edu.upc.fib.meetnrun">
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".views.MeetingInfoActivity"
             android:label="@string/meeting_info_label"
@@ -74,6 +75,10 @@ package="edu.upc.fib.meetnrun">
             android:screenOrientation="portrait"/>
         <activity
             android:name=".views.UsersListActivity"
+            android:label="@string/users_label"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.MeetingFriendsActivity"
             android:label="@string/users_label"
             android:screenOrientation="portrait"/>
         <activity

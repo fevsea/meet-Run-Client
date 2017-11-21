@@ -1,12 +1,22 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
+
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +46,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
@@ -43,12 +59,16 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 
+
+import edu.upc.fib.meetnrun.views.MeetingFriendsActivity;
 import static android.app.Activity.RESULT_OK;
 
 
 public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
     private Integer year, month, day, hour2, minute;
 
+    Meeting m;
+    private boolean friends;
     private View view;
     private GoogleMap maps;
     private LatLng myLocation;
@@ -59,6 +79,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     EditText hour;
     EditText level;
     EditText description;
+    EditText location;
 
     String Name;
     String Description;
@@ -70,6 +91,8 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     ScrollView sV;
     Switch publicMeeting;
     private IMeetingAdapter meetingAdapter;
+
+    Geocoder geocoder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,7 +112,12 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         hour = (EditText) view.findViewById(R.id.hour);
         level = (EditText) view.findViewById(R.id.level);
         description = (EditText) view.findViewById(R.id.description);
+        location = (EditText) view.findViewById(R.id.meetingLocation);
         Button dateButton = (Button) view.findViewById(R.id.pickDate);
+
+        myLocation = new LatLng(41.388576, 2.112840);
+        friends=false;
+
         dateButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -131,6 +159,23 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         publicMeeting.setOnCheckedChangeListener(this);
 
         Public=false;
+
+        geocoder = new Geocoder(this.getContext(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(myLocation.latitude, myLocation.longitude, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                location.setText(strReturnedAddress.toString());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         SupportMapFragment mMapFragment = SupportMapFragment.newInstance();
         getFragmentManager().beginTransaction().add(R.id.mapView, mMapFragment).commit();
@@ -177,20 +222,19 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     public void create(){
         Name = name.getText().toString();
         Date = date.getText().toString();
-        Level = Integer.parseInt(level.getText().toString());
+
         String Hour = hour.getText().toString();
         Description = description.getText().toString();
         Latitude= String.valueOf(myLocation.latitude);
         Latitude = Latitude.substring(0,Math.min(Latitude.length(),10));
         Longitude=String.valueOf(myLocation.longitude);
         Longitude= Longitude.substring(0,Math.min(Longitude.length(),10));
-        String hourTxt,minuteTxt,secondTxt;
+        String hourTxt,minuteTxt;
         String yearTxt,monthTxt,dayTxt;
         if (hour2 < 10) hourTxt = "0"+hour2;
         else hourTxt = String.valueOf(hour2);
         if (minute < 10) minuteTxt = "0"+minute;
         else minuteTxt = String.valueOf(minute);
-        secondTxt = "00";
         yearTxt = String.valueOf(year);
         if (month < 10) monthTxt = "0"+month;
         else monthTxt = String.valueOf(month);
@@ -198,17 +242,19 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         else dayTxt = String.valueOf(day);
         Date=yearTxt+"-"+monthTxt+"-"+dayTxt+"T"+hourTxt+":"+minuteTxt+":00Z";
 
-        if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty()){
-            Toast.makeText(this.getContext(), "@string/emptyCreate", Toast.LENGTH_SHORT).show();
+
+        if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty() ||level.getText().toString().isEmpty()){
+            Toast.makeText(this.getContext(), this.getString(R.string.empty_create_error), Toast.LENGTH_SHORT).show();
         }
         else if (Level > CurrentSession.getInstance().getCurrentUser().getLevel()) Toast.makeText(this.getContext(),R.string.level_too_high, Toast.LENGTH_SHORT).show();
-        else if(Name.length()>=100) Toast.makeText(this.getContext(),"@string/bigName", Toast.LENGTH_SHORT).show();
-        else if(Description.length()>=500) Toast.makeText(this.getContext(), "@string/bigDescription", Toast.LENGTH_SHORT).show();
+        else if(Name.length()>=100) Toast.makeText(this.getContext(),this.getString(R.string.big_name_error), Toast.LENGTH_SHORT).show();
+        else if(Description.length()>=500) Toast.makeText(this.getContext(), this.getString(R.string.big_description_error), Toast.LENGTH_SHORT).show();
         else{
             //DB stuff
-            Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description+", Kind of meeting: "+Public.toString(), Toast.LENGTH_SHORT).show();
-            create_meeting();
-            this.getActivity().finish();
+            Level = Integer.parseInt(level.getText().toString());
+            if (Public)  onCreateDialog(getActivity(), this.getString(R.string.public_friends), this.getString(R.string.public_yes_friends), this.getString(R.string.public_no_friends));
+            else onCreateDialog(getActivity(), this.getString(R.string.private_friends), this.getString(R.string.private_yes_friends), this.getString(R.string.private_no_friends));
+            //Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description+", Kind of meeting: "+Public.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -242,9 +288,25 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap map) {
         this.maps = map;
-        myLocation = new LatLng(41.388576, 2.112840);
+
         myMarker = map.addMarker(new MarkerOptions().position(myLocation).title("Meeting"));
         moveMapCameraAndMarker(myLocation);
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocation(myLocation.latitude, myLocation.longitude, 1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (addresses != null) {
+            Address returnedAddress = addresses.get(0);
+            StringBuilder strReturnedAddress = new StringBuilder("");
+
+            for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+            }
+            location.setText(strReturnedAddress.toString());
+        }
+
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -270,6 +332,30 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         myMarker = maps.addMarker(new MarkerOptions().position(location).title("Meeting"));
     }
 
+    public Dialog onCreateDialog(final FragmentActivity fa, String message, String pos, String neg) {
+        // Use the Builder class for convenient dialog construction
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(message)
+                .setPositiveButton(pos, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        friends=true;
+                        create_meeting();
+                    }
+                })
+                .setNegativeButton(neg, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        create_meeting();
+                        fa.finish();
+                    }});
+                    // Create the AlertDialog object and return it
+        builder.show();
+        return builder.create();
+
+    }
+
+
+
     private void create_meeting(){
         new newMeeting().execute();
     }
@@ -280,7 +366,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     }
 
     private class newMeeting extends AsyncTask<String,String,String> {
-        Meeting m;
+        //Meeting m;
         @Override
         protected String doInBackground(String... strings){
             try {
@@ -295,8 +381,15 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
         @Override
         protected void onPostExecute(String s){
-            getActivity().finish();
             super.onPostExecute(s);
+            if (friends){
+                Intent i=new Intent(getActivity(), MeetingFriendsActivity.class);
+                Integer MeetingId=m.getId();
+                i.putExtra("level", Level);
+                i.putExtra("meetingId",MeetingId);
+                startActivity(i);
+            }
+            getActivity().finish();
         }
     }
 
