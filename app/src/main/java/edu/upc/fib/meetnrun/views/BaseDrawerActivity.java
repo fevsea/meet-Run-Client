@@ -73,7 +73,7 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                     i = new Intent(getApplicationContext(),FriendsActivity.class);
                                     break;
                                 case R.id.chat:
-                                    i = new Intent(getApplicationContext(),ChatListActivity.class);
+                                    i = new Intent(getApplicationContext(),ChatActivity.class);
                                     break;
                                 case R.id.settings:
                                     i = new Intent(getApplicationContext(),SettingsActivity.class);

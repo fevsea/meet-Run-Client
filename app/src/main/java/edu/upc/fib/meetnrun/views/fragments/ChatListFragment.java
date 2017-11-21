@@ -78,7 +78,9 @@ public class ChatListFragment extends Fragment {
     }
 
     private void updateChats() {
+
         new getChats().execute();
+
     }
 
     private void addChat() {
@@ -102,8 +104,7 @@ public class ChatListFragment extends Fragment {
 
                 Chat chat = chatAdapter.getChatAtPosition(position);
                 Intent chatIntent = new Intent(getActivity(),ChatActivity.class);
-
-                chatIntent.putExtra("me",CurrentSession.getInstance().getCurrentUser().getUsername());
+                chatIntent.putExtra("chat",chat.getChat());
                 chatIntent.putExtra("friend",chat.getFriend().getUsername());
                 startActivity(chatIntent);
             }
