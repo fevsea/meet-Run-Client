@@ -12,7 +12,7 @@ import edu.upc.fib.meetnrun.models.TrackingData;
  * Created by Awais Iqbal on 10/11/2017.
  */
 
-public class TrackServer {
+public class TrackServer implements IServerModel {
     @SerializedName("id")
     @Expose
     private Integer id;

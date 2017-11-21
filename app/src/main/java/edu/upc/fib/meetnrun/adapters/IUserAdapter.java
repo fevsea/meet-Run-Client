@@ -14,7 +14,7 @@ import edu.upc.fib.meetnrun.models.User;
 
 public interface IUserAdapter {
 
-    public List<User> getAllUsers();
+    public List<User> getAllUsers(int page);
 
     public User registerUser(String userName, String firstName, String lastName, String postCode, String password, String question, String answer) throws ParamsException;
 
@@ -24,5 +24,5 @@ public interface IUserAdapter {
 
     public boolean deleteUserByID(int targetUserId) throws NotFoundException, AutorizationException;
 
-    public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException;
+    public List<Meeting> getUsersFutureMeetings(int targetUserId, int page) throws AutorizationException, ParamsException;
 }

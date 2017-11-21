@@ -1,9 +1,8 @@
 package edu.upc.fib.meetnrun.remote;
 
-import java.util.List;
-
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
+import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import retrofit2.Call;
@@ -21,9 +20,11 @@ import retrofit2.http.Query;
 
 public interface SOServices {
 
+    public int PAGELIMIT = 3;
+
     //MEETINGS
     @GET("/meetings")
-    Call<MeetingServer[]> getMeetings();
+    Call<PageServer<MeetingServer>> getAllMeetings(@Query("limit") int limit, @Query("offset") int offset);
 
     @POST("/meetings")
     Call<MeetingServer> createMeeting(@Body Forms.CreateMeeting meeting);
@@ -38,12 +39,12 @@ public interface SOServices {
     Call<Void> deletetMeeting(@Path("id") int id);
 
     @GET("/meetings")
-    Call<MeetingServer[]> getAllMeetingsFiltered(@Query("search") String query);
+    Call<PageServer<MeetingServer>> getAllMeetingsFiltered(@Query("limit") int limit, @Query("offset") int offset, @Query("search") String query);
 
     //USERS
 
     @GET("/users")
-    Call<UserServer[]> getUsers();
+    Call<PageServer<UserServer>> getAllUsers(@Query("limit") int limit, @Query("offset") int offset);
 
     @POST("/users")
     Call<UserServer> registerUser(@Body Forms.UserRegistration user);
@@ -75,7 +76,7 @@ public interface SOServices {
     //PARTICIPANTS
 
     @GET("/meetings/{id}/participants")
-    Call<List<UserServer>> getAllParticipantsFromMeeting(@Path("id") int id);
+    Call<PageServer<UserServer>> getAllParticipantsFromMeeting(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
 
     @POST("/meetings/{id}/participants")
     Call<Void> joinMeeting(@Path("id") int id);
@@ -84,12 +85,12 @@ public interface SOServices {
     Call<Void> leaveMeeting(@Path("id") int id);
 
     @GET("/users/{id}/meetings")
-    Call<List<MeetingServer>> getAllFutureMeetings(@Path("id") int id);
+    Call<PageServer<MeetingServer>> getAllFutureMeetings(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
 
 
     //FRIENDS
     @GET("/users/friends")
-    Call<List<UserServer>> getCurrentUserFriends();
+    Call<PageServer<UserServer>> getCurrentUserFriends(@Query("limit") int limit, @Query("offset") int offset);
 
     @POST("/users/friends/{id}")
     Call<Void> addFriend(@Path("id") int id);
@@ -98,16 +99,16 @@ public interface SOServices {
     Call<Void> removeFriend(@Path("id") int id);
 
     @GET("/users/{id}/friends")
-    Call<List<UserServer>> getFriendsOfUser(@Path("id") int id);
+    Call<PageServer<UserServer>> getAllFriendsOfUser(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
 
     //TRACKING
     @GET("/meetings/{idMeeting}/tracking/{idUser}")
-    Call<TrackServer> getTracking(@Path("idUser") int userID,@Path("idMeeting") int meetingID);
+    Call<TrackServer> getTracking(@Path("idUser") int userID, @Path("idMeeting") int meetingID);
 
     @POST("/meetings/{idMeeting}/tracking/{idUser}")
-    Call<Void> addTracking(@Path("idUser") int userID,@Path("idMeeting") int meetingID,@Body TrackServer ts);
+    Call<Void> addTracking(@Path("idUser") int userID, @Path("idMeeting") int meetingID, @Body TrackServer ts);
 
     @DELETE("/meetings/{idMeeting}/tracking/{idUser}")
-    Call<Void> deleteTracking(@Path("idUser") int userID,@Path("idMeeting") int meetingID);
+    Call<Void> deleteTracking(@Path("idUser") int userID, @Path("idMeeting") int meetingID);
 
 }

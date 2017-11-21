@@ -9,6 +9,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
+import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
@@ -22,6 +23,7 @@ import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.remote.SOServices;
 import retrofit2.Response;
 
+import static edu.upc.fib.meetnrun.adapters.utils.Utils.calculateOffset;
 import static edu.upc.fib.meetnrun.adapters.utils.Utils.checkErrorCodeAndThowException;
 
 /**
@@ -36,13 +38,15 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     }
 
     @Override
-    public List<Meeting> getAllMeetings() {
+    public List<Meeting> getAllMeetings(int page) {
         List<Meeting> l = new ArrayList<>();
         try {
-            Response<MeetingServer[]> res = mServices.getMeetings().execute();
-            MeetingServer[] array = res.body();
-            for (int i = 0; i < array.length; i++) {
-                l.add(array[i].toGenericModel());
+            int offset = calculateOffset(SOServices.PAGELIMIT, page);
+            Response<PageServer<MeetingServer>> res =
+                    mServices.getAllMeetings(SOServices.PAGELIMIT, offset).execute();
+            PageServer<MeetingServer> psm = res.body();
+            for (int i = 0; i < psm.getResults().size(); i++) {
+                l.add(psm.getResults().get(i).toGenericModel());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -142,17 +146,21 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     }
 
     @Override
-    public List<User> getParticipantsFromMeeting(int meetingId) throws AutorizationException, ParamsException {
+    public List<User> getParticipantsFromMeeting(int meetingId, int page) throws AutorizationException, ParamsException {
+        //TODO pending to TEST
         List<User> ul = new ArrayList<>();
         try {
-            Response<List<UserServer>> ret = mServices.getAllParticipantsFromMeeting(meetingId).execute();
+            int offset = calculateOffset(SOServices.PAGELIMIT, page);
+            Response<PageServer<UserServer>> ret =
+                    mServices.getAllParticipantsFromMeeting(SOServices.PAGELIMIT,
+                            offset, meetingId).execute();
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
 
-            List<UserServer> u = ret.body();
+            PageServer<UserServer> u = ret.body();
 
-            for (int i = 0; i < u.size(); i++) {
-                ul.add(u.get(i).toGenericModel());
+            for (int i = 0; i < u.getResults().size(); i++) {
+                ul.add(u.getResults().get(i).toGenericModel());
             }
 
         } catch (IOException e) {
@@ -209,13 +217,15 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     }
 
     @Override
-    public List<Meeting> getAllMeetingsFilteredByName(String query) {
+    public List<Meeting> getAllMeetingsFilteredByName(String query, int page) {
         List<Meeting> l = new ArrayList<>();
         try {
-            Response<MeetingServer[]> res = mServices.getAllMeetingsFiltered(query).execute();
-            MeetingServer[] array = res.body();
-            for (int i = 0; i < array.length; i++) {
-                l.add(array[i].toGenericModel());
+            int offset = calculateOffset(SOServices.PAGELIMIT, page);
+            Response<PageServer<MeetingServer>> res =
+                    mServices.getAllMeetingsFiltered(SOServices.PAGELIMIT, offset, query).execute();
+            PageServer<MeetingServer> array = res.body();
+            for (int i = 0; i < array.getResults().size(); i++) {
+                l.add(array.getResults().get(i).toGenericModel());
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -272,7 +282,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     public boolean deleteTrackingInMeeting(int userID, int meetingID) throws AutorizationException, NotFoundException {
         boolean ok = true;
         try {
-            Response<Void> ret = mServices.deleteTracking(userID,meetingID).execute();
+            Response<Void> ret = mServices.deleteTracking(userID, meetingID).execute();
             if (!ret.isSuccessful()) {
                 ok = false;
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
