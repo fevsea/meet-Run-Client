@@ -61,7 +61,7 @@ public class ChatFragment extends Fragment {
 
         this.chatInfo = getActivity().getIntent().getExtras();
 
-        //getActivity().setTitle(chatInfo.getString("friend"));
+        getActivity().setTitle(chatInfo.getString("friend"));
 
         this.view = inflater.inflate(R.layout.fragment_chat, container, false);
 
@@ -74,7 +74,7 @@ public class ChatFragment extends Fragment {
 
         database = FirebaseDatabase.getInstance();
 
-        databaseReference = database.getReference("chat"/*chatInfo.getString("chat")*/); //Sala de chat
+        databaseReference = database.getReference(chatInfo.getString("chat")); //Sala de chat
 
         adapter = new MessageAdapter(getContext());
         LinearLayoutManager l = new LinearLayoutManager(getContext());

@@ -8,17 +8,17 @@ public class Chat {
 
     private Integer id;
     private String chat;
-    private User friend;
+    private String friendUsername;
     private String last_converse;
     private String last_hour;
 
     public Chat() {
     }
 
-    public Chat(Integer id, String chat, User friend, String last_converse, String last_hour) {
+    public Chat(Integer id, String chat, String friendUsername, String last_converse, String last_hour) {
         this.id = id;
         this.chat = chat;
-        this.friend = friend;
+        this.friendUsername = friendUsername;
         this.last_converse = last_converse;
         this.last_hour = last_hour;
     }
@@ -39,12 +39,12 @@ public class Chat {
         this.chat = chat;
     }
 
-    public User getFriend() {
-        return friend;
+    public String getFriendUsername() {
+        return friendUsername;
     }
 
-    public void setFriend(User friend) {
-        this.friend = friend;
+    public void setFriendUsername(String friendUsername) {
+        this.friendUsername = friendUsername;
     }
 
     public String getLast_converse() {

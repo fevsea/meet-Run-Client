@@ -29,13 +29,13 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     public void bindChat(Chat chat) {
         TextView userPhoto = view.findViewById(R.id.friend_photo);
-        char letter = chat.getFriend().getUsername().charAt(0);
+        char letter = chat.getFriendUsername().charAt(0);
         String firstLetter = String.valueOf(letter);
         userPhoto.setBackground(getColoredCircularShape((letter)));
         userPhoto.setText(firstLetter);
 
         TextView userName = view.findViewById(R.id.username_friend);
-        userName.setText(chat.getFriend().getUsername());
+        userName.setText(chat.getFriendUsername());
 
         TextView lastConverse = view.findViewById(R.id.chat_last_converse);
         lastConverse.setText(chat.getLast_converse());
@@ -56,9 +56,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     @Override
     public void onClick(View view) {
-
         listener.get().onMeetingClicked(getAdapterPosition());
-
     }
 
 }

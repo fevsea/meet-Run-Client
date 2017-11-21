@@ -42,6 +42,8 @@ public class ChatListFragment extends Fragment {
     private List<Chat> l;
     private ChatAdapter chatAdapter;
 
+    private static List<Chat> list = new ArrayList<Chat>();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -78,9 +80,8 @@ public class ChatListFragment extends Fragment {
     }
 
     private void updateChats() {
-
-        new getChats().execute();
-
+        //new getChats().execute();
+        chatAdapter.updateChatList(list);
     }
 
     private void addChat() {
@@ -105,7 +106,7 @@ public class ChatListFragment extends Fragment {
                 Chat chat = chatAdapter.getChatAtPosition(position);
                 Intent chatIntent = new Intent(getActivity(),ChatActivity.class);
                 chatIntent.putExtra("chat",chat.getChat());
-                chatIntent.putExtra("friend",chat.getFriend().getUsername());
+                chatIntent.putExtra("friend",chat.getFriendUsername());
                 startActivity(chatIntent);
             }
         });
@@ -130,7 +131,7 @@ public class ChatListFragment extends Fragment {
                 newText = newText.toLowerCase();
                 ArrayList<Chat> newList = new ArrayList<Chat>();
                 for (Chat chat : l) {
-                    String friendName = chat.getFriend().getUsername().toLowerCase();
+                    String friendName = chat.getFriendUsername().toLowerCase();
                     if (friendName != null) {
                         if (friendName.contains(newText)) newList.add(chat);
                     }
@@ -148,13 +149,13 @@ public class ChatListFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-                //l = friendsDBAdapter.getUserFriends();
+                //l = chatDBAdapter.getUserChats();
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            //friendsAdapter.updateFriendsList(l);
+            //chatAdapter.updateChatList(l);
             super.onPostExecute(s);
         }
     }
@@ -163,5 +164,9 @@ public class ChatListFragment extends Fragment {
     public void onResume() {
         updateChats();
         super.onResume();
+    }
+
+    public static void addChatFake(Chat c) {
+        list.add(c);
     }
 }

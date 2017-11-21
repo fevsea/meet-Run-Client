@@ -1,15 +1,21 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.Chat;
+import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.views.ChatListActivity;
 
 /**
  * Created by eric on 2/11/17.
@@ -23,9 +29,9 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String title = getResources().getString(R.string.chat_friend_dialog_title)+" "+profileInfo.getString("userName");
-                String message = getResources().getString(R.string.chat_friend_dialog_message)+" "+profileInfo.getString("userName")+"?";
+                final String friend = profileInfo.getString("userName");
+                String title = getResources().getString(R.string.chat_friend_dialog_title)+" "+friend;
+                String message = getResources().getString(R.string.chat_friend_dialog_message)+" "+friend+"?";
 
                 String ok = getResources().getString(R.string.ok);
                 String cancel = getResources().getString(R.string.cancel);
@@ -33,6 +39,19 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Crear o cojer chat
+                                String user = CurrentSession.getInstance().getCurrentUser().getUsername();
+                                String chatName = user+" - "+friend;
+
+                                Calendar rightNow = Calendar.getInstance();
+                                StringBuilder sb = new StringBuilder();
+                                String hour = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
+                                String minute = String.valueOf(rightNow.get(Calendar.MINUTE));
+                                sb.append(hour);
+                                sb.append(":");
+                                sb.append(minute);
+                                ChatListFragment.addChatFake(new Chat(1,chatName, friend, "", sb.toString()));
+                                Intent i = new Intent(getContext(), ChatListActivity.class);
+                                startActivity(i);
                             }
                         },
                         new DialogInterface.OnClickListener() {
