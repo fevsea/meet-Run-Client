@@ -241,6 +241,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         if (day < 10) dayTxt = "0"+day;
         else dayTxt = String.valueOf(day);
         Date=yearTxt+"-"+monthTxt+"-"+dayTxt+"T"+hourTxt+":"+minuteTxt+":00Z";
+        Level = Integer.parseInt(level.getText().toString());
 
 
         if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty() ||level.getText().toString().isEmpty()){
@@ -251,7 +252,6 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         else if(Description.length()>=500) Toast.makeText(this.getContext(), this.getString(R.string.big_description_error), Toast.LENGTH_SHORT).show();
         else{
             //DB stuff
-            Level = Integer.parseInt(level.getText().toString());
             if (Public)  onCreateDialog(getActivity(), this.getString(R.string.public_friends), this.getString(R.string.public_yes_friends), this.getString(R.string.public_no_friends));
             else onCreateDialog(getActivity(), this.getString(R.string.private_friends), this.getString(R.string.private_yes_friends), this.getString(R.string.private_no_friends));
             //Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description+", Kind of meeting: "+Public.toString(), Toast.LENGTH_SHORT).show();
