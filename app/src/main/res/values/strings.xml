@@ -92,4 +92,5 @@
     <string name="repeat_new_password">Introduce again your new password:</string>
     <string name="error_change_pass">Sorry, there was an error while changing your password</string>
     <string name="action_change_pass">Change password</string>
+    <string name="level_too_high">The meeting level is higher than yours </string>
 </resources>

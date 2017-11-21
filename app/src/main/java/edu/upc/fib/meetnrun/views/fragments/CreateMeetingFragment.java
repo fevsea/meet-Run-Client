@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +25,7 @@ import android.widget.ScrollView;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,8 +43,7 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 
-
-
+import static android.app.Activity.RESULT_OK;
 
 
 public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
@@ -180,7 +181,9 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         String Hour = hour.getText().toString();
         Description = description.getText().toString();
         Latitude= String.valueOf(myLocation.latitude);
+        Latitude = Latitude.substring(0,Math.min(Latitude.length(),10));
         Longitude=String.valueOf(myLocation.longitude);
+        Longitude= Longitude.substring(0,Math.min(Longitude.length(),10));
         String hourTxt,minuteTxt,secondTxt;
         String yearTxt,monthTxt,dayTxt;
         if (hour2 < 10) hourTxt = "0"+hour2;
@@ -198,6 +201,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty()){
             Toast.makeText(this.getContext(), "@string/emptyCreate", Toast.LENGTH_SHORT).show();
         }
+        else if (Level > CurrentSession.getInstance().getCurrentUser().getLevel()) Toast.makeText(this.getContext(),R.string.level_too_high, Toast.LENGTH_SHORT).show();
         else if(Name.length()>=100) Toast.makeText(this.getContext(),"@string/bigName", Toast.LENGTH_SHORT).show();
         else if(Description.length()>=500) Toast.makeText(this.getContext(), "@string/bigDescription", Toast.LENGTH_SHORT).show();
         else{
@@ -249,6 +253,16 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         });
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) { //Retrieve the result from the PlacePicker
+                Place place = PlacePicker.getPlace(getActivity(), data);
+                myLocation = place.getLatLng();
+                moveMapCameraAndMarker(myLocation);
+            }
+        }
+    }
+
     private void moveMapCameraAndMarker(LatLng location) {
         CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(location, 15);
         maps.moveCamera(camera);
@@ -270,7 +284,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         @Override
         protected String doInBackground(String... strings){
             try {
-                 m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
+                m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
             } catch (ParamsException  e) {
                 e.printStackTrace();
             } catch (AutorizationException e) {
