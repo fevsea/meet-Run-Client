@@ -8,16 +8,14 @@ public class Message {
 
     private String mensaje;
     private String nombre;
-    private String fotoPerfil;
-    private  String hora;
+    private String hora;
 
     public Message() {
     }
 
-    public Message(String mensaje, String nombre, String fotoPerfil, String hora) {
+    public Message(String mensaje, String nombre, String hora) {
         this.mensaje = mensaje;
         this.nombre = nombre;
-        this.fotoPerfil = fotoPerfil;
         this.hora = hora;
     }
 
@@ -35,14 +33,6 @@ public class Message {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getFotoPerfil() {
-        return fotoPerfil;
-    }
-
-    public void setFotoPerfil(String fotoPerfil) {
-        this.fotoPerfil = fotoPerfil;
     }
 
     public String getHora() {

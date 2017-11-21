@@ -1,6 +1,8 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,10 +48,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         holder.getNombre().setText(listaMensaje.get(position).getNombre());
         holder.getMensaje().setText(listaMensaje.get(position).getMensaje());
         holder.getHora().setText(listaMensaje.get(position).getHora());
+        holder.getFotoMensaje().setText(listaMensaje.get(position).getNombre());
     }
 
     @Override
     public int getItemCount() {
         return listaMensaje.size();
     }
+
 }

@@ -40,6 +40,7 @@ public class ChatFragment extends Fragment {
 
     private View view;
     private FloatingActionButton fab;
+    private Bundle chatInfo;
 
     private ImageView fotoPerfil;
     private TextView nombre;
@@ -58,6 +59,10 @@ public class ChatFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+        this.chatInfo = getActivity().getIntent().getExtras();
+
+        getActivity().setTitle(chatInfo.getString("friend"));
+
         this.view = inflater.inflate(R.layout.fragment_chat, container, false);
 
         fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
@@ -68,7 +73,8 @@ public class ChatFragment extends Fragment {
         btnEnviar = (Button) view.findViewById(R.id.btnEnviar);
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("chat"); //Sala de chat
+        String chatReference = chatInfo.getString("me")+" - "+chatInfo.getString("friend");
+        databaseReference = database.getReference(chatReference); //Sala de chat
 
         adapter = new MessageAdapter(getContext());
         LinearLayoutManager l = new LinearLayoutManager(getContext());
@@ -87,7 +93,7 @@ public class ChatFragment extends Fragment {
                 sb.append(hour);
                 sb.append(":");
                 sb.append(minute);
-                databaseReference.push().setValue(new Message(txtMensaje.getText().toString(), userName,"1",sb.toString()));
+                databaseReference.push().setValue(new Message(txtMensaje.getText().toString(), userName, sb.toString()));
                 txtMensaje.setText("");
             }
         });

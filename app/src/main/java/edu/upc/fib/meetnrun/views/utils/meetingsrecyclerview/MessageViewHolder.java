@@ -16,14 +16,14 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     private TextView nombre;
     private TextView mensaje;
     private TextView hora;
-    private ImageView fotoMensaje;
+    private TextView fotoMensaje;
 
     public MessageViewHolder(View itemView) {
         super(itemView);
         nombre = (TextView) itemView.findViewById(R.id.nombreMensaje);
         mensaje = (TextView) itemView.findViewById(R.id.mensajeMensaje);
         hora = (TextView) itemView.findViewById(R.id.horaMensaje);
-        fotoMensaje = (ImageView) itemView.findViewById(R.id.fotoPerfilMensaje);
+        fotoMensaje = (TextView) itemView.findViewById(R.id.fotoPerfilMensaje);
 
     }
 
@@ -51,11 +51,11 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         this.hora = hora;
     }
 
-    public ImageView getFotoMensaje() {
+    public TextView getFotoMensaje() {
         return fotoMensaje;
     }
 
-    public void setFotoMensaje(ImageView fotoMensaje) {
+    public void setFotoMensaje(TextView fotoMensaje) {
         this.fotoMensaje = fotoMensaje;
     }
 
