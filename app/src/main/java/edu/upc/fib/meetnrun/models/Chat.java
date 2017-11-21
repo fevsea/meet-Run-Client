@@ -1,10 +1,13 @@
 package edu.upc.fib.meetnrun.models;
 
+import java.io.Serializable;
+
 /**
  * Created by eric on 21/11/17.
  */
 
-public class Chat {
+@SuppressWarnings("serial")
+public class Chat implements Serializable{
 
     private Integer id;
     private String chat;

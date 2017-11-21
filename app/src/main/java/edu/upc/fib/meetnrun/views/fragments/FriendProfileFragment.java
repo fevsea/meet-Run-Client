@@ -39,17 +39,20 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Crear o cojer chat
+
                                 String user = CurrentSession.getInstance().getCurrentUser().getUsername();
                                 String chatName = user+" - "+friend;
 
-                                Calendar rightNow = Calendar.getInstance();
-                                StringBuilder sb = new StringBuilder();
-                                String hour = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
-                                String minute = String.valueOf(rightNow.get(Calendar.MINUTE));
-                                sb.append(hour);
-                                sb.append(":");
-                                sb.append(minute);
-                                ChatListFragment.addChatFake(new Chat(1,chatName, friend, "", sb.toString()));
+                                if (!ChatListFragment.isChat(chatName)) {
+                                    Calendar rightNow = Calendar.getInstance();
+                                    StringBuilder sb = new StringBuilder();
+                                    String hour = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
+                                    String minute = String.valueOf(rightNow.get(Calendar.MINUTE));
+                                    sb.append(hour);
+                                    sb.append(":");
+                                    sb.append(minute);
+                                    ChatListFragment.addChatFake(new Chat(1,chatName, friend, "", sb.toString()));
+                                }
                                 Intent i = new Intent(getContext(), ChatListActivity.class);
                                 startActivity(i);
                             }

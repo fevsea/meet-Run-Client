@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MessageAdapter;
@@ -53,6 +54,8 @@ public class ChatFragment extends Fragment {
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
 
+    private Chat chat;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,8 +63,9 @@ public class ChatFragment extends Fragment {
         setHasOptionsMenu(true);
 
         this.chatInfo = getActivity().getIntent().getExtras();
+        chat = (Chat) getActivity().getIntent().getExtras().getSerializable("chat");
 
-        getActivity().setTitle(chatInfo.getString("friend"));
+        getActivity().setTitle(chat.getFriendUsername()/*chatInfo.getString("friend")*/);
 
         this.view = inflater.inflate(R.layout.fragment_chat, container, false);
 
@@ -73,8 +77,7 @@ public class ChatFragment extends Fragment {
         btnEnviar = (Button) view.findViewById(R.id.btnEnviar);
 
         database = FirebaseDatabase.getInstance();
-
-        databaseReference = database.getReference(chatInfo.getString("chat")); //Sala de chat
+        databaseReference = database.getReference(chat.getChat()/*chatInfo.getString("chatName")*/); //Sala de chat
 
         adapter = new MessageAdapter(getContext());
         LinearLayoutManager l = new LinearLayoutManager(getContext());
@@ -93,7 +96,10 @@ public class ChatFragment extends Fragment {
                 sb.append(hour);
                 sb.append(":");
                 sb.append(minute);
-                databaseReference.push().setValue(new Message(txtMensaje.getText().toString(), userName, sb.toString()));
+                String txt = txtMensaje.getText().toString();
+                databaseReference.push().setValue(new Message(txt, userName, sb.toString()));
+                chat.setLast_hour(sb.toString());
+                chat.setLast_converse(txt);
                 txtMensaje.setText("");
             }
         });

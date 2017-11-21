@@ -105,8 +105,9 @@ public class ChatListFragment extends Fragment {
 
                 Chat chat = chatAdapter.getChatAtPosition(position);
                 Intent chatIntent = new Intent(getActivity(),ChatActivity.class);
-                chatIntent.putExtra("chat",chat.getChat());
-                chatIntent.putExtra("friend",chat.getFriendUsername());
+                //chatIntent.putExtra("chatName",chat.getChat());
+                //chatIntent.putExtra("friend",chat.getFriendUsername());
+                chatIntent.putExtra("chat",chat);
                 startActivity(chatIntent);
             }
         });
@@ -168,5 +169,12 @@ public class ChatListFragment extends Fragment {
 
     public static void addChatFake(Chat c) {
         list.add(c);
+    }
+
+    public static boolean isChat(String chat) {
+        for ( Chat name : list) {
+            if (name.getChat().equals(chat)) return true;
+        }
+        return false;
     }
 }
