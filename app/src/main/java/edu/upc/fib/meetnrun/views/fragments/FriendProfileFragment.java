@@ -1,7 +1,9 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -16,7 +18,35 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 public class FriendProfileFragment extends ProfileFragmentTemplate {
 
     @Override
-    protected void setImage() {}
+    protected void setImage() {
+
+        chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String title = getResources().getString(R.string.chat_friend_dialog_title)+" "+profileInfo.getString("userName");
+                String message = getResources().getString(R.string.chat_friend_dialog_message)+" "+profileInfo.getString("userName")+"?";
+
+                String ok = getResources().getString(R.string.ok);
+                String cancel = getResources().getString(R.string.cancel);
+                showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //Crear o cojer chat
+                            }
+                        },
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
+
+            }
+        });
+
+    }
 
     @Override
     protected String setDialogTitle() {
