@@ -63,6 +63,7 @@
 
     <string name="user_added_to_meeting">User added to meeting</string>
     <string name="friend_profile_label">Friend profile</string>
+    <string name="chat_label">Chat</string>
     <string name="user_profile_label">User profile</string>
     <string name="joined_meeting">Meeting joined succesfully</string>
 

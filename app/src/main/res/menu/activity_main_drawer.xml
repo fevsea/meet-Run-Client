@@ -14,6 +14,12 @@
             android:id="@+id/friends"
             android:icon="@drawable/friends"
             android:title="Friends" />
+
+        <item
+            android:id="@+id/chat"
+            android:icon="@drawable/chat"
+            android:title="Chat" />
+
         <item
             android:id="@+id/logout"
             android:icon="@drawable/exit"
