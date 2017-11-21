@@ -6,8 +6,7 @@ import java.io.Serializable;
  * Created by eric on 21/11/17.
  */
 
-@SuppressWarnings("serial")
-public class Chat implements Serializable{
+public class Chat{
 
     private Integer id;
     private String chat;

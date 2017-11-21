@@ -43,8 +43,6 @@ public class ChatFragment extends Fragment {
     private FloatingActionButton fab;
     private Bundle chatInfo;
 
-    private ImageView fotoPerfil;
-    private TextView nombre;
     private RecyclerView rvMensajes;
     private EditText txtMensaje;
     private Button btnEnviar;
@@ -54,8 +52,6 @@ public class ChatFragment extends Fragment {
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
 
-    private Chat chat;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -63,9 +59,8 @@ public class ChatFragment extends Fragment {
         setHasOptionsMenu(true);
 
         this.chatInfo = getActivity().getIntent().getExtras();
-        chat = (Chat) getActivity().getIntent().getExtras().getSerializable("chat");
 
-        getActivity().setTitle(chat.getFriendUsername()/*chatInfo.getString("friend")*/);
+        getActivity().setTitle(chatInfo.getString("friend"));
 
         this.view = inflater.inflate(R.layout.fragment_chat, container, false);
 
@@ -77,7 +72,7 @@ public class ChatFragment extends Fragment {
         btnEnviar = (Button) view.findViewById(R.id.btnEnviar);
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference(chat.getChat()/*chatInfo.getString("chatName")*/); //Sala de chat
+        databaseReference = database.getReference(chatInfo.getString("chatName")); //Chat name
 
         adapter = new MessageAdapter(getContext());
         LinearLayoutManager l = new LinearLayoutManager(getContext());
@@ -98,8 +93,6 @@ public class ChatFragment extends Fragment {
                 sb.append(minute);
                 String txt = txtMensaje.getText().toString();
                 databaseReference.push().setValue(new Message(txt, userName, sb.toString()));
-                chat.setLast_hour(sb.toString());
-                chat.setLast_converse(txt);
                 txtMensaje.setText("");
             }
         });

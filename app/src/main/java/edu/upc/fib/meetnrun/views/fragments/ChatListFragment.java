@@ -105,9 +105,8 @@ public class ChatListFragment extends Fragment {
 
                 Chat chat = chatAdapter.getChatAtPosition(position);
                 Intent chatIntent = new Intent(getActivity(),ChatActivity.class);
-                //chatIntent.putExtra("chatName",chat.getChat());
-                //chatIntent.putExtra("friend",chat.getFriendUsername());
-                chatIntent.putExtra("chat",chat);
+                chatIntent.putExtra("chatName",chat.getChat());
+                chatIntent.putExtra("friend",chat.getFriendUsername());
                 startActivity(chatIntent);
             }
         });
