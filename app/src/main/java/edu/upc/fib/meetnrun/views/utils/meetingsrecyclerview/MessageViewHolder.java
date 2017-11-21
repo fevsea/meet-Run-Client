@@ -13,50 +13,49 @@ import edu.upc.fib.meetnrun.R;
 
 public class MessageViewHolder extends RecyclerView.ViewHolder {
 
-    private TextView nombre;
-    private TextView mensaje;
-    private TextView hora;
-    private TextView fotoMensaje;
+    private TextView name;
+    private TextView message;
+    private TextView hour;
+    private TextView photo;
 
     public MessageViewHolder(View itemView) {
         super(itemView);
-        nombre = (TextView) itemView.findViewById(R.id.nombreMensaje);
-        mensaje = (TextView) itemView.findViewById(R.id.mensajeMensaje);
-        hora = (TextView) itemView.findViewById(R.id.horaMensaje);
-        fotoMensaje = (TextView) itemView.findViewById(R.id.fotoPerfilMensaje);
+        name = (TextView) itemView.findViewById(R.id.messageName);
+        message = (TextView) itemView.findViewById(R.id.messageTxt);
+        hour = (TextView) itemView.findViewById(R.id.messageHour);
+        photo = (TextView) itemView.findViewById(R.id.messagePhoto);
 
     }
 
-    public TextView getNombre() {
-        return nombre;
+    public TextView getName() {
+        return name;
     }
 
-    public void setNombre(TextView nombre) {
-        this.nombre = nombre;
+    public void setName(TextView name) {
+        this.name = name;
     }
 
-    public TextView getMensaje() {
-        return mensaje;
+    public TextView getMessage() {
+        return message;
     }
 
-    public void setMensaje(TextView mensaje) {
-        this.mensaje = mensaje;
+    public void setMessage(TextView message) {
+        this.message = message;
     }
 
-    public TextView getHora() {
-        return hora;
+    public TextView getHour() {
+        return hour;
     }
 
-    public void setHora(TextView hora) {
-        this.hora = hora;
+    public void setHour(TextView hour) {
+        this.hour = hour;
     }
 
-    public TextView getFotoMensaje() {
-        return fotoMensaje;
+    public TextView getPhoto() {
+        return photo;
     }
 
-    public void setFotoMensaje(TextView fotoMensaje) {
-        this.fotoMensaje = fotoMensaje;
+    public void setPhoto(TextView photo) {
+        this.photo = photo;
     }
-
 }

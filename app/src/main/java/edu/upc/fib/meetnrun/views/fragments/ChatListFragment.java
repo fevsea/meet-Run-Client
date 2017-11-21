@@ -170,10 +170,11 @@ public class ChatListFragment extends Fragment {
         list.add(c);
     }
 
-    public static boolean isChat(String chat) {
-        for ( Chat name : list) {
-            if (name.getChat().equals(chat)) return true;
+    public static Chat getChat(String chat) {
+
+        for (Chat name : list) {
+            if (name.getChat().equals(chat)) return name;
         }
-        return false;
+        return null;
     }
 }

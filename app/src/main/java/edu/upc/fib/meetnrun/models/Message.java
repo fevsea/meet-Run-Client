@@ -6,40 +6,40 @@ package edu.upc.fib.meetnrun.models;
 
 public class Message {
 
-    private String mensaje;
-    private String nombre;
-    private String hora;
+    private String message;
+    private String name;
+    private String hour;
 
     public Message() {
     }
 
-    public Message(String mensaje, String nombre, String hora) {
-        this.mensaje = mensaje;
-        this.nombre = nombre;
-        this.hora = hora;
+    public Message(String message, String name, String hour) {
+        this.message = message;
+        this.name = name;
+        this.hour = hour;
     }
 
-    public String getMensaje() {
-        return mensaje;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getHora() {
-        return hora;
+    public String getHour() {
+        return hour;
     }
 
-    public void setHora(String hora) {
-        this.hora = hora;
+    public void setHour(String hour) {
+        this.hour = hour;
     }
 }

@@ -43,9 +43,9 @@ public class ChatFragment extends Fragment {
     private FloatingActionButton fab;
     private Bundle chatInfo;
 
-    private RecyclerView rvMensajes;
-    private EditText txtMensaje;
-    private Button btnEnviar;
+    private RecyclerView rvMessages;
+    private EditText txtMessage;
+    private Button btnSend;
 
     private MessageAdapter adapter;
 
@@ -67,19 +67,19 @@ public class ChatFragment extends Fragment {
         fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        rvMensajes = (RecyclerView) view.findViewById(R.id.rvMensajes);
-        txtMensaje = (EditText) view.findViewById(R.id.txtMensaje);
-        btnEnviar = (Button) view.findViewById(R.id.btnEnviar);
+        rvMessages = (RecyclerView) view.findViewById(R.id.rvMensajes);
+        txtMessage = (EditText) view.findViewById(R.id.txtMensaje);
+        btnSend = (Button) view.findViewById(R.id.btnEnviar);
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference(chatInfo.getString("chatName")); //Chat name
 
         adapter = new MessageAdapter(getContext());
         LinearLayoutManager l = new LinearLayoutManager(getContext());
-        rvMensajes.setLayoutManager(l);
-        rvMensajes.setAdapter(adapter);
+        rvMessages.setLayoutManager(l);
+        rvMessages.setAdapter(adapter);
 
-        btnEnviar.setOnClickListener(new View.OnClickListener() {
+        btnSend.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -91,9 +91,9 @@ public class ChatFragment extends Fragment {
                 sb.append(hour);
                 sb.append(":");
                 sb.append(minute);
-                String txt = txtMensaje.getText().toString();
+                String txt = txtMessage.getText().toString();
                 databaseReference.push().setValue(new Message(txt, userName, sb.toString()));
-                txtMensaje.setText("");
+                txtMessage.setText("");
             }
         });
 
@@ -129,6 +129,8 @@ public class ChatFragment extends Fragment {
     }
 
     private void setScrollbar() {
-        rvMensajes.scrollToPosition(adapter.getItemCount()-1);
+        rvMessages.scrollToPosition(adapter.getItemCount()-1);
     }
+
+
 }

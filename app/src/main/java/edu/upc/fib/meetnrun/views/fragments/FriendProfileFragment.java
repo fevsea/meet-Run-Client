@@ -15,6 +15,7 @@ import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.views.ChatActivity;
 import edu.upc.fib.meetnrun.views.ChatListActivity;
 
 /**
@@ -42,8 +43,8 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
 
                                 String user = CurrentSession.getInstance().getCurrentUser().getUsername();
                                 String chatName = user+" - "+friend;
-
-                                if (!ChatListFragment.isChat(chatName)) {
+                                Chat chat = ChatListFragment.getChat(chatName);
+                                if (chat == null) {
                                     Calendar rightNow = Calendar.getInstance();
                                     StringBuilder sb = new StringBuilder();
                                     String hour = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
@@ -51,9 +52,13 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                                     sb.append(hour);
                                     sb.append(":");
                                     sb.append(minute);
-                                    ChatListFragment.addChatFake(new Chat(1,chatName, friend, "", sb.toString()));
+                                    chat = new Chat(1,chatName, friend, "", sb.toString());
+                                    ChatListFragment.addChatFake(chat);
                                 }
-                                Intent i = new Intent(getContext(), ChatListActivity.class);
+                                Intent i = new Intent(getContext(), ChatActivity.class);
+                                i.putExtra("chatName",chat.getChat());
+                                i.putExtra("friend",chat.getFriendUsername());
+                                getActivity().finish();
                                 startActivity(i);
                             }
                         },

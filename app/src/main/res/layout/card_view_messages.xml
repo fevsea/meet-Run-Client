@@ -27,7 +27,7 @@
                 android:padding="10sp">
 
                 <TextView
-                    android:id="@+id/fotoPerfilMensaje"
+                    android:id="@+id/messagePhoto"
                     android:layout_width="24sp"
                     android:layout_height="24sp"
                     android:layout_margin="@dimen/meeting_item_margin"
@@ -46,14 +46,14 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/nombreMensaje"
+                        android:id="@+id/messageName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Eric"
                         android:layout_weight="1"/>
 
                     <TextView
-                        android:id="@+id/horaMensaje"
+                        android:id="@+id/messageHour"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="00:00"/>
@@ -61,10 +61,10 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/mensajeMensaje"
+                    android:id="@+id/messageTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hola bienvenido!"/>
+                    android:text="Hello!"/>
 
             </LinearLayout>
 
