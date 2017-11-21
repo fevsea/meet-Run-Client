@@ -35,6 +35,9 @@ public class ChatFragment extends Fragment {
 
     private MessageAdapter adapter;
 
+    //private FirebaseDatabase database;
+    //private DatabaseReference databaseReference;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,6 +54,9 @@ public class ChatFragment extends Fragment {
         rvMensajes = (RecyclerView) view.findViewById(R.id.rvMensajes);
         txtMensaje = (EditText) view.findViewById(R.id.txtMensaje);
         btnEnviar = (Button) view.findViewById(R.id.btnEnviar);
+
+        //database = FirebaseDatabase.getInstance();
+        //databaseReference = database.getReference("chat"); //Sala de chat
 
         adapter = new MessageAdapter(getContext());
         LinearLayoutManager l = new LinearLayoutManager(getContext());
@@ -72,6 +78,8 @@ public class ChatFragment extends Fragment {
                 setScrollbar();
             }
         });
+
+
 
         return this.view;
     }
