@@ -99,6 +99,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
             try {
                 ok = friendsDBAdapter.removeFriend(Integer.parseInt(s[0]));
                 //eliminar chat con amigo
+                ChatListFragment.deleteChat(profileInfo.getString("userName"));
             } catch (AutorizationException e) {
                 e.printStackTrace();
             } catch (ParamsException e) {

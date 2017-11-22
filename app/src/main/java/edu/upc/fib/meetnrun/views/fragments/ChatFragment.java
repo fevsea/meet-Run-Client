@@ -87,7 +87,7 @@ public class ChatFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                String userName = CurrentSession.getInstance().getCurrentUser().getUsername();
+                String userName = currentUser.getUsername();
                 Calendar rightNow = Calendar.getInstance();
                 StringBuilder sb = new StringBuilder();
                 String hour = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
