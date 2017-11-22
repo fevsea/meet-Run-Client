@@ -43,9 +43,9 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                                 //Crear o cojer chat
 
                                 String user = CurrentSession.getInstance().getCurrentUser().getUsername();
-                                String chatName = user+" - "+friend;
-                                Chat chat = ChatListFragment.getChat(chatName);
+                                Chat chat = ChatListFragment.getChat(user, friend);
                                 if (chat == null) {
+                                    String chatName = user+" - "+friend;
                                     Calendar rightNow = Calendar.getInstance();
                                     StringBuilder sb = new StringBuilder();
                                     String hour = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
@@ -53,7 +53,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                                     sb.append(hour);
                                     sb.append(":");
                                     sb.append(minute);
-                                    chat = new Chat(1,chatName, friend, "", sb.toString());
+                                    chat = new Chat(1,chatName, user, friend, "", sb.toString());
                                     ChatListFragment.addChatFake(chat);
                                 }
                                 Intent i = new Intent(getContext(), ChatActivity.class);

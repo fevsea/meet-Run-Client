@@ -170,10 +170,16 @@ public class ChatListFragment extends Fragment {
         list.add(c);
     }
 
-    public static Chat getChat(String chat) {
+    public static Chat getChat(String user, String friend) {
 
-        for (Chat name : list) {
-            if (name.getChat().equals(chat)) return name;
+        for (Chat chat : list) {
+            String chatUserName = chat.getUserName();
+            if (chatUserName.equals(user) || chatUserName.equals(friend)) {
+                String chatFriendUserName = chat.getFriendUsername();
+                if (chatFriendUserName.equals(user) || chatFriendUserName.equals(friend)) {
+                    return chat;
+                }
+            }
         }
         return null;
     }

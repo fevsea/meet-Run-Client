@@ -10,6 +10,7 @@ public class Chat{
 
     private Integer id;
     private String chat;
+    private String userName;
     private String friendUsername;
     private String last_converse;
     private String last_hour;
@@ -17,9 +18,10 @@ public class Chat{
     public Chat() {
     }
 
-    public Chat(Integer id, String chat, String friendUsername, String last_converse, String last_hour) {
+    public Chat(Integer id, String chat, String userName, String friendUsername, String last_converse, String last_hour) {
         this.id = id;
         this.chat = chat;
+        this.userName = userName;
         this.friendUsername = friendUsername;
         this.last_converse = last_converse;
         this.last_hour = last_hour;
@@ -39,6 +41,14 @@ public class Chat{
 
     public void setChat(String chat) {
         this.chat = chat;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getFriendUsername() {
