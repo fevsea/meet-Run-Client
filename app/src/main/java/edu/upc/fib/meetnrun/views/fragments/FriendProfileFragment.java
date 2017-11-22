@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +57,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                                     ChatListFragment.addChatFake(chat);
                                 }
                                 Intent i = new Intent(getContext(), ChatActivity.class);
-                                i.putExtra("chatName",chat.getChat());
-                                i.putExtra("friend",chat.getFriendUsername());
+                                CurrentSession.getInstance().setChat(chat);
                                 getActivity().finish();
                                 startActivity(i);
                             }

@@ -41,7 +41,6 @@ public class ChatFragment extends Fragment {
 
     private View view;
     private FloatingActionButton fab;
-    private Bundle chatInfo;
 
     private RecyclerView rvMessages;
     private EditText txtMessage;
@@ -52,15 +51,17 @@ public class ChatFragment extends Fragment {
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
 
+    private Chat chat;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
 
-        this.chatInfo = getActivity().getIntent().getExtras();
+        chat = CurrentSession.getInstance().getChat();
 
-        getActivity().setTitle(chatInfo.getString("friend"));
+        getActivity().setTitle(chat.getFriendUsername());
 
         this.view = inflater.inflate(R.layout.fragment_chat, container, false);
 
@@ -72,7 +73,7 @@ public class ChatFragment extends Fragment {
         btnSend = (Button) view.findViewById(R.id.btnEnviar);
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference(chatInfo.getString("chatName")); //Chat name
+        databaseReference = database.getReference(chat.getChat()); //Chat name
 
         adapter = new MessageAdapter(getContext());
         LinearLayoutManager l = new LinearLayoutManager(getContext());
@@ -94,6 +95,8 @@ public class ChatFragment extends Fragment {
                 String txt = txtMessage.getText().toString();
                 databaseReference.push().setValue(new Message(txt, userName, sb.toString()));
                 txtMessage.setText("");
+                chat.setLast_hour(sb.toString());
+                chat.setLast_converse(txt);
             }
         });
 

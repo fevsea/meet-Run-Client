@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.View;
 
 import java.util.Calendar;
@@ -35,7 +36,8 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
 
         String friendUserName = friend.getUsername();
         String user = CurrentSession.getInstance().getCurrentUser().getUsername();
-        String chatName = user+" - "+friend;
+        String chatName = user+" - "+friendUserName;
+        Log.e("CHATNAME", chatName);
         Chat chat = ChatListFragment.getChat(chatName);
         if (chat == null) {
             Calendar rightNow = Calendar.getInstance();
@@ -49,8 +51,7 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
             ChatListFragment.addChatFake(chat);
         }
         Intent i = new Intent(getContext(), ChatActivity.class);
-        i.putExtra("chatName",chat.getChat());
-        i.putExtra("friend",chat.getFriendUsername());
+        CurrentSession.getInstance().setChat(chat);
         getActivity().finish();
         startActivity(i);
     }
