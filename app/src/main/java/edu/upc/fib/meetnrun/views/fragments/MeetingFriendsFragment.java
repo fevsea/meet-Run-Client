@@ -1,37 +1,36 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
-import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 
-import static android.R.layout.simple_list_item_1;
 import static android.R.layout.simple_list_item_activated_2;
-import static android.R.layout.simple_list_item_checked;
 
 
 /**
@@ -44,10 +43,11 @@ public class MeetingFriendsFragment extends Fragment {
     private int level;
     private int meetingId;
     private FragmentActivity context;
+    private UsersArrayAdapter adapter;
 
     private IFriendsAdapter friendsDBAdapter;
     List<User> l;
-    List<User> _users;
+    HashMap<Integer,Boolean> selectedUsers;
 
     ListView lv;
 
@@ -63,16 +63,63 @@ public class MeetingFriendsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_meeting_friends, container, false);
         this.view = view;
         context=this.getActivity();
-
+        FloatingActionButton fab =
+                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setVisibility(View.INVISIBLE);
+        selectedUsers = new HashMap<>();
         lv = (ListView) view.findViewById(R.id.myFriends);
-
+        lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         Bundle meetingLevel= getActivity().getIntent().getExtras();
         meetingId=meetingLevel.getInt("meetingId");
         level=meetingLevel.getInt("level");
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int pos, long id) {
+                User u = (User) adapter.getItemAtPosition(pos);
+                boolean setSelected;
+                if (selectedUsers.get(u.getId()) != null) {
+                    setSelected = false;
+                    selectedUsers.remove(u.getId());
+                }
+                else {
+                    setSelected = true;
+                    selectedUsers.put(u.getId(),true);
+                }
+              lv.setItemChecked(pos, setSelected);
+            }
+        });
         new getFriends().execute();
 
         return view;
     }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        inflater.inflate(R.menu.edit_meeting_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.done_button) {
+            SparseBooleanArray checked = lv.getCheckedItemPositions();
+            ArrayList<User> selectedItems = new ArrayList<User>();
+            for (int i = 0; i < checked.size(); i++) {
+                int position = checked.keyAt(i);
+                if (checked.valueAt(i)) {
+                    selectedItems.add(adapter.getItem(position));
+                }
+            }
+            //TODO crida al servidor enviar llista d'amics a enviar
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
     public class UsersArrayAdapter extends ArrayAdapter<User>{
         LayoutInflater _li;
         int _resource;
@@ -96,11 +143,15 @@ public class MeetingFriendsFragment extends Fragment {
             TextView tvTitle = (TextView)convertView.findViewById(android.R.id.text1);
             TextView tvSubtitle = (TextView)convertView.findViewById(android.R.id.text2);
 
-
             tvTitle.setText(item.getFirstName()+" "+item.getLastName());
             tvSubtitle.setText(item.getUsername()+" -> "+item.getPostalCode());
 
             return convertView;
+        }
+
+        @Override
+        public int getCount() {
+            return _users.size();
         }
     }
     private class getFriends extends AsyncTask<String,String,String> {
@@ -118,60 +169,12 @@ public class MeetingFriendsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            ArrayAdapter<User> adapter = new ArrayAdapter<User>(context, simple_list_item_activated_2,l);
-            lv.setAdapter(
-                    new UsersArrayAdapter(
-                            context,
-                            android.R.layout.simple_list_item_activated_2,
-                            l
-                    )
-            );
-            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> adapter, View v, int pos, long id) {
-                /* The code goes here */
-                    //User item = adapter.getSelectedItem();
-                }
-            });
+            adapter = new UsersArrayAdapter(context, simple_list_item_activated_2,l);
+            lv.setAdapter(adapter);
             super.onPostExecute(s);
         }
     }
 
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.search_menu, menu);
-        MenuItem item = menu.findItem(R.id.search_menu);
-        SearchView searchView = (SearchView) item.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                newText = newText.toLowerCase();
-                ArrayList<User> newList = new ArrayList<User>();
-                for (User friend : l) {
-                    String userName = friend.getUsername().toLowerCase();
-                    String name = (friend.getFirstName()+" "+friend.getLastName()).toLowerCase();
-                    String postCode = friend.getPostalCode();
-                    if (userName != null && name != null && postCode != null) {
-                        if (name.contains(newText) || userName.contains(newText) || postCode.contains(newText)) newList.add(friend);
-                    }
-
-                }
-                //friendsAdapter.updateFriendsList(newList);
-                return true;
-            }
-        });
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
 }
 
 

@@ -369,13 +369,13 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         //Meeting m;
         @Override
         protected String doInBackground(String... strings){
-            try {
+          /*  try {
                 m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
             } catch (ParamsException  e) {
                 e.printStackTrace();
             } catch (AutorizationException e) {
                 e.printStackTrace();
-            }
+            }*/
             return null;
         }
 
@@ -384,9 +384,9 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
             super.onPostExecute(s);
             if (friends){
                 Intent i=new Intent(getActivity(), MeetingFriendsActivity.class);
-                Integer MeetingId=m.getId();
+                //Integer MeetingId=m.getId();
                 i.putExtra("level", Level);
-                i.putExtra("meetingId",MeetingId);
+                i.putExtra("meetingId",5);
                 startActivity(i);
             }
             getActivity().finish();

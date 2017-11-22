@@ -93,7 +93,7 @@ public class MyMeetingsFragment extends Fragment {
 
             @Override
             public void onMeetingClicked(int position) {
-                Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Showing selectedUsers meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
