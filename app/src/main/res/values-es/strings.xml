@@ -24,7 +24,7 @@
     <string name="minimum_level">Nivel mínimo</string>
     <string name="meeting_description">Descripción de la quedada</string>
     <string name="empty_create_error">Se ha dejado campos vacion. DEBE rellenar nombre, fecha, hora y lugar</string>
-    <string name="big_name_error">El nombre del meeting debe tener menos de 100 caracteres</string>
+    <string name="big_name_error">El nombre de la quedada debe tener menos de 100 caracteres</string>
     <string name="big_description_error">La descripción debe tener menos de 500 caracteres</string>
     <string name="location">Su última ubicación</string>
     <string name="meeting_location">Lugar de la quedada</string>
