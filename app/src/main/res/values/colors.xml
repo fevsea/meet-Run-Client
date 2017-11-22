@@ -12,5 +12,18 @@
     <color name="color_chat">#82EAEC</color>
     <color name="black_overlay">#66000000</color>
 
-    <color name="red_profile">#E53935</color>
+    <color name="red_profile">#FF5252</color>
+    <color name="pink_profile">#F06292</color>
+    <color name="purple_profile">#BA68C8</color>
+    <color name="deep_purple_profile">#9575CD</color>
+    <color name="indigo_profile">#7986CB</color>
+    <color name="blue_profile">#64B5F6</color>
+    <color name="cyan_profile">#4DD0E1</color>
+    <color name="teal_profile">#4DB6AC</color>
+    <color name="green_profile">#81C784</color>
+    <color name="light_green_profile">#AED581</color>
+    <color name="yellow_profile">#FFF176</color>
+    <color name="orange_profile">#FFB74D</color>
+    <color name="deep_orange_profile">#FF8A65</color>
+
 </resources>
