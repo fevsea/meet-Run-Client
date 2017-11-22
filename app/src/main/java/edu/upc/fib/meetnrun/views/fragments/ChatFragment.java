@@ -29,6 +29,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MessageAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
@@ -52,14 +53,16 @@ public class ChatFragment extends Fragment {
     private DatabaseReference databaseReference;
 
     private Chat chat;
+    private User currentUser;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
 
         chat = CurrentSession.getInstance().getChat();
+        currentUser = CurrentSession.getInstance().getCurrentUser();
 
         getActivity().setTitle(chat.getFriendUsername());
 

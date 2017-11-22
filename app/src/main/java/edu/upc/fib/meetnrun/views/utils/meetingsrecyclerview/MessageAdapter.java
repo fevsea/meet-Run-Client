@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +33,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (messagesList.get(position).isSender()) return 0;
+        return 1;
+    }
+
+    @Override
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(c).inflate(R.layout.card_view_messages, parent, false);
+
+        View v = null;
+
+        if (viewType == 0) {
+            v = LayoutInflater.from(c).inflate(R.layout.card_view_message_send, parent, false);
+        }
+        else {
+            v = LayoutInflater.from(c).inflate(R.layout.card_view_message_recieved, parent, false);
+        }
         return new MessageViewHolder(v);
     }
 

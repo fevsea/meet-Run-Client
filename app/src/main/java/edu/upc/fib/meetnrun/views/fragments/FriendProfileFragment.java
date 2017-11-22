@@ -98,6 +98,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
         protected String doInBackground(String... s) {
             try {
                 ok = friendsDBAdapter.removeFriend(Integer.parseInt(s[0]));
+                //eliminar chat con amigo
             } catch (AutorizationException e) {
                 e.printStackTrace();
             } catch (ParamsException e) {

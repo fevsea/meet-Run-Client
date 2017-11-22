@@ -42,4 +42,10 @@ public class Message {
     public void setHour(String hour) {
         this.hour = hour;
     }
+
+    public boolean isSender() {
+        if (name.equals(CurrentSession.getInstance().getCurrentUser().getUsername())) return true;
+        return false;
+    }
+
 }
