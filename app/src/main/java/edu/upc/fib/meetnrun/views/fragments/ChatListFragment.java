@@ -183,4 +183,14 @@ public class ChatListFragment extends Fragment {
         }
         return null;
     }
+
+    public static boolean deleteChat(String name) {
+        for (Chat chat : list) {
+            if (chat.getUserName().equals(name) || chat.getFriendUsername().equals(name)) {
+                list.remove(chat);
+                return true;
+            }
+        }
+        return false;
+    }
 }

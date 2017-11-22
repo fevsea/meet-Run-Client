@@ -29,9 +29,8 @@
 
                 <TextView
                     android:id="@+id/messagePhoto"
-                    android:layout_width="24sp"
-                    android:layout_height="24sp"
-                    android:layout_margin="@dimen/meeting_item_margin"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:gravity="center"
                     android:textSize="15sp"/>
 
