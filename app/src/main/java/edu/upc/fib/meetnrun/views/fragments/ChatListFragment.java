@@ -26,6 +26,7 @@ import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
+import edu.upc.fib.meetnrun.views.ChatFriendsActivity;
 import edu.upc.fib.meetnrun.views.FriendsActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChatAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
@@ -85,7 +86,7 @@ public class ChatListFragment extends Fragment {
     }
 
     private void addChat() {
-        Intent intent = new Intent(getActivity(),FriendsActivity.class);
+        Intent intent = new Intent(getActivity(), ChatFriendsActivity.class);
         startActivity(intent);
     }
 
