@@ -26,6 +26,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     private List<Message> messagesList = new ArrayList<>();
     private Context c;
     private View v;
+    private Message previous = null;
+    private boolean sameHour = false;
+    private boolean me = false;
+    private boolean showDate = false;
 
     public MessageAdapter(Context c) {
         this.c = c;
@@ -38,7 +42,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if (messagesList.get(position).isSender()) return 0;
+        Message m = messagesList.get(position);
+        if (previous != null) {
+            if(m.getHour().equals(previous.getHour()) && m.getName().equals(previous.getName())) {
+                //sameHour = true;
+            }
+            if(!m.getDate().equals(previous.getDate())) {
+                showDate = true;
+            }
+
+        }
+        else showDate = true;
+        previous = m;
+        if (m.isSender()) return 0;
         return 1;
     }
 
@@ -48,11 +64,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         v = null;
 
         if (viewType == 0) {
+            me = true;
             v = LayoutInflater.from(c).inflate(R.layout.card_view_message_send, parent, false);
         }
         else {
             v = LayoutInflater.from(c).inflate(R.layout.card_view_message_recieved, parent, false);
         }
+
         return new MessageViewHolder(v);
     }
 
@@ -60,9 +78,29 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     public void onBindViewHolder(MessageViewHolder holder, int position) {
 
         String userName = messagesList.get(position).getName();
-        holder.getName().setText(userName);
+        if (me) {
+            holder.getName().setText("you");
+            me = false;
+        }
+        else holder.getName().setText(userName);
+
         holder.getMessage().setText(messagesList.get(position).getMessage());
-        holder.getHour().setText(messagesList.get(position).getHour());
+        if (sameHour) {
+            //holder.getHour().setVisibility(View.GONE);
+            sameHour = false;
+        }
+        else {
+            //holder.getHour().setVisibility(View.VISIBLE);
+            holder.getHour().setText(messagesList.get(position).getHour());
+        }
+        if (showDate) {
+            holder.getDate().setVisibility(View.VISIBLE);
+            holder.getDate().setText(messagesList.get(position).getDate());
+            showDate = false;
+        }
+        else {
+            holder.getDate().setVisibility(View.GONE);
+        }
 
         char letter = userName.charAt(0);
         String firstLetter = String.valueOf(letter);

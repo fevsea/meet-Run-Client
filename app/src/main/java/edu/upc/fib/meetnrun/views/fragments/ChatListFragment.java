@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
@@ -82,6 +85,7 @@ public class ChatListFragment extends Fragment {
 
     private void updateChats() {
         //new getChats().execute();
+        sortList();
         chatAdapter.updateChatList(list);
     }
 
@@ -192,5 +196,20 @@ public class ChatListFragment extends Fragment {
             }
         }
         return false;
+    }
+
+    public void sortList() {
+        Collections.sort(list, new Comparator<Chat>() {
+            @Override
+            public int compare(Chat c2, Chat c1) {
+                if (c1.getLast_date().equals(c2.getLast_date())) {
+                    if (c1.getLast_hour().equals(c2.getLast_hour())) {
+                        return c1.getLast_second().compareTo(c2.getLast_second());
+                    }
+                    else return c1.getLast_hour().compareTo(c2.getLast_hour());
+                }
+                else return c1.getLast_date().compareTo(c2.getLast_date());
+            }
+        });
     }
 }

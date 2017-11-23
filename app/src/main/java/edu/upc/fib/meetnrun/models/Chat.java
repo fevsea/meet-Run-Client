@@ -14,17 +14,21 @@ public class Chat{
     private String friendUsername;
     private String last_converse;
     private String last_hour;
+    private String last_second;
+    private String last_date;
 
     public Chat() {
     }
 
-    public Chat(Integer id, String chat, String userName, String friendUsername, String last_converse, String last_hour) {
+    public Chat(Integer id, String chat, String userName, String friendUsername, String last_converse, String last_hour, String last_second, String last_date) {
         this.id = id;
         this.chat = chat;
         this.userName = userName;
         this.friendUsername = friendUsername;
         this.last_converse = last_converse;
         this.last_hour = last_hour;
+        this.last_second = last_second;
+        this.last_date = last_date;
     }
 
     public Integer getId() {
@@ -73,5 +77,21 @@ public class Chat{
 
     public void setLast_hour(String last_hour) {
         this.last_hour = last_hour;
+    }
+
+    public String getLast_second() {
+        return last_second;
+    }
+
+    public void setLast_second(String last_second) {
+        this.last_second = last_second;
+    }
+
+    public String getLast_date() {
+        return last_date;
+    }
+
+    public void setLast_date(String last_date) {
+        this.last_date = last_date;
     }
 }

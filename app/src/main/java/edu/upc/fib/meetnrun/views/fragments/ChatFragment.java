@@ -21,6 +21,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
@@ -88,18 +91,28 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String userName = currentUser.getUsername();
-                Calendar rightNow = Calendar.getInstance();
+
+                Calendar cal = Calendar.getInstance();
                 StringBuilder sb = new StringBuilder();
-                String hour = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
-                String minute = String.valueOf(rightNow.get(Calendar.MINUTE));
+                String hour = String.valueOf(cal.get(Calendar.HOUR_OF_DAY));
+                String minute = String.valueOf(cal.get(Calendar.MINUTE));
                 sb.append(hour);
                 sb.append(":");
                 sb.append(minute);
+                String seconds = String.valueOf(cal.get(Calendar.SECOND));
+
+                cal.set(Calendar.HOUR_OF_DAY, 0);
+                cal.set(Calendar.MINUTE, 0);
+                cal.set(Calendar.SECOND, 0);
+                cal.set(Calendar.MILLISECOND, 0);
+                Date dateWithoutTime = cal.getTime();
+
                 String txt = txtMessage.getText().toString();
-                databaseReference.push().setValue(new Message(txt, userName, sb.toString()));
+                databaseReference.push().setValue(new Message(txt, userName, sb.toString(), dateWithoutTime.toString()));
                 txtMessage.setText("");
                 chat.setLast_hour(sb.toString());
                 chat.setLast_converse(txt);
+                chat.setLast_second(seconds);
             }
         });
 

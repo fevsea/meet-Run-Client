@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
@@ -46,7 +47,15 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
             sb.append(hour);
             sb.append(":");
             sb.append(minute);
-            chat = new Chat(1,chatName, user, friendUserName, "", sb.toString());
+            String seconds = String.valueOf(rightNow.get(Calendar.SECOND));
+
+            rightNow.set(Calendar.HOUR_OF_DAY, 0);
+            rightNow.set(Calendar.MINUTE, 0);
+            rightNow.set(Calendar.SECOND, 0);
+            rightNow.set(Calendar.MILLISECOND, 0);
+            Date dateWithoutTime = rightNow.getTime();
+
+            chat = new Chat(1,chatName, user, friendUserName, "", sb.toString(), seconds, dateWithoutTime.toString());
             ChatListFragment.addChatFake(chat);
         }
         Intent i = new Intent(getContext(), ChatActivity.class);

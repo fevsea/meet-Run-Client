@@ -9,14 +9,16 @@ public class Message {
     private String message;
     private String name;
     private String hour;
+    private String date;
 
     public Message() {
     }
 
-    public Message(String message, String name, String hour) {
+    public Message(String message, String name, String hour, String date) {
         this.message = message;
         this.name = name;
         this.hour = hour;
+        this.date = date;
     }
 
     public String getMessage() {
@@ -41,6 +43,14 @@ public class Message {
 
     public void setHour(String hour) {
         this.hour = hour;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public boolean isSender() {

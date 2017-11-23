@@ -1,13 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:cardview="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="120dp"
-    android:paddingRight="@dimen/meeting_item_padding_vertical"
-    android:paddingBottom="1dp"
-    android:paddingTop="1dp">
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/messageDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#808080"
+        android:paddingTop="20dp"
+        android:paddingBottom="8dp"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:text="Today"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingRight="4dp"
+        android:paddingLeft="120dp"
+        android:paddingBottom="1dp"
+        android:paddingTop="1dp">
+
+    <TextView
+        android:id="@+id/messageHour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#808080"
+        android:paddingRight="4dp"
+        android:paddingTop="1dp"
+        android:layout_gravity="end"
+        android:text="00:00"/>
 
     <android.support.v7.widget.CardView
         android:orientation="vertical"
@@ -53,13 +80,6 @@
                         android:text="Eric"
                         android:layout_weight="1"/>
 
-                    <TextView
-                        android:id="@+id/messageHour"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="#808080"
-                        android:paddingRight="4dp"
-                        android:text="00:00"/>
 
                 </LinearLayout>
 
@@ -77,3 +97,4 @@
 
 </LinearLayout>
 
+</LinearLayout>
