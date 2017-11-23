@@ -1,5 +1,7 @@
 package edu.upc.fib.meetnrun.adapters.impls;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,12 +9,15 @@ import java.util.List;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
+import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.TrackingData;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.remote.SOServices;
 import retrofit2.Response;
@@ -216,5 +221,72 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
             e.printStackTrace();
         }
         return l;
+    }
+
+    @Override
+    public boolean addTracking(Integer userID, Integer meetingID, Float averageSpeed, Float distance, Integer steps, Long totalTimeMillis, Float calories, List<LatLng> routePoints) throws AutorizationException, ForbiddenException {
+        boolean ok = true;
+        TrackServer ts = new TrackServer(userID, meetingID, averageSpeed, distance, steps, totalTimeMillis, calories, routePoints);
+
+        try {
+            Response<Void> ret = mServices.addTracking(userID, meetingID, ts).execute();
+            if (!ret.isSuccessful()) {
+                ok = false;
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GenericException e) {
+            e.printStackTrace();
+            if (e instanceof ForbiddenException) {
+                throw (ForbiddenException) e;
+            } else if (e instanceof AutorizationException) {
+                throw (AutorizationException) e;
+            }
+        }
+        return ok;
+    }
+
+    @Override
+    public TrackingData getTracking(int userID, int meetingID) throws AutorizationException, NotFoundException {
+        TrackServer m = null;
+        try {
+            Response<TrackServer> ret = mServices.getTracking(userID, meetingID).execute();
+            if (!ret.isSuccessful())
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            m = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GenericException e) {
+            e.printStackTrace();
+            if (e instanceof NotFoundException) {
+                throw (NotFoundException) e;
+            } else if (e instanceof AutorizationException) {
+                throw (AutorizationException) e;
+            }
+        }
+        return m.toGenericModel();
+    }
+
+    @Override
+    public boolean deleteTrackingInMeeting(int userID, int meetingID) throws AutorizationException, NotFoundException {
+        boolean ok = true;
+        try {
+            Response<Void> ret = mServices.deleteTracking(userID,meetingID).execute();
+            if (!ret.isSuccessful()) {
+                ok = false;
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GenericException e) {
+            e.printStackTrace();
+            if (e instanceof NotFoundException) {
+                throw (NotFoundException) e;
+            } else if (e instanceof AutorizationException) {
+                throw (AutorizationException) e;
+            }
+        }
+        return ok;
     }
 }

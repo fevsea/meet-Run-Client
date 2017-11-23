@@ -48,7 +48,7 @@ public class MeetingFriendsFragment extends Fragment {
     private IFriendsAdapter friendsDBAdapter;
     List<User> l;
     List<User> _users;
-
+    List<Boolean> clickedFriends;
     ListView lv;
 
     @Override
@@ -131,11 +131,16 @@ public class MeetingFriendsFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> adapter, View v, int pos, long id) {
                 /* The code goes here */
-                    //User item = adapter.getSelectedItem();
+                    friendClicked(pos);
+
                 }
             });
             super.onPostExecute(s);
         }
+    }
+
+    private void friendClicked(int pos) {
+        clickedFriends.set(pos,!clickedFriends.get(pos));
     }
 
 

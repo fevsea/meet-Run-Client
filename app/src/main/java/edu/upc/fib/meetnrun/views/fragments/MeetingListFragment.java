@@ -228,5 +228,4 @@ public class MeetingListFragment extends Fragment {
         }
     }
 
-
 }

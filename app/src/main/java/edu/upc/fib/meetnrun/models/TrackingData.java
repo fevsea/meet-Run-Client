@@ -21,7 +21,8 @@ public class TrackingData implements Parcelable, Cloneable {
         this.totalTimeMillis = totalTimeMillis;
         this.calories = calories;
     }
-
+    private int userID;
+    private  int meetingID;
     private float averageSpeed;
     private float distance;
     private int steps;
@@ -46,6 +47,17 @@ public class TrackingData implements Parcelable, Cloneable {
         dest.writeLong(totalTimeMillis);
         dest.writeFloat(calories);
         dest.writeTypedList(routePoints);
+    }
+
+    public TrackingData(int userID, int meetingID, float averageSpeed, float distance, int steps, long totalTimeMillis, float calories, List<LatLng> routePoints) {
+        this.userID = userID;
+        this.meetingID = meetingID;
+        this.averageSpeed = averageSpeed;
+        this.distance = distance;
+        this.steps = steps;
+        this.totalTimeMillis = totalTimeMillis;
+        this.calories = calories;
+        this.routePoints = routePoints;
     }
 
     @Override
@@ -121,5 +133,21 @@ public class TrackingData implements Parcelable, Cloneable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public int getMeetingID() {
+        return meetingID;
+    }
+
+    public void setMeetingID(int meetingID) {
+        this.meetingID = meetingID;
     }
 }

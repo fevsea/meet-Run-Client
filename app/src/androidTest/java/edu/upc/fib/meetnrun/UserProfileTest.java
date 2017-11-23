@@ -1,27 +1,16 @@
 package edu.upc.fib.meetnrun;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.UiController;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.assertion.ViewAssertions;
-import android.support.test.espresso.contrib.PickerActions;
-import android.support.test.espresso.matcher.ViewMatchers;
-import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.view.View;
-import android.widget.DatePicker;
-import android.widget.TextView;
-import android.widget.TimePicker;
 
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+
+/**
+ * Created by eric on 14/11/17.
+ */
 
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
@@ -38,9 +27,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-
 @RunWith(AndroidJUnit4.class)
+<<<<<<< HEAD
 @SmallTest
+=======
+public class UserProfileTest {
+>>>>>>> 2ae17c2f8351a6ce00bcc750c10fc2738d3ecdde
 
 public class UserProfileTest {
 /*
@@ -74,5 +66,9 @@ public class UserProfileTest {
         onView(withId(R.id.completeName)).check(matches(withText(u.getFirstName() + " " + u.getLastName())));
         onView(withId(R.id.userName)).check(matches(withText(u.getUsername())));
     }
+<<<<<<< HEAD
     */
+=======
+
+>>>>>>> 2ae17c2f8351a6ce00bcc750c10fc2738d3ecdde
 }

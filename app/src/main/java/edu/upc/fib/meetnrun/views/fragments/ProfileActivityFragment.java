@@ -1,8 +1,6 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
-import android.app.ActionBar;
 import android.content.Intent;
-import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -13,33 +11,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.*;
-import com.google.android.gms.location.places.Places;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
-import edu.upc.fib.meetnrun.exceptions.NotFoundException;
-import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChangePasswordActivity;
 import edu.upc.fib.meetnrun.views.EditProfileActivity;
 
-import com.google.android.gms.maps.*;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Scanner;
 
 
@@ -47,7 +31,6 @@ public class ProfileActivityFragment extends Fragment {
 
     User u;
     private View view;
-    String city;
     TextView userPostCodeTextView;
 
 
@@ -71,7 +54,6 @@ public class ProfileActivityFragment extends Fragment {
         userNameTextView.setText(userName);
         nameTextView.setText(name);
         userPostCodeTextView.setText(postCode);
-
         getCityFromPostcode(postCode);
 
 
@@ -101,31 +83,6 @@ public class ProfileActivityFragment extends Fragment {
 
         return view;
     }
-
-    /*private void getCityFromPostcode(String p) throws IOException, JSONException {
-        // build a URL
-        URL url = new URL("https://maps.googleapis.com/maps/api/geocode/json?address=" + p + "&region=es&key=AIzaSyDm6Bt_p5gn3F7DAJJLMYSEOR0kyqNL800");
-
-        // read from the URL
-        Scanner scan = new Scanner(url.openStream());
-        String str = new String();
-        while (scan.hasNext())
-            str += scan.nextLine();
-        scan.close();
-
-        // build a JSON object
-        JSONObject obj = new JSONObject(str);
-        if (! obj.getString("status").equals("OK"))
-            return;
-
-        // get the first result
-        JSONObject res = obj.getJSONArray("results").getJSONObject(0);
-
-        Log.e("URL", res.getString("formatted_address"));
-        //System.out.println(res.getString("formatted_address"));
-        //JSONObject loc = res.getJSONObject("geometry").getJSONObject("location");
-        //System.out.println("lat: " + loc.getDouble("lat") + ", lng: " + loc.getDouble("lng"));
-    }*/
 
 
     private void getCityFromPostcode(String p) {
@@ -167,8 +124,6 @@ public class ProfileActivityFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            //if (! obj.getString("status").equals("OK"))
-            //return;
 
             // get the first result
             JSONObject res = null;
@@ -191,7 +146,6 @@ public class ProfileActivityFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            Log.e("URL", "change view");
             userPostCodeTextView.setText(s);
         }
     }
