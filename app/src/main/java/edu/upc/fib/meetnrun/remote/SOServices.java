@@ -1,5 +1,7 @@
 package edu.upc.fib.meetnrun.remote;
 
+import java.util.List;
+
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
@@ -85,7 +87,7 @@ public interface SOServices {
     Call<Void> leaveMeeting(@Path("id") int id);
 
     @GET("/users/{id}/meetings")
-    Call<PageServer<MeetingServer>> getAllFutureMeetings(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
+    Call<List<MeetingServer>> getAllFutureMeetings(@Path("id") int id);
 
 
     //FRIENDS

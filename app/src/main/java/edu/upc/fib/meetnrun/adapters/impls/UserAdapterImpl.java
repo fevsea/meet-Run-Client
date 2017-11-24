@@ -141,20 +141,19 @@ public class UserAdapterImpl implements IUserAdapter {
     }
 
     @Override
-    public List<Meeting> getUsersFutureMeetings(int userId, int page) throws AutorizationException, ParamsException {
+    public List<Meeting> getUsersFutureMeetings(int userId) throws AutorizationException, ParamsException {
         List<Meeting> ul = new ArrayList<>();
         //TODO Pending to TEST
         try {
-            int offset = calculateOffset(SOServices.PAGELIMIT, page);
-            Response<PageServer<MeetingServer>> ret =
-                    mServices.getAllFutureMeetings(SOServices.PAGELIMIT, offset, userId).execute();
+            Response<List<MeetingServer>> ret =
+                    mServices.getAllFutureMeetings(userId).execute();
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
 
-            PageServer<MeetingServer> u = ret.body();
+            List<MeetingServer> u = ret.body();
 
-            for (int i = 0; i < u.getResults().size(); i++) {
-                ul.add(u.getResults().get(i).toGenericModel());
+            for (int i = 0; i < u.size(); i++) {
+                ul.add(u.get(i).toGenericModel());
             }
 
         } catch (IOException e) {

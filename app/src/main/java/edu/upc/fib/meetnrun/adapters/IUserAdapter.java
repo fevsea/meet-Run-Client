@@ -24,5 +24,5 @@ public interface IUserAdapter {
 
     public boolean deleteUserByID(int targetUserId) throws NotFoundException, AutorizationException;
 
-    public List<Meeting> getUsersFutureMeetings(int targetUserId, int page) throws AutorizationException, ParamsException;
+    public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException;
 }
