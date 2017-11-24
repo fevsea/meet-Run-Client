@@ -78,7 +78,6 @@ package="edu.upc.fib.meetnrun">
             android:screenOrientation="portrait"/>
         <activity
             android:name=".views.ChatActivity"
-            android:label="@string/chat_label"
             android:screenOrientation="portrait" />
         <activity
             android:name=".views.ChatListActivity"
