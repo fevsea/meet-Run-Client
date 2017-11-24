@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Meet&amp;Run</string>
+    <string name="meeting_list_label">Lista de quedadas</string>
+    <string name="mymeetings_label">Mis quedadas</string>
+    <string name="register_label">Registrarse</string>
+    <string name="edit_meeting_label">Modificar quedada</string>
+    <string name="create_meeting_label">Crear Quedada</string>
+    <string name="meeting_info_label">Información de la quedada</string>
+    <string name="start_meeting_label">Iniciar quedada</string>
+    <string name="not_start_meeting_label">La quedada no está disponile</string>
+    <string name="leave_meeting_label">Abandonar quedada</string>
+    <string name="leave_meeting_message">¿Está seguro que quiere abandonar la quedada?</string>
+    <string name="friends_label">Amigos</string>
+    <string name="users_label">Usuarios</string>
+    <string name="home">Home</string>
+    <string name="navigation_drawer_open">Abrir cajón de navegación</string>
+    <string name="navigation_drawer_close">Cerrar cajón de navegación</string>
+    <string name="search">Buscar</string>
+    <string name="action_settings">Configuración</string>
+
+    <string name="hour">Hora</string>
+    <string name="meeting_name">Nombre de la quedada</string>
+    <string name="minimum_level">Nivel mínimo</string>
+    <string name="meeting_description">Descripción de la quedada</string>
+    <string name="empty_create_error">Se ha dejado campos vacion. DEBE rellenar nombre, fecha, hora y lugar</string>
+    <string name="big_name_error">El nombre de la quedada debe tener menos de 100 caracteres</string>
+    <string name="big_description_error">La descripción debe tener menos de 500 caracteres</string>
+    <string name="location">Su última ubicación</string>
+    <string name="meeting_location">Lugar de la quedada</string>
+    <string name="create_button">Crear</string>
+    <string name="public_meeting">Público</string>
+    <string name="private_meeting">Privado</string>
+    <string name="location_button">Ubicación</string>
+
+    <string name="edit_meeting_close_dialog_message">¿Está seguro que quieres salir antes de guardar?</string>
+    <string name="edit_meeting_close_dialog_title">Cerrar sin guardar</string>
+    <string name="friend_request_dialog_message">"Está seguro que quieres enviar la solicitud a "</string>
+    <string name="friend_request_dialog_title">Solicitudes de amistad</string>
+    <string name="delete_friend_dialog_message">Esta seguro que quiere dejar de ser amigo de</string>
+    <string name="delete_friend_dialog_title">Dejar de ser amigos</string>
+    <string name="delete_account_message">¿Esta seguro que quiere borrar la cuenta?</string>
+    <string name="delete_account_title">Borrar Cuenta</string>
+    <string name="ok">OK</string>
+    <string name="accept_request">Enviar solicitud</string>
+    <string name="cancel">Cancelar</string>
+    <string name="is_public">Público</string>
+    <string name="edit_meeting_error_dialog_title">Error modificando la quedada</string>
+    <string name="edit_meeting_error_dialog_message">Error al guardar la quedada modificada, compruebe los valores!</string>
+    <string name="level">Nivel</string>
+    <string name="change_location">Cambiar lugar</string>
+    <string name="title">Título</string>
+    <string name="description">Descripción</string>
+    <string name="time">Hora</string>
+    <string name="date">Fecha</string>
+    <string name="change_date">Cambiar fecha</string>
+    <string name="change_time">Cambiar hora</string>
+    <string name="edit_meeting">Modificar meeting</string>
+    <string name="title_activity_profile">Perfil de usuario</string>
+    <string name="title_edit_profile">Modificar perfil</string>
+    <string name="button_edit_profile">Editar perfil</string>
+    <string name="button_edit_password">Cambiar contraseña</string>
+
+    <string name="user_added_to_meeting">Usuario añadido</string>
+    <string name="friend_profile_label">Perfil de amigo</string>
+    <string name="user_profile_label">Perfil de usuario</string>
+    <string name="joined_meeting">Se ha unido a la quedada!</string>
+
+
+    <string name="title_activity_fullscreen">Actividad de pantalla de completa</string>
+    <string name="dummy_button">Boton tonto</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="saving">Guardando</string>
+    <string name="saving_meeting">Guardando quedada</string>
+    <string name="error_loading_meeting">Lo siento, ha ocurrido un error mientras se cargaba el perfil</string>
+    <string name="title_activity_tracking">Tracking</string>
+    <string name="saving_tracking_data">Guardando información de tracking</string>
+    <string name="tracking_error_toast_message">Error guardando información de tracking!</string>
+    <string name="tracking_error_loading">Error cargando el tracking!</string>
+    <string name="error_connecting_google_reconnect">Error conectando con Google API, intentelo de nuevo</string>
+    <string name="error_connecting_google">No se ha podido conectar con Google</string>
+    <string name="vertical_ellipsis">&#8942;</string>
+    <string name="user_name">Nombre de usuario</string>
+    <string name="first_name">Nombre</string>
+    <string name="last_name">Apellidos</string>
+    <string name="post_code">Código postal</string>
+    <string name="save_changes">Guardar</string>
+    <string name="error_edit_profile">Lo siento, ha ocurrido un error mientras se actualizaba el perfil</string>
+
+    <string name="current_password">Contraseña actual:</string>
+    <string name="new_password">Introduzca su nueva contraseña</string>
+    <string name="repeat_new_password">Introduzca su nueva contraseña otra vez</string>
+    <string name="error_change_pass">Lo siento, ha ocurrido un error mientras se cambiaba la contraseña</string>
+    <string name="action_change_pass">Cambiar contraseña</string>
+    <string name="log_out">Desconectar</string>
+    <string name="communicate">Comunicación</string>
+    <string name="share">Compartir</string>
+    <string name="send">Enviar</string>
+    <string name="configuration">Configuración</string>
+    <string name="settings">Configuración</string>
+    <string name="help_and_suggestions">Ayuda y sugerencias</string>
+    <string name="meetings">Quedadas</string>
+    <string name="log_in">Conectarse</string>
+    <string name="password">Contraseña</string>
+
+</resources>
