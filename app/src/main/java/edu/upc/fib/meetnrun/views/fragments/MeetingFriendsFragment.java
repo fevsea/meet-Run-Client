@@ -1,11 +1,13 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -134,19 +136,42 @@ public class MeetingFriendsFragment extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null){
-                convertView = this._li.inflate(this._resource, null);
+        public View getView(int position, View view, ViewGroup parent) {
+            if (view == null){
+                view = this._li.inflate(this._resource, null);
             }
 
+            User user = this._users.get(position);
+
+            TextView userPhoto = view.findViewById(R.id.meeting_item_user_photo2);
+            char letter = user.getUsername().charAt(0);
+            String firstLetter = String.valueOf(letter);
+            userPhoto.setBackground(getColoredCircularShape((letter)));
+            userPhoto.setText(firstLetter);
+
+            TextView userName = view.findViewById(R.id.meeting_item_username);
+            userName.setText(user.getUsername());
+
+            TextView name = view.findViewById(R.id.meeting_item_name);
+            name.setText(user.getFirstName()+" "+user.getLastName());
+
+            TextView postCode = view.findViewById(R.id.meeting_item_postcode);
+            postCode.setText(user.getPostalCode());
+
+            TextView meetingLevel = view.findViewById(R.id.meeting_item_level2);
+            String level = String.valueOf(user.getLevel());
+            if (level.equals("null")) level = "0";
+            meetingLevel.setText(String.valueOf(level));
+
+/*
             User item = this._users.get(position);
             TextView tvTitle = (TextView)convertView.findViewById(android.R.id.text1);
             TextView tvSubtitle = (TextView)convertView.findViewById(android.R.id.text2);
 
             tvTitle.setText(item.getFirstName()+" "+item.getLastName());
             tvSubtitle.setText(item.getUsername()+" -> "+item.getPostalCode());
-
-            return convertView;
+*/
+            return view;
         }
 
         @Override
@@ -154,6 +179,16 @@ public class MeetingFriendsFragment extends Fragment {
             return _users.size();
         }
     }
+
+
+    private GradientDrawable getColoredCircularShape(char letter) {
+        int[] colors = view.getResources().getIntArray(R.array.colors);
+        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(view.getContext(),R.drawable.user_profile_circular_text_view);
+        int position = letter%colors.length;
+        circularShape.setColor(colors[position]);
+        return circularShape;
+    }
+
     private class getFriends extends AsyncTask<String,String,String> {
 
         @Override
@@ -169,7 +204,7 @@ public class MeetingFriendsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            adapter = new UsersArrayAdapter(context, simple_list_item_activated_2,l);
+            adapter = new UsersArrayAdapter(context, R.layout.user_item_simple,l);
             lv.setAdapter(adapter);
             super.onPostExecute(s);
         }
