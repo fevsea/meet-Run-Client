@@ -11,16 +11,16 @@ public class Message {
     private String message;
     private String name;
     private String hour;
-    private Date time;
+    private Date dateTime;
 
     public Message() {
     }
 
-    public Message(String message, String name, String hour, Date time) {
+    public Message(String message, String name, String hour, Date dateTime) {
         this.message = message;
         this.name = name;
         this.hour = hour;
-        this.time = time;
+        this.dateTime = dateTime;
     }
 
     public String getMessage() {
@@ -47,12 +47,12 @@ public class Message {
         this.hour = hour;
     }
 
-    public Date getTime() {
-        return time;
+    public Date getDateTime() {
+        return dateTime;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
 
     public boolean isSender() {

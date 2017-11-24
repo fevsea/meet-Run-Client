@@ -71,9 +71,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
             if(m.getHour().equals(previous.getHour()) && m.getName().equals(previous.getName())) {
                 sameHour = true;
             }
-            if(!m.getDate().equals(previous.getDate())) {
+            /*if(!m.getDate().equals(previous.getDate())) {
                 showDate = true;
-            }
+            }*/
 
         }
         else showDate = true;
@@ -97,7 +97,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         }
         if (showDate) {
             holder.getDate().setVisibility(View.VISIBLE);
-            holder.getDate().setText(m.getDate());
+            //holder.getDate().setText(m.getDate());
             showDate = false;
         }
         else {

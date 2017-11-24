@@ -209,7 +209,7 @@ public class ChatListFragment extends Fragment {
     }
 
     public void sortList() {
-        Collections.sort(list, new Comparator<Chat>() {
+       /* Collections.sort(list, new Comparator<Chat>() {
             @Override
             public int compare(Chat c2, Chat c1) {
                 Message m1 = c1.getMessage();
@@ -222,6 +222,6 @@ public class ChatListFragment extends Fragment {
                 }
                 else return m1.getDate().compareTo(m2.getDate());
             }
-        });
+        });*/
     }
 }

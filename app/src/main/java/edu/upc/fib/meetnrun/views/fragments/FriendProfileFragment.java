@@ -63,15 +63,10 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                                     sb.append(hour);
                                     sb.append(":");
                                     sb.append(minute);
-                                    String seconds = String.valueOf(rightNow.get(Calendar.SECOND));
 
-                                    rightNow.set(Calendar.HOUR_OF_DAY, 0);
-                                    rightNow.set(Calendar.MINUTE, 0);
-                                    rightNow.set(Calendar.SECOND, 0);
-                                    rightNow.set(Calendar.MILLISECOND, 0);
                                     Date dateWithoutTime = rightNow.getTime();
 
-                                    Message m = new Message("", user.getUsername(), sb.toString(), dateWithoutTime.toString(), seconds);
+                                    Message m = new Message("", user.getUsername(), sb.toString(), dateWithoutTime);
 
                                     chat = new Chat(1,chatName, user, friend, m);
                                     ChatListFragment.addChatFake(chat);

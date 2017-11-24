@@ -108,16 +108,11 @@ public class ChatFragment extends Fragment {
                 sb.append(hour);
                 sb.append(":");
                 sb.append(minute);
-                String seconds = String.valueOf(cal.get(Calendar.SECOND));
 
-                cal.set(Calendar.HOUR_OF_DAY, 0);
-                cal.set(Calendar.MINUTE, 0);
-                cal.set(Calendar.SECOND, 0);
-                cal.set(Calendar.MILLISECOND, 0);
                 Date dateWithoutTime = cal.getTime();
 
                 String txt = txtMessage.getText().toString();
-                Message m = new Message(txt, userName, sb.toString(), dateWithoutTime.toString(), seconds);
+                Message m = new Message(txt, userName, sb.toString(), dateWithoutTime);
                 databaseReference.push().setValue(m);
                 txtMessage.setText("");
                 chat.setMessage(m);
