@@ -37,8 +37,8 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
     protected void getIntent(User friend) {
 
         String friendUserName = friend.getUsername();
-        String user = CurrentSession.getInstance().getCurrentUser().getUsername();
-        Chat chat = ChatListFragment.getChat(user, friendUserName);
+        User user = CurrentSession.getInstance().getCurrentUser();
+        Chat chat = ChatListFragment.getChat(user.getUsername(), friendUserName);
         if (chat == null) {
             String chatName = user+" - "+friendUserName;
             Calendar rightNow = Calendar.getInstance();
@@ -62,7 +62,7 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
             rightNow.set(Calendar.MILLISECOND, 0);
             Date dateWithoutTime = rightNow.getTime();
 
-            Message m = new Message("", user, sb.toString(), dateWithoutTime.toString(), seconds);
+            Message m = new Message("", user.getUsername(), sb.toString(), dateWithoutTime.toString(), seconds);
 
             chat = new Chat(1,chatName, user, friendUserName, m);
             ChatListFragment.addChatFake(chat);

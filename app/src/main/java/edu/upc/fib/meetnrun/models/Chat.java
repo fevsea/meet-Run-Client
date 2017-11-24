@@ -10,14 +10,14 @@ public class Chat{
 
     private Integer id;
     private String chat;
-    private String userName1;
+    private User userName1;
     private String userName2;
     private Message message;
 
     public Chat() {
     }
 
-    public Chat(Integer id, String chat, String userName1, String userName2, Message message) {
+    public Chat(Integer id, String chat, User userName1, String userName2, Message message) {
         this.id = id;
         this.chat = chat;
         this.userName1 = userName1;
@@ -41,11 +41,11 @@ public class Chat{
         this.chat = chat;
     }
 
-    public String getUserName1() {
+    public User getUserName1() {
         return userName1;
     }
 
-    public void setUserName1(String userName1) {
+    public void setUserName1(User userName1) {
         this.userName1 = userName1;
     }
 

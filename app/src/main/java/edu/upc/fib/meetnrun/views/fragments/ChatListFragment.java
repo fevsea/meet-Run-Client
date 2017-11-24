@@ -141,7 +141,7 @@ public class ChatListFragment extends Fragment {
                 ArrayList<Chat> newList = new ArrayList<Chat>();
                 for (Chat chat : l) {
 
-                    if (!currentUser.getUsername().equals(chat.getUserName1())) friendUserName = chat.getUserName1();
+                    if (!currentUser.getUsername().equals(chat.getUserName1().getUsername())) friendUserName = chat.getUserName1().getUsername();
                     else friendUserName = chat.getUserName2();
 
                     String friendName = friendUserName.toLowerCase();
@@ -187,7 +187,7 @@ public class ChatListFragment extends Fragment {
 
         for (Chat chat : list) {
 
-            String chatUserName = chat.getUserName1();
+            String chatUserName = chat.getUserName1().getUsername();
             if (chatUserName.equals(user) || chatUserName.equals(friend)) {
                 String chatFriendUserName = chat.getUserName2();
                 if (chatFriendUserName.equals(user) || chatFriendUserName.equals(friend)) {
@@ -200,7 +200,7 @@ public class ChatListFragment extends Fragment {
 
     public static boolean deleteChat(String name) {
         for (Chat chat : list) {
-            if (chat.getUserName1().equals(name) || chat.getUserName2().equals(name)) {
+            if (chat.getUserName1().getUsername().equals(name) || chat.getUserName2().equals(name)) {
                 list.remove(chat);
                 return true;
             }

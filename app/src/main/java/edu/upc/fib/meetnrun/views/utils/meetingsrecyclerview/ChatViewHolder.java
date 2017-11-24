@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -29,15 +30,15 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         this.listener = new WeakReference<>(listener);
     }
 
-    public void bindChat(Chat chat) {
+    public void bindChat(Chat chat, boolean newChat, int numb) {
         String friendUserName = null;
-        if (!CurrentSession.getInstance().getCurrentUser().getUsername().equals(chat.getUserName1())) friendUserName = chat.getUserName1();
+        if (!CurrentSession.getInstance().getCurrentUser().getUsername().equals(chat.getUserName1().getUsername())) friendUserName = chat.getUserName1().getUsername();
         else friendUserName = chat.getUserName2();
 
         TextView userPhoto = view.findViewById(R.id.friend_photo);
         char letter = friendUserName.charAt(0);
         String firstLetter = String.valueOf(letter);
-        userPhoto.setBackground(getColoredCircularShape((letter)));
+        userPhoto.setBackground(getColoredCircularShape(letter));
         userPhoto.setText(firstLetter);
 
         TextView userName = view.findViewById(R.id.username_friend);
@@ -52,10 +53,21 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         TextView lastHour = view.findViewById(R.id.chat_hour);
         lastHour.setText(chat.getMessage().getHour());
 
+        TextView numberChats = view.findViewById(R.id.chat_new_messages);
+
+        if (newChat) {
+            numberChats.setVisibility(View.VISIBLE);
+            numberChats.setText(String.valueOf(numb));
+            newChat = false;
+        }
+        else numberChats.setVisibility(View.GONE);
+
+
         view.setOnClickListener(this);
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {
+        
         int[] colors = view.getResources().getIntArray(R.array.colors);
         GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(view.getContext(),R.drawable.user_profile_circular_text_view);
         int position = letter%colors.length;

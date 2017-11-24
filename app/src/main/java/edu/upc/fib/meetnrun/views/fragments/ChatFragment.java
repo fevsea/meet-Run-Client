@@ -67,7 +67,7 @@ public class ChatFragment extends Fragment {
         chat = CurrentSession.getInstance().getChat();
         currentUser = CurrentSession.getInstance().getCurrentUser();
         String friendUserName = null;
-        if (!currentUser.getUsername().equals(chat.getUserName1())) friendUserName = chat.getUserName1();
+        if (!currentUser.getUsername().equals(chat.getUserName1().getUsername())) friendUserName = chat.getUserName1().getUsername();
         else friendUserName = chat.getUserName2();
 
         getActivity().setTitle(friendUserName);

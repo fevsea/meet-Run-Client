@@ -43,17 +43,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     @Override
     public int getItemViewType(int position) {
         Message m = messagesList.get(position);
-        if (previous != null) {
-            if(m.getHour().equals(previous.getHour()) && m.getName().equals(previous.getName())) {
-                //sameHour = true;
-            }
-            if(!m.getDate().equals(previous.getDate())) {
-                showDate = true;
-            }
-
-        }
-        else showDate = true;
-        previous = m;
         if (m.isSender()) return 0;
         return 1;
     }
@@ -77,25 +66,38 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     @Override
     public void onBindViewHolder(MessageViewHolder holder, int position) {
 
-        String userName = messagesList.get(position).getName();
+        Message m = messagesList.get(position);
+        if (previous != null) {
+            if(m.getHour().equals(previous.getHour()) && m.getName().equals(previous.getName())) {
+                sameHour = true;
+            }
+            if(!m.getDate().equals(previous.getDate())) {
+                showDate = true;
+            }
+
+        }
+        else showDate = true;
+        previous = m;
+
+        String userName = m.getName();
         if (me) {
             holder.getName().setText("you");
             me = false;
         }
         else holder.getName().setText(userName);
 
-        holder.getMessage().setText(messagesList.get(position).getMessage());
+        holder.getMessage().setText(m.getMessage());
         if (sameHour) {
-            //holder.getHour().setVisibility(View.GONE);
+            holder.getHour().setVisibility(View.GONE);
             sameHour = false;
         }
         else {
-            //holder.getHour().setVisibility(View.VISIBLE);
-            holder.getHour().setText(messagesList.get(position).getHour());
+            holder.getHour().setVisibility(View.VISIBLE);
+            holder.getHour().setText(m.getHour());
         }
         if (showDate) {
             holder.getDate().setVisibility(View.VISIBLE);
-            holder.getDate().setText(messagesList.get(position).getDate());
+            holder.getDate().setText(m.getDate());
             showDate = false;
         }
         else {
