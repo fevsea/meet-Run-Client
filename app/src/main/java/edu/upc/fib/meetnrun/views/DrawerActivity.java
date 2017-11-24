@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -35,21 +36,28 @@ public class DrawerActivity extends AppCompatActivity{
     private CurrentSession cs;
 
     private void replaceFragment(Fragment fragment) {
-        String backStateName = fragment.getClass().getName();
+        if (!isCurrentlyOpen(fragment.getClass().getName())) {
+            String backStateName = fragment.getClass().getName();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentManager fragmentManager = getSupportFragmentManager();
 
-        boolean fragmentPopped = fragmentManager.popBackStackImmediate (backStateName, 0);
+            boolean fragmentPopped = fragmentManager.popBackStackImmediate(backStateName, 0);
 
-        if (!fragmentPopped) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.activity_contentFrame,fragment)
-                    .addToBackStack(backStateName)
-                    .commit();
+            if (!fragmentPopped) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.activity_contentFrame, fragment)
+                        .addToBackStack(backStateName)
+                        .commit();
+            }
         }
     }
 
+
+    private boolean isCurrentlyOpen(String backStateName) {
+        String currentBackStateName = getSupportFragmentManager().findFragmentById(R.id.activity_contentFrame).getClass().getName();
+        return backStateName.equals(currentBackStateName);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,8 +123,8 @@ public class DrawerActivity extends AppCompatActivity{
             profileButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Fragment fragment = new ProfileActivityFragment();
-                    replaceFragment(fragment);
+                    //TODO Intent i = new Intent(this,'Nombre del FragmentActivity'.class);
+                    //TODO startActivity(i);
                     drawerLayout.closeDrawers();
                 }
             });
