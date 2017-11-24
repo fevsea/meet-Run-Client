@@ -29,7 +29,7 @@
             android:id="@+id/btnEnviar"
             android:layout_width="47sp"
             android:layout_height="47sp"
-            android:background="@drawable/telegram"/>
+            android:background="@drawable/telegram_blue"/>
 
     </LinearLayout>
 

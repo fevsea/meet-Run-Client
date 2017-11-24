@@ -27,18 +27,4 @@
     <color name="orange_profile">#FFCC80</color>
     <color name="deep_orange_profile">#FFAB91</color>
 
-    <!--<color name="red_profile">#FFCDD2</color>
-    <color name="pink_profile">#F8BBD0</color>
-    <color name="purple_profile">#E1BEE7</color>
-    <color name="deep_purple_profile">#D1C4E9</color>
-    <color name="indigo_profile">#C5CAE9</color>
-    <color name="blue_profile">#BBDEFB</color>
-    <color name="cyan_profile">#B2EBF2</color>
-    <color name="teal_profile">#B2DFDB</color>
-    <color name="green_profile">#C8E6C9</color>
-    <color name="light_green_profile">#DCEDC8</color>
-    <color name="yellow_profile">#FFF9C4</color>
-    <color name="orange_profile">#FFE0B2</color>
-    <color name="deep_orange_profile">#FFCCBC</color>-->
-
 </resources>
