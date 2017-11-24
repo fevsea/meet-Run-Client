@@ -9,17 +9,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
-import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.EditProfileActivity;
-import edu.upc.fib.meetnrun.views.ProfileActivity;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.fragments.EditProfileFragment;
-import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
-import edu.upc.fib.meetnrun.views.fragments.ProfileActivityFragment;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

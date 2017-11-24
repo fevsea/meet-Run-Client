@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,19 +22,34 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.fragments.FriendsFragment;
+import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
+import edu.upc.fib.meetnrun.views.fragments.MyMeetingsFragment;
+import edu.upc.fib.meetnrun.views.fragments.ProfileActivityFragment;
 import edu.upc.fib.meetnrun.views.fragments.SettingsFragment;
 
-public abstract class BaseDrawerActivity extends AppCompatActivity{
+public class DrawerActivity extends AppCompatActivity{
 
     protected DrawerLayout drawerLayout;
-
     public static final String MY_PREFS_NAME = "TokenFile";
-
-    protected abstract Fragment createFragment();
-
-    protected abstract boolean finishOnChangeView();
-
     private CurrentSession cs;
+
+    private void replaceFragment(Fragment fragment) {
+        String backStateName = fragment.getClass().getName();
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        boolean fragmentPopped = fragmentManager.popBackStackImmediate (backStateName, 0);
+
+        if (!fragmentPopped) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.activity_contentFrame,fragment)
+                    .addToBackStack(backStateName)
+                    .commit();
+        }
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,32 +73,33 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                         @Override
                         public boolean onNavigationItemSelected(MenuItem menuItem) {
                             Intent i = null;
-                            menuItem.setCheckable(false);
+                            Fragment fragment;
                             switch (menuItem.getItemId()) {
                                 case R.id.mymeetings:
-                                    i = new Intent(getApplicationContext(),MyMeetingsActivity.class);
+                                    fragment = new MyMeetingsFragment();
+                                    replaceFragment(fragment);
                                     break;
                                 case R.id.logout:
                                     deleteToken();
                                     i = new Intent(getApplicationContext(),LoginActivity.class);
+                                    startActivity(i);
                                     finishAffinity();
                                     break;
 
                                 case R.id.meetings:
-                                    i = new Intent(getApplicationContext(),MeetingListActivity.class);
+                                    fragment = new MeetingListFragment();
+                                    replaceFragment(fragment);
                                     break;
                                 case R.id.friends:
-                                    i = new Intent(getApplicationContext(),FriendsActivity.class);
+                                    fragment = new FriendsFragment();
+                                    replaceFragment(fragment);
                                     break;
                                 case R.id.settings:
-                                    i = new Intent(getApplicationContext(),SettingsActivity.class);
+                                    fragment = new SettingsFragment();
+                                    replaceFragment(fragment);
                                     break;
                                 default:
                                     break;
-                            }
-                            if (i != null) {
-                                if (finishOnChangeView()) finish();
-                                startActivity(i);
                             }
                             drawerLayout.closeDrawers();
                             return true;
@@ -97,25 +115,38 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
             profileButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(getApplicationContext(),ProfileActivity.class);
-                    if (intent != null) {
-                        if (finishOnChangeView()) finish();
-                        startActivity(intent);
-                    }
+                    Fragment fragment = new ProfileActivityFragment();
+                    replaceFragment(fragment);
+                    drawerLayout.closeDrawers();
                 }
             });
+
+
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.activity_contentFrame);
+            if (currentFragment == null) {
+
+                currentFragment = new MeetingListFragment();
+                String backStateName = currentFragment.getClass().getName();
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.activity_contentFrame,currentFragment)
+                        .addToBackStack(backStateName)
+                        .commit();
+            }
         }
 
-        Fragment activityFragment =
-                getSupportFragmentManager().findFragmentById(R.id.activity_contentFrame);
-        if (activityFragment == null) {
-            activityFragment = createFragment();
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.activity_contentFrame,activityFragment)
-                    .commit();
-        }
 
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+        }
+        return true;
     }
 
     private void deleteToken() {
