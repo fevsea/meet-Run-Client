@@ -20,7 +20,6 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ProfileActivity;
 
 
 public class EditProfileFragment extends Fragment {
@@ -104,9 +103,7 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void changeToNewUserProfile() {
-        Intent intent;
-        intent = new Intent(getActivity(), ProfileActivity.class);
-        startActivity(intent);
+        getActivity().finish();
     }
 
     private void updateUserServer() {
