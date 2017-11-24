@@ -5,7 +5,7 @@
         <item
             android:id="@+id/meetings"
             android:icon="@drawable/add_group_512"
-            android:title="Meetings" />
+            android:title="@string/meetings" />
         <item
             android:id="@+id/mymeetings"
             android:icon="@drawable/ic_menu_slideshow"
@@ -13,37 +13,37 @@
         <item
             android:id="@+id/friends"
             android:icon="@drawable/friends"
-            android:title="Friends" />
+            android:title="@string/friends_label" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/exit"
-            android:title="Log out" />
+            android:title="@string/log_out" />
 
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/communicate">
         <menu>
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:title="@string/share" />
             <item
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="@string/send" />
         </menu>
     </item>
 
-    <item android:title="Configuration">
+    <item android:title="@string/configuration">
         <menu>
             <item
                 android:id="@+id/settings"
                 android:icon="@drawable/settings"
-                android:title="Settings" />
+                android:title="@string/action_settings" />
             <item
                 android:id="@+id/help"
                 android:icon="@drawable/help"
-                android:title="Help and suggestions" />
+                android:title="@string/help_and_suggestions" />
         </menu>
     </item>
 
