@@ -66,8 +66,11 @@ public class ChatFragment extends Fragment {
 
         chat = CurrentSession.getInstance().getChat();
         currentUser = CurrentSession.getInstance().getCurrentUser();
+        String friendUserName = null;
+        if (!currentUser.getUsername().equals(chat.getUserName1())) friendUserName = chat.getUserName1();
+        else friendUserName = chat.getUserName2();
 
-        getActivity().setTitle(chat.getFriendUsername());
+        getActivity().setTitle(friendUserName);
 
         this.view = inflater.inflate(R.layout.fragment_chat, container, false);
 
@@ -94,8 +97,14 @@ public class ChatFragment extends Fragment {
 
                 Calendar cal = Calendar.getInstance();
                 StringBuilder sb = new StringBuilder();
-                String hour = String.valueOf(cal.get(Calendar.HOUR_OF_DAY));
-                String minute = String.valueOf(cal.get(Calendar.MINUTE));
+                String hour = null;
+                String minute = null;
+                String aux = String.valueOf(cal.get(Calendar.HOUR_OF_DAY));
+                if (aux.length() == 1) hour = "0"+aux;
+                else hour = aux;
+                aux = String.valueOf(cal.get(Calendar.MINUTE));
+                if (aux.length() == 1) minute = "0"+aux;
+                else minute = aux;
                 sb.append(hour);
                 sb.append(":");
                 sb.append(minute);
@@ -108,11 +117,10 @@ public class ChatFragment extends Fragment {
                 Date dateWithoutTime = cal.getTime();
 
                 String txt = txtMessage.getText().toString();
-                databaseReference.push().setValue(new Message(txt, userName, sb.toString(), dateWithoutTime.toString()));
+                Message m = new Message(txt, userName, sb.toString(), dateWithoutTime.toString(), seconds);
+                databaseReference.push().setValue(m);
                 txtMessage.setText("");
-                chat.setLast_hour(sb.toString());
-                chat.setLast_converse(txt);
-                chat.setLast_second(seconds);
+                chat.setMessage(m);
             }
         });
 

@@ -27,6 +27,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
 import edu.upc.fib.meetnrun.views.ChatFriendsActivity;
@@ -45,6 +46,8 @@ public class ChatListFragment extends Fragment {
     private FloatingActionButton fab;
     private List<Chat> l;
     private ChatAdapter chatAdapter;
+    private String friendUserName = null;
+    private User currentUser;
 
     private static List<Chat> list = new ArrayList<Chat>();
 
@@ -55,6 +58,8 @@ public class ChatListFragment extends Fragment {
         setHasOptionsMenu(true);
 
         this.view = inflater.inflate(R.layout.fragment_chat_list, container, false);
+
+        currentUser = CurrentSession.getInstance().getCurrentUser();
 
         l = new ArrayList<Chat>();
 
@@ -135,7 +140,11 @@ public class ChatListFragment extends Fragment {
                 newText = newText.toLowerCase();
                 ArrayList<Chat> newList = new ArrayList<Chat>();
                 for (Chat chat : l) {
-                    String friendName = chat.getFriendUsername().toLowerCase();
+
+                    if (!currentUser.getUsername().equals(chat.getUserName1())) friendUserName = chat.getUserName1();
+                    else friendUserName = chat.getUserName2();
+
+                    String friendName = friendUserName.toLowerCase();
                     if (friendName != null) {
                         if (friendName.contains(newText)) newList.add(chat);
                     }
@@ -177,9 +186,10 @@ public class ChatListFragment extends Fragment {
     public static Chat getChat(String user, String friend) {
 
         for (Chat chat : list) {
-            String chatUserName = chat.getUserName();
+
+            String chatUserName = chat.getUserName1();
             if (chatUserName.equals(user) || chatUserName.equals(friend)) {
-                String chatFriendUserName = chat.getFriendUsername();
+                String chatFriendUserName = chat.getUserName2();
                 if (chatFriendUserName.equals(user) || chatFriendUserName.equals(friend)) {
                     return chat;
                 }
@@ -190,7 +200,7 @@ public class ChatListFragment extends Fragment {
 
     public static boolean deleteChat(String name) {
         for (Chat chat : list) {
-            if (chat.getUserName().equals(name) || chat.getFriendUsername().equals(name)) {
+            if (chat.getUserName1().equals(name) || chat.getUserName2().equals(name)) {
                 list.remove(chat);
                 return true;
             }
@@ -202,13 +212,15 @@ public class ChatListFragment extends Fragment {
         Collections.sort(list, new Comparator<Chat>() {
             @Override
             public int compare(Chat c2, Chat c1) {
-                if (c1.getLast_date().equals(c2.getLast_date())) {
-                    if (c1.getLast_hour().equals(c2.getLast_hour())) {
-                        return c1.getLast_second().compareTo(c2.getLast_second());
+                Message m1 = c1.getMessage();
+                Message m2= c2.getMessage();
+                if (m1.getDate().equals(m2.getDate())) {
+                    if (m1.getHour().equals(m2.getHour())) {
+                        return m1.getSeconds().compareTo(m2.getSeconds());
                     }
-                    else return c1.getLast_hour().compareTo(c2.getLast_hour());
+                    else return m1.getHour().compareTo(m2.getHour());
                 }
-                else return c1.getLast_date().compareTo(c2.getLast_date());
+                else return m1.getDate().compareTo(m2.getDate());
             }
         });
     }

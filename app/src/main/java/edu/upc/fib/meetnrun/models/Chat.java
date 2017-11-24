@@ -10,25 +10,19 @@ public class Chat{
 
     private Integer id;
     private String chat;
-    private String userName;
-    private String friendUsername;
-    private String last_converse;
-    private String last_hour;
-    private String last_second;
-    private String last_date;
+    private String userName1;
+    private String userName2;
+    private Message message;
 
     public Chat() {
     }
 
-    public Chat(Integer id, String chat, String userName, String friendUsername, String last_converse, String last_hour, String last_second, String last_date) {
+    public Chat(Integer id, String chat, String userName1, String userName2, Message message) {
         this.id = id;
         this.chat = chat;
-        this.userName = userName;
-        this.friendUsername = friendUsername;
-        this.last_converse = last_converse;
-        this.last_hour = last_hour;
-        this.last_second = last_second;
-        this.last_date = last_date;
+        this.userName1 = userName1;
+        this.userName2 = userName2;
+        this.message = message;
     }
 
     public Integer getId() {
@@ -47,51 +41,27 @@ public class Chat{
         this.chat = chat;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUserName1() {
+        return userName1;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserName1(String userName1) {
+        this.userName1 = userName1;
     }
 
-    public String getFriendUsername() {
-        return friendUsername;
+    public String getUserName2() {
+        return userName2;
     }
 
-    public void setFriendUsername(String friendUsername) {
-        this.friendUsername = friendUsername;
+    public void setUserName2(String userName2) {
+        this.userName2 = userName2;
     }
 
-    public String getLast_converse() {
-        return last_converse;
+    public Message getMessage() {
+        return message;
     }
 
-    public void setLast_converse(String last_converse) {
-        this.last_converse = last_converse;
-    }
-
-    public String getLast_hour() {
-        return last_hour;
-    }
-
-    public void setLast_hour(String last_hour) {
-        this.last_hour = last_hour;
-    }
-
-    public String getLast_second() {
-        return last_second;
-    }
-
-    public void setLast_second(String last_second) {
-        this.last_second = last_second;
-    }
-
-    public String getLast_date() {
-        return last_date;
-    }
-
-    public void setLast_date(String last_date) {
-        this.last_date = last_date;
+    public void setMessage(Message message) {
+        this.message = message;
     }
 }

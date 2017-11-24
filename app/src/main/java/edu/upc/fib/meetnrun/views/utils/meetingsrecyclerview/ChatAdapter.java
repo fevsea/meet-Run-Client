@@ -19,6 +19,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
 
     private List<Chat> chats;
     private RecyclerViewOnClickListener listener;
+    private View v;
 
     public ChatAdapter(List<Chat> chats, RecyclerViewOnClickListener listener) {
         this.chats = chats;
@@ -27,10 +28,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     }
 
     @Override
+    public int getItemViewType(int position) {
+        Chat c = chats.get(position);
+
+        return 1;
+    }
+
+    @Override
     public ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.chat_item, parent, false);
-        return new ChatViewHolder(view,listener);
+        v = layoutInflater.inflate(R.layout.chat_item, parent, false);
+        return new ChatViewHolder(v,listener);
     }
 
     @Override

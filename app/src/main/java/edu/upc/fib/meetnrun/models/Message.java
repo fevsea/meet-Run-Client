@@ -10,15 +10,17 @@ public class Message {
     private String name;
     private String hour;
     private String date;
+    private String seconds;
 
     public Message() {
     }
 
-    public Message(String message, String name, String hour, String date) {
+    public Message(String message, String name, String hour, String date, String seconds) {
         this.message = message;
         this.name = name;
         this.hour = hour;
         this.date = date;
+        this.seconds = seconds;
     }
 
     public String getMessage() {
@@ -51,6 +53,14 @@ public class Message {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getSeconds() {
+        return seconds;
+    }
+
+    public void setSeconds(String seconds) {
+        this.seconds = seconds;
     }
 
     public boolean isSender() {

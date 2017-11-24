@@ -17,6 +17,7 @@ import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.views.ChatActivity;
 import edu.upc.fib.meetnrun.views.ChatListActivity;
 
@@ -49,8 +50,14 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                                     String chatName = user+" - "+friend;
                                     Calendar rightNow = Calendar.getInstance();
                                     StringBuilder sb = new StringBuilder();
-                                    String hour = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
-                                    String minute = String.valueOf(rightNow.get(Calendar.MINUTE));
+                                    String hour = null;
+                                    String minute = null;
+                                    String aux = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
+                                    if (aux.length() == 1) hour = "0"+aux;
+                                    else hour = aux;
+                                    aux = String.valueOf(rightNow.get(Calendar.MINUTE));
+                                    if (aux.length() == 1) minute = "0"+aux;
+                                    else minute = aux;
                                     sb.append(hour);
                                     sb.append(":");
                                     sb.append(minute);
@@ -62,7 +69,9 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                                     rightNow.set(Calendar.MILLISECOND, 0);
                                     Date dateWithoutTime = rightNow.getTime();
 
-                                    chat = new Chat(1,chatName, user, friend, "", sb.toString(), seconds, dateWithoutTime.toString());
+                                    Message m = new Message("", user, sb.toString(), dateWithoutTime.toString(), seconds);
+
+                                    chat = new Chat(1,chatName, user, friend, m);
                                     ChatListFragment.addChatFake(chat);
                                 }
                                 Intent i = new Intent(getContext(), ChatActivity.class);
