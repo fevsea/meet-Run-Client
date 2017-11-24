@@ -67,7 +67,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {
-        
+
         int[] colors = view.getResources().getIntArray(R.array.colors);
         GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(view.getContext(),R.drawable.user_profile_circular_text_view);
         int position = letter%colors.length;
