@@ -1,5 +1,7 @@
 package edu.upc.fib.meetnrun.models;
 
+import java.util.Date;
+
 /**
  * Created by eric on 21/11/17.
  */
@@ -9,18 +11,16 @@ public class Message {
     private String message;
     private String name;
     private String hour;
-    private String date;
-    private String seconds;
+    private Date time;
 
     public Message() {
     }
 
-    public Message(String message, String name, String hour, String date, String seconds) {
+    public Message(String message, String name, String hour, Date time) {
         this.message = message;
         this.name = name;
         this.hour = hour;
-        this.date = date;
-        this.seconds = seconds;
+        this.time = time;
     }
 
     public String getMessage() {
@@ -47,20 +47,12 @@ public class Message {
         this.hour = hour;
     }
 
-    public String getDate() {
-        return date;
+    public Date getTime() {
+        return time;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getSeconds() {
-        return seconds;
-    }
-
-    public void setSeconds(String seconds) {
-        this.seconds = seconds;
+    public void setTime(Date time) {
+        this.time = time;
     }
 
     public boolean isSender() {
