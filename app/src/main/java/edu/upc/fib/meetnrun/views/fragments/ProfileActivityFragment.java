@@ -33,6 +33,28 @@ public class ProfileActivityFragment extends Fragment {
     private View view;
     TextView userPostCodeTextView;
 
+    private String title;
+    private int page;
+
+
+    // newInstance constructor for creating fragment with arguments
+    public static ProfileActivityFragment newInstance(int page, String title) {
+        ProfileActivityFragment fragmentFirst = new ProfileActivityFragment();
+        Bundle args = new Bundle();
+        args.putInt("0", page);
+        args.putString("Info", title);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
+    }
+
+    // Store instance variables based on arguments passed
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        page = getArguments().getInt("0", 0);
+        title = getArguments().getString("Info");
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

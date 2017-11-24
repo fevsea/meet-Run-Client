@@ -8,13 +8,14 @@ import android.view.MenuItem;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.views.fragments.ProfileActivityFragment;
+import edu.upc.fib.meetnrun.views.fragments.ProfileViewPagerFragment;
 
 
 public class ProfileActivity extends BaseDrawerActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new ProfileActivityFragment();
+        return new ProfileViewPagerFragment();
     }
 
     @Override
