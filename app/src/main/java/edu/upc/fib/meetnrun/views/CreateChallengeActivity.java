@@ -1,0 +1,201 @@
+package edu.upc.fib.meetnrun.views;
+
+import android.app.DatePickerDialog;
+import android.app.FragmentManager;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.NumberPicker;
+import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.models.Challenge;
+import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.fragments.DatePickerFragment;
+import edu.upc.fib.meetnrun.views.fragments.EditMeetingFragment;
+
+public class CreateChallengeActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private NumberPicker distancePicker;
+    private NumberPicker hoursPicker;
+    private NumberPicker minutesPicker;
+    private EditText deadlineText;
+
+    private Challenge challenge = new Challenge();
+
+    private int userID;
+    private User challenged;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_createchallenge);
+
+        userID = getIntent().getIntExtra("id", -1);
+        if (userID == -1) {
+            Toast.makeText(this, R.string.tracking_error_loading, Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+        distancePicker = findViewById(R.id.distance_picker);
+        hoursPicker = findViewById(R.id.hour_picker);
+        minutesPicker = findViewById(R.id.minutes_picker);
+        deadlineText = findViewById(R.id.deadline_picker);
+
+        deadlineText.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        if (id == R.id.deadline_picker) {
+            showDatePickerDialog();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.edit_meeting_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.done_button) {
+            challenge.setDistance(distancePicker.getValue());
+            challenge.setHours(hoursPicker.getValue());
+            challenge.setMinutes(minutesPicker.getValue());
+            challenge.setCreator(CurrentSession.getInstance().getCurrentUser());
+            new GetUser().execute(userID);
+            challenge.setChallenged(challenged);
+
+
+
+            CreateChallenge createChallenge= new CreateChallenge();
+            createChallenge.execute(this.challenge);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showDatePickerDialog() {
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setListener(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int yearSet, int monthSet, int daySet) {
+                DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                Date dateTime;
+                try {
+                    dateTime = inputFormat.parse(challenge.getDeadline());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    dateTime = new Date(challenge.getDeadline());
+                }
+                Calendar date = new GregorianCalendar();
+                date.setTime(dateTime);
+                date.set(Calendar.YEAR, yearSet/* + 1900*/);
+                date.set(Calendar.MONTH, monthSet);
+                date.set(Calendar.DAY_OF_MONTH, daySet);
+                challenge.setDeadline(inputFormat.format(date.getTime()));
+                final String selectedDate = ((daySet<10)?"0"+daySet:daySet) + "/" + (((monthSet+1)<10)?"0"+(monthSet+1):(monthSet+1)) + "/" + yearSet;
+                deadlineText.setText(selectedDate);
+            }
+        });
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        Date dateTime = null;
+        try {
+            dateTime = inputFormat.parse(challenge.getDeadline());
+        } catch (ParseException e) {
+            e.printStackTrace();
+            dateTime = new Date(challenge.getDeadline());
+        }
+        if (dateTime != null) {
+            Calendar date = new GregorianCalendar();
+            date.setTime(dateTime);
+            datePickerFragment.setValues(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
+        }
+        datePickerFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+
+    private class CreateChallenge extends AsyncTask<Challenge, String ,Boolean> {
+
+        Exception exception = null;
+        ProgressDialog mProgressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressDialog = new ProgressDialog(CreateChallengeActivity.this);
+            mProgressDialog.setTitle(R.string.saving);
+            mProgressDialog.setMessage(getResources().getString(R.string.saving_meeting));
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
+        }
+
+        @Override
+        protected Boolean doInBackground(Challenge[] params) {
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                this.exception = e;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            mProgressDialog.dismiss();
+            if (exception != null || !result) {
+                Toast.makeText(CreateChallengeActivity.this, getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
+            }
+            else {
+                finish();
+            }
+        }
+    }
+
+    private class GetUser extends AsyncTask<Integer,String,User> {
+
+        Exception exception = null;
+
+        @Override
+        protected User doInBackground(Integer[] params) {
+            User ret = null;
+            try {
+                ret = CurrentSession.getInstance().getUserAdapter().getUser(userID);
+            } catch (NotFoundException e) {
+                this.exception = e;
+            }
+            return ret;
+        }
+
+        @Override
+        protected void onPostExecute(User result) {
+            if (exception != null || result == null) {
+                Toast.makeText(CreateChallengeActivity.this, getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
+            }
+            challenged = result;
+        }
+    }
+
+}

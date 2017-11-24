@@ -1,19 +1,22 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.views.CreateChallengeActivity;
 
 /**
  * Created by eric on 2/11/17.
  */
 
-public class FriendProfileFragment extends ProfileFragmentTemplate {
+public class FriendProfileFragment extends ProfileFragmentTemplate implements View.OnClickListener {
 
     @Override
     protected void setImage() {}
@@ -31,6 +34,16 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
     @Override
     protected void getMethod(String s) {
         new removeFriend().execute(s);
+    }
+
+    @Override
+    protected void configureChallengeButton() {
+        challengeButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        startActivity(new Intent(getActivity(), CreateChallengeActivity.class));
     }
 
     private class removeFriend extends AsyncTask<String,String,String> {

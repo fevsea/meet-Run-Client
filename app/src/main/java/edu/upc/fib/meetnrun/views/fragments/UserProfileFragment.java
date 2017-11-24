@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -33,6 +34,11 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
     @Override
     protected void getMethod(String s) {
         new addFriend().execute(s);
+    }
+
+    @Override
+    protected void configureChallengeButton() {
+        challengeButton.setVisibility(View.INVISIBLE);
     }
 
     private class addFriend extends AsyncTask<String,String,String> {

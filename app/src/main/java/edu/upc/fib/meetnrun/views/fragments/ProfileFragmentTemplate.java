@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
     protected TextView name;
     protected ImageView img;
     protected IFriendsAdapter friendsDBAdapter;
+    protected Button challengeButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,7 +51,9 @@ public abstract class ProfileFragmentTemplate extends Fragment {
         this.name = view.findViewById(R.id.completeName2);
         this.postCode = view.findViewById(R.id.userPostCode2);
         this.img = view.findViewById(R.id.action_friend);
+        this.challengeButton = view.findViewById(R.id.challenge_button);
         setImage();
+        configureChallengeButton();
 
         this.profileInfo = getActivity().getIntent().getExtras();
         this.friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
@@ -99,6 +103,8 @@ public abstract class ProfileFragmentTemplate extends Fragment {
     protected abstract String setDialogMessage();
 
     protected abstract void getMethod(String s);
+
+    protected abstract void configureChallengeButton();
 
     private void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
