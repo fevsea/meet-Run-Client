@@ -19,14 +19,22 @@ import edu.upc.fib.meetnrun.models.User;
 public class UserLevelFragment extends Fragment {
     private View view;
     private User u;
+    ProgressBar userLevel;
+    ProgressBar km;
+    ProgressBar speed;
+    ProgressBar meetings;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_level, container, false);
         this.view = view;
         u = CurrentSession.getInstance().getCurrentUser();
-        int level=u.getLevel();
-        ProgressBar km=(ProgressBar) view.findViewById(R.id.kmProgressBar);
-        ProgressBar
+        int level= u.getLevel();
+        userLevel= (ProgressBar) view.findViewById(R.id.totalProgressBar);
+        km=        (ProgressBar) view.findViewById(R.id.kmProgressBar);
+        speed=     (ProgressBar) view.findViewById(R.id.speedProgressBar);
+        meetings=  (ProgressBar) view.findViewById(R.id.meetingsProgressBar);
         return view;
     }
+
+
 }
