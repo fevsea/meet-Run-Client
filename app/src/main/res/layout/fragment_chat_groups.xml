@@ -7,55 +7,62 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="20dp">
 
-            <EditText
-                android:id="@+id/groupName"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Write a group name..."
-                android:layout_weight="1"/>
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnOk"
-                android:layout_width="47sp"
-                android:layout_height="47sp"
-                android:background="@drawable/done"/>
+                <EditText
+                    android:id="@+id/groupName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Write a group name..."
+                    android:layout_weight="1"/>
+
+                <Button
+                    android:id="@+id/btnOk"
+                    android:layout_width="47sp"
+                    android:layout_height="47sp"
+                    android:background="@drawable/done"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Participants: " />
+
+                <TextView
+                    android:id="@+id/numb_friends"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_friends_group_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Participants: " />
-
-            <TextView
-                android:id="@+id/numb_friends"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0" />
-
-        </LinearLayout>
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:orientation="vertical">
+        </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fragment_friends_group_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:orientation="vertical">
-    </android.support.v7.widget.RecyclerView>
 
 </android.support.v4.widget.SwipeRefreshLayout>

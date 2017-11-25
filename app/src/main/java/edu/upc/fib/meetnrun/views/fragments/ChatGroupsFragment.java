@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,9 +60,9 @@ public class ChatGroupsFragment extends Fragment {
 
         friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
-        groupName = (EditText) getActivity().findViewById(R.id.groupName);
-        ok = (Button) getActivity().findViewById(R.id.btnOk);
-        numbFriends = (TextView) getActivity().findViewById(R.id.numb_friends);
+        groupName = (EditText) view.findViewById(R.id.groupName);
+        ok = (Button) view.findViewById(R.id.btnOk);
+        numbFriends = (TextView) view.findViewById(R.id.numb_friends);
 
         fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
@@ -148,7 +149,7 @@ public class ChatGroupsFragment extends Fragment {
 
                 User friend = friendsAdapter.getFriendAtPosition(position);
                 selectedFriends.add(friend);
-                numbFriends.setText(selectedFriends.size());
+                numbFriends.setText(String.valueOf(selectedFriends.size()));
                 //TODO cambiar color friend selected + tick
 
             }
