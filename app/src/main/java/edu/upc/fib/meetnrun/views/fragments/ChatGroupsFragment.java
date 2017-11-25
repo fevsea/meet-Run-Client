@@ -87,29 +87,28 @@ public class ChatGroupsFragment extends Fragment {
                         friendUserName = selectedFriends.get(0);
                     }
                     User user = CurrentSession.getInstance().getCurrentUser();
-                    Chat chat = ChatListFragment.getChat(user.getUsername(), friendUserName.getUsername());
-                    if (chat == null) {
-                        Calendar rightNow = Calendar.getInstance();
-                        StringBuilder sb = new StringBuilder();
-                        String hour = null;
-                        String minute = null;
-                        String aux = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
-                        if (aux.length() == 1) hour = "0"+aux;
-                        else hour = aux;
-                        aux = String.valueOf(rightNow.get(Calendar.MINUTE));
-                        if (aux.length() == 1) minute = "0"+aux;
-                        else minute = aux;
-                        sb.append(hour);
-                        sb.append(":");
-                        sb.append(minute);
 
-                        Date dateWithoutTime = rightNow.getTime();
+                    Calendar rightNow = Calendar.getInstance();
+                    StringBuilder sb = new StringBuilder();
+                    String hour = null;
+                    String minute = null;
+                    String aux = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
+                    if (aux.length() == 1) hour = "0"+aux;
+                    else hour = aux;
+                    aux = String.valueOf(rightNow.get(Calendar.MINUTE));
+                    if (aux.length() == 1) minute = "0"+aux;
+                    else minute = aux;
+                    sb.append(hour);
+                    sb.append(":");
+                    sb.append(minute);
 
-                        Message m = new Message("", user.getUsername(), sb.toString(), dateWithoutTime);
+                    Date dateWithoutTime = rightNow.getTime();
 
-                        chat = new Chat(1,name, user, friendUserName.getUsername(), m);
-                        ChatListFragment.addChatFake(chat);
-                    }
+                    Message m = new Message("", user.getUsername(), sb.toString(), dateWithoutTime);
+
+                    Chat chat = new Chat(1,name, user, friendUserName.getUsername(), m);
+                    ChatListFragment.addChatFake(chat);
+                    
                     Intent i = new Intent(getContext(), ChatActivity.class);
                     CurrentSession.getInstance().setChat(chat);
                     getActivity().finish();
