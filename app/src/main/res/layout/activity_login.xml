@@ -33,7 +33,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="17dp"
         android:onClick="loginButton"
-        android:text="Log in" />
+        android:text="@string/log_in" />
 
     <Button
         android:id="@+id/signin"
@@ -42,7 +42,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:onClick="registerButton"
-        android:text="Register" />
+        android:text="@string/register_label" />
 
     <TextView
         android:id="@+id/username"
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:textSize="17dp"
-        android:text="Username:"
+        android:text="@string/user_name"
         android:layout_marginBottom="156dp"
         android:layout_above="@+id/login"
         android:layout_alignParentStart="true" />
@@ -74,7 +74,7 @@
         android:layout_below="@+id/editUsername"
         android:layout_marginTop="12dp"
         android:textSize="17dp"
-        android:text="Password:" />
+        android:text="@string/password" />
 
     <EditText
         android:id="@+id/editPassword"

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="edu.upc.fib.meetnrun.views.fragments.ProfileActivityFragment">
-
-
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -73,11 +71,35 @@
                 android:layout_marginTop="12dp"
                 android:layout_below="@+id/completeName"
                 android:textColor="#000000"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:text="Postcode" />
 
             </RelativeLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/profile_layout">
+
+            <Button
+                android:id="@+id/editProfile_button"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="12dp"
+                android:text="@string/button_edit_profile" />
+
+            <Button
+                android:id="@+id/changePass_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/editProfile_button"
+                android:layout_marginTop="12dp"
+                android:text="@string/button_edit_password" />
+
+        </LinearLayout>
+
     </RelativeLayout>
 
-</ScrollView>
+</ViewPager>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
+import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -12,6 +13,7 @@ import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Awais Iqbal on 24/10/2017.
@@ -35,6 +37,9 @@ public interface SOServices {
     @DELETE("/meetings/{id}")
     Call<Void> deletetMeeting(@Path("id") int id);
 
+    @GET("/meetings")
+    Call<MeetingServer[]> getAllMeetingsFiltered(@Query("search") String query);
+
     //USERS
 
     @GET("/users")
@@ -51,6 +56,9 @@ public interface SOServices {
 
     @DELETE("/users/{id}")
     Call<Void> deleteUser(@Path("id") int id);
+
+    @POST("/users/changePassword")
+    Call<Void> changePassword(@Body Forms.ChangePassword sp);
 
 
     //LOGIN
@@ -92,5 +100,14 @@ public interface SOServices {
     @GET("/users/{id}/friends")
     Call<List<UserServer>> getFriendsOfUser(@Path("id") int id);
 
+    //TRACKING
+    @GET("/meetings/{idMeeting}/tracking/{idUser}")
+    Call<TrackServer> getTracking(@Path("idUser") int userID,@Path("idMeeting") int meetingID);
+
+    @POST("/meetings/{idMeeting}/tracking/{idUser}")
+    Call<Void> addTracking(@Path("idUser") int userID,@Path("idMeeting") int meetingID,@Body TrackServer ts);
+
+    @DELETE("/meetings/{idMeeting}/tracking/{idUser}")
+    Call<Void> deleteTracking(@Path("idUser") int userID,@Path("idMeeting") int meetingID);
 
 }
