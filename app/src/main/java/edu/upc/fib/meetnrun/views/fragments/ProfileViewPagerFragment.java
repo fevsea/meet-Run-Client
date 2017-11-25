@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.views.BaseReturnActivity;
 
 public class ProfileViewPagerFragment extends FragmentActivity {
 
@@ -23,4 +24,5 @@ public class ProfileViewPagerFragment extends FragmentActivity {
         adapterViewPager = new PagerAdapterFragment(getSupportFragmentManager());
         vpPager.setAdapter(adapterViewPager);
     }
+
 }

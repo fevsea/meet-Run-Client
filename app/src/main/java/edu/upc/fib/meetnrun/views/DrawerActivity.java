@@ -27,6 +27,7 @@ import edu.upc.fib.meetnrun.views.fragments.FriendsFragment;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
 import edu.upc.fib.meetnrun.views.fragments.MyMeetingsFragment;
 import edu.upc.fib.meetnrun.views.fragments.ProfileActivityFragment;
+import edu.upc.fib.meetnrun.views.fragments.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.fragments.SettingsFragment;
 
 public class DrawerActivity extends AppCompatActivity{
@@ -123,8 +124,8 @@ public class DrawerActivity extends AppCompatActivity{
             profileButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO Intent i = new Intent(this,'Nombre del FragmentActivity'.class);
-                    //TODO startActivity(i);
+                    Intent i = new Intent(getApplicationContext(),ProfileViewPagerFragment.class);
+                    startActivity(i);
                     drawerLayout.closeDrawers();
                 }
             });
