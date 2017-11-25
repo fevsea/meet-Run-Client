@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,7 +25,6 @@ import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.fragments.FriendsFragment;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
 import edu.upc.fib.meetnrun.views.fragments.MyMeetingsFragment;
-import edu.upc.fib.meetnrun.views.fragments.ProfileActivityFragment;
 import edu.upc.fib.meetnrun.views.fragments.SettingsFragment;
 
 public class DrawerActivity extends AppCompatActivity{
@@ -123,8 +121,8 @@ public class DrawerActivity extends AppCompatActivity{
             profileButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO Intent i = new Intent(this.getActivity,'Nombre del FragmentActivity'.class);
-                    //TODO startActivity(i);
+                    Intent i = new Intent(getApplicationContext(),ProfileViewPagerFragment.class);
+                    startActivity(i);
                     drawerLayout.closeDrawers();
                 }
             });

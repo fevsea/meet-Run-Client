@@ -37,6 +37,7 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -132,7 +133,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
                 User participant = participantsAdapter.getFriendAtPosition(position);
                 Intent profileIntent;
                 if (participant.getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
-                    profileIntent = new Intent(getActivity(), UserProfileActivity.class);
+                    profileIntent = new Intent(getActivity(),ProfileViewPagerFragment.class);
                 }
                 else {
                     boolean isFriend = false;

@@ -63,6 +63,10 @@ package="edu.upc.fib.meetnrun">
             android:name=".views.UserProfileActivity"
             android:label="@string/user_profile_label"
             android:screenOrientation="portrait"/>
+    <activity
+        android:name=".views.ProfileViewPagerFragment"
+        android:label="@string/user_profile_label"
+        android:screenOrientation="portrait"/>
         <activity
             android:name=".views.UsersListActivity"
             android:label="@string/users_label"
