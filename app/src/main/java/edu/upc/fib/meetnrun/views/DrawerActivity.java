@@ -123,7 +123,7 @@ public class DrawerActivity extends AppCompatActivity{
             profileButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO Intent i = new Intent(this,'Nombre del FragmentActivity'.class);
+                    //TODO Intent i = new Intent(this.getActivity,'Nombre del FragmentActivity'.class);
                     //TODO startActivity(i);
                     drawerLayout.closeDrawers();
                 }
