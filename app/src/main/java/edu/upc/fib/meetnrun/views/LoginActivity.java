@@ -153,11 +153,12 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            //mProgressDialog.dismiss();
             if (ok) {
                 cs.setCurrentUser(user);
+                mProgressDialog.dismiss();
                 changeToMainActivity();
             }
+            mProgressDialog.dismiss();
             super.onPostExecute(s);
         }
     }
