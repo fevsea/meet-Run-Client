@@ -13,13 +13,16 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:backgroundTint="@color/colorPrimary">
 
-    <ImageButton
+    <TextView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:background="@android:color/transparent"
-        app:srcCompat="@android:drawable/sym_def_app_icon" />
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/user_profile_circular_text_view"
+        android:textSize="40dp"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="e"
+        android:textColor="@color/black"/>
 
     <TextView
         android:id="@+id/nameProfile"
