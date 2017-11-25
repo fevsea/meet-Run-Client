@@ -16,6 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
@@ -43,11 +45,13 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 public class ChatListFragment extends Fragment {
 
     private View view;
-    private FloatingActionButton fab;
+    private FloatingActionButton fab1, fab2, fab3;
+    Animation FabOpen, FabClose, FabRClockWise, FabRantiClockWise;
     private List<Chat> l;
     private ChatAdapter chatAdapter;
     private String friendUserName = null;
     private User currentUser;
+    private boolean isOpen = false;
 
     private static List<Chat> list = new ArrayList<Chat>();
 
@@ -65,13 +69,37 @@ public class ChatListFragment extends Fragment {
 
         setupRecyclerView();
 
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
-        fab.setImageResource(R.drawable.chat);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab.setVisibility(View.GONE);
+
+        fab1 = (FloatingActionButton) getActivity().findViewById(R.id.fab1);
+        fab2 = (FloatingActionButton) getActivity().findViewById(R.id.fab2);
+        fab3 = (FloatingActionButton) getActivity().findViewById(R.id.fab3);
+
+        FabOpen = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
+        FabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
+        FabRClockWise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
+        FabRantiClockWise = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_anticlockwise);
+
+        fab1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addChat();
+                if (isOpen) {
+                    fab2.startAnimation(FabClose);
+                    fab3.startAnimation(FabClose);
+                    fab1.startAnimation(FabRantiClockWise);
+                    fab2.setClickable(false);
+                    fab3.setClickable(false);
+                    isOpen = false;
+                }
+                else {
+                    fab2.startAnimation(FabOpen);
+                    fab3.startAnimation(FabOpen);
+                    fab1.startAnimation(FabRClockWise);
+                    fab2.setClickable(true);
+                    fab3.setClickable(true);
+                    isOpen = true;
+                }
             }
         });
 
@@ -95,6 +123,11 @@ public class ChatListFragment extends Fragment {
     }
 
     private void addChat() {
+        Intent intent = new Intent(getActivity(), ChatFriendsActivity.class);
+        startActivity(intent);
+    }
+
+    private void addGroup() {
         Intent intent = new Intent(getActivity(), ChatFriendsActivity.class);
         startActivity(intent);
     }

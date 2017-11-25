@@ -5,6 +5,9 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorPrimaryLight">#B3E5FC</color>
 
+    <color name="color_fab1">#4CAF50</color>
+    <color name="color_fab2">#2196F3</color>
+
     <color name="red">#E53935</color>
     <color name="blue">#1E88E5</color>
     <color name="green">#43A047</color>
