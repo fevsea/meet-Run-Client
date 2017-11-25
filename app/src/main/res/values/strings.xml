@@ -74,10 +74,12 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="saving">Saving</string>
+    <string name="login">Login</string>
     <string name="saving_meeting">Saving Meeting</string>
     <string name="error_loading_meeting">Sorry, there was an error while loading this meeting</string>
     <string name="title_activity_tracking">Tracking</string>
     <string name="saving_tracking_data">Saving tracking data</string>
+    <string name="getting_current_session">Entering in your account</string>
     <string name="tracking_error_toast_message">There was an error saving the tracking data!</string>
     <string name="tracking_error_loading">There was an error loading the tracking!</string>
     <string name="error_connecting_google_reconnect">Error connecting with the Google API, trying to reconnect</string>
