@@ -70,7 +70,8 @@ public class ChatFragment extends Fragment {
         if (!currentUser.getUsername().equals(chat.getUserName1().getUsername())) friendUserName = chat.getUserName1().getUsername();
         else friendUserName = chat.getUserName2();
 
-        getActivity().setTitle(friendUserName);
+        //getActivity().setTitle(friendUserName);
+        getActivity().setTitle(chat.getChat());
 
         this.view = inflater.inflate(R.layout.fragment_chat, container, false);
 
