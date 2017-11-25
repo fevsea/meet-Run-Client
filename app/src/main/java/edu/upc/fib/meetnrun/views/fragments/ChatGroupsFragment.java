@@ -77,7 +77,7 @@ public class ChatGroupsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String name = groupName.getText().toString();
-                if (!name.equals("")) {
+                if (name.equals("")) {
                     Toast.makeText(getContext(), "Name group field is empty", Toast.LENGTH_SHORT).show();
                 }
                 else {
