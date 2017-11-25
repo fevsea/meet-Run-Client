@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Meet&amp;Run</string>
-    <string name="meeting_list_label">Lista de quedadas</string>
-    <string name="mymeetings_label">Mis quedadas</string>
+    <string name="meeting_list_label">Lista de Quedadas</string>
+    <string name="mymeetings_label">Mis Quedadas</string>
     <string name="register_label">Registrarse</string>
     <string name="edit_meeting_label">Modificar quedada</string>
     <string name="create_meeting_label">Crear Quedada</string>
@@ -23,11 +23,11 @@
     <string name="meeting_name">Nombre de la quedada</string>
     <string name="minimum_level">Nivel mínimo</string>
     <string name="meeting_description">Descripción de la quedada</string>
-    <string name="empty_create_error">Se ha dejado campos vacion. DEBE rellenar nombre, fecha, hora y lugar</string>
+    <string name="empty_create_error">Se ha dejado campos vacíos. DEBE rellenar nombre, fecha, hora y lugar.</string>
     <string name="big_name_error">El nombre de la quedada debe tener menos de 100 caracteres</string>
     <string name="big_description_error">La descripción debe tener menos de 500 caracteres</string>
     <string name="location">Su última ubicación</string>
-    <string name="meeting_location">Lugar de la quedada</string>
+    <string name="meeting_location">Ubicación de la quedada</string>
     <string name="create_button">Crear</string>
     <string name="public_meeting">Público</string>
     <string name="private_meeting">Privado</string>
@@ -36,17 +36,16 @@
     <string name="edit_meeting_close_dialog_message">¿Está seguro que quieres salir antes de guardar?</string>
     <string name="edit_meeting_close_dialog_title">Cerrar sin guardar</string>
     <string name="friend_request_dialog_message">"Está seguro que quieres enviar la solicitud a "</string>
-    <string name="friend_request_dialog_title">Solicitudes de amistad</string>
+    <string name="friend_request_dialog_title">Solicitud de amistad</string>
     <string name="delete_friend_dialog_message">Esta seguro que quiere dejar de ser amigo de</string>
     <string name="delete_friend_dialog_title">Dejar de ser amigos</string>
-    <string name="delete_account_message">¿Esta seguro que quiere borrar la cuenta?</string>
-    <string name="delete_account_title">Borrar Cuenta</string>
-    <string name="ok">OK</string>
+    <string name="delete_account_message">¿Está seguro que quiere borrar la cuenta?</string>
+    <string name="delete_account_title">Borrar cuenta</string>
     <string name="accept_request">Enviar solicitud</string>
     <string name="cancel">Cancelar</string>
     <string name="is_public">Público</string>
     <string name="edit_meeting_error_dialog_title">Error modificando la quedada</string>
-    <string name="edit_meeting_error_dialog_message">Error al guardar la quedada modificada, compruebe los valores!</string>
+    <string name="edit_meeting_error_dialog_message">Error al guardar la quedada modificada, ¡compruebe los valores!</string>
     <string name="level">Nivel</string>
     <string name="change_location">Cambiar lugar</string>
     <string name="title">Título</string>
@@ -55,7 +54,7 @@
     <string name="date">Fecha</string>
     <string name="change_date">Cambiar fecha</string>
     <string name="change_time">Cambiar hora</string>
-    <string name="edit_meeting">Modificar meeting</string>
+    <string name="edit_meeting">Modificar quedada</string>
     <string name="title_activity_profile">Perfil de usuario</string>
     <string name="title_edit_profile">Modificar perfil</string>
     <string name="button_edit_profile">Editar perfil</string>
@@ -67,7 +66,7 @@
     <string name="joined_meeting">Se ha unido a la quedada!</string>
 
 
-    <string name="title_activity_fullscreen">Actividad de pantalla de completa</string>
+    <string name="title_activity_fullscreen">Actividad de pantalla completa</string>
     <string name="dummy_button">Boton tonto</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="saving">Guardando</string>
@@ -75,11 +74,10 @@
     <string name="error_loading_meeting">Lo siento, ha ocurrido un error mientras se cargaba el perfil</string>
     <string name="title_activity_tracking">Tracking</string>
     <string name="saving_tracking_data">Guardando información de tracking</string>
-    <string name="tracking_error_toast_message">Error guardando información de tracking!</string>
-    <string name="tracking_error_loading">Error cargando el tracking!</string>
+    <string name="tracking_error_toast_message">¡Error guardando información de tracking!</string>
+    <string name="tracking_error_loading">¡Error cargando el tracking!</string>
     <string name="error_connecting_google_reconnect">Error conectando con Google API, intentelo de nuevo</string>
     <string name="error_connecting_google">No se ha podido conectar con Google</string>
-    <string name="vertical_ellipsis">&#8942;</string>
     <string name="user_name">Nombre de usuario</string>
     <string name="first_name">Nombre</string>
     <string name="last_name">Apellidos</string>
@@ -102,5 +100,13 @@
     <string name="meetings">Quedadas</string>
     <string name="log_in">Conectarse</string>
     <string name="password">Contraseña</string>
+    <string name="private_friends">¿Quiere correr con amigos, o solo?</string>
+    <string name="private_no_friends">Quiero correr solo</string>
+    <string name="private_yes_friends">Quiero añadir amigos</string>
+    <string name="public_friends">¿Quiere añadir amigos en la quedada?</string>
+    <string name="public_no_friends">No, sólo créala</string>
+    <string name="public_yes_friends">Sí, quiero añadir amigos</string>
+    <string name="meeting_friends_label">Elige a tus amigos</string>
+    <string name="ok">OK</string>
 
 </resources>

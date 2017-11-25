@@ -86,7 +86,7 @@
     <string name="tracking_error_loading">There was an error loading the tracking!</string>
     <string name="error_connecting_google_reconnect">Error connecting with the Google API, trying to reconnect</string>
     <string name="error_connecting_google">Could not connect with Google</string>
-    <string name="vertical_ellipsis">&#8942;</string>
+    <string name="vertical_ellipsis" translatable="false">&#8942;</string>
     <string name="user_name">User Name</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
