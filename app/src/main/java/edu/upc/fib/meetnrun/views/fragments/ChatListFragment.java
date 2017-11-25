@@ -56,7 +56,7 @@ public class ChatListFragment extends Fragment {
     private static List<Chat> list = new ArrayList<Chat>();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
@@ -83,22 +83,21 @@ public class ChatListFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isOpen) {
-                    fab2.startAnimation(FabClose);
-                    fab3.startAnimation(FabClose);
-                    fab.startAnimation(FabRantiClockWise);
-                    fab2.setClickable(false);
-                    fab3.setClickable(false);
-                    isOpen = false;
-                }
-                else {
-                    fab2.startAnimation(FabOpen);
-                    fab3.startAnimation(FabOpen);
-                    fab.startAnimation(FabRClockWise);
-                    fab2.setClickable(true);
-                    fab3.setClickable(true);
-                    isOpen = true;
-                }
+                animFab();
+            }
+        });
+
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addChat();
+            }
+        });
+
+        fab3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addGroup();
             }
         });
 
@@ -115,6 +114,25 @@ public class ChatListFragment extends Fragment {
         return this.view;
     }
 
+    private void animFab() {
+        if (isOpen) {
+            fab2.startAnimation(FabClose);
+            fab3.startAnimation(FabClose);
+            fab.startAnimation(FabRantiClockWise);
+            fab2.setClickable(false);
+            fab3.setClickable(false);
+            isOpen = false;
+        }
+        else {
+            fab2.startAnimation(FabOpen);
+            fab3.startAnimation(FabOpen);
+            fab.startAnimation(FabRClockWise);
+            fab2.setClickable(true);
+            fab3.setClickable(true);
+            isOpen = true;
+        }
+    }
+
     private void updateChats() {
         //new getChats().execute();
         sortList();
@@ -123,11 +141,13 @@ public class ChatListFragment extends Fragment {
 
     private void addChat() {
         Intent intent = new Intent(getActivity(), ChatFriendsActivity.class);
+        animFab();
         startActivity(intent);
     }
 
     private void addGroup() {
         Intent intent = new Intent(getActivity(), ChatFriendsActivity.class);
+        animFab();
         startActivity(intent);
     }
 
