@@ -22,7 +22,7 @@
             android:id="@+id/txtMensaje"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Escribe un mensaje"
+            android:hint="Write a message..."
             android:layout_weight="1"/>
 
         <Button

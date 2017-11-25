@@ -12,6 +12,7 @@
     <string name="leave_meeting_label">Leave meeting</string>
     <string name="leave_meeting_message">Are you sure you want to leave the meeting?</string>
     <string name="friends_label">Friends</string>
+    <string name="new_group_label">New group</string>
     <string name="users_label">Users</string>
     <string name="home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
