@@ -1,11 +1,10 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,21 +21,18 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
+import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
-
-public class MeetingListFragment extends Fragment {
+public class PastMeetingsProfileFragment extends Fragment {
 
     private MeetingsAdapter meetingsAdapter;
     private IMeetingAdapter meetingDBAdapter;
@@ -44,14 +40,31 @@ public class MeetingListFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetings;
 
-    public MeetingListFragment() {
-        meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
+    private String title;
+    private int page;
+
+    // newInstance constructor for creating fragment with arguments
+    public static PastMeetingsProfileFragment newInstance(int page, String title) {
+        PastMeetingsProfileFragment fragmentFirst = new PastMeetingsProfileFragment();
+        Bundle args = new Bundle();
+        args.putInt("1", page);
+        args.putString("Past Meetings", title);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
     }
 
+    // Store instance variables based on arguments passed
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        page = getArguments().getInt("1", 1);
+        title = getArguments().getString("Past Meetings");
         setHasOptionsMenu(true);
+    }
+
+
+    public PastMeetingsProfileFragment() {
+        meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
     }
 
     @Override
@@ -63,15 +76,6 @@ public class MeetingListFragment extends Fragment {
         meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
         setupRecyclerView();
 
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
-        fab.setImageResource(R.drawable.add_group_512);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createNewMeeting();
-            }
-        });
         swipeRefreshLayout =
                 (SwipeRefreshLayout) view.findViewById(R.id.fragment_meeting_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -91,7 +95,7 @@ public class MeetingListFragment extends Fragment {
             @Override
             public void onButtonClicked(int position) {
                 Meeting selectedMeeting = meetingsAdapter.getMeetingAtPosition(position);
-                    joinMeeting(selectedMeeting);
+                joinMeeting(selectedMeeting);
             }
 
             @Override
@@ -159,7 +163,7 @@ public class MeetingListFragment extends Fragment {
 
 
     private void updateMeetingList() {
-            new GetMeetings().execute();
+        new GetMeetings().execute();
     }
 
     private void createNewMeeting() {
@@ -176,7 +180,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-                meetings = meetingDBAdapter.getAllMeetings();
+            meetings = meetingDBAdapter.getAllMeetings();
             return null;
         }
 
