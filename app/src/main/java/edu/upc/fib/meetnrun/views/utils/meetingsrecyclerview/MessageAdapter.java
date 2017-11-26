@@ -40,6 +40,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         notifyItemInserted(messagesList.size());
     }
 
+    public void deleteMessages() {
+        messagesList.clear();
+    }
+
     @Override
     public int getItemViewType(int position) {
         Message m = messagesList.get(position);

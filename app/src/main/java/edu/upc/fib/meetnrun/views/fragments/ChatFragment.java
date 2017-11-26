@@ -131,7 +131,14 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        databaseReference.addChildEventListener(new ChildEventListener() {
+        loadMessages();
+
+        return this.view;
+    }
+
+    private void loadMessages() {
+
+        databaseReference.limitToLast(4).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message m = dataSnapshot.getValue(Message.class);
@@ -150,18 +157,27 @@ public class ChatFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
-
-        return this.view;
     }
 
     private void setScrollbar() {
         rvMessages.scrollToPosition(adapter.getItemCount()-1);
     }
 
-    /*@Override
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.chat_menu, menu);
+        MenuItem item = menu.findItem(R.id.delete_historial);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                databaseReference.removeValue();
+                adapter.deleteMessages();
+                rvMessages.setAdapter(adapter);
+                return true;
+            }
+        });
+        /*inflater.inflate(R.menu.chat_menu, menu);
         MenuItem item = menu.findItem(R.id.chat_menu);
         item.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
             @Override
@@ -175,10 +191,10 @@ public class ChatFragment extends Fragment {
                 }
                 return true;
             }
-        });
+        });*/
 
         super.onCreateOptionsMenu(menu, inflater);
     }
-*/
+
 
 }
