@@ -153,6 +153,7 @@ public class DrawerActivity extends AppCompatActivity{
                         .add(R.id.activity_contentFrame,currentFragment)
                         .addToBackStack(backStateName)
                         .commit();
+                navigationView.getMenu().getItem(0).setChecked(true);
             }
         }
 
