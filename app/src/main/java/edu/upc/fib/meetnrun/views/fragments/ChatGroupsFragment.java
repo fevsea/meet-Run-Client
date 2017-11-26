@@ -147,9 +147,18 @@ public class ChatGroupsFragment extends Fragment {
             public void onMeetingClicked(int position) {
 
                 User friend = friendsAdapter.getFriendAtPosition(position);
-                selectedFriends.add(friend);
-                numbFriends.setText(String.valueOf(selectedFriends.size()));
-                //TODO cambiar color friend selected + tick
+
+                if (friend.isSelected()) {
+                    selectedFriends.remove(friend);
+                    numbFriends.setText(String.valueOf(selectedFriends.size()));
+                    friend.setSelected(false);
+                }
+                else {
+                    selectedFriends.add(friend);
+                    numbFriends.setText(String.valueOf(selectedFriends.size()));
+                    friend.setSelected(true);
+                }
+                friendsAdapter.updateFriendsList(l);
 
             }
         });
