@@ -1,6 +1,7 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -33,9 +34,13 @@ public class ProfileViewPagerFragment extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        ViewPager vpPager = findViewById(R.id.viewpager);
+        ViewPager pager = findViewById(R.id.viewpager);
+        TabLayout tabs = (TabLayout) findViewById(R.id.pager_tabs);
+
         adapterViewPager = new PagerAdapterFragment(getSupportFragmentManager());
-        vpPager.setAdapter(adapterViewPager);
+        pager.setAdapter(adapterViewPager);
+        tabs.setupWithViewPager(pager);
+
     }
 
     @Override
