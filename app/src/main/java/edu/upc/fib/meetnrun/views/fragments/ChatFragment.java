@@ -57,11 +57,16 @@ public class ChatFragment extends Fragment {
 
         chat = CurrentSession.getInstance().getChat();
         currentUser = CurrentSession.getInstance().getCurrentUser();
-        String friendUserName = null;
-        if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) friendUserName = chat.getUser1().getUsername();
-        else friendUserName = chat.getUser2();
 
-        //getActivity().setTitle(friendUserName);
+        switch (chat.getType()) {
+            case 0:
+                if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) chat.setChatName(chat.getUser1().getUsername());
+                else chat.setChatName(chat.getUser2().getUsername());
+                break;
+            default:
+                break;
+        }
+
         getActivity().setTitle(chat.getChatName());
 
         this.view = inflater.inflate(R.layout.fragment_chat, container, false);
@@ -74,7 +79,7 @@ public class ChatFragment extends Fragment {
         btnSend = (Button) view.findViewById(R.id.btnEnviar);
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference(chat.getChatName()); //Chat name
+        databaseReference = database.getReference(String.valueOf(chat.getId())); //Chat name
 
         adapter = new MessageAdapter(getContext());
         LinearLayoutManager l = new LinearLayoutManager(getContext());

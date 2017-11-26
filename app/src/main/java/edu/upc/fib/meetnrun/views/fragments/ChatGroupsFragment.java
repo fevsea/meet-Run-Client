@@ -69,6 +69,7 @@ public class ChatGroupsFragment extends Fragment {
 
         l = new ArrayList<>();
         selectedFriends = new ArrayList<>();
+        selectedFriends.add(CurrentSession.getInstance().getCurrentUser());
 
         setupRecyclerView();
 
@@ -82,11 +83,8 @@ public class ChatGroupsFragment extends Fragment {
                 }
                 else {
                     groupName.setText("");
-                    User friendUserName = null;
-                    if (selectedFriends.size() > 0) {
-                        friendUserName = selectedFriends.get(0);
-                    }
-                    User user = CurrentSession.getInstance().getCurrentUser();
+
+                    User user = selectedFriends.get(0);
 
                     Calendar rightNow = Calendar.getInstance();
                     StringBuilder sb = new StringBuilder();
@@ -106,7 +104,7 @@ public class ChatGroupsFragment extends Fragment {
 
                     Message m = new Message("", user.getUsername(), sb.toString(), dateWithoutTime);
 
-                    Chat chat = new Chat(1,name, user, friendUserName.getUsername(), m);
+                    Chat chat = new Chat(ChatListFragment.getCount(),name, selectedFriends, 1, m);
                     ChatListFragment.addChatFake(chat);
 
                     Intent i = new Intent(getContext(), ChatActivity.class);
@@ -150,12 +148,12 @@ public class ChatGroupsFragment extends Fragment {
 
                 if (friend.isSelected()) {
                     selectedFriends.remove(friend);
-                    numbFriends.setText(String.valueOf(selectedFriends.size()));
+                    numbFriends.setText(String.valueOf(selectedFriends.size()-1));
                     friend.setSelected(false);
                 }
                 else {
                     selectedFriends.add(friend);
-                    numbFriends.setText(String.valueOf(selectedFriends.size()));
+                    numbFriends.setText(String.valueOf(selectedFriends.size()-1));
                     friend.setSelected(true);
                 }
                 friendsAdapter.updateFriendsList(l);
