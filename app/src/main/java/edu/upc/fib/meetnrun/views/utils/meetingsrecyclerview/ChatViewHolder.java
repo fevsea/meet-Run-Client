@@ -30,13 +30,9 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     public void bindChat(Chat chat, boolean newChat) {
 
-        switch (chat.getType()) {
-            case 0:
-                if (!CurrentSession.getInstance().getCurrentUser().getUsername().equals(chat.getUser1().getUsername())) chat.setChatName(chat.getUser1().getUsername());
-                else chat.setChatName(chat.getUser2().getUsername());
-                break;
-            default:
-                break;
+        if (chat.getType() == 0) {
+            if (!CurrentSession.getInstance().getCurrentUser().getUsername().equals(chat.getUser1().getUsername())) chat.setChatName(chat.getUser1().getUsername());
+            else chat.setChatName(chat.getUser2().getUsername());
         }
 
         TextView userPhoto = view.findViewById(R.id.friend_photo);

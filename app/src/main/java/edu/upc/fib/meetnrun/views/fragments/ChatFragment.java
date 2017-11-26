@@ -58,13 +58,9 @@ public class ChatFragment extends Fragment {
         chat = CurrentSession.getInstance().getChat();
         currentUser = CurrentSession.getInstance().getCurrentUser();
 
-        switch (chat.getType()) {
-            case 0:
-                if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) chat.setChatName(chat.getUser1().getUsername());
-                else chat.setChatName(chat.getUser2().getUsername());
-                break;
-            default:
-                break;
+        if (chat.getType() == 0) {
+            if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) chat.setChatName(chat.getUser1().getUsername());
+            else chat.setChatName(chat.getUser2().getUsername());
         }
 
         getActivity().setTitle(chat.getChatName());
