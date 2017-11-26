@@ -16,6 +16,8 @@ public class CurrentSession {
     private String token;
     private User currentUser;
     private AdaptersContainer adapterContainer;
+    private Chat chat;
+    private User friend;
 
     private CurrentSession() {
         adapterContainer = AdaptersContainer.getInstance();
@@ -39,6 +41,22 @@ public class CurrentSession {
 
     public void setCurrentUser(User currentUser) {
         this.currentUser = currentUser;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
+    }
+
+    public User getFriend() {
+        return friend;
+    }
+
+    public void setFriend(User friend) {
+        this.friend = friend;
     }
 
     public AdaptersContainer getAdapterContainer() {

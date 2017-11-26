@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="colors">
-        <item>@color/blue</item>
-        <item>@color/green</item>
-        <item>@color/red</item>
-        <item>@color/purple</item>
+        <item>@color/red_profile</item>
+        <item>@color/pink_profile</item>
+        <item>@color/purple_profile</item>
+        <item>@color/deep_purple_profile</item>
+        <item>@color/indigo_profile</item>
+        <item>@color/blue_profile</item>
+        <item>@color/cyan_profile</item>
+        <item>@color/teal_profile</item>
+        <item>@color/green_profile</item>
+        <item>@color/light_green_profile</item>
+        <item>@color/yellow_profile</item>
+        <item>@color/orange_profile</item>
+        <item>@color/deep_orange_profile</item>
+
     </array>
 </resources>

@@ -10,19 +10,20 @@
     android:paddingTop="@dimen/meeting_item_padding_vertical">
 
     <android.support.v7.widget.CardView
-        android:id="@+id/meeting_item_cardview"
+        android:id="@+id/user_cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/card_depth"
         card_view:cardCornerRadius="@dimen/card_radius"
-        card_view:cardElevation="@dimen/card_depth">
+        card_view:cardElevation="@dimen/card_depth"
+        card_view:cardBackgroundColor="@color/colorPrimaryLight">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:padding="@dimen/meeting_item_padding_vertical">
             <TextView
-                android:id="@+id/meeting_item_user_photo2"
+                android:id="@+id/user_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -30,10 +31,11 @@
                 android:layout_margin="@dimen/meeting_item_margin"
                 android:background="@drawable/user_profile_circular_text_view"
                 android:gravity="center"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:text="e"/>
 
             <TextView
-                android:id="@+id/meeting_item_level2"
+                android:id="@+id/user_level"
                 android:layout_alignParentEnd="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,36 +43,33 @@
                 android:layout_margin="@dimen/meeting_item_margin"
                 android:background="@drawable/level_circular_text_view"
                 android:gravity="center"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:text="1"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toEndOf="@id/meeting_item_user_photo2"
-                android:layout_toStartOf="@id/meeting_item_level2"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical"
+                android:gravity="center">
 
                     <TextView
-                        android:id="@+id/meeting_item_username"
+                        android:id="@+id/user_username"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="ericR"/>
 
                     <TextView
-                        android:id="@+id/meeting_item_name"
+                        android:id="@+id/user_name"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="Eric Rodriguez"/>
                     <TextView
-                        android:id="@+id/meeting_item_postcode"
+                        android:id="@+id/user_postcode"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:text="08830" />
 
             </LinearLayout>
         </RelativeLayout>

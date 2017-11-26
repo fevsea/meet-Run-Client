@@ -34,6 +34,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".views.DrawerActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name=".views.MeetingInfoActivity"
             android:label="@string/meeting_info_label"
             android:screenOrientation="portrait" />
@@ -50,22 +54,9 @@
             android:label="@string/register_label"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".views.ProfileActivity"
-            android:label="@string/title_activity_profile"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".views.MeetingListActivity"
-            android:hardwareAccelerated="true"
-            android:label="@string/meeting_list_label"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".views.EditProfileActivity"
             android:label="@string/title_edit_profile"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".views.FriendsActivity"
-            android:label="@string/friends_label"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".views.FriendProfileActivity"
             android:label="@string/friend_profile_label"
@@ -74,9 +65,29 @@
             android:name=".views.UserProfileActivity"
             android:label="@string/user_profile_label"
             android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.ProfileViewPagerFragment"
+            android:label="@string/user_profile_label"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".views.UsersListActivity"
             android:label="@string/users_label"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.ChatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.ChatListActivity"
+            android:label="@string/chat_label"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.ChatFriendsActivity"
+            android:label="@string/friends_label"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".views.ChatGroupsActivity"
+            android:label="@string/new_group_label"
             android:screenOrientation="portrait" />
         <activity
             android:name=".views.SettingsActivity"
@@ -85,10 +96,6 @@
         <activity
             android:name=".views.ChangePasswordActivity"
             android:label="@string/action_change_pass"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".views.MyMeetingsActivity"
-            android:label="@string/mymeetings_label"
             android:screenOrientation="portrait" />
         <activity
             android:name=".views.TrackingActivity"

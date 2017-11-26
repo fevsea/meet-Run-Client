@@ -10,6 +10,7 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 
 /**
@@ -20,6 +21,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsViewHolder> {
 
     private List<User> users;
     private RecyclerViewOnClickListener listener;
+    private View v;
 
     public FriendsAdapter(List<User> users, RecyclerViewOnClickListener listener) {
         this.users = users;
@@ -30,8 +32,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsViewHolder> {
     @Override
     public FriendsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.user_item, parent, false);
-        return new FriendsViewHolder(view,listener);
+        v = layoutInflater.inflate(R.layout.user_item, parent, false);
+        return new FriendsViewHolder(v,listener);
     }
 
     @Override
@@ -54,5 +56,4 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsViewHolder> {
     public User getFriendAtPosition(int position) {
         return users.get(position);
     }
-
 }
