@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,7 +25,6 @@ public class LoginActivity extends AppCompatActivity {
     public static final String MY_PREFS_NAME = "TokenFile";
     private ILoginAdapter loginAdapter;
     private CurrentSession cs;
-    private ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +33,6 @@ public class LoginActivity extends AppCompatActivity {
 
         editUsername = (EditText) findViewById(R.id.editUsername);
         editPassword = (EditText) findViewById(R.id.editPassword);
-        progress = (ProgressBar) findViewById(R.id.progressBar);
-        progress.setVisibility(View.INVISIBLE);
 
         cs = CurrentSession.getInstance();
         loginAdapter = cs.getLoginAdapter();
@@ -127,10 +125,16 @@ public class LoginActivity extends AppCompatActivity {
 
         User user = null;
         boolean ok = false;
+        ProgressDialog mProgressDialog;
 
         @Override
         protected void onPreExecute() {
-            progress.setVisibility(View.VISIBLE);
+            mProgressDialog = new ProgressDialog(LoginActivity.this);
+            mProgressDialog.setTitle(R.string.login);
+            mProgressDialog.setMessage(getResources().getString(R.string.getting_current_session));
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
             super.onPreExecute();
         }
 
@@ -149,11 +153,12 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            progress.setVisibility(View.INVISIBLE);
             if (ok) {
                 cs.setCurrentUser(user);
+                mProgressDialog.dismiss();
                 changeToMainActivity();
             }
+            mProgressDialog.dismiss();
             super.onPostExecute(s);
         }
     }

@@ -4,11 +4,16 @@ package edu.upc.fib.meetnrun.views;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+
+import android.support.v4.content.ContextCompat;
+
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -100,6 +105,9 @@ public class DrawerActivity extends AppCompatActivity{
                                     fragment = new FriendsFragment();
                                     replaceFragment(fragment);
                                     break;
+                                case R.id.chat:
+                                    i = new Intent(getApplicationContext(),ChatListActivity.class);
+                                    break;
                                 case R.id.settings:
                                     fragment = new SettingsFragment();
                                     replaceFragment(fragment);
@@ -117,7 +125,11 @@ public class DrawerActivity extends AppCompatActivity{
             String name = user.getFirstName()+" "+user.getLastName();
             nav_user.setText(name);
 
-            ImageButton profileButton = navigationView.getHeaderView(0).findViewById(R.id.imageView);
+            TextView profileButton = navigationView.getHeaderView(0).findViewById(R.id.imageView);
+            char letter = user.getUsername().charAt(0);
+            String firstLetter = String.valueOf(letter);
+            profileButton.setBackground(getColoredCircularShape((letter)));
+            profileButton.setText(firstLetter);
             profileButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -153,6 +165,14 @@ public class DrawerActivity extends AppCompatActivity{
                 drawerLayout.openDrawer(GravityCompat.START);
         }
         return true;
+    }
+
+    private GradientDrawable getColoredCircularShape(char letter) {
+        int[] colors = getResources().getIntArray(R.array.colors);
+        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(getApplicationContext(),R.drawable.user_profile_circular_text_view);
+        int position = letter%colors.length;
+        circularShape.setColor(colors[position]);
+        return circularShape;
     }
 
     private void deleteToken() {

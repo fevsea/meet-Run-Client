@@ -86,14 +86,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
             public void onMeetingClicked(int position) {
 
                 User friend = friendsAdapter.getFriendAtPosition(position);
-                Intent friendProfileIntent = selectIntent();
-
-                friendProfileIntent.putExtra("id",String.valueOf(friend.getId()));
-                friendProfileIntent.putExtra("userName",friend.getUsername());
-                String name = friend.getFirstName()+" "+friend.getLastName();
-                friendProfileIntent.putExtra("name",name);
-                friendProfileIntent.putExtra("postCode",friend.getPostalCode());
-                startActivity(friendProfileIntent);
+                getIntent(friend);
 
             }
         });
@@ -101,7 +94,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
 
     }
 
-    protected abstract Intent selectIntent();
+    protected abstract void getIntent(User friend);
 
     protected abstract void getMethod();
 
