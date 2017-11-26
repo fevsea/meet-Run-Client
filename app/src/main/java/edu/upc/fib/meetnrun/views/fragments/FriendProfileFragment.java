@@ -3,10 +3,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,7 +19,6 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
-import edu.upc.fib.meetnrun.views.ChatListActivity;
 
 /**
  * Created by eric on 2/11/17.
