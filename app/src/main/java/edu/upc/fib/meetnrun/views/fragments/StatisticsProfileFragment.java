@@ -8,13 +8,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.User;
 
 public class StatisticsProfileFragment extends Fragment {
 
     private String title;
     private int page;
-
+    private Statistics stats;
 
     // newInstance constructor for creating fragment with arguments
     public static StatisticsProfileFragment newInstance(int page, String title) {
