@@ -138,7 +138,7 @@ public class ChatFragment extends Fragment {
 
     private void loadMessages() {
 
-        databaseReference.limitToLast(4).addChildEventListener(new ChildEventListener() {
+        databaseReference.limitToLast(15).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message m = dataSnapshot.getValue(Message.class);
