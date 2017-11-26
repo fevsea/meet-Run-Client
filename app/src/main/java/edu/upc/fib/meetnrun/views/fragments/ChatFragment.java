@@ -33,6 +33,7 @@ import java.util.Date;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
@@ -174,6 +175,10 @@ public class ChatFragment extends Fragment {
                 databaseReference.removeValue();
                 adapter.deleteMessages();
                 rvMessages.setAdapter(adapter);
+                Message m = chat.getMessage();
+                m.setMessage("");
+                m.setName("");
+                chat.setMessage(m);
                 return true;
             }
         });
