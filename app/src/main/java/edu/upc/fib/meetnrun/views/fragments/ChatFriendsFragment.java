@@ -40,7 +40,7 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
         User user = CurrentSession.getInstance().getCurrentUser();
         Chat chat = ChatListFragment.getChat(user.getUsername(), friendUserName);
         if (chat == null) {
-            String chatName = user+" - "+friendUserName;
+            String chatName = user.getUsername()+" - "+friendUserName;
             Calendar rightNow = Calendar.getInstance();
             StringBuilder sb = new StringBuilder();
             String hour = null;

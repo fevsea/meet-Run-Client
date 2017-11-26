@@ -9,19 +9,19 @@ import java.io.Serializable;
 public class Chat{
 
     private Integer id;
-    private String chat;
-    private User userName1;
-    private String userName2;
+    private String chatName;
+    private User user1;
+    private String user2;
     private Message message;
 
     public Chat() {
     }
 
-    public Chat(Integer id, String chat, User userName1, String userName2, Message message) {
+    public Chat(Integer id, String chatName, User user1, String user2, Message message) {
         this.id = id;
-        this.chat = chat;
-        this.userName1 = userName1;
-        this.userName2 = userName2;
+        this.chatName = chatName;
+        this.user1 = user1;
+        this.user2 = user2;
         this.message = message;
     }
 
@@ -33,28 +33,28 @@ public class Chat{
         this.id = id;
     }
 
-    public String getChat() {
-        return chat;
+    public String getChatName() {
+        return chatName;
     }
 
-    public void setChat(String chat) {
-        this.chat = chat;
+    public void setChatName(String chatName) {
+        this.chatName = chatName;
     }
 
-    public User getUserName1() {
-        return userName1;
+    public User getUser1() {
+        return user1;
     }
 
-    public void setUserName1(User userName1) {
-        this.userName1 = userName1;
+    public void setUser1(User user1) {
+        this.user1 = user1;
     }
 
-    public String getUserName2() {
-        return userName2;
+    public String getUser2() {
+        return user2;
     }
 
-    public void setUserName2(String userName2) {
-        this.userName2 = userName2;
+    public void setUser2(String user2) {
+        this.user2 = user2;
     }
 
     public Message getMessage() {

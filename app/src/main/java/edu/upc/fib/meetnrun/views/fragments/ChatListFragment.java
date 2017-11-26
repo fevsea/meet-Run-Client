@@ -1,6 +1,5 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,22 +19,16 @@ import android.view.animation.AnimationUtils;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
 import edu.upc.fib.meetnrun.views.ChatFriendsActivity;
 import edu.upc.fib.meetnrun.views.ChatGroupsActivity;
-import edu.upc.fib.meetnrun.views.FriendsActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChatAdapter;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 /**
@@ -194,8 +186,8 @@ public class ChatListFragment extends Fragment {
                 ArrayList<Chat> newList = new ArrayList<Chat>();
                 for (Chat chat : l) {
 
-                    if (!currentUser.getUsername().equals(chat.getUserName1().getUsername())) friendUserName = chat.getUserName1().getUsername();
-                    else friendUserName = chat.getUserName2();
+                    if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) friendUserName = chat.getUser1().getUsername();
+                    else friendUserName = chat.getUser2();
 
                     String friendName = friendUserName.toLowerCase();
                     if (friendName != null) {
@@ -240,9 +232,9 @@ public class ChatListFragment extends Fragment {
 
         for (Chat chat : list) {
 
-            String chatUserName = chat.getUserName1().getUsername();
+            String chatUserName = chat.getUser1().getUsername();
             if (chatUserName.equals(user) || chatUserName.equals(friend)) {
-                String chatFriendUserName = chat.getUserName2();
+                String chatFriendUserName = chat.getUser2();
                 if (chatFriendUserName.equals(user) || chatFriendUserName.equals(friend)) {
                     return chat;
                 }
@@ -253,7 +245,7 @@ public class ChatListFragment extends Fragment {
 
     public static boolean deleteChat(String name) {
         for (Chat chat : list) {
-            if (chat.getUserName1().getUsername().equals(name) || chat.getUserName2().equals(name)) {
+            if (chat.getUser1().getUsername().equals(name) || chat.getUser2().equals(name)) {
                 list.remove(chat);
                 return true;
             }

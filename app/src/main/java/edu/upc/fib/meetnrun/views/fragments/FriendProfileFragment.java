@@ -49,7 +49,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                                 User user = CurrentSession.getInstance().getCurrentUser();
                                 Chat chat = ChatListFragment.getChat(user.getUsername(), friend);
                                 if (chat == null) {
-                                    String chatName = user+" - "+friend;
+                                    String chatName = user.getUsername()+" - "+friend;
                                     Calendar rightNow = Calendar.getInstance();
                                     StringBuilder sb = new StringBuilder();
                                     String hour = null;

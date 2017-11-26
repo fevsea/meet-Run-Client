@@ -3,7 +3,6 @@ package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,7 +11,6 @@ import java.lang.ref.WeakReference;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.User;
 
 /**
  * Created by eric on 21/11/17.
@@ -32,8 +30,8 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     public void bindChat(Chat chat, boolean newChat) {
         String friendUserName = null;
-        if (!CurrentSession.getInstance().getCurrentUser().getUsername().equals(chat.getUserName1().getUsername())) friendUserName = chat.getUserName1().getUsername();
-        else friendUserName = chat.getUserName2();
+        if (!CurrentSession.getInstance().getCurrentUser().getUsername().equals(chat.getUser1().getUsername())) friendUserName = chat.getUser1().getUsername();
+        else friendUserName = chat.getUser2();
 
         TextView userPhoto = view.findViewById(R.id.friend_photo);
         char letter = friendUserName.charAt(0);

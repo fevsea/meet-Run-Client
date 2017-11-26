@@ -159,7 +159,6 @@ public class ChatGroupsFragment extends Fragment {
                     friend.setSelected(true);
                 }
                 friendsAdapter.updateFriendsList(l);
-
             }
         });
         friendsList.setAdapter(friendsAdapter);

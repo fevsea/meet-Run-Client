@@ -5,15 +5,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -21,10 +17,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -34,7 +26,6 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MessageAdapter;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 
 /**
@@ -67,11 +58,11 @@ public class ChatFragment extends Fragment {
         chat = CurrentSession.getInstance().getChat();
         currentUser = CurrentSession.getInstance().getCurrentUser();
         String friendUserName = null;
-        if (!currentUser.getUsername().equals(chat.getUserName1().getUsername())) friendUserName = chat.getUserName1().getUsername();
-        else friendUserName = chat.getUserName2();
+        if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) friendUserName = chat.getUser1().getUsername();
+        else friendUserName = chat.getUser2();
 
         //getActivity().setTitle(friendUserName);
-        getActivity().setTitle(chat.getChat());
+        getActivity().setTitle(chat.getChatName());
 
         this.view = inflater.inflate(R.layout.fragment_chat, container, false);
 
@@ -83,7 +74,7 @@ public class ChatFragment extends Fragment {
         btnSend = (Button) view.findViewById(R.id.btnEnviar);
 
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference(chat.getChat()); //Chat name
+        databaseReference = database.getReference(chat.getChatName()); //Chat name
 
         adapter = new MessageAdapter(getContext());
         LinearLayoutManager l = new LinearLayoutManager(getContext());
