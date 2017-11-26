@@ -12,6 +12,7 @@ public class User {
     private String postalCode;
     private String question;
     private Integer level;
+    private boolean selected = false;
 
     public User(Integer id, String username, String firstName, String lastName, String postalCode, String question,Integer level) {
         this.id = id;
@@ -77,6 +78,15 @@ public class User {
 
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     @Override

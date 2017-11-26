@@ -38,6 +38,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
     protected TextView name;
     protected ImageView img;
     protected IFriendsAdapter friendsDBAdapter;
+    protected ImageView chat;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,6 +50,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
         this.name = view.findViewById(R.id.completeName2);
         this.postCode = view.findViewById(R.id.userPostCode2);
         this.img = view.findViewById(R.id.action_friend);
+        this.chat = view.findViewById(R.id.chat_friend);
         setImage();
 
         this.profileInfo = getActivity().getIntent().getExtras();
@@ -100,7 +102,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
 
     protected abstract void getMethod(String s);
 
-    private void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+    protected void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle(title);
         builder.setMessage(message);

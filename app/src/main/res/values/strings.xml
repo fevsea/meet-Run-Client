@@ -12,6 +12,7 @@
     <string name="leave_meeting_label">Leave meeting</string>
     <string name="leave_meeting_message">Are you sure you want to leave the meeting?</string>
     <string name="friends_label">Friends</string>
+    <string name="new_group_label">New group</string>
     <string name="users_label">Users</string>
     <string name="home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -41,6 +42,8 @@
     <string name="delete_friend_dialog_title">Stop being friends</string>
     <string name="delete_account_message">Are you sure you want to delete your account?</string>
     <string name="delete_account_title">Delete account</string>
+    <string name="chat_friend_dialog_message">Are you sure you want to send a message to</string>
+    <string name="chat_friend_dialog_title">Chat with</string>
     <string name="ok">OK</string>
     <string name="accept_request">Send request</string>
     <string name="cancel">Cancel</string>
@@ -63,6 +66,7 @@
 
     <string name="user_added_to_meeting">User added to meeting</string>
     <string name="friend_profile_label">Friend profile</string>
+    <string name="chat_label">Chats</string>
     <string name="user_profile_label">User profile</string>
     <string name="joined_meeting">Meeting joined succesfully!</string>
 
@@ -71,10 +75,12 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="saving">Saving</string>
+    <string name="login">Login</string>
     <string name="saving_meeting">Saving Meeting</string>
     <string name="error_loading_meeting">Sorry, there was an error while loading this meeting</string>
     <string name="title_activity_tracking">Tracking</string>
     <string name="saving_tracking_data">Saving tracking data</string>
+    <string name="getting_current_session">Entering in your account</string>
     <string name="tracking_error_toast_message">There was an error saving the tracking data!</string>
     <string name="tracking_error_loading">There was an error loading the tracking!</string>
     <string name="error_connecting_google_reconnect">Error connecting with the Google API, trying to reconnect</string>

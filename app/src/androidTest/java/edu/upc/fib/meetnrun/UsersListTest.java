@@ -70,8 +70,8 @@ public class UsersListTest {
     public void testRecyclerViewIntent() {
         Intents.init();
         UsersListFragment userListFragment = getActivityFragment();
-        onView(withId(R.id.fragment_users_container)).check(matches(isDisplayed()));
-        onView(withId(R.id.fragment_users_container))
+        onView(withId(R.id.fragment_friends_container)).check(matches(isDisplayed()));
+        onView(withId(R.id.fragment_friends_container))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
         intended(hasComponent(UserProfileActivity.class.getName()));
         Intents.release();
@@ -80,7 +80,7 @@ public class UsersListTest {
     @Test
     public void testRecyclerViewHolder() {
         UsersListFragment userListFragment = getActivityFragment();
-        onView(withId(R.id.fragment_users_container))
+        onView(withId(R.id.fragment_friends_container))
                 .perform(RecyclerViewActions.scrollToHolder(
                         withViewHolder("ericR")
                 ));

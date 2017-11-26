@@ -49,8 +49,15 @@ public class UsersListFragment extends FriendUserListFragmentTemplate {
     }
 
     @Override
-    protected Intent selectIntent() {
-        return new Intent(getActivity(),UserProfileActivity.class);
+    protected void getIntent(User friend) {
+        Intent friendProfileIntent = new Intent(getActivity(),UserProfileActivity.class);
+
+        friendProfileIntent.putExtra("id",String.valueOf(friend.getId()));
+        friendProfileIntent.putExtra("userName",friend.getUsername());
+        String name = friend.getFirstName()+" "+friend.getLastName();
+        friendProfileIntent.putExtra("name",name);
+        friendProfileIntent.putExtra("postCode",friend.getPostalCode());
+        startActivity(friendProfileIntent);
     }
 
     @Override
