@@ -102,4 +102,5 @@
     <string name="user_name">Nom d\'usuari</string>
     <string name="user_profile_label">Perfil d\'usuari</string>
     <string name="users_label">Usuaris</string>
+    <string name="avg_speed">Velocitat mitjana</string>
 </resources>

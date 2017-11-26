@@ -108,5 +108,6 @@
     <string name="public_yes_friends">Sí, quiero añadir amigos</string>
     <string name="meeting_friends_label">Elige a tus amigos</string>
     <string name="ok">OK</string>
+    <string name="avg_speed">Velocidad media</string>
 
 </resources>

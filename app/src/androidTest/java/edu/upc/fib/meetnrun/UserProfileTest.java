@@ -12,18 +12,11 @@ import org.junit.runner.RunWith;
  * Created by eric on 14/11/17.
  */
 
-import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.views.EditMeetingActivity;
-import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
-import edu.upc.fib.meetnrun.views.ProfileActivity;
 import edu.upc.fib.meetnrun.models.User;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 

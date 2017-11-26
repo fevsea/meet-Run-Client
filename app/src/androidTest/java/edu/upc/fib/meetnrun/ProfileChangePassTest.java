@@ -13,7 +13,6 @@ import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.ChangePasswordActivity;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ProfileActivity;
 import edu.upc.fib.meetnrun.views.fragments.ChangePasswordFragment;
 
 import static android.support.test.espresso.Espresso.onView;

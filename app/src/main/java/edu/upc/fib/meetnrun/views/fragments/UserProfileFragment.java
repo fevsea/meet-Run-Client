@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.os.AsyncTask;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
     @Override
     protected void setImage() {
         img.setImageResource(R.drawable.send);
+        chat.setVisibility(View.GONE);
     }
 
     @Override
@@ -27,7 +29,7 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
 
     @Override
     protected String setDialogMessage() {
-        return getResources().getString(R.string.friend_request_dialog_message)+" "+profileInfo.getString("userName")+"?";
+        return getResources().getString(R.string.friend_request_dialog_message)+" "+currentFriend.getUsername()+"?";
     }
 
     @Override
