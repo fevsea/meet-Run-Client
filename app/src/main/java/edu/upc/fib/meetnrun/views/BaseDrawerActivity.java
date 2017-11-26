@@ -73,6 +73,9 @@ public abstract class BaseDrawerActivity extends AppCompatActivity{
                                 case R.id.friends:
                                     i = new Intent(getApplicationContext(),FriendsActivity.class);
                                     break;
+                                case R.id.challenges:
+                                    i = new Intent(getApplicationContext(), ChallengesListActivity.class);
+                                    break;
                                 case R.id.settings:
                                     i = new Intent(getApplicationContext(),SettingsActivity.class);
                                     break;

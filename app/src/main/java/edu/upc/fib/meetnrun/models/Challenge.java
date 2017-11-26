@@ -8,13 +8,68 @@ import java.util.Date;
 
 public class Challenge {
 
+    private Integer id;
     private User creator;
     private User challenged;
     private int distance;
-    private int hours;
-    private int minutes;
     private String dateDeadline;
     private String creationDate;
+    private Integer creatorDistance;
+    private Integer challengedDistance;
+
+    public Challenge() {
+
+    }
+
+    public Challenge(Integer id, User creator, User challenged, int distance, String dateDeadline, String creationDate, Integer creatorDistance, Integer challengedDistance) {
+        this.id = id;
+        this.creator = creator;
+        this.challenged = challenged;
+        this.distance = distance;
+        this.dateDeadline = dateDeadline;
+        this.creationDate = creationDate;
+        this.creatorDistance = creatorDistance;
+        this.challengedDistance = challengedDistance;
+    }
+
+    public Challenge(User creator, User challenged, int distance, String dateDeadline) {
+        this.creator = creator;
+        this.challenged = challenged;
+        this.distance = distance;
+        this.dateDeadline = dateDeadline;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getDateDeadline() {
+        return dateDeadline;
+    }
+
+    public void setDateDeadline(String dateDeadline) {
+        this.dateDeadline = dateDeadline;
+    }
+
+    public Integer getCreatorDistance() {
+        return creatorDistance;
+    }
+
+    public void setCreatorDistance(Integer creatorDistance) {
+        this.creatorDistance = creatorDistance;
+    }
+
+    public Integer getChallengedDistance() {
+        return challengedDistance;
+    }
+
+    public void setChallengedDistance(Integer challengedDistance) {
+        this.challengedDistance = challengedDistance;
+    }
 
     public User getCreator() {
         return creator;
@@ -38,22 +93,6 @@ public class Challenge {
 
     public void setDistance(int distance) {
         this.distance = distance;
-    }
-
-    public int getHours() {
-        return hours;
-    }
-
-    public void setHours(int hours) {
-        this.hours = hours;
-    }
-
-    public int getMinutes() {
-        return minutes;
-    }
-
-    public void setMinutes(int minutes) {
-        this.minutes = minutes;
     }
 
     public String getDeadline() {

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/meeting_item_padding_horizontal"
+    android:paddingRight="@dimen/meeting_item_padding_horizontal"
+    android:paddingBottom="@dimen/meeting_item_padding_vertical"
+    android:paddingTop="@dimen/meeting_item_padding_vertical">
+    <android.support.v7.widget.CardView
+        android:id="@+id/challenge_item_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/card_depth"
+        card_view:cardCornerRadius="@dimen/card_radius"
+        card_view:cardElevation="@dimen/card_depth">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp">
+            <TextView
+                android:id="@+id/progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="40dp"
+                android:text="95%"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:padding="5dp"
+                android:gravity="center" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3.0"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/opponent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:textSize="15sp"
+                    android:layout_weight="1.0"
+                    android:text="Opponent: Guillem Castro"/>
+                <TextView
+                    android:id="@+id/expiration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1.0"
+                    android:textSize="15sp"
+                    android:text="Expires in 5 hours"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

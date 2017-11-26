@@ -43,7 +43,9 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
 
     @Override
     public void onClick(View v) {
-        startActivity(new Intent(getActivity(), CreateChallengeActivity.class));
+        Intent i = new Intent(getActivity(), CreateChallengeActivity.class);
+        i.putExtra("id",Integer.parseInt(this.profileInfo.getString("id")));
+        startActivity(i);
     }
 
     private class removeFriend extends AsyncTask<String,String,String> {

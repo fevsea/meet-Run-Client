@@ -96,11 +96,16 @@
             android:label="Tracking"
             android:screenOrientation="portrait" />
 
-        <service android:name=".services.TrackingService"></service>
+        <service android:name=".services.TrackingService" />
 
         <activity
             android:name=".views.CreateChallengeActivity"
-            android:label="@string/title_activity_challenge"></activity>
+            android:label="@string/title_activity_challenge"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".views.ChallengesListActivity"
+            android:label="@string/title_activity_challenges_list" />
     </application>
 
 </manifest>

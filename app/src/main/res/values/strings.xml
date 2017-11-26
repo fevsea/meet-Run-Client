@@ -93,5 +93,9 @@
     <string name="error_change_pass">Sorry, there was an error while changing your password</string>
     <string name="action_change_pass">Change password</string>
     <string name="challenge">Challenge</string>
-    <string name="title_activity_challenge">New Challenge</string>
+    <string name="title_activity_challenge">Create Challenge</string>
+    <string name="title_activity_challenges_list">ChallengesList</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

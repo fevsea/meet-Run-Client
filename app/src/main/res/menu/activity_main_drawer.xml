@@ -15,6 +15,11 @@
             android:icon="@drawable/friends"
             android:title="Friends" />
         <item
+            android:id="@+id/challenges"
+            android:icon="@drawable/ic_challenge"
+            android:title="Challenges"
+            />
+        <item
             android:id="@+id/logout"
             android:icon="@drawable/exit"
             android:title="Log out" />

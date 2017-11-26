@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,8 +35,6 @@ import edu.upc.fib.meetnrun.views.fragments.EditMeetingFragment;
 public class CreateChallengeActivity extends AppCompatActivity implements View.OnClickListener{
 
     private NumberPicker distancePicker;
-    private NumberPicker hoursPicker;
-    private NumberPicker minutesPicker;
     private EditText deadlineText;
 
     private Challenge challenge = new Challenge();
@@ -48,6 +47,8 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createchallenge);
 
+        setTitle("Create challenge");
+
         userID = getIntent().getIntExtra("id", -1);
         if (userID == -1) {
             Toast.makeText(this, R.string.tracking_error_loading, Toast.LENGTH_LONG).show();
@@ -55,11 +56,15 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         }
 
         distancePicker = findViewById(R.id.distance_picker);
-        hoursPicker = findViewById(R.id.hour_picker);
-        minutesPicker = findViewById(R.id.minutes_picker);
+        distancePicker.setMinValue(0);
+        distancePicker.setMaxValue(1000);
+        distancePicker.setWrapSelectorWheel(true);
         deadlineText = findViewById(R.id.deadline_picker);
-
+        deadlineText.setFocusable(false);
+        deadlineText.setClickable(true);
         deadlineText.setOnClickListener(this);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -73,8 +78,9 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.edit_meeting_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     @Override
@@ -82,18 +88,19 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         int id = item.getItemId();
         if (id == R.id.done_button) {
             challenge.setDistance(distancePicker.getValue());
-            challenge.setHours(hoursPicker.getValue());
-            challenge.setMinutes(minutesPicker.getValue());
             challenge.setCreator(CurrentSession.getInstance().getCurrentUser());
             new GetUser().execute(userID);
             challenge.setChallenged(challenged);
-
-
-
             CreateChallenge createChallenge= new CreateChallenge();
             createChallenge.execute(this.challenge);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void showDatePickerDialog() {
@@ -103,12 +110,16 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
             public void onDateSet(DatePicker datePicker, int yearSet, int monthSet, int daySet) {
                 DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
                 Date dateTime;
-                try {
-                    dateTime = inputFormat.parse(challenge.getDeadline());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    dateTime = new Date(challenge.getDeadline());
+                if(challenge.getDeadline() != null) {
+                    try {
+                        dateTime = inputFormat.parse(challenge.getDeadline());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        dateTime = new Date(challenge.getDeadline());
+                    }
                 }
+                else
+                    dateTime = new Date();
                 Calendar date = new GregorianCalendar();
                 date.setTime(dateTime);
                 date.set(Calendar.YEAR, yearSet/* + 1900*/);
@@ -121,12 +132,16 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         });
         DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Date dateTime = null;
-        try {
-            dateTime = inputFormat.parse(challenge.getDeadline());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            dateTime = new Date(challenge.getDeadline());
+        if(challenge.getDeadline() != null) {
+            try {
+                dateTime = inputFormat.parse(challenge.getDeadline());
+            } catch (ParseException e) {
+                e.printStackTrace();
+                dateTime = new Date(challenge.getDeadline());
+            }
         }
+        else
+            dateTime = new Date();
         if (dateTime != null) {
             Calendar date = new GregorianCalendar();
             date.setTime(dateTime);
