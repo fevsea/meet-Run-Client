@@ -47,6 +47,7 @@ public class ChatListFragment extends Fragment {
     private boolean isOpen = false;
 
     private static List<Chat> list = new ArrayList<Chat>();
+    private static int count = 0;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -187,7 +188,7 @@ public class ChatListFragment extends Fragment {
                 for (Chat chat : l) {
 
                     if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) friendUserName = chat.getUser1().getUsername();
-                    else friendUserName = chat.getUser2();
+                    else friendUserName = chat.getUser2().getUsername();
 
                     String friendName = friendUserName.toLowerCase();
                     if (friendName != null) {
@@ -228,13 +229,19 @@ public class ChatListFragment extends Fragment {
         list.add(c);
     }
 
+    public static int getCount() {
+        int aux = count;
+        count++;
+        return aux;
+    }
+
     public static Chat getChat(String user, String friend) {
 
         for (Chat chat : list) {
 
             String chatUserName = chat.getUser1().getUsername();
             if (chatUserName.equals(user) || chatUserName.equals(friend)) {
-                String chatFriendUserName = chat.getUser2();
+                String chatFriendUserName = chat.getUser2().getUsername();
                 if (chatFriendUserName.equals(user) || chatFriendUserName.equals(friend)) {
                     return chat;
                 }
@@ -245,7 +252,7 @@ public class ChatListFragment extends Fragment {
 
     public static boolean deleteChat(String name) {
         for (Chat chat : list) {
-            if (chat.getUser1().getUsername().equals(name) || chat.getUser2().equals(name)) {
+            if (chat.getUser1().getUsername().equals(name) || chat.getUser2().getUsername().equals(name)) {
                 list.remove(chat);
                 return true;
             }

@@ -29,18 +29,20 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     }
 
     public void bindChat(Chat chat, boolean newChat) {
-        String friendUserName = null;
-        if (!CurrentSession.getInstance().getCurrentUser().getUsername().equals(chat.getUser1().getUsername())) friendUserName = chat.getUser1().getUsername();
-        else friendUserName = chat.getUser2();
+
+        if (chat.getType() == 0) {
+            if (!CurrentSession.getInstance().getCurrentUser().getUsername().equals(chat.getUser1().getUsername())) chat.setChatName(chat.getUser1().getUsername());
+            else chat.setChatName(chat.getUser2().getUsername());
+        }
 
         TextView userPhoto = view.findViewById(R.id.friend_photo);
-        char letter = friendUserName.charAt(0);
+        char letter = chat.getChatName().charAt(0);
         String firstLetter = String.valueOf(letter);
         userPhoto.setBackground(getColoredCircularShape(letter));
         userPhoto.setText(firstLetter);
 
         TextView userName = view.findViewById(R.id.username_friend);
-        userName.setText(friendUserName);
+        userName.setText(chat.getChatName());
 
         String txt = chat.getMessage().getMessage();
         if (txt.length() > MAX_CHAT_LAST_MESSAGE) txt = txt.substring(0, MAX_CHAT_LAST_MESSAGE)+"...";

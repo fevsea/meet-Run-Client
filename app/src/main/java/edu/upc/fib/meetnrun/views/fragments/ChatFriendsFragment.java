@@ -6,8 +6,10 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
@@ -38,9 +40,9 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
 
         String friendUserName = friend.getUsername();
         User user = CurrentSession.getInstance().getCurrentUser();
-        Chat chat = ChatListFragment.getChat(user.getUsername(), friendUserName);
+        String currentUsername = user.getUsername();
+        Chat chat = ChatListFragment.getChat(currentUsername, friendUserName);
         if (chat == null) {
-            String chatName = user.getUsername()+" - "+friendUserName;
             Calendar rightNow = Calendar.getInstance();
             StringBuilder sb = new StringBuilder();
             String hour = null;
@@ -57,9 +59,13 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
 
             Date dateWithoutTime = rightNow.getTime();
 
-            Message m = new Message("", user.getUsername(), sb.toString(), dateWithoutTime);
+            Message m = new Message("", currentUsername, sb.toString(), dateWithoutTime);
 
-            chat = new Chat(1,chatName, user, friendUserName, m);
+            List<User> userList = new ArrayList<User>();
+            userList.add(user);
+            userList.add(friend);
+
+            chat = new Chat(ChatListFragment.getCount(),friendUserName, userList, 0, m);
             ChatListFragment.addChatFake(chat);
         }
         Intent i = new Intent(getContext(), ChatActivity.class);

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "926951362382",
+    "firebase_url": "https://chat-android-ecce0.firebaseio.com",
+    "project_id": "chat-android-ecce0",
+    "storage_bucket": "chat-android-ecce0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:926951362382:android:f688e8cf20e1909e",
+        "android_client_info": {
+          "package_name": "edu.upc.fib.meetnrun"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "926951362382-rtltm3d596sf306h4nm04g3h54ug3mi6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPmtGj8ssQUY2NFSRMFEadYxG-H4X1eYs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
