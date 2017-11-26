@@ -1,15 +1,22 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -17,6 +24,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -25,6 +35,7 @@ import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MessageAdapter;
 
 
@@ -147,5 +158,27 @@ public class ChatFragment extends Fragment {
         rvMessages.scrollToPosition(adapter.getItemCount()-1);
     }
 
+    /*@Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        inflater.inflate(R.menu.chat_menu, menu);
+        MenuItem item = menu.findItem(R.id.chat_menu);
+        item.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (chat.getType() == 0) {
+                    Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
+                    CurrentSession.getInstance().setFriend(chat.getUser2());
+                    startActivity(friendProfileIntent);
+                } else {
+
+                }
+                return true;
+            }
+        });
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+*/
 
 }
