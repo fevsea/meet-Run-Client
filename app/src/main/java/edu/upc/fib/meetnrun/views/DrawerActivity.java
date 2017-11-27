@@ -187,4 +187,9 @@ public class DrawerActivity extends AppCompatActivity{
         editor.commit();
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+    
 }
