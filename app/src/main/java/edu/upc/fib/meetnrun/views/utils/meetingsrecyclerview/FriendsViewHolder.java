@@ -54,9 +54,12 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
         if (level.equals("null")) level = "0";
         meetingLevel.setText(String.valueOf(level));
 
+        cardView = (CardView) view.findViewById(R.id.user_cardview);
 
-        if (isGroup) {
-            cardView = (CardView) view.findViewById(R.id.user_cardview);
+        if (user.isSelected()) cardView.setCardBackgroundColor(Color.parseColor("#B3E5FC"));
+        else cardView.setCardBackgroundColor(Color.WHITE);
+
+        /*if (isGroup) {
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -70,7 +73,7 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
                     }
                 }
             });
-        }
+        }*/
 
 
         view.setOnClickListener(this);

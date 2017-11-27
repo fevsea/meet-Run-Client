@@ -31,7 +31,8 @@
                 android:background="@drawable/user_profile_circular_text_view"
                 android:gravity="center"
                 android:textSize="20sp"
-                android:text="e"/>
+                android:text="e"
+                android:textAllCaps="true"/>
 
             <TextView
                 android:id="@+id/user_level"

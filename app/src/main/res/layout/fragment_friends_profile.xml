@@ -25,7 +25,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="-60dp"
             android:background="@drawable/user_profile_circular_text_view"
-            android:textSize="40dp"
+            android:textSize="45dp"
             android:layout_centerVertical="true"
             android:gravity="center"
             android:text="e"
