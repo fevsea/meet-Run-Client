@@ -126,4 +126,5 @@
     <string name="min_length">Minimum distance run</string>
     <string name="total_steps">Total number of steps</string>
     <string name="total_meetings">Completed meetings</string>
+    <string name="total_km">Total distance (in Km)</string>
 </resources>
