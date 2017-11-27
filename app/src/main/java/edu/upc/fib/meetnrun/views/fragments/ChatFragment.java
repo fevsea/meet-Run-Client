@@ -129,6 +129,7 @@ public class ChatFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                NUMB_MESSAGES += 15;
                 loadMessages();
                 swipeRefreshLayout.setRefreshing(false);
             }
