@@ -29,4 +29,18 @@
     <color name="orange_profile">#FFCC80</color>
     <color name="deep_orange_profile">#FFAB91</color>
 
+    <color name="red_chat">#C62828</color>
+    <color name="pink_chat">#AD1457</color>
+    <color name="purple_chat">#6A1B9A</color>
+    <color name="deep_purple_chat">#4527A0</color>
+    <color name="indigo_chat">#283593</color>
+    <color name="blue_chat">#1565C0</color>
+    <color name="cyan_chat">#00838F</color>
+    <color name="teal_chat">#00695C</color>
+    <color name="green_chat">#2E7D32</color>
+    <color name="light_green_chat">#558B2F</color>
+    <color name="yellow_chat">#F9A825</color>
+    <color name="orange_chat">#EF6C00</color>
+    <color name="deep_orange_chat">#D84315</color>
+
 </resources>

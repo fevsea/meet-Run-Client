@@ -51,7 +51,8 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         lastConverse.setText(txt);
 
         TextView lastHour = view.findViewById(R.id.chat_hour);
-        lastHour.setText(chat.getMessage().getHour());
+        //HORA
+        lastHour.setText(chat.getMessage().getDateTime().toString());
 
         TextView numberChats = view.findViewById(R.id.chat_new_messages);
 

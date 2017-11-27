@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,6 +62,8 @@ public class ChatFragment extends Fragment {
     private Chat chat;
     private User currentUser;
 
+    private int NUMB_MESSAGES = 15;
+
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
@@ -101,23 +104,11 @@ public class ChatFragment extends Fragment {
                 String userName = currentUser.getUsername();
 
                 Calendar cal = Calendar.getInstance();
-                StringBuilder sb = new StringBuilder();
-                String hour = null;
-                String minute = null;
-                String aux = String.valueOf(cal.get(Calendar.HOUR_OF_DAY));
-                if (aux.length() == 1) hour = "0"+aux;
-                else hour = aux;
-                aux = String.valueOf(cal.get(Calendar.MINUTE));
-                if (aux.length() == 1) minute = "0"+aux;
-                else minute = aux;
-                sb.append(hour);
-                sb.append(":");
-                sb.append(minute);
 
                 Date dateWithoutTime = cal.getTime();
 
                 String txt = txtMessage.getText().toString();
-                Message m = new Message(txt, userName, sb.toString(), dateWithoutTime);
+                Message m = new Message(txt, userName, dateWithoutTime);
                 databaseReference.push().setValue(m);
                 txtMessage.setText("");
                 chat.setMessage(m);
@@ -134,12 +125,21 @@ public class ChatFragment extends Fragment {
 
         loadMessages();
 
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_messages_swipe);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadMessages();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         return this.view;
     }
 
     private void loadMessages() {
 
-        databaseReference.limitToLast(15).addChildEventListener(new ChildEventListener() {
+        databaseReference.limitToLast(NUMB_MESSAGES).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message m = dataSnapshot.getValue(Message.class);

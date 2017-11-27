@@ -1,6 +1,7 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -77,19 +78,36 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         }
         if (position == 0) {
             showDate = true;
+            sameHour = false;
         }
-        if (previous != null) {
-            if(m.getHour().equals(previous.getHour()) && m.getName().equals(previous.getName())) {
-                sameHour = true;
-            }
-            Date date = m.getDateTime();
-            Date previousDate = previous.getDateTime();
+        Date date = m.getDateTime();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
 
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
-            int day = cal.get(Calendar.DAY_OF_MONTH);
-            cal.setTime(previousDate);
-            int previousDay = cal.get(Calendar.DAY_OF_MONTH);
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int min = cal.get(Calendar.MINUTE);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        String messageHourMin = String.valueOf(hour)+":"+String.valueOf(min);
+
+        String messageDay = String.valueOf(day)+"-"+String.valueOf(cal.get(Calendar.MONTH))+"-"+String.valueOf(cal.get(Calendar.YEAR));
+
+        if (previous != null) {
+
+            Date previousDate = previous.getDateTime();
+            Calendar cal2 = Calendar.getInstance();
+            cal2.setTime(previousDate);
+
+            int previousHour = cal2.get(Calendar.HOUR_OF_DAY);
+            int previousMin = cal2.get(Calendar.MINUTE);
+
+            if (m.getName().equals(previous.getName())) {
+                if (hour == previousHour && min == previousMin) {
+                    sameHour = true;
+                }
+            }
+
+            int previousDay = cal2.get(Calendar.DAY_OF_MONTH);
 
             if(day != previousDay) {
                 showDate = true;
@@ -102,7 +120,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         if (m.getName().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) {
             holder.getName().setText("you");
         }
-        else holder.getName().setText(userName);
+        else {
+            holder.getName().setText(userName);
+            holder.getName().setTextColor(getColor(userName.charAt(0), false));
+        }
 
         holder.getMessage().setText(m.getMessage());
         if (sameHour) {
@@ -111,11 +132,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         }
         else {
             holder.getHour().setVisibility(View.VISIBLE);
-            holder.getHour().setText(m.getHour());
+            holder.getHour().setText(messageHourMin);
         }
         if (showDate) {
             holder.getDate().setVisibility(View.VISIBLE);
-            holder.getDate().setText(m.getDateTime().toString());
+            holder.getDate().setText(messageDay);
             showDate = false;
         }
         else {
@@ -134,11 +155,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {
-        int[] colors = v.getResources().getIntArray(R.array.colors);
         GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(v.getContext(),R.drawable.user_profile_circular_text_view);
-        int position = letter%colors.length;
-        circularShape.setColor(colors[position]);
+        circularShape.setColor(getColor(letter, true));
         return circularShape;
+    }
+
+    private int getColor(char letter, boolean b) {
+        int[] colors;
+        if (b) {
+            colors = v.getResources().getIntArray(R.array.colors);
+        }
+        else {
+            colors = v.getResources().getIntArray(R.array.colors_chat);
+        }
+
+        int position = letter%colors.length;
+        return colors[position];
     }
 
 }
