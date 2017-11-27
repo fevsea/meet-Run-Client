@@ -27,6 +27,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.fragments.ChatListFragment;
 import edu.upc.fib.meetnrun.views.fragments.FriendsFragment;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
 import edu.upc.fib.meetnrun.views.fragments.MyMeetingsFragment;
@@ -106,7 +107,8 @@ public class DrawerActivity extends AppCompatActivity{
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.chat:
-                                    i = new Intent(getApplicationContext(),ChatListActivity.class);
+                                    fragment = new ChatListFragment();
+                                    replaceFragment(fragment);
                                     break;
                                 case R.id.settings:
                                     fragment = new SettingsFragment();
