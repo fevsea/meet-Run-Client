@@ -37,7 +37,8 @@
                         android:textSize="20sp"
                         android:layout_margin="@dimen/meeting_item_margin"
                         android:layout_gravity="start|center_vertical"
-                        android:background="@drawable/user_profile_circular_text_view"/>
+                        android:background="@drawable/user_profile_circular_text_view"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -47,7 +48,8 @@
                         <TextView
                             android:id="@+id/mymeeting_item_title"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.AppCompat.Body2"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -61,7 +63,8 @@
                                 android:gravity="center"
                                 android:textSize="16sp"
                                 android:layout_gravity="center_vertical"
-                                android:background="@drawable/user_circular_text_view_small"/>
+                                android:background="@drawable/user_circular_text_view_small"
+                                style="@style/TextAppearance.AppCompat.Body1"/>
 
                             <TextView
                                 android:id="@+id/mymeeting_item_user_icon2"
@@ -71,7 +74,8 @@
                                 android:layout_margin="@dimen/meeting_item_margin"
                                 android:textSize="16sp"
                                 android:layout_gravity="center_vertical"
-                                android:background="@drawable/user_circular_text_view_small"/>
+                                android:background="@drawable/user_circular_text_view_small"
+                                style="@style/TextAppearance.AppCompat.Body1"/>
 
                             <TextView
                                 android:id="@+id/mymeeting_item_user_icon3"
@@ -80,14 +84,16 @@
                                 android:gravity="center"
                                 android:textSize="16sp"
                                 android:layout_gravity="center_vertical"
-                                android:background="@drawable/user_circular_text_view_small"/>
+                                android:background="@drawable/user_circular_text_view_small"
+                                style="@style/TextAppearance.AppCompat.Body1"/>
 
                             <TextView
                                 android:id="@+id/mymeeting_item_more_users"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:layout_margin="@dimen/meeting_item_margin"/>
+                                android:layout_margin="@dimen/meeting_item_margin"
+                                style="@style/TextAppearance.AppCompat.Body1"/>
                         </LinearLayout>
 
 
@@ -119,13 +125,15 @@
                         android:id="@+id/mymeeting_item_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"/>
+                        android:layout_weight="0.5"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
                     <TextView
                         android:id="@+id/mymeeting_item_time"
                         android:layout_width="wrap_content"
 
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5" />
+                        android:layout_weight="0.5"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
 
                 </LinearLayout>
 
@@ -154,7 +162,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_margin="@dimen/meeting_item_margin" />
+                    android:layout_margin="@dimen/meeting_item_margin"
+                    style="@style/TextAppearance.AppCompat.Body1"/>
 
                 <ImageButton
                     android:id="@+id/mymeeting_item_start"

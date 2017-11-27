@@ -17,16 +17,9 @@ import org.junit.runner.RunWith;
 import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
-import edu.upc.fib.meetnrun.views.FriendsActivity;
-import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
-import edu.upc.fib.meetnrun.views.MeetingListActivity;
-import edu.upc.fib.meetnrun.views.UsersListActivity;
 import edu.upc.fib.meetnrun.views.fragments.FriendsFragment;
-import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsViewHolder;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsViewHolder;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

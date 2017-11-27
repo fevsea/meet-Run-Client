@@ -19,7 +19,6 @@ import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.views.ProfileActivity;
 
 public class ChangePasswordFragment extends Fragment {
 
@@ -94,9 +93,7 @@ public class ChangePasswordFragment extends Fragment {
     }
 
     private void changeToUserProfile() {
-        Intent intent;
-        intent = new Intent(getActivity(), ProfileActivity.class);
-        startActivity(intent);
+       getActivity().finish();
     }
 
     private void saveNewPass() {

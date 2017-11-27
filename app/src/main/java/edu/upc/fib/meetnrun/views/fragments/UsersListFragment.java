@@ -33,8 +33,10 @@ public class UsersListFragment extends FriendUserListFragmentTemplate {
     }
 
     @Override
-    protected Intent selectIntent() {
-        return new Intent(getActivity(),UserProfileActivity.class);
+    protected void getIntent(User friend) {
+        Intent friendProfileIntent = new Intent(getActivity(),UserProfileActivity.class);
+        CurrentSession.getInstance().setFriend(friend);
+        startActivity(friendProfileIntent);
     }
 
     @Override
