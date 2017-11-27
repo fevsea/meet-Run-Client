@@ -33,7 +33,7 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
         this.context = context;
     }
 
-    public void bindMeeting(User user) {
+    public void bindMeeting(User user, boolean isGroup) {
         TextView userPhoto = view.findViewById(R.id.user_photo);
         char letter = user.getUsername().charAt(0);
         String firstLetter = String.valueOf(letter);
@@ -54,21 +54,24 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
         if (level.equals("null")) level = "0";
         meetingLevel.setText(String.valueOf(level));
 
-        cardView = (CardView) view.findViewById(R.id.user_cardview);
 
-        cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (cardView.isSelected()) {
-                    cardView.setCardBackgroundColor(Color.WHITE);
-                    cardView.setSelected(false);
+        if (isGroup) {
+            cardView = (CardView) view.findViewById(R.id.user_cardview);
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (cardView.isSelected()) {
+                        cardView.setCardBackgroundColor(Color.WHITE);
+                        cardView.setSelected(false);
+                    }
+                    else {
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+                        cardView.setSelected(true);
+                    }
                 }
-                else {
-                    cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
-                    cardView.setSelected(true);
-                }
-            }
-        });
+            });
+        }
+
 
         view.setOnClickListener(this);
     }

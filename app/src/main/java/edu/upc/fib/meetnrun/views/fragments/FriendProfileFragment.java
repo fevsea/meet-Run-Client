@@ -26,10 +26,12 @@ import edu.upc.fib.meetnrun.views.ChatActivity;
 
 public class FriendProfileFragment extends ProfileFragmentTemplate {
 
-    private String friendUsername = currentFriend.getUsername();
+    private String friendUsername;
 
     @Override
     protected void setImage() {
+
+        friendUsername = currentFriend.getUsername();
 
         chat.setOnClickListener(new View.OnClickListener() {
             @Override

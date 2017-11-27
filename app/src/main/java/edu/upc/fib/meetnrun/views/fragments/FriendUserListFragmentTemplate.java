@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -89,7 +90,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
                 getIntent(friend);
 
             }
-        }, getContext());
+        }, getContext(), false);
         friendsList.setAdapter(friendsAdapter);
 
     }

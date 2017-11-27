@@ -24,11 +24,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsViewHolder> {
     private RecyclerViewOnClickListener listener;
     private View v;
     private Context context;
+    private boolean isGroup;
 
-    public FriendsAdapter(List<User> users, RecyclerViewOnClickListener listener, Context context) {
+    public FriendsAdapter(List<User> users, RecyclerViewOnClickListener listener, Context context, boolean isGroup) {
         this.users = users;
         this.listener = listener;
         this.context = context;
+        this.isGroup = isGroup;
         notifyDataSetChanged();
     }
 
@@ -42,7 +44,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsViewHolder> {
     @Override
     public void onBindViewHolder(final FriendsViewHolder holder, int position) {
         User user = users.get(position);
-        holder.bindMeeting(user);
+        holder.bindMeeting(user, isGroup);
     }
 
     @Override
