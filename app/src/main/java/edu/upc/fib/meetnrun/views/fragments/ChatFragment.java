@@ -125,7 +125,7 @@ public class ChatFragment extends Fragment {
 
         loadMessages();
 
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_messages_swipe);
+        /*final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_messages_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -133,7 +133,7 @@ public class ChatFragment extends Fragment {
                 loadMessages();
                 swipeRefreshLayout.setRefreshing(false);
             }
-        });
+        });*/
 
         return this.view;
     }
