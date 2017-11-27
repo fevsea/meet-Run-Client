@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -22,11 +23,14 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
 
     private View view;
     private WeakReference<RecyclerViewOnClickListener> listener;
+    private CardView cardView;
+    private Context context;
 
-    public FriendsViewHolder(View itemView, RecyclerViewOnClickListener listener) {
+    public FriendsViewHolder(View itemView, RecyclerViewOnClickListener listener, Context context) {
         super(itemView);
         view = itemView;
         this.listener = new WeakReference<>(listener);
+        this.context = context;
     }
 
     public void bindMeeting(User user) {
@@ -50,9 +54,21 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
         if (level.equals("null")) level = "0";
         meetingLevel.setText(String.valueOf(level));
 
-        CardView cardView = (CardView) view.findViewById(R.id.user_cardview);
-        if (user.isSelected()) cardView.setCardBackgroundColor(Color.parseColor("#B3E5FC"));
-        else cardView.setCardBackgroundColor(Color.WHITE);
+        cardView = (CardView) view.findViewById(R.id.user_cardview);
+
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (cardView.isSelected()) {
+                    cardView.setCardBackgroundColor(Color.WHITE);
+                    cardView.setSelected(false);
+                }
+                else {
+                    cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+                    cardView.setSelected(true);
+                }
+            }
+        });
 
         view.setOnClickListener(this);
     }

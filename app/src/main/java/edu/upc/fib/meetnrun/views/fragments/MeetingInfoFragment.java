@@ -155,7 +155,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
                 startActivity(profileIntent);
 
             }
-        });
+        }, getContext());
         friendsList.setAdapter(participantsAdapter);
       /*  LinearLayoutManager layoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);

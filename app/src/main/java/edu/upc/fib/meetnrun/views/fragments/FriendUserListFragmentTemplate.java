@@ -89,7 +89,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
                 getIntent(friend);
 
             }
-        });
+        }, getContext());
         friendsList.setAdapter(friendsAdapter);
 
     }

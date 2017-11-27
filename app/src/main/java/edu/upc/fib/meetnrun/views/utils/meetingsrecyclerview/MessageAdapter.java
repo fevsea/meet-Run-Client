@@ -11,9 +11,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
 
 /**
@@ -26,9 +29,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     private List<Message> messagesList = new ArrayList<>();
     private Context c;
     private View v;
-    private Message previous = null;
     private boolean sameHour = false;
-    private boolean me = false;
     private boolean showDate = false;
 
     public MessageAdapter(Context c) {
@@ -57,7 +58,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         v = null;
 
         if (viewType == 0) {
-            me = true;
             v = LayoutInflater.from(c).inflate(R.layout.card_view_message_send, parent, false);
         }
         else {
@@ -71,22 +71,36 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     public void onBindViewHolder(MessageViewHolder holder, int position) {
 
         Message m = messagesList.get(position);
+        Message previous = null;
+        if (position > 0) {
+            previous = messagesList.get(position-1);
+        }
+        if (position == 0) {
+            showDate = true;
+        }
         if (previous != null) {
             if(m.getHour().equals(previous.getHour()) && m.getName().equals(previous.getName())) {
                 sameHour = true;
             }
-            /*if(!m.getDate().equals(previous.getDate())) {
+            Date date = m.getDateTime();
+            Date previousDate = previous.getDateTime();
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
+            cal.setTime(previousDate);
+            int previousDay = cal.get(Calendar.DAY_OF_MONTH);
+
+            if(day != previousDay) {
                 showDate = true;
-            }*/
+            }
 
         }
         else showDate = true;
-        previous = m;
 
         String userName = m.getName();
-        if (me) {
+        if (m.getName().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) {
             holder.getName().setText("you");
-            me = false;
         }
         else holder.getName().setText(userName);
 
@@ -101,7 +115,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         }
         if (showDate) {
             holder.getDate().setVisibility(View.VISIBLE);
-            //holder.getDate().setText(m.getDate());
+            holder.getDate().setText(m.getDateTime().toString());
             showDate = false;
         }
         else {

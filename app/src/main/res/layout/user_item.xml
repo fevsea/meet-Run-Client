@@ -15,8 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/card_depth"
         card_view:cardCornerRadius="@dimen/card_radius"
-        card_view:cardElevation="@dimen/card_depth"
-        card_view:cardBackgroundColor="@color/colorPrimaryLight">
+        card_view:cardElevation="@dimen/card_depth">
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -158,7 +158,7 @@ public class ChatGroupsFragment extends Fragment {
                 }
                 friendsAdapter.updateFriendsList(l);
             }
-        });
+        }, getContext());
         friendsList.setAdapter(friendsAdapter);
     }
 
@@ -186,4 +186,6 @@ public class ChatGroupsFragment extends Fragment {
         updateFriends();
         super.onResume();
     }
+
+
 }
