@@ -41,7 +41,7 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
 
 
     public void updateMeetingsList(List<Meeting> meetings) {
-        this.meetings = meetings;
+        this.meetings.addAll(meetings);
         notifyDataSetChanged();
     }
 
