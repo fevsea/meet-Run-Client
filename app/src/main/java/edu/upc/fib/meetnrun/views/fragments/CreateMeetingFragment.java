@@ -14,7 +14,6 @@ import android.support.v4.app.Fragment;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,7 +46,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -59,13 +57,6 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 
 
-/*
-import static android.R.layout.simple_spinner_item;
-import static edu.upc.fib.meetnrun.R.id.isPublic;
-import static edu.upc.fib.meetnrun.R.id.scrollView;
-import edu.upc.fib.meetnrun.persistence.WebDBController;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
-*/
 import edu.upc.fib.meetnrun.views.MeetingFriendsActivity;
 
 import static android.app.Activity.RESULT_OK;
@@ -80,7 +71,6 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     private GoogleMap maps;
     private LatLng myLocation;
     private Marker myMarker;
-    private final static String[] kind = {"@string/public_meeting","@string/private_meeting"};
     EditText name;
     EditText date;
     EditText hour;
@@ -114,13 +104,13 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         View view = inflater.inflate(R.layout.fragment_create_meeting, container, false);
         this.view = view;
 
-        name = (EditText) view.findViewById(R.id.name);
-        date = (EditText) view.findViewById(R.id.date);
-        hour = (EditText) view.findViewById(R.id.hour);
-        level = (EditText) view.findViewById(R.id.level);
-        description = (EditText) view.findViewById(R.id.description);
-        location = (EditText) view.findViewById(R.id.meetingLocation);
-        Button dateButton = (Button) view.findViewById(R.id.pickDate);
+        name = view.findViewById(R.id.name);
+        date = view.findViewById(R.id.date);
+        hour = view.findViewById(R.id.hour);
+        level = view.findViewById(R.id.level);
+        description = view.findViewById(R.id.description);
+        location = view.findViewById(R.id.meetingLocation);
+        Button dateButton = view.findViewById(R.id.pickDate);
 
         myLocation = new LatLng(41.388576, 2.112840);
         friends=false;
@@ -132,16 +122,16 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
                 showDatePickerDialog();
             }
         });
-        Button hourButton = (Button) view.findViewById(R.id.pickHour);
+        Button hourButton = view.findViewById(R.id.pickHour);
         hourButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showTimePickerDialog();
             }
         });
-        sV=(ScrollView) view.findViewById(R.id.scrollView);
+        sV= view.findViewById(R.id.scrollView);
 
-        Button pickLocation=(Button) view.findViewById(R.id.pickLocation);
+        Button pickLocation= view.findViewById(R.id.pickLocation);
         pickLocation.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -149,7 +139,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
                 showLocationPicker();
             }
         });
-        Button createButton=(Button) view.findViewById(R.id.create);
+        Button createButton= view.findViewById(R.id.create);
         createButton.setOnClickListener(new View.OnClickListener (){
 
             @Override
@@ -159,10 +149,10 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         });
 
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        publicMeeting = (Switch) view.findViewById(R.id.switch_create);
+        publicMeeting = view.findViewById(R.id.switch_create);
         publicMeeting.setOnCheckedChangeListener(this);
 
         Public=false;
@@ -192,7 +182,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
 
     private void showTimePickerDialog() {
-        final EditText timeText = (EditText) view.findViewById(R.id.hour);
+        final EditText timeText = view.findViewById(R.id.hour);
         TimePickerFragment timePickerFragment = new TimePickerFragment();
         timePickerFragment.setListener(new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -208,7 +198,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     }
 
     private void showDatePickerDialog() {
-        final EditText dateText = (EditText) view.findViewById(R.id.date);
+        final EditText dateText = view.findViewById(R.id.date);
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -371,7 +361,6 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     }
 
     private class newMeeting extends AsyncTask<String,String,String> {
-        //Meeting m;
         @Override
         protected String doInBackground(String... strings){
             try {

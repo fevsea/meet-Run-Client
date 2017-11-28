@@ -109,5 +109,22 @@
     <string name="meeting_friends_label">Elige a tus amigos</string>
     <string name="ok">OK</string>
     <string name="avg_speed">Velocidad media</string>
+    <string name="chat_friend_dialog_message">Está seguro que quiere enviar un mensaje a</string>
+    <string name="chat_friend_dialog_title">Chatear con</string>
+    <string name="chat_label">Chats</string>
+    <string name="getting_current_session">Entrando en tu cuenta</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="max_length">Máxima distancia recorrida</string>
+    <string name="max_speed">Máxima velocidad media</string>
+    <string name="max_time">Tiempo máximo</string>
+    <string name="min_length">Mínima distancia recorrida</string>
+    <string name="min_speed">Mínima velocidad media</string>
+    <string name="min_time">Tiempo mínimo</string>
+    <string name="new_group_label">Grupo nuevo</string>
+    <string name="rhythm">Ritmo</string>
+    <string name="statistics_title">Estadísticas</string>
+    <string name="total_km">Distancia total (en km)</string>
+    <string name="total_meetings">Quedadas completadas</string>
+    <string name="total_steps">Número de pasos total</string>
 
 </resources>

@@ -18,9 +18,9 @@
     <string name="create_meeting_label">Crear Trobada</string>
     <string name="current_password">La vostra contrasenya actual:</string>
     <string name="date">Data</string>
-    <string name="delete_account_message">Esteu segur que voleu suprimir el vostre compte?</string>
+    <string name="delete_account_message">Està segur que voleu suprimir el vostre compte?</string>
     <string name="delete_account_title">Esborrar compte</string>
-    <string name="delete_friend_dialog_message">"Esta segur que vol deixar de ser amic de "</string>
+    <string name="delete_friend_dialog_message">Esta segur que vol deixar de ser amic de</string>
     <string name="delete_friend_dialog_title">Deixar de ser amics</string>
     <string name="description">Descripció</string>
     <string name="dummy_button">Botó ximple</string>
@@ -103,4 +103,21 @@
     <string name="user_profile_label">Perfil d\'usuari</string>
     <string name="users_label">Usuaris</string>
     <string name="avg_speed">Velocitat mitjana</string>
+    <string name="chat_friend_dialog_message">Està segur que vol enviar un misstage a</string>
+    <string name="chat_friend_dialog_title">Xatejar amb</string>
+    <string name="chat_label">Xats</string>
+    <string name="getting_current_session">Entrant dins el teu compte</string>
+    <string name="login">Iniciar sessió</string>
+    <string name="max_length">Màxima distància recorreguda</string>
+    <string name="max_speed">Màxima velocitat mitjana</string>
+    <string name="max_time">Temps máxim</string>
+    <string name="min_length">Mínima distancia recorreguda</string>
+    <string name="min_speed">Mínima velocitat mitjana</string>
+    <string name="min_time">Temps mínim</string>
+    <string name="new_group_label">Grup nou</string>
+    <string name="rhythm">Ritme</string>
+    <string name="statistics_title">Estadístiques</string>
+    <string name="total_km">Distància total (en km)</string>
+    <string name="total_meetings">Trobades completades</string>
+    <string name="total_steps">Nombre total de passos</string>
 </resources>

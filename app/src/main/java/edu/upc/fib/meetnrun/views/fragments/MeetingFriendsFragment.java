@@ -64,7 +64,7 @@ public class MeetingFriendsFragment extends Fragment {
         this.view = view;
         context=this.getActivity();
 
-        lv = (ListView) view.findViewById(R.id.myFriends);
+        lv = view.findViewById(R.id.myFriends);
 
         Bundle meetingLevel= getActivity().getIntent().getExtras();
         meetingId=meetingLevel.getInt("meetingId");
@@ -93,8 +93,8 @@ public class MeetingFriendsFragment extends Fragment {
             }
 
             User item = this._users.get(position);
-            TextView tvTitle = (TextView)convertView.findViewById(android.R.id.text1);
-            TextView tvSubtitle = (TextView)convertView.findViewById(android.R.id.text2);
+            TextView tvTitle = convertView.findViewById(android.R.id.text1);
+            TextView tvSubtitle = convertView.findViewById(android.R.id.text2);
 
 
             tvTitle.setText(item.getFirstName()+" "+item.getLastName());

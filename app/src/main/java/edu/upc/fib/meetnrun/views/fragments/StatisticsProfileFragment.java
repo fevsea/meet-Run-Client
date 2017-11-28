@@ -57,18 +57,18 @@ public class StatisticsProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_statistics_profile, container, false);
         context=this.getActivity();
 
-        meetings = (TextView) view.findViewById (R.id.nMeetings);
-        steps = (TextView) view.findViewById (R.id.nSteps);
-        totalKm = (TextView) view.findViewById(R.id.totalKm);
-        calories = (TextView) view.findViewById (R.id.calories);
-        rhythm = (TextView) view.findViewById (R.id.rhythm);
-        avgSpeed = (TextView) view.findViewById (R.id.avgSpeed);
-        maxSpeed = (TextView) view.findViewById (R.id.maxSpeed);
-        minSpeed = (TextView) view.findViewById (R.id.minSpeed);
-        maxTime = (TextView) view.findViewById (R.id.maxTime);
-        minTime = (TextView) view.findViewById (R.id.minTime);
-        maxLength = (TextView) view.findViewById (R.id.maxLength);
-        minLength = (TextView) view.findViewById (R.id.minLength);
+        meetings  = view.findViewById (R.id.nMeetings);
+        steps     = view.findViewById (R.id.nSteps);
+        totalKm   = view.findViewById (R.id.totalKm);
+        calories  = view.findViewById (R.id.calories);
+        rhythm    = view.findViewById (R.id.rhythm);
+        avgSpeed  = view.findViewById (R.id.avgSpeed);
+        maxSpeed  = view.findViewById (R.id.maxSpeed);
+        minSpeed  = view.findViewById (R.id.minSpeed);
+        maxTime   = view.findViewById (R.id.maxTime);
+        minTime   = view.findViewById (R.id.minTime);
+        maxLength = view.findViewById (R.id.maxLength);
+        minLength = view.findViewById (R.id.minLength);
 
         return view;
     }
