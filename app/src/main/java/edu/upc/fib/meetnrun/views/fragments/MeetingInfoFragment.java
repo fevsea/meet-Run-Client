@@ -210,7 +210,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         protected String doInBackground(Integer... integers) {
             //TODO handle exceptions
             try {
-                l = meetingController.getParticipantsFromMeeting(integers[0]);
+                l = meetingController.getParticipantsFromMeeting(integers[0],0);//TODO arreglar paginas
             } catch (AutorizationException e) {
                 e.printStackTrace();
             } catch (ParamsException e) {
@@ -231,7 +231,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         @Override
         protected String doInBackground(String... strings) {
             try {
-                friends = friendsController.getUserFriends();
+                friends = friendsController.getUserFriends(0); //TODO arreglar paginas
             } catch (AutorizationException e) {
                 e.printStackTrace();
             }

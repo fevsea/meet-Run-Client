@@ -14,7 +14,7 @@ import edu.upc.fib.meetnrun.models.User;
 
 public interface IUserAdapter {
 
-    public List<User> getAllUsers();
+    public List<User> getAllUsers(int page);
 
     public User registerUser(String userName, String firstName, String lastName, String postCode, String password, String question, String answer) throws ParamsException;
 
