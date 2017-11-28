@@ -48,8 +48,8 @@ public class UsersListFragment extends FriendUserListFragmentTemplate {
 
     private class getUsers extends AsyncTask<String,String,String> {
 
-        List<User> friends = new ArrayList<User>();
-        List<User> users = new ArrayList<User>();
+        List<User> friends = new ArrayList<>();
+        List<User> users = new ArrayList<>();
 
         @Override
         protected String doInBackground(String... strings) {

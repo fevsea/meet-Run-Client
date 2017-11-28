@@ -27,14 +27,8 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasPackage;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
@@ -92,7 +86,7 @@ public class MeetingListTest{
 
             @Override
             protected boolean matchesSafely(MeetingsViewHolder item) {
-                TextView timeViewText = (TextView) item.itemView.findViewById(R.id.meeting_item_title);
+                TextView timeViewText = item.itemView.findViewById(R.id.meeting_item_title);
                 if (timeViewText == null) {
                     return false;
                 }

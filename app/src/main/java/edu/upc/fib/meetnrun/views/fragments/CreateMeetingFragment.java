@@ -87,6 +87,9 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     String Longitude;
     ScrollView sV;
     Switch publicMeeting;
+
+    private final static String[] kind = {"@string/public_meeting","@string/private_meeting"};
+
     private IMeetingAdapter meetingAdapter;
 
     Geocoder geocoder;
@@ -216,7 +219,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     }
 
 
-    public void create(){
+    private void create(){
         Name = name.getText().toString();
         Date = date.getText().toString();
 
@@ -245,10 +248,10 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         else if(Description.length()>=500) Toast.makeText(this.getContext(), this.getString(R.string.big_description_error), Toast.LENGTH_SHORT).show();
         else{
             //DB stuff
-            Level = Integer.parseInt(level.getText().toString());
+ /*           Level = Integer.parseInt(level.getText().toString());
             if (Public)  onCreateDialog(getActivity(), this.getString(R.string.public_friends), this.getString(R.string.public_yes_friends), this.getString(R.string.public_no_friends));
             else onCreateDialog(getActivity(), this.getString(R.string.private_friends), this.getString(R.string.private_yes_friends), this.getString(R.string.private_no_friends));
-            //Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description+", Kind of meeting: "+Public.toString(), Toast.LENGTH_SHORT).show();
+ */           //Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description+", Kind of meeting: "+Public.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -365,9 +368,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         protected String doInBackground(String... strings){
             try {
                  m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
-            } catch (ParamsException  e) {
-                e.printStackTrace();
-            } catch (AutorizationException e) {
+            } catch (ParamsException | AutorizationException e) {
                 e.printStackTrace();
             }
             return null;

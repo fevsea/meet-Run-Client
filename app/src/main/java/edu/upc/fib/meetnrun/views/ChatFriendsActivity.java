@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.view.MenuItem;
 
 import edu.upc.fib.meetnrun.views.fragments.ChatFriendsFragment;
-import edu.upc.fib.meetnrun.views.fragments.UsersListFragment;
 
 /**
  * Created by eric on 22/11/17.

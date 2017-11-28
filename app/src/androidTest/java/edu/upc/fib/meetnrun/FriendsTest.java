@@ -37,7 +37,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 public class FriendsTest {
 
     @Rule
-    public ActivityTestRule<FriendsActivity> activityRule = new ActivityTestRule<FriendsActivity>(FriendsActivity.class) {
+    public final ActivityTestRule<FriendsActivity> activityRule = new ActivityTestRule<FriendsActivity>(FriendsActivity.class) {
         protected void beforeActivityLaunched() {
             AdaptersContainer adaptersContainer = AdaptersContainer.getInstance();
             adaptersContainer.setFriendsAdapter(MockFriendsAdapter.getInstance());
@@ -104,7 +104,7 @@ public class FriendsTest {
 
             @Override
             protected boolean matchesSafely(FriendsViewHolder item) {
-                TextView timeViewText = (TextView) item.itemView.findViewById(R.id.meeting_item_username);
+                TextView timeViewText = item.itemView.findViewById(R.id.meeting_item_username);
                 if (timeViewText == null) {
                     return false;
                 }

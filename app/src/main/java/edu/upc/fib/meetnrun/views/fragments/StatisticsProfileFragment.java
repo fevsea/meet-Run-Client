@@ -13,6 +13,9 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.User;
 
+
+import edu.upc.fib.meetnrun.R;
+
 public class StatisticsProfileFragment extends Fragment {
 
     private String title;

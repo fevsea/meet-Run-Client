@@ -31,7 +31,7 @@ import static edu.upc.fib.meetnrun.adapters.utils.Utils.checkErrorCodeAndThowExc
  */
 
 public class MeetingAdapterImpl implements IMeetingAdapter {
-    private SOServices mServices;
+    private final SOServices mServices;
 
     public MeetingAdapterImpl(SOServices soServices) {
         mServices = soServices;

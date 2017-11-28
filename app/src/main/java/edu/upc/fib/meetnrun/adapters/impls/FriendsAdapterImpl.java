@@ -22,7 +22,7 @@ import static edu.upc.fib.meetnrun.adapters.utils.Utils.checkErrorCodeAndThowExc
  */
 
 public class FriendsAdapterImpl implements IFriendsAdapter {
-    private SOServices mServices;
+    private final SOServices mServices;
 
     public FriendsAdapterImpl(SOServices soServices) {
         mServices = soServices;

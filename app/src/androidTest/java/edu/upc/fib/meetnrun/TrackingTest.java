@@ -17,7 +17,7 @@ import edu.upc.fib.meetnrun.views.TrackingActivity;
 public class TrackingTest {
 
     @Rule
-    public ActivityTestRule<TrackingActivity> mMainActivityTestRule = new ActivityTestRule<TrackingActivity>(TrackingActivity.class);
+    public ActivityTestRule<TrackingActivity> mMainActivityTestRule = new ActivityTestRule<>(TrackingActivity.class);
 
     @Test
     public void test() {
