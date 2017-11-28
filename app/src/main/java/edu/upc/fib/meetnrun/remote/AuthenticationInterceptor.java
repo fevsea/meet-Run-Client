@@ -13,7 +13,7 @@ import okhttp3.Response;
  * Created by Awais Iqbal on 25/10/2017.
  */
 
-public class AuthenticationInterceptor implements Interceptor {
+class AuthenticationInterceptor implements Interceptor {
 
     public AuthenticationInterceptor() {
     }

@@ -1,6 +1,5 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
@@ -20,8 +19,8 @@ import edu.upc.fib.meetnrun.models.User;
 
 public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private View view;
-    private WeakReference<RecyclerViewOnClickListener> listener;
+    private final View view;
+    private final WeakReference<RecyclerViewOnClickListener> listener;
 
     public FriendsViewHolder(View itemView, RecyclerViewOnClickListener listener) {
         super(itemView);
@@ -50,7 +49,7 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
         if (level.equals("null")) level = "0";
         meetingLevel.setText(String.valueOf(level));
 
-        CardView cardView = (CardView) view.findViewById(R.id.user_cardview);
+        CardView cardView = view.findViewById(R.id.user_cardview);
         if (user.isSelected()) cardView.setCardBackgroundColor(Color.parseColor("#B3E5FC"));
         else cardView.setCardBackgroundColor(Color.WHITE);
 

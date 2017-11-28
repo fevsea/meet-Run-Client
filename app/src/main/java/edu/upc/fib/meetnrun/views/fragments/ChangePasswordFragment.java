@@ -1,7 +1,6 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -22,16 +21,16 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 
 public class ChangePasswordFragment extends Fragment {
 
-    private ILoginAdapter controller = CurrentSession.getInstance().getLoginAdapter();
-    EditText currentPassText;
-    EditText newPassText;
-    EditText newPass2Text;
+    private final ILoginAdapter controller = CurrentSession.getInstance().getLoginAdapter();
+    private EditText currentPassText;
+    private EditText newPassText;
+    private EditText newPass2Text;
 
-    String currentPass;
-    String newPass;
-    String newPass2;
+    private String currentPass;
+    private String newPass;
+    private String newPass2;
 
-    View v;
+    private View v;
 
 
     @Override
@@ -52,7 +51,7 @@ public class ChangePasswordFragment extends Fragment {
         }
 
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
         return v;
@@ -62,9 +61,9 @@ public class ChangePasswordFragment extends Fragment {
 
         boolean b = false;
 
-        currentPassText = (EditText) v.findViewById(R.id.currentPass_enter);
-        newPassText = (EditText) v.findViewById(R.id.newPass_enter);
-        newPass2Text = (EditText) v.findViewById(R.id.repeatNewPass_enter);
+        currentPassText = v.findViewById(R.id.currentPass_enter);
+        newPassText = v.findViewById(R.id.newPass_enter);
+        newPass2Text = v.findViewById(R.id.repeatNewPass_enter);
 
         currentPass = currentPassText.getText().toString();
         newPass = newPassText.getText().toString();
@@ -111,9 +110,7 @@ public class ChangePasswordFragment extends Fragment {
 
                 try {
                     actualitzat_correctament = controller.changePassword(params[0], params[1]);
-                } catch (AutorizationException e) {
-                    e.printStackTrace();
-                } catch (ForbiddenException e) {
+                } catch (AutorizationException | ForbiddenException e) {
                     e.printStackTrace();
                 }
 
