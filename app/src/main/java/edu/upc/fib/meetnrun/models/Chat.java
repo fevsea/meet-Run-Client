@@ -1,6 +1,5 @@
 package edu.upc.fib.meetnrun.models;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

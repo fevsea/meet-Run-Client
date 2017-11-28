@@ -24,8 +24,8 @@ import edu.upc.fib.meetnrun.models.User;
 public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
 
-    private View view;
-    private WeakReference<RecyclerViewOnClickListener> listener;
+    private final View view;
+    private final WeakReference<RecyclerViewOnClickListener> listener;
     private ImageButton addUserButton;
 
     public MeetingsViewHolder(View itemView, RecyclerViewOnClickListener listener) {

@@ -27,7 +27,7 @@ import edu.upc.fib.meetnrun.views.ChatActivity;
 
 public class FriendProfileFragment extends ProfileFragmentTemplate implements View.OnClickListener {
 
-    private String friendUsername = currentFriend.getUsername();
+    private final String friendUsername = currentFriend.getUsername();
 
     @Override
     protected void setImage() {
@@ -67,7 +67,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
 
                                     Message m = new Message("", currentUsername, sb.toString(), dateWithoutTime);
 
-                                    List<User> userList = new ArrayList<User>();
+                                    List<User> userList = new ArrayList<>();
                                     userList.add(user);
                                     userList.add(currentFriend);
 
@@ -130,9 +130,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                 ok = friendsDBAdapter.removeFriend(Integer.parseInt(s[0]));
                 //eliminar chat con amigo
                 ChatListFragment.deleteChat(friendUsername);
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
+            } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;

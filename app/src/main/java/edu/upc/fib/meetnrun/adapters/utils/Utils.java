@@ -10,15 +10,19 @@ import edu.upc.fib.meetnrun.utils.JsonUtils;
 public class Utils {
 
     public static void checkErrorCodeAndThowException(int code, String string) throws GenericException {
-            switch (code) {
-                case 400:
-                    throw JsonUtils.CreateParamExceptionFromJson(string);
-                case 401:
-                    throw JsonUtils.CreateAutorizationExceptionFromJson(string);
-                case 403:
-                    throw JsonUtils.CreateForbiddenExceptionFromJson();
-                case 404:
-                    throw JsonUtils.CreateNotFoundExceptionFromJson(string);
-            }
+        switch (code) {
+            case 400:
+                throw JsonUtils.CreateParamExceptionFromJson(string);
+            case 401:
+                throw JsonUtils.CreateAutorizationExceptionFromJson(string);
+            case 403:
+                throw JsonUtils.CreateForbiddenExceptionFromJson();
+            case 404:
+                throw JsonUtils.CreateNotFoundExceptionFromJson(string);
         }
+    }
+
+    public static int calculateOffset(int limit,int page){
+        return limit*page;
+    }
 }

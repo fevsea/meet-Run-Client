@@ -22,17 +22,13 @@ import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
-import edu.upc.fib.meetnrun.views.fragments.MeetingInfoFragment;
-import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsViewHolder;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.not;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
@@ -114,7 +110,7 @@ public class MeetingInfoTest{
 
             @Override
             protected boolean matchesSafely(MeetingsViewHolder item) {
-                TextView timeViewText = (TextView) item.itemView.findViewById(R.id.meeting_item_username);
+                TextView timeViewText = item.itemView.findViewById(R.id.meeting_item_username);
                 if (timeViewText == null) {
                     return false;
                 }

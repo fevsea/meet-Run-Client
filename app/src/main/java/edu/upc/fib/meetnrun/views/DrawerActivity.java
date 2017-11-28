@@ -20,7 +20,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
@@ -36,8 +35,8 @@ import edu.upc.fib.meetnrun.views.fragments.SettingsFragment;
 
 public class DrawerActivity extends AppCompatActivity{
 
-    protected DrawerLayout drawerLayout;
-    public static final String MY_PREFS_NAME = "TokenFile";
+    private DrawerLayout drawerLayout;
+    private static final String MY_PREFS_NAME = "TokenFile";
     private CurrentSession cs;
 
     private void replaceFragment(Fragment fragment) {
@@ -71,15 +70,15 @@ public class DrawerActivity extends AppCompatActivity{
 
         cs = CurrentSession.getInstance();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
+        Toolbar toolbar = findViewById(R.id.activity_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_18dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.activity_drawerlayout);
+        drawerLayout = findViewById(R.id.activity_drawerlayout);
         drawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.activity_nav_view);
+        NavigationView navigationView = findViewById(R.id.activity_nav_view);
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
@@ -127,7 +126,7 @@ public class DrawerActivity extends AppCompatActivity{
                         }
                     });
 
-            TextView nav_user = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nameProfile);
+            TextView nav_user = navigationView.getHeaderView(0).findViewById(R.id.nameProfile);
             User user = cs.getCurrentUser();
             String name = user.getFirstName()+" "+user.getLastName();
             nav_user.setText(name);
@@ -191,4 +190,9 @@ public class DrawerActivity extends AppCompatActivity{
         editor.commit();
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+    
 }

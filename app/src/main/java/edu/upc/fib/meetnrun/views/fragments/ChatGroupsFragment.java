@@ -8,13 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,8 +39,8 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 public class ChatGroupsFragment extends Fragment {
 
     private View view;
-    protected FriendsAdapter friendsAdapter;
-    protected IFriendsAdapter friendsDBAdapter;
+    private FriendsAdapter friendsAdapter;
+    private IFriendsAdapter friendsDBAdapter;
     private FloatingActionButton fab;
     private List<User> l;
     private EditText groupName;
@@ -60,11 +58,11 @@ public class ChatGroupsFragment extends Fragment {
 
         friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
-        groupName = (EditText) view.findViewById(R.id.groupName);
-        ok = (Button) view.findViewById(R.id.btnOk);
-        numbFriends = (TextView) view.findViewById(R.id.numb_friends);
+        groupName = view.findViewById(R.id.groupName);
+        ok = view.findViewById(R.id.btnOk);
+        numbFriends = view.findViewById(R.id.numb_friends);
 
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
         l = new ArrayList<>();
@@ -116,7 +114,7 @@ public class ChatGroupsFragment extends Fragment {
             }
         });
 
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_friends_group_swipe);
+        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.fragment_friends_group_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -167,7 +165,7 @@ public class ChatGroupsFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                l = friendsDBAdapter.getUserFriends();
+                l = friendsDBAdapter.getUserFriends(0);
             } catch (AutorizationException e) {
                 e.printStackTrace();
             }

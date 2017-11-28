@@ -1,9 +1,7 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.os.AsyncTask;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
@@ -50,9 +48,7 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
         protected String doInBackground(String... s) {
             try {
                 ok = friendsDBAdapter.addFriend(Integer.parseInt(s[0]));
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
+            } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;

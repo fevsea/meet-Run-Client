@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,15 +32,14 @@ import edu.upc.fib.meetnrun.models.User;
 
 public abstract class ProfileFragmentTemplate extends Fragment {
 
-    protected View view;
-    protected TextView postCode;
-    protected TextView userName;
-    protected TextView name;
-    protected ImageView img;
-    protected IFriendsAdapter friendsDBAdapter;
-    protected Button challengeButton;
-    protected ImageView chat;
-    protected User currentFriend;
+    private View view;
+    private TextView postCode;
+    private TextView userName;
+    private TextView name;
+    ImageView img;
+    IFriendsAdapter friendsDBAdapter;
+    ImageView chat;
+    User currentFriend;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,10 +51,8 @@ public abstract class ProfileFragmentTemplate extends Fragment {
         this.name = view.findViewById(R.id.completeName2);
         this.postCode = view.findViewById(R.id.userPostCode2);
         this.img = view.findViewById(R.id.action_friend);
-        this.challengeButton = view.findViewById(R.id.challenge_button);
         this.chat = view.findViewById(R.id.chat_friend);
         setImage();
-        configureChallengeButton();
 
         this.currentFriend = CurrentSession.getInstance().getFriend();
         this.friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
@@ -87,7 +83,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
             }
         });
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
         userName.setText(currentFriend.getUsername());
@@ -109,9 +105,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
 
     protected abstract void getMethod(String s);
 
-    protected abstract void configureChallengeButton();
-
-    protected void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+    void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle(title);
         builder.setMessage(message);
