@@ -37,7 +37,7 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
-import edu.upc.fib.meetnrun.views.ProfileActivity;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -133,7 +133,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
                 User participant = participantsAdapter.getFriendAtPosition(position);
                 Intent profileIntent;
                 if (participant.getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
-                    profileIntent = new Intent(getActivity(), ProfileActivity.class);
+                    profileIntent = new Intent(getActivity(),ProfileViewPagerFragment.class);
                 }
                 else {
                     boolean isFriend = false;
@@ -210,7 +210,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         protected String doInBackground(Integer... integers) {
             //TODO handle exceptions
             try {
-                l = meetingController.getParticipantsFromMeeting(integers[0]);
+                l = meetingController.getParticipantsFromMeeting(integers[0],0);//TODO arreglar paginas
             } catch (AutorizationException e) {
                 e.printStackTrace();
             } catch (ParamsException e) {
@@ -231,7 +231,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         @Override
         protected String doInBackground(String... strings) {
             try {
-                friends = friendsController.getUserFriends();
+                friends = friendsController.getUserFriends(0); //TODO arreglar paginas
             } catch (AutorizationException e) {
                 e.printStackTrace();
             }

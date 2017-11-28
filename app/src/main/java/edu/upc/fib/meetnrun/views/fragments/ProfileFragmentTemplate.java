@@ -24,6 +24,7 @@ import java.util.Scanner;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.User;
 
 /**
  * Created by eric on 16/11/17.
@@ -33,11 +34,12 @@ public abstract class ProfileFragmentTemplate extends Fragment {
 
     protected View view;
     protected TextView postCode;
-    protected Bundle profileInfo;
     protected TextView userName;
     protected TextView name;
     protected ImageView img;
     protected IFriendsAdapter friendsDBAdapter;
+    protected ImageView chat;
+    protected User currentFriend;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,9 +51,10 @@ public abstract class ProfileFragmentTemplate extends Fragment {
         this.name = view.findViewById(R.id.completeName2);
         this.postCode = view.findViewById(R.id.userPostCode2);
         this.img = view.findViewById(R.id.action_friend);
+        this.chat = view.findViewById(R.id.chat_friend);
         setImage();
 
-        this.profileInfo = getActivity().getIntent().getExtras();
+        this.currentFriend = CurrentSession.getInstance().getFriend();
         this.friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
         img.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +69,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
                 showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                getMethod(profileInfo.getString("id"));
+                                getMethod(String.valueOf(currentFriend.getId()));
                             }
                         },
                         new DialogInterface.OnClickListener() {
@@ -83,11 +86,13 @@ public abstract class ProfileFragmentTemplate extends Fragment {
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        userName.setText(profileInfo.getString("userName"));
-        name.setText(profileInfo.getString("name"));
-        postCode.setText(profileInfo.getString("postCode"));
+        userName.setText(currentFriend.getUsername());
+        String nameFriend = currentFriend.getFirstName()+" "+currentFriend.getLastName();
+        name.setText(nameFriend);
+        String postcodeFriend = currentFriend.getPostalCode();
+        postCode.setText(postcodeFriend);
 
-        getCityFromPostcode(profileInfo.getString("postCode"));
+        getCityFromPostcode(postcodeFriend);
 
         return this.view;
     }
@@ -100,7 +105,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
 
     protected abstract void getMethod(String s);
 
-    private void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+    protected void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle(title);
         builder.setMessage(message);

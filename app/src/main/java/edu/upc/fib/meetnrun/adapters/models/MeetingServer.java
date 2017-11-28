@@ -10,7 +10,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 
-public class MeetingServer {
+public class MeetingServer implements IServerModel {
 
     @SerializedName("id")
     @Expose
