@@ -19,41 +19,62 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="10dp">
             <TextView
-                android:id="@+id/progress"
+                android:id="@+id/total"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="40dp"
-                android:text="95%"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:textSize="40sp"
+                android:text="2 km"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:padding="5dp"
                 android:gravity="center" />
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="3.0"
-                android:orientation="vertical">
+                android:layout_weight="3.0">
                 <TextView
                     android:id="@+id/opponent"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:textSize="15sp"
-                    android:layout_weight="1.0"
-                    android:text="Opponent: Guillem Castro"/>
+                    android:layout_height="wrap_content"
+                    android:text="Opponent"/>
+                <ProgressBar
+                    android:id="@+id/opponent_progress"
+                    android:layout_toEndOf="@id/opponent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
                 <TextView
-                    android:id="@+id/expiration"
+                    android:id="@+id/you"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1.0"
-                    android:textSize="15sp"
-                    android:text="Expires in 5 hours"/>
-
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/opponent"
+                    android:layout_marginTop="10dp"
+                    android:text="You"/>
+                <ProgressBar
+                    android:id="@+id/my_progress"
+                    android:layout_toEndOf="@id/you"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@id/opponent_progress"
+                    android:layout_below="@id/opponent"
+                    android:layout_marginEnd="10dp"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+            </RelativeLayout>
         </LinearLayout>
+        <TextView
+            android:id="@+id/expires_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:text="5 hours 4 minutes left"
+            android:layout_marginEnd="10dp"/>
     </android.support.v7.widget.CardView>
 
 </LinearLayout>

@@ -1,15 +1,11 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.app.DatePickerDialog;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Activity;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
@@ -23,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
@@ -30,14 +27,13 @@ import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.fragments.DatePickerFragment;
-import edu.upc.fib.meetnrun.views.fragments.EditMeetingFragment;
 
 public class CreateChallengeActivity extends AppCompatActivity implements View.OnClickListener{
 
     private NumberPicker distancePicker;
     private EditText deadlineText;
 
-    private Challenge challenge = new Challenge();
+    final private Challenge challenge = new Challenge();
 
     private int userID;
     private User challenged;
@@ -87,7 +83,7 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.done_button) {
-            challenge.setDistance(distancePicker.getValue());
+            challenge.setDistance(distancePicker.getValue()*1000);
             challenge.setCreator(CurrentSession.getInstance().getCurrentUser());
             new GetUser().execute(userID);
             challenge.setChallenged(challenged);
@@ -108,7 +104,7 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         datePickerFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int yearSet, int monthSet, int daySet) {
-                DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
                 Date dateTime;
                 if(challenge.getDeadline() != null) {
                     try {
@@ -130,8 +126,8 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
                 deadlineText.setText(selectedDate);
             }
         });
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        Date dateTime = null;
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
+        Date dateTime;
         if(challenge.getDeadline() != null) {
             try {
                 dateTime = inputFormat.parse(challenge.getDeadline());

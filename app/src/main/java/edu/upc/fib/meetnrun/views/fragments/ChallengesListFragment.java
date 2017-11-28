@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,14 +43,14 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        getActivity().setTitle(R.string.title_activity_challenges_list);
         View view =  inflater.inflate(R.layout.fragment_challenges_list, container, false);
         recyclerView = view.findViewById(R.id.fragment_challenge_recycler);
         swipeRefreshLayout = view.findViewById(R.id.fragment_challenge_swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
         setupRecyclerView();
 
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        FloatingActionButton fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.INVISIBLE);
 
         return view;
@@ -66,7 +65,8 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
 
             @Override
             public void onMeetingClicked(int position) {
-                //Open info about the challenge
+                Challenge challenge = challengesAdapter.getChallengeAt(position);
+                challenge.getDeadline();
             }
         });
         recyclerView.setAdapter(challengesAdapter);

@@ -1,13 +1,8 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.shapes.Shape;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Display;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -23,14 +18,10 @@ import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 
-/**
- * Created by guillemcastro on 26/11/2017.
- */
-
 public class ChallengesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private View view;
-    private WeakReference<RecyclerViewOnClickListener> listener;
+    final private View view;
+    final private WeakReference<RecyclerViewOnClickListener> listener;
 
     public ChallengesViewHolder(View itemView, RecyclerViewOnClickListener listener) {
         super(itemView);
@@ -40,28 +31,35 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
 
     public void bindChallenge(Challenge challenge) {
         User currentUser = CurrentSession.getInstance().getCurrentUser();
-        User opponent = null;
+        User opponent;
         int currentUserDistance;
+        int opponentDistance;
         if (challenge.getCreator().getId().equals(currentUser.getId())) {
-            opponent = challenge.getChallenged();
             currentUserDistance = challenge.getCreatorDistance();
+            opponentDistance = challenge.getChallengedDistance();
+            opponent = challenge.getChallenged();
         }
         else {
-            opponent = challenge.getCreator();
             currentUserDistance = challenge.getChallengedDistance();
+            opponentDistance = challenge.getCreatorDistance();
+            opponent = challenge.getCreator();
         }
+        TextView totalView = view.findViewById(R.id.total);
+        ProgressBar opponentBar = view.findViewById(R.id.opponent_progress);
+        ProgressBar youBar = view.findViewById(R.id.my_progress);
+        TextView expirationView = view.findViewById(R.id.expires_in);
+        String totalText = String.format(Locale.forLanguageTag("es"), "%d km", challenge.getDistance());
+        totalView.setText(totalText);
+        TextView opponentName = view.findViewById(R.id.opponent);
 
-        float progressF = (float)((float)currentUserDistance/(float)challenge.getDistance());
-        int progress = (int)(progressF * 100.0f);
-        Log.d("VIEW HOLDER", String.valueOf(progressF));
-        Log.d("VIEW HOLDER", String.valueOf(progress));
-        TextView progressView = view.findViewById(R.id.progress);
-        TextView opponentView = view.findViewById(R.id.opponent);
-        TextView expirationView = view.findViewById(R.id.expiration);
-        String progressText = String.format(Locale.forLanguageTag("es"), "%d %s", progress, "%");
-        progressView.setText(progressText);
-        String opponentText = String.format("Opponent: %s %s", opponent.getFirstName(), opponent.getLastName());
-        opponentView.setText(opponentText);
+        opponentName.setText(opponent.getUsername());
+
+        opponentBar.setMax(challenge.getDistance());
+        opponentBar.setProgress(opponentDistance);
+
+        youBar.setMax(challenge.getDistance());
+        youBar.setProgress(currentUserDistance);
+
         expirationView.setText(getExpirationText(challenge.getDeadline()));
         view.setOnClickListener(this);
     }
@@ -72,8 +70,8 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
     }
 
     private String getExpirationText(String deadline) {
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        Date dateTime = null;
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
+        Date dateTime;
         try {
             dateTime = inputFormat.parse(deadline);
         } catch (ParseException e) {
