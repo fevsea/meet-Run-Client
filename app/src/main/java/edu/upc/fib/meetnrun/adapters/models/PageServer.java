@@ -12,16 +12,16 @@ import java.util.List;
 public class PageServer<IServerModel> {
     @SerializedName("count")
     @Expose
-    public int count;
+    private int count;
     @SerializedName("next")
     @Expose
-    public String next;
+    private String next;
     @SerializedName("previous")
     @Expose
-    public String previous;
+    private String previous;
     @SerializedName("results")
     @Expose
-    public List<IServerModel> results;
+    private List<IServerModel> results;
 
     public int getCount() {
         return count;

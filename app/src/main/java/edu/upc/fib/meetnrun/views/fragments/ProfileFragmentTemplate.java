@@ -32,14 +32,14 @@ import edu.upc.fib.meetnrun.models.User;
 
 public abstract class ProfileFragmentTemplate extends Fragment {
 
-    protected View view;
-    protected TextView postCode;
-    protected TextView userName;
-    protected TextView name;
-    protected ImageView img;
-    protected IFriendsAdapter friendsDBAdapter;
-    protected ImageView chat;
-    protected User currentFriend;
+    private View view;
+    private TextView postCode;
+    private TextView userName;
+    private TextView name;
+    ImageView img;
+    IFriendsAdapter friendsDBAdapter;
+    ImageView chat;
+    User currentFriend;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,7 +83,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
             }
         });
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
         userName.setText(currentFriend.getUsername());
@@ -105,7 +105,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
 
     protected abstract void getMethod(String s);
 
-    protected void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+    void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle(title);
         builder.setMessage(message);

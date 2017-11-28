@@ -32,8 +32,8 @@ import edu.upc.fib.meetnrun.models.User;
 
 public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback{
 
-    private View view;
-    private WeakReference<MyMeetingsListener> listener;
+    private final View view;
+    private final WeakReference<MyMeetingsListener> listener;
     private ImageButton startMeetingButton;
     private ImageButton leaveMeetingButton;
     private LatLng location;
