@@ -7,6 +7,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
+import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
@@ -17,6 +18,7 @@ import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.remote.SOServices;
 import retrofit2.Response;
 
+import static edu.upc.fib.meetnrun.adapters.utils.Utils.calculateOffset;
 import static edu.upc.fib.meetnrun.adapters.utils.Utils.checkErrorCodeAndThowException;
 
 /**
@@ -28,6 +30,27 @@ public class UserAdapterImpl implements IUserAdapter {
 
     public UserAdapterImpl(SOServices soServices) {
         mServices = soServices;
+    }
+
+    public List<User> getAllUsers(int page) {
+        PageServer<UserServer> pus = null;
+        try {
+            int offset = calculateOffset(SOServices.PAGELIMIT, page);
+            Response<PageServer<UserServer>> ret = mServices.getAllUsers(SOServices.PAGELIMIT, offset).execute();
+            if (!ret.isSuccessful())
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            pus = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GenericException e) {
+            e.printStackTrace();
+        }
+        List<UserServer> lus = pus.getResults();
+        List<User> lu = new ArrayList<>();
+        for (int i = 0; i < lus.size(); i++) {
+            lu.add(lus.get(i).toGenericModel());
+        }
+        return lu;
     }
 
     @Override
@@ -96,21 +119,6 @@ public class UserAdapterImpl implements IUserAdapter {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        List<User> l = new ArrayList<>();
-        try {
-            Response<UserServer[]> res = mServices.getUsers().execute();
-            UserServer[] array = res.body();
-            for (int i = 0; i < array.length; i++) {
-                l.add(array[i].toGenericModel());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return l;
-    }
-
-    @Override
     public User registerUser(String userName, String firstName, String lastName, String postCode, String password, String question, String answer) throws ParamsException {
         Forms.UserRegistration ur = new Forms.UserRegistration(0, userName, firstName, lastName, postCode, question, answer, password, 1);
         UserServer u = null;
@@ -133,30 +141,32 @@ public class UserAdapterImpl implements IUserAdapter {
     }
 
     @Override
-        public List<Meeting> getUsersFutureMeetings(int userId) throws AutorizationException, ParamsException {
-            List<Meeting> ul = new ArrayList<>();
-            try {
-                Response<List<MeetingServer>> ret = mServices.getAllFutureMeetings(userId).execute();
-                if (!ret.isSuccessful())
-                    checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+    public List<Meeting> getUsersFutureMeetings(int userId) throws AutorizationException, ParamsException {
+        List<Meeting> ul = new ArrayList<>();
+        //TODO Pending to TEST
+        try {
+            Response<List<MeetingServer>> ret =
+                    mServices.getAllFutureMeetings(userId).execute();
+            if (!ret.isSuccessful())
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
 
-                List<MeetingServer> u = ret.body();
+            List<MeetingServer> u = ret.body();
 
-                for (int i = 0; i < u.size(); i++) {
-                    ul.add(u.get(i).toGenericModel());
-                }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (GenericException e) {
-                e.printStackTrace();
-                if (e instanceof AutorizationException) {
-                    throw (AutorizationException) e;
-                } else if (e instanceof ParamsException) {
-                    throw (ParamsException) e;
-                }
+            for (int i = 0; i < u.size(); i++) {
+                ul.add(u.get(i).toGenericModel());
             }
-            return ul;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GenericException e) {
+            e.printStackTrace();
+            if (e instanceof AutorizationException) {
+                throw (AutorizationException) e;
+            } else if (e instanceof ParamsException) {
+                throw (ParamsException) e;
+            }
         }
+        return ul;
+    }
 
 }

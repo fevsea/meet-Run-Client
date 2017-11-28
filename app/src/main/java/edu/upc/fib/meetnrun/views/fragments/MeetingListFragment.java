@@ -22,15 +22,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
+import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -176,7 +174,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-                meetings = meetingDBAdapter.getAllMeetings();
+                meetings = meetingDBAdapter.getAllMeetings(0);//TODO arreglar paginas
             return null;
         }
 
@@ -194,7 +192,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0]);
+            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0],0);//TODO arreglar paginas
             return null;
         }
 

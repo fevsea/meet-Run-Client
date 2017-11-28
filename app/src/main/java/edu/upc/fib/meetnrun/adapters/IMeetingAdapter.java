@@ -17,7 +17,7 @@ import edu.upc.fib.meetnrun.models.User;
  */
 
 public interface IMeetingAdapter {
-    public List<Meeting> getAllMeetings();
+    public List<Meeting> getAllMeetings(int page);
 
     public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException, AutorizationException;
 
@@ -27,15 +27,15 @@ public interface IMeetingAdapter {
 
     public boolean deleteMeetingByID(int id) throws NotFoundException, AutorizationException;
 
-    public List<User> getParticipantsFromMeeting(int targetMeetingId) throws AutorizationException, ParamsException;
+    public List<User> getParticipantsFromMeeting(int targetMeetingId, int page) throws AutorizationException, ParamsException;
 
     public boolean joinMeeting(int targetMeetingId) throws AutorizationException, ParamsException;
 
     public boolean leaveMeeting(int targetMeetingId) throws AutorizationException, ParamsException;
 
-    public List<Meeting> getAllMeetingsFilteredByName(String query);
+    public List<Meeting> getAllMeetingsFilteredByName(String query, int page);
 
-    public boolean addTracking(Integer userID, Integer meetingID, Float averageSpeed, Float distance, Integer steps, Long totalTimeMillis, Float calories, List<LatLng> routePoints) throws ForbiddenException,AutorizationException;
+    public boolean addTracking(Integer userID, Integer meetingID, Float averageSpeed, Float distance, Integer steps, Long totalTimeMillis, Float calories, List<LatLng> routePoints) throws ForbiddenException, AutorizationException;
 
     public TrackingData getTracking(int userID, int meetingID) throws AutorizationException, NotFoundException;
 
