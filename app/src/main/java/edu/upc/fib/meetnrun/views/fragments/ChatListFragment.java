@@ -157,7 +157,7 @@ public class ChatListFragment extends Fragment {
             public void onButtonClicked(int position) {}
 
             @Override
-            public void onMeetingClicked(int position) {
+            public void onItemClicked(int position) {
 
                 Chat chat = chatAdapter.getChatAtPosition(position);
                 Intent chatIntent = new Intent(getActivity(),ChatActivity.class);

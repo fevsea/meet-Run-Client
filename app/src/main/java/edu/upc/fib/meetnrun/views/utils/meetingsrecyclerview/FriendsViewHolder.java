@@ -1,7 +1,6 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
@@ -49,10 +48,10 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
         TextView postCode = view.findViewById(R.id.user_postcode);
         postCode.setText(user.getPostalCode());
 
-        TextView meetingLevel = view.findViewById(R.id.user_level);
+        TextView userLevel = view.findViewById(R.id.user_level);
         String level = String.valueOf(user.getLevel());
         if (level.equals("null")) level = "0";
-        meetingLevel.setText(String.valueOf(level));
+        userLevel.setText(String.valueOf(level));
 
         cardView = (CardView) view.findViewById(R.id.user_cardview);
 
@@ -90,7 +89,7 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
     @Override
     public void onClick(View view) {
 
-        listener.get().onMeetingClicked(getAdapterPosition());
+        listener.get().onItemClicked(getAdapterPosition());
 
     }
 

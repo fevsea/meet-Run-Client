@@ -130,7 +130,7 @@ public class ChatGroupsFragment extends Fragment {
             public void onButtonClicked(int position) {}
 
             @Override
-            public void onMeetingClicked(int position) {
+            public void onItemClicked(int position) {
 
                 User friend = friendsAdapter.getFriendAtPosition(position);
 
