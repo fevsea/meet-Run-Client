@@ -4,6 +4,9 @@
 
     <item
         android:id="@+id/delete_historial"
-        android:title="Delete historial" />
+        android:title="@string/delete_history" />
 
+    <item
+        android:id="@+id/menu_chat_name"
+        android:title=""/>
 </menu>
