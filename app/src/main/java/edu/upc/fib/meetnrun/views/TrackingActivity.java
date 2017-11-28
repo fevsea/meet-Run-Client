@@ -77,7 +77,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private TextView caloriesCounter;
     private FloatingActionButton pauseButton;
 
-    private final Integer meetingId;
+    private Integer meetingId;
 
     private TrackingService trackingService;
     private boolean mBound;
