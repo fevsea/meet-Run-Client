@@ -56,7 +56,7 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
 
             Message m = new Message("", currentUsername, sb.toString(), dateWithoutTime);
 
-            List<User> userList = new ArrayList<User>();
+            List<User> userList = new ArrayList<>();
             userList.add(user);
             userList.add(friend);
 

@@ -1,7 +1,6 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +15,7 @@ public class MyMeetingsAdapter extends RecyclerView.Adapter<MyMeetingsViewHolder
 
 
     private List<Meeting> meetings;
-    private MyMeetingsListener listener;
+    private final MyMeetingsListener listener;
 
     public MyMeetingsAdapter(List<Meeting> meetings, MyMeetingsListener listener) {
         this.meetings = meetings;

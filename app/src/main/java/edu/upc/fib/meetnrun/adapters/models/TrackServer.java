@@ -18,28 +18,28 @@ public class TrackServer implements IServerModel {
     private Integer id;
     @SerializedName("user")
     @Expose
-    private Integer user;
+    private final Integer user;
     @SerializedName("meeting")
     @Expose
-    private Integer meeting;
+    private final Integer meeting;
     @SerializedName("averagespeed")
     @Expose
-    private Float averageSpeed;
+    private final Float averageSpeed;
     @SerializedName("distance")
     @Expose
-    private Float distance;
+    private final Float distance;
     @SerializedName("steps")
     @Expose
-    private Integer steps;
+    private final Integer steps;
     @SerializedName("totalTimeMillis")
     @Expose
-    private Long totalTimeMillis;
+    private final Long totalTimeMillis;
     @SerializedName("calories")
     @Expose
-    private Float calories;
+    private final Float calories;
     @SerializedName("routePoints")
     @Expose
-    private List<LatLng> routePoints;
+    private final List<LatLng> routePoints;
 
 
     public TrackServer(TrackingData td) {

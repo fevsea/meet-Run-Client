@@ -38,7 +38,7 @@ public class ProfileActivityTest {
     private User u;
 
     @Rule
-    public ActivityTestRule<ProfileActivity> activityRule = new ActivityTestRule<ProfileActivity>(
+    public final ActivityTestRule<ProfileActivity> activityRule = new ActivityTestRule<ProfileActivity>(
             ProfileActivity.class) {
         @Override
         protected void beforeActivityLaunched() {

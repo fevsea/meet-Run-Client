@@ -39,14 +39,17 @@ public class ChatListFragment extends Fragment {
 
     private View view;
     private FloatingActionButton fab, fab2, fab3;
-    Animation FabOpen, FabClose, FabRClockWise, FabRantiClockWise;
+    private Animation FabOpen;
+    private Animation FabClose;
+    private Animation FabRClockWise;
+    private Animation FabRantiClockWise;
     private List<Chat> l;
     private ChatAdapter chatAdapter;
     private String friendUserName = null;
     private User currentUser;
     private boolean isOpen = false;
 
-    private static List<Chat> list = new ArrayList<Chat>();
+    private static final List<Chat> list = new ArrayList<>();
     private static int count = 0;
 
     @Override
@@ -59,15 +62,15 @@ public class ChatListFragment extends Fragment {
 
         currentUser = CurrentSession.getInstance().getCurrentUser();
 
-        l = new ArrayList<Chat>();
+        l = new ArrayList<>();
 
         setupRecyclerView();
 
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab = getActivity().findViewById(R.id.activity_fab);
         fab.setImageResource(R.drawable.chat);
 
-        fab2 = (FloatingActionButton) view.findViewById(R.id.fab2);
-        fab3 = (FloatingActionButton) view.findViewById(R.id.fab3);
+        fab2 = view.findViewById(R.id.fab2);
+        fab3 = view.findViewById(R.id.fab3);
 
         FabOpen = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
         FabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
@@ -95,7 +98,7 @@ public class ChatListFragment extends Fragment {
             }
         });
 
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_chat_swipe);
+        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.fragment_chat_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -150,7 +153,7 @@ public class ChatListFragment extends Fragment {
         final RecyclerView chatList = view.findViewById(R.id.fragment_chat_container);
         chatList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        List<Chat> chats = new ArrayList<Chat>();
+        List<Chat> chats = new ArrayList<>();
 
         chatAdapter = new ChatAdapter(chats, new RecyclerViewOnClickListener() {
             @Override
@@ -184,7 +187,7 @@ public class ChatListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 newText = newText.toLowerCase();
-                ArrayList<Chat> newList = new ArrayList<Chat>();
+                ArrayList<Chat> newList = new ArrayList<>();
                 for (Chat chat : l) {
 
                     if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) friendUserName = chat.getUser1().getUsername();
@@ -260,7 +263,7 @@ public class ChatListFragment extends Fragment {
         return false;
     }
 
-    public void sortList() {
+    private void sortList() {
        /* Collections.sort(list, new Comparator<Chat>() {
             @Override
             public int compare(Chat c2, Chat c1) {
