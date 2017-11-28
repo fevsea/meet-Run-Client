@@ -70,6 +70,7 @@ public class StatisticsProfileFragment extends Fragment {
         maxLength = view.findViewById (R.id.maxLength);
         minLength = view.findViewById (R.id.minLength);
 
+
         return view;
     }
 }
