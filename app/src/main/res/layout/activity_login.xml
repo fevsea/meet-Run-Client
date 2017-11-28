@@ -58,7 +58,7 @@
 
     <EditText
         android:id="@+id/editUsername"
-        android:layout_width="match_parent"
+        android:layout_width="370dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignTop="@+id/username"
@@ -79,9 +79,9 @@
 
     <EditText
         android:id="@+id/editPassword"
-        android:layout_width="match_parent"
+        android:layout_width="370dp"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/editUsername"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/password"
         android:layout_marginEnd="6dp"
         android:ems="10"
@@ -92,11 +92,12 @@
         android:id="@+id/see_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/editPassword"
+        android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/editPassword"
-        android:layout_marginEnd="7dp"
+        android:layout_marginEnd="11dp"
         android:layout_marginTop="10dp"
         android:text="SEE"
-        android:textColor="@color/colorAccent"/>
+        android:textColor="@color/colorAccent"
+        android:visibility="gone"/>
 
 </RelativeLayout>
