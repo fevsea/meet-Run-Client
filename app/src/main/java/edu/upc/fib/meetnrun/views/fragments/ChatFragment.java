@@ -1,10 +1,12 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -130,6 +132,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onRefresh() {
                 NUMB_MESSAGES += 15;
+                adapter.deleteMessages();
                 loadMessages();
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -169,37 +172,85 @@ public class ChatFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.chat_menu, menu);
-        MenuItem item = menu.findItem(R.id.delete_historial);
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+        final String titleHistorial = getResources().getString(R.string.chat_delete_historial_title);
+        final String messageHistorial = getResources().getString(R.string.chat_delete_historial_message);
+
+        final String titleChat = getResources().getString(R.string.chat_delete_chat_title);
+        final String messageChat = getResources().getString(R.string.chat_delete_chat_message);
+
+        final String ok = getResources().getString(R.string.ok);
+        final String cancel = getResources().getString(R.string.cancel);
+
+        MenuItem itemDeleteHidtorial = menu.findItem(R.id.delete_historial);
+        itemDeleteHidtorial.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                databaseReference.removeValue();
-                adapter.deleteMessages();
-                rvMessages.setAdapter(adapter);
-                Message m = chat.getMessage();
-                m.setMessage("");
-                m.setName("");
-                chat.setMessage(m);
+
+                showDialog(titleHistorial, messageHistorial, ok, cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                databaseReference.removeValue();
+                                adapter.deleteMessages();
+                                rvMessages.setAdapter(adapter);
+                                Message m = chat.getMessage();
+                                m.setMessage("");
+                                m.setName("");
+                                chat.setMessage(m);
+                            }
+                        },
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
                 return true;
             }
         });
-        /*inflater.inflate(R.menu.chat_menu, menu);
-        MenuItem item = menu.findItem(R.id.chat_menu);
-        item.setOnMenuItemClickListener(new ActionMenuView.OnMenuItemClickListener() {
+
+        MenuItem itemDeleteChat = menu.findItem(R.id.delete_chat);
+        itemDeleteChat.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (chat.getType() == 0) {
-                    Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
-                    CurrentSession.getInstance().setFriend(chat.getUser2());
-                    startActivity(friendProfileIntent);
-                } else {
 
-                }
+                showDialog(titleChat, messageChat, ok, cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                databaseReference.removeValue();
+                                adapter.deleteMessages();
+                                rvMessages.setAdapter(adapter);
+                                Message m = chat.getMessage();
+                                m.setMessage("");
+                                m.setName("");
+                                chat.setMessage(m);
+                                //TODO eliminar chat
+                            }
+                        },
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }
+                );
                 return true;
             }
-        });*/
+        });
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    protected void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(okButtonText, ok);
+        if (negativeButtonText != null && cancel != null)
+            builder.setNegativeButton(negativeButtonText, cancel);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 

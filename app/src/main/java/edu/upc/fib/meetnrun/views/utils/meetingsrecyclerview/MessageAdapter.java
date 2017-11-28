@@ -86,9 +86,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int min = cal.get(Calendar.MINUTE);
+
+        String aux = String.valueOf(min);
+        if (aux.length() == 1) {
+            aux = "0"+aux;
+        }
+
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
-        String messageHourMin = String.valueOf(hour)+":"+String.valueOf(min);
+        String messageHourMin = String.valueOf(hour)+":"+aux;
 
         String messageDay = String.valueOf(day)+"-"+String.valueOf(cal.get(Calendar.MONTH))+"-"+String.valueOf(cal.get(Calendar.YEAR));
 
@@ -122,7 +128,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         }
         else {
             holder.getName().setText(userName);
-            holder.getName().setTextColor(getColor(userName.charAt(0), false));
+            holder.getName().setTextColor(getColor(userName.charAt(0)));
         }
 
         holder.getMessage().setText(m.getMessage());
@@ -142,11 +148,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         else {
             holder.getDate().setVisibility(View.GONE);
         }
-
-        char letter = userName.charAt(0);
-        String firstLetter = String.valueOf(letter);
-        holder.getPhoto().setBackground(getColoredCircularShape((letter)));
-        holder.getPhoto().setText(firstLetter);
     }
 
     @Override
@@ -154,21 +155,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         return messagesList.size();
     }
 
-    private GradientDrawable getColoredCircularShape(char letter) {
-        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(v.getContext(),R.drawable.user_profile_circular_text_view);
-        circularShape.setColor(getColor(letter, true));
-        return circularShape;
-    }
 
-    private int getColor(char letter, boolean b) {
-        int[] colors;
-        if (b) {
-            colors = v.getResources().getIntArray(R.array.colors);
-        }
-        else {
-            colors = v.getResources().getIntArray(R.array.colors_chat);
-        }
-
+    private int getColor(char letter) {
+        int[] colors = v.getResources().getIntArray(R.array.colors_chat);
         int position = letter%colors.length;
         return colors[position];
     }

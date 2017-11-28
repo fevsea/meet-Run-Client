@@ -11,7 +11,6 @@
         <item>@color/teal_profile</item>
         <item>@color/green_profile</item>
         <item>@color/light_green_profile</item>
-        <item>@color/yellow_profile</item>
         <item>@color/orange_profile</item>
         <item>@color/deep_orange_profile</item>
 
@@ -28,7 +27,6 @@
         <item>@color/teal_chat</item>
         <item>@color/green_chat</item>
         <item>@color/light_green_chat</item>
-        <item>@color/yellow_chat</item>
         <item>@color/orange_chat</item>
         <item>@color/deep_orange_chat</item>
 

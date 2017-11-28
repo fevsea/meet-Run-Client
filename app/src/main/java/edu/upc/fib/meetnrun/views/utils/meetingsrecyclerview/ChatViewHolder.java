@@ -60,8 +60,12 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
         int hour = cal.get(Calendar.HOUR_OF_DAY);
         int min = cal.get(Calendar.MINUTE);
+        String aux = String.valueOf(min);
+        if (aux.length() == 1) {
+            aux = "0"+aux;
+        }
 
-        String messageHourMin = String.valueOf(hour)+":"+String.valueOf(min);
+        String messageHourMin = String.valueOf(hour)+":"+aux;
 
         lastHour.setText(messageHourMin);
 

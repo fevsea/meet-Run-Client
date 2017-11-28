@@ -3,7 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/delete_historial"
-        android:title="Delete historial" />
+    android:id="@+id/delete_historial"
+    android:title="Delete historial" />
+
+    <item
+        android:id="@+id/delete_chat"
+        android:title="Delete chat" />
 
 </menu>
