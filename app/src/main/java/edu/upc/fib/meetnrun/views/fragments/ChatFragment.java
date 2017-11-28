@@ -127,23 +127,23 @@ public class ChatFragment extends Fragment {
 
         loadMessages();
 
-        /*final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_messages_swipe);
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_messages_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                NUMB_MESSAGES += 15;
+                /*NUMB_MESSAGES += 15;
                 adapter.deleteMessages();
-                loadMessages();
+                loadMessages();*/
                 swipeRefreshLayout.setRefreshing(false);
             }
-        });*/
+        });
 
         return this.view;
     }
 
     private void loadMessages() {
 
-        databaseReference.limitToLast(NUMB_MESSAGES).addChildEventListener(new ChildEventListener() {
+        databaseReference.limitToLast(100/*NUMB_MESSAGES*/).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Message m = dataSnapshot.getValue(Message.class);

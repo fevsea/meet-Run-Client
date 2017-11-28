@@ -91,7 +91,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     @Override
     public void onClick(View view) {
-        listener.get().onMeetingClicked(getAdapterPosition());
+        listener.get().onItemClicked(getAdapterPosition());
     }
 
 }

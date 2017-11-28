@@ -112,7 +112,7 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
             listener.get().onButtonClicked(getAdapterPosition());
         }
         else {
-            listener.get().onMeetingClicked(getAdapterPosition());
+            listener.get().onItemClicked(getAdapterPosition());
         }
     }
 }

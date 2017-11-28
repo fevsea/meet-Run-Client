@@ -129,7 +129,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
             public void onButtonClicked(int position) {}
 
             @Override
-            public void onMeetingClicked(int position) {
+            public void onItemClicked(int position) {
                 User participant = participantsAdapter.getFriendAtPosition(position);
                 Intent profileIntent;
                 if (participant.getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
