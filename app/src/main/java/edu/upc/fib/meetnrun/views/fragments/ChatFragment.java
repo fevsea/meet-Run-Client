@@ -12,11 +12,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-<<<<<<< HEAD
-import android.util.Log;
-=======
+
 import android.support.v7.widget.Toolbar;
->>>>>>> 5cea440a144e658206e0f5d38bb9279ce921717c
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
