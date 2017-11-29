@@ -41,6 +41,11 @@ public class MeetingListFragment extends Fragment {
     private View view;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetings;
+    private  FloatingActionButton fab;
+    boolean filtered;
+    String filteredQuery;
+    private LinearLayoutManager layoutManager;
+    int pageSize;
 
     //variables para paginacion
     private boolean isLoading;
@@ -67,11 +72,12 @@ public class MeetingListFragment extends Fragment {
         meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
         //iniciar paginacion y progressbar
         initializePagination();
+        filtered = false;
+        filteredQuery = "";
         progressBar = view.findViewById(R.id.pb_loading);
         setupRecyclerView();
 
-        FloatingActionButton fab =
-                getActivity().findViewById(R.id.activity_fab);
+        fab = getActivity().findViewById(R.id.activity_fab);
         fab.setImageResource(R.drawable.add_group_512);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +101,7 @@ public class MeetingListFragment extends Fragment {
 
     private void setupRecyclerView() {
         final RecyclerView meetingsList = view.findViewById(R.id.fragment_meeting_container);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(getActivity());
         meetingsList.setLayoutManager(layoutManager);
         meetings = new ArrayList<>();
         meetingsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
@@ -139,23 +145,21 @@ public class MeetingListFragment extends Fragment {
                 int visibleItemCount = layoutManager.getChildCount();
                 int totalItemCount = layoutManager.getItemCount();
                 int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                fab.setVisibility(View.VISIBLE);
 
-                if (!isLoading && !isLastPage) {
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0) {
-                        Log.d("MEETING_LIST","CRIDA A PAGINACIO");
+                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0) {
+                    if (!isLastPage) {
                         updateMeetingList();
+                    }
+                    else {
+                        fab.setVisibility(View.INVISIBLE);
                     }
                 }
             }
         });
         meetingsList.setAdapter(meetingsAdapter);
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
 
@@ -168,9 +172,11 @@ public class MeetingListFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                filtered = true;
                 initializePagination();
                 query = query.toLowerCase();
-                new GetMeetingsFiltered().execute(query);
+                filteredQuery = query;
+                updateMeetingList();
                 return true;
             }
 
@@ -183,6 +189,7 @@ public class MeetingListFragment extends Fragment {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
+                filtered = false;
                 initializePagination();
                 updateMeetingList();
                 return false;
@@ -200,7 +207,8 @@ public class MeetingListFragment extends Fragment {
     }
 
     private void updateMeetingList() {
-        new GetMeetings().execute();
+        if (filtered) new GetMeetingsFiltered().execute(filteredQuery);
+        else new GetMeetings().execute();
     }
 
     private void createNewMeeting() {
@@ -218,8 +226,7 @@ public class MeetingListFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
-            isLoading = true;
+            setLoading();
         }
 
         @Override
@@ -231,30 +238,42 @@ public class MeetingListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            if (meetings != null) {
-                if (pageNumber == 0) meetingsAdapter.updateMeetingsList(meetings);
-                else meetingsAdapter.addMeetings(meetings);
-
-                if (meetings.size() == 0) {
-                    isLastPage = true;
-                }
-                else pageNumber++;
-            }
-            swipeRefreshLayout.setRefreshing(false);
-            isLoading = false;
-            progressBar.setVisibility(View.INVISIBLE);
+            updateData();
             super.onPostExecute(s);
         }
     }
 
 
+    private void setLoading() {
+        if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+    }
+
+    private void updateData() {
+        if (meetings != null) {
+            if (pageNumber == 0) {
+                meetingsAdapter.updateMeetingsList(meetings);
+                pageSize = meetings.size();
+            }
+            else {
+                meetingsAdapter.addMeetings(meetings);
+            }
+
+            if (pageNumber != 0 && meetings.size() < pageSize) {
+                isLastPage = true;
+            }
+            else pageNumber++;
+        }
+        isLoading = false;
+        swipeRefreshLayout.setRefreshing(false);
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
     private class GetMeetingsFiltered extends AsyncTask<String,String,String> {
 
         @Override
         protected void onPreExecute() {
-            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
-            isLoading = true;
+            setLoading();
         }
 
         @Override
@@ -266,18 +285,7 @@ public class MeetingListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            if (meetings != null) {
-                meetingsAdapter.updateMeetingsList(meetings);
-
-                if (meetings.size() == 0) {
-                    isLastPage = true;
-                }
-                else pageNumber++;
-            }
-            isLoading = false;
-            swipeRefreshLayout.setRefreshing(false);
-            progressBar.setVisibility(View.INVISIBLE);
-            System.err.println("FINISHED");
+            updateData();
             super.onPostExecute(s);
         }
     }
