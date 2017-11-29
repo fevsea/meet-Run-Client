@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -71,6 +72,8 @@ public class ChatFragment extends Fragment {
     private User currentUser;
 
     private int NUMB_MESSAGES = 15;
+
+    private boolean newChat = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -133,7 +136,6 @@ public class ChatFragment extends Fragment {
         });
 
         loadMessages();
-        removeProgressChat();
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_messages_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -171,6 +173,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
+
     }
 
     private void setScrollbar() {
