@@ -69,9 +69,6 @@
 
     </android.support.design.widget.TextInputLayout>
 
-
-
-
     <EditText
         android:id="@+id/editUsername"
         android:layout_width="370dp"
