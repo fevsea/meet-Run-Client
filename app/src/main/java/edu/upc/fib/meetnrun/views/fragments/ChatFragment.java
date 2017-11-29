@@ -2,15 +2,21 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+<<<<<<< HEAD
 import android.util.Log;
+=======
+import android.support.v7.widget.Toolbar;
+>>>>>>> 5cea440a144e658206e0f5d38bb9279ce921717c
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -82,7 +88,8 @@ public class ChatFragment extends Fragment {
             else chat.setChatName(chat.getUser2().getUsername());
         }
 
-        getActivity().setTitle(chat.getChatName());
+        //getActivity().setTitle(chat.getChatName());
+        getActivity().setTitle("");
 
         this.view = inflater.inflate(R.layout.fragment_chat, container, false);
 
@@ -214,6 +221,32 @@ public class ChatFragment extends Fragment {
             }
         });
 
+        Toolbar toolbar = getActivity().findViewById(R.id.activity_toolbar);
+        TextView name = toolbar.findViewById(R.id.toolbar_title);
+        name.setText(chat.getChatName());
+        name.setVisibility(View.VISIBLE);
+
+        TextView icon = toolbar.findViewById(R.id.toolbar_user_icon);
+        char letter = chat.getChatName().charAt(0);
+        String firstLetter = String.valueOf(letter);
+        icon.setBackground(getColoredCircularShape((letter)));
+        icon.setText(firstLetter.toUpperCase());
+        icon.setVisibility(View.VISIBLE);
+
+        name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openProfileView();
+            }
+        });
+
+        icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openProfileView();
+            }
+        });
+
         MenuItem itemDeleteChat = menu.findItem(R.id.delete_chat);
         itemDeleteChat.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -244,8 +277,35 @@ public class ChatFragment extends Fragment {
         });
 
         super.onCreateOptionsMenu(menu, inflater);
+
     }
 
+
+
+    private void openProfileView() {
+
+        Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
+        User user = null;
+        int type = chat.getType();
+        if (type == 0) {
+            if (!currentUser.getUsername().equals(chat.getUser1().getUsername()))
+                user = chat.getUser1();
+            else user = chat.getUser2();
+        }
+        else if (type == 1) {
+
+        }
+        CurrentSession.getInstance().setFriend(user);
+        startActivity(friendProfileIntent);
+    }
+
+    private GradientDrawable getColoredCircularShape(char letter) {
+        int[] colors = view.getResources().getIntArray(R.array.colors);
+        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(view.getContext(),R.drawable.user_profile_circular_text_view);
+        int position = letter%colors.length;
+        circularShape.setColor(colors[position]);
+        return circularShape;
+    }
     protected void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle(title);

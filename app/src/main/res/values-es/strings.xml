@@ -102,5 +102,5 @@
     <string name="meetings">Quedadas</string>
     <string name="log_in">Conectarse</string>
     <string name="password">Contraseña</string>
-
+    <string name="delete_history">Eliminar historial</string>
 </resources>
