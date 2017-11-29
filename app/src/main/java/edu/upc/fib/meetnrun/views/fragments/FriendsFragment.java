@@ -15,6 +15,9 @@ import edu.upc.fib.meetnrun.views.UsersListActivity;
 public class FriendsFragment extends FriendUserListFragmentTemplate {
 
     @Override
+    protected void initList() {}
+
+    @Override
     protected void floatingbutton() {
         fab.setImageResource(R.drawable.add_user_512);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -80,5 +83,12 @@ public class FriendsFragment extends FriendUserListFragmentTemplate {
             super.onPostExecute(s);
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        initializePagination();
+        getMethod();
+        super.onResume();
     }
 }

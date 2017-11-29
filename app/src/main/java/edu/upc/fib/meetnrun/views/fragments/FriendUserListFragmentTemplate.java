@@ -68,13 +68,19 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                initializePagination();
                 getMethod();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
         swipeRefreshLayout.setProgressViewOffset(true,200,400);
+
+        initList();
+
         return this.view;
     }
+
+    protected abstract void initList();
 
     protected abstract void floatingbutton();
 
@@ -165,13 +171,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @Override
-    public void onResume() {
-        getMethod();
-        super.onResume();
-    }
-
-    private void initializePagination() {
+    protected void initializePagination() {
         pageNumber = 0;
         isLoading = false;
         isLastPage = false;

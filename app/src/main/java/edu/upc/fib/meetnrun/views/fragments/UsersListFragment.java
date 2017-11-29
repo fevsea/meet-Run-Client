@@ -26,6 +26,11 @@ public class UsersListFragment extends FriendUserListFragmentTemplate {
 
 
     @Override
+    protected void initList() {
+        getMethod();
+    }
+
+    @Override
     protected void floatingbutton() {
         fab.setVisibility(View.GONE);
     }
