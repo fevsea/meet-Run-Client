@@ -27,10 +27,12 @@ import edu.upc.fib.meetnrun.views.ChatActivity;
 
 public class FriendProfileFragment extends ProfileFragmentTemplate implements View.OnClickListener {
 
-    private final String friendUsername = currentFriend.getUsername();
+    private String friendUsername;
 
     @Override
     protected void setImage() {
+
+        friendUsername = currentFriend.getUsername();
 
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,22 +52,10 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                                 Chat chat = ChatListFragment.getChat(currentUsername, friendUsername);
                                 if (chat == null) {
                                     Calendar rightNow = Calendar.getInstance();
-                                    StringBuilder sb = new StringBuilder();
-                                    String hour = null;
-                                    String minute = null;
-                                    String aux = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
-                                    if (aux.length() == 1) hour = "0"+aux;
-                                    else hour = aux;
-                                    aux = String.valueOf(rightNow.get(Calendar.MINUTE));
-                                    if (aux.length() == 1) minute = "0"+aux;
-                                    else minute = aux;
-                                    sb.append(hour);
-                                    sb.append(":");
-                                    sb.append(minute);
 
                                     Date dateWithoutTime = rightNow.getTime();
 
-                                    Message m = new Message("", currentUsername, sb.toString(), dateWithoutTime);
+                                    Message m = new Message("", currentUsername, dateWithoutTime);
 
                                     List<User> userList = new ArrayList<>();
                                     userList.add(user);
@@ -108,10 +98,10 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
         new removeFriend().execute(s);
     }
 
-    @Override
+    /*@Override
     protected void configureChallengeButton() {
         challengeButton.setOnClickListener(this);
-    }
+    }*/
 
     @Override
     public void onClick(View v) {

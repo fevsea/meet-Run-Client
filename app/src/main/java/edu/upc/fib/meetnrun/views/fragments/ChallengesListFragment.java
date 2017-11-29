@@ -45,7 +45,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        getActivity().setTitle(R.string.title_activity_challenges_list);
+        getActivity().setTitle(R.string.challenges);
         View view =  inflater.inflate(R.layout.fragment_challenges_list, container, false);
         recyclerView = view.findViewById(R.id.fragment_challenge_recycler);
         swipeRefreshLayout = view.findViewById(R.id.fragment_challenge_swipe);
@@ -66,7 +66,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             public void onButtonClicked(int position) {}
 
             @Override
-            public void onMeetingClicked(int position) {
+            public void onItemClicked(int position) {
                 Challenge challenge = challengesAdapter.getChallengeAt(position);
                 Intent i = new Intent(getActivity(), ChallengeActivity.class);
                 i.putExtra("id", challenge.getId());

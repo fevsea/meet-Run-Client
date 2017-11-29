@@ -15,58 +15,49 @@
         android:paddingBottom="8dp"
         android:layout_gravity="center"
         android:textStyle="bold"
-        android:text="Today"/>
+        android:text="Today"
+        android:textSize="16dp"/>
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:paddingRight="4dp"
-        android:paddingLeft="120dp"
         android:paddingBottom="1dp"
-        android:paddingTop="1dp">
+        android:paddingTop="1dp"
+        android:layout_gravity="end">
 
     <TextView
         android:id="@+id/messageHour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#808080"
-        android:paddingRight="4dp"
+        android:paddingRight="16dp"
         android:paddingTop="1dp"
         android:layout_gravity="end"
         android:text="00:00"/>
 
     <android.support.v7.widget.CardView
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="end"
         cardview:cardCornerRadius="8dp"
         cardview:cardElevation="@dimen/card_depth"
-        android:layout_margin="@dimen/card_depth"
+        android:layout_marginRight="8dp"
+       android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="1dp"
         cardview:cardBackgroundColor="@color/colorPrimaryLight">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10sp">
-
-                <TextView
-                    android:id="@+id/messagePhoto"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:gravity="center"
-                    android:textSize="17sp"/>
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginRight="6dp"
+                android:layout_marginLeft="3dp"
+                android:padding="6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -74,7 +65,7 @@
 
                     <TextView
                         android:id="@+id/messageName"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
                         android:text="Eric"
@@ -85,13 +76,12 @@
 
                 <TextView
                     android:id="@+id/messageTxt"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Hello!"/>
+                    android:text="Hello!"
+                    android:textSize="15dp"/>
 
             </LinearLayout>
-
-        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 

@@ -66,7 +66,7 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
 
     @Override
     public void onClick(View v) {
-        listener.get().onMeetingClicked(getAdapterPosition());
+        listener.get().onItemClicked(getAdapterPosition());
     }
 
     private String getExpirationText(String deadline) {

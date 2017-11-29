@@ -35,10 +35,10 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
         new addFriend().execute(s);
     }
 
-    @Override
+    /*@Override
     protected void configureChallengeButton() {
         challengeButton.setVisibility(View.INVISIBLE);
-    }
+    }*/
 
     private class addFriend extends AsyncTask<String,String,String> {
 

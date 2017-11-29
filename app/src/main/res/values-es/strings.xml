@@ -102,6 +102,7 @@
     <string name="meetings">Quedadas</string>
     <string name="log_in">Conectarse</string>
     <string name="password">Contraseña</string>
+    <string name="delete_history">Eliminar historial</string>
     <string name="challenges">Desafíos</string>
-
+    <string name="challenge">Desafío</string>
 </resources>
