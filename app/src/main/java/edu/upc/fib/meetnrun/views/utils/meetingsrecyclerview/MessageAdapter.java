@@ -1,6 +1,7 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -9,9 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
 
 /**
@@ -24,9 +28,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     private final List<Message> messagesList = new ArrayList<>();
     private final Context c;
     private View v;
-    private Message previous = null;
     private boolean sameHour = false;
-    private boolean me = false;
     private boolean showDate = false;
 
     public MessageAdapter(Context c) {
@@ -36,6 +38,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     public void addMensaje(Message m) {
         messagesList.add(m);
         notifyItemInserted(messagesList.size());
+    }
+
+    public void deleteMessages() {
+        messagesList.clear();
     }
 
     @Override
@@ -51,7 +57,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         v = null;
 
         if (viewType == 0) {
-            me = true;
             v = LayoutInflater.from(c).inflate(R.layout.card_view_message_send, parent, false);
         }
         else {
@@ -65,24 +70,64 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
     public void onBindViewHolder(MessageViewHolder holder, int position) {
 
         Message m = messagesList.get(position);
+        Message previous = null;
+        if (position > 0) {
+            previous = messagesList.get(position-1);
+        }
+        if (position == 0) {
+            showDate = true;
+            sameHour = false;
+        }
+        Date date = m.getDateTime();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int min = cal.get(Calendar.MINUTE);
+
+        String aux = String.valueOf(min);
+        if (aux.length() == 1) {
+            aux = "0"+aux;
+        }
+
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        String messageHourMin = String.valueOf(hour)+":"+aux;
+
+        String messageDay = String.valueOf(day)+"-"+String.valueOf(cal.get(Calendar.MONTH))+"-"+String.valueOf(cal.get(Calendar.YEAR));
+
         if (previous != null) {
-            if(m.getHour().equals(previous.getHour()) && m.getName().equals(previous.getName())) {
-                sameHour = true;
+
+            Date previousDate = previous.getDateTime();
+            Calendar cal2 = Calendar.getInstance();
+            cal2.setTime(previousDate);
+
+            int previousHour = cal2.get(Calendar.HOUR_OF_DAY);
+            int previousMin = cal2.get(Calendar.MINUTE);
+
+            if (m.getName().equals(previous.getName())) {
+                if (hour == previousHour && min == previousMin) {
+                    sameHour = true;
+                }
             }
-            /*if(!m.getDate().equals(previous.getDate())) {
+
+            int previousDay = cal2.get(Calendar.DAY_OF_MONTH);
+
+            if(day != previousDay) {
                 showDate = true;
-            }*/
+            }
 
         }
         else showDate = true;
-        previous = m;
 
         String userName = m.getName();
-        if (me) {
-            holder.getName().setText("you");
-            me = false;
+        if (m.getName().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) {
+            holder.getName().setVisibility(View.GONE);
         }
-        else holder.getName().setText(userName);
+        else {
+            holder.getName().setText(userName);
+            holder.getName().setTextColor(getColor(userName.charAt(0)));
+        }
 
         holder.getMessage().setText(m.getMessage());
         if (sameHour) {
@@ -91,21 +136,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         }
         else {
             holder.getHour().setVisibility(View.VISIBLE);
-            holder.getHour().setText(m.getHour());
+            holder.getHour().setText(messageHourMin);
         }
         if (showDate) {
             holder.getDate().setVisibility(View.VISIBLE);
-            //holder.getDate().setText(m.getDate());
+            holder.getDate().setText(messageDay);
             showDate = false;
         }
         else {
             holder.getDate().setVisibility(View.GONE);
         }
-
-        char letter = userName.charAt(0);
-        String firstLetter = String.valueOf(letter);
-        holder.getPhoto().setBackground(getColoredCircularShape((letter)));
-        holder.getPhoto().setText(firstLetter);
     }
 
     @Override
@@ -113,12 +153,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         return messagesList.size();
     }
 
-    private GradientDrawable getColoredCircularShape(char letter) {
-        int[] colors = v.getResources().getIntArray(R.array.colors);
-        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(v.getContext(),R.drawable.user_profile_circular_text_view);
+
+    private int getColor(char letter) {
+        int[] colors = v.getResources().getIntArray(R.array.colors_chat);
         int position = letter%colors.length;
-        circularShape.setColor(colors[position]);
-        return circularShape;
+        return colors[position];
     }
 
 }
