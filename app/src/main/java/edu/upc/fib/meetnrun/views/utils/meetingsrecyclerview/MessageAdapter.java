@@ -124,7 +124,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
         String userName = m.getName();
         if (m.getName().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) {
-            holder.getName().setText("you");
+            holder.getName().setVisibility(View.GONE);
         }
         else {
             holder.getName().setText(userName);

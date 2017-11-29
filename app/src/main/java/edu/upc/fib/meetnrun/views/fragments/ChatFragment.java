@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -126,6 +128,7 @@ public class ChatFragment extends Fragment {
         });
 
         loadMessages();
+        removeProgressChat();
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_messages_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -143,9 +146,10 @@ public class ChatFragment extends Fragment {
 
     private void loadMessages() {
 
-        databaseReference.limitToLast(100/*NUMB_MESSAGES*/).addChildEventListener(new ChildEventListener() {
+        databaseReference.limitToLast(50/*NUMB_MESSAGES*/).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                removeProgressChat();
                 Message m = dataSnapshot.getValue(Message.class);
                 adapter.addMensaje(m);
             }
@@ -251,6 +255,10 @@ public class ChatFragment extends Fragment {
             builder.setNegativeButton(negativeButtonText, cancel);
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void removeProgressChat() {
+        (view.findViewById(R.id.loading_layout)).setVisibility(View.GONE);
     }
 
 

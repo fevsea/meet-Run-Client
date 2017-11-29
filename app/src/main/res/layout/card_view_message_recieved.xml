@@ -15,7 +15,8 @@
         android:paddingBottom="8dp"
         android:layout_gravity="center"
         android:textStyle="bold"
-        android:text="Today"/>
+        android:text="Today"
+        android:textSize="16dp"/>
 
 <LinearLayout
     android:orientation="vertical"

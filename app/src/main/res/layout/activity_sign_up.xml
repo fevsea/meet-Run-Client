@@ -126,7 +126,7 @@
             <EditText
                 android:id="@+id/editPassword1"
                 android:textSize="17dp"
-                android:layout_width="match_parent"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPassword"
@@ -146,12 +146,36 @@
             <EditText
                 android:id="@+id/editPassword2"
                 android:textSize="17dp"
-                android:layout_width="match_parent"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPassword"
                 android:layout_below="@+id/password2"
                 android:layout_alignStart="@+id/password2" />
+
+            <TextView
+                android:id="@+id/see_password2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/editPassword1"
+                android:layout_marginEnd="11dp"
+                android:layout_marginTop="10dp"
+                android:text="SEE"
+                android:textColor="@color/colorAccent"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/see_password3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/editPassword2"
+                android:layout_marginEnd="11dp"
+                android:layout_marginTop="10dp"
+                android:text="SEE"
+                android:textColor="@color/colorAccent"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/register"

@@ -1,45 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_weight="1"
-    android:padding="5sp">
+    android:layout_height="match_parent">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragment_messages_swipe"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="5sp">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvMensajes"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/fragment_messages_swipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
-        </android.support.v7.widget.RecyclerView>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvMensajes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+            </android.support.v7.widget.RecyclerView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        </android.support.v4.widget.SwipeRefreshLayout>
 
-        <EditText
-            android:id="@+id/txtMensaje"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Write a message..."
-            android:layout_weight="1"/>
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnEnviar"
-            android:layout_width="47sp"
-            android:layout_height="47sp"
-            android:background="@drawable/telegram_blue"/>
+            <EditText
+                android:id="@+id/txtMensaje"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Write a message..." />
+
+            <Button
+                android:id="@+id/btnEnviar"
+                android:layout_width="47sp"
+                android:layout_height="47sp"
+                android:background="@drawable/telegram_blue" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
+

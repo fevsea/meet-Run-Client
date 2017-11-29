@@ -25,7 +25,6 @@ import edu.upc.fib.meetnrun.models.User;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText editUsername, editPassword;
-    private TextView seePassword;
     private String username, password;
     public static final String MY_PREFS_NAME = "TokenFile";
     private ILoginAdapter loginAdapter;
@@ -39,40 +38,6 @@ public class LoginActivity extends AppCompatActivity {
 
         editUsername = (EditText) findViewById(R.id.editUsername);
         editPassword = (EditText) findViewById(R.id.editPassword);
-        seePassword = (TextView) findViewById(R.id.see_password);
-
-        editPassword.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (editPassword.getText().toString().equals("")) {
-                    seePassword.setVisibility(View.GONE);
-                }
-                else seePassword.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        seePassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (see) {
-                    editPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    see = false;
-                }
-                else {
-                    editPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-                    see = true;
-                }
-            }
-        });
 
         cs = CurrentSession.getInstance();
         loginAdapter = cs.getLoginAdapter();
