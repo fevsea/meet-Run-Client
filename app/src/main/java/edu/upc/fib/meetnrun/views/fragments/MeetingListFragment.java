@@ -45,6 +45,7 @@ public class MeetingListFragment extends Fragment {
     private boolean isLoading;
     private boolean isLastPage;
     private int pageNumber;
+    private ProgressBar progressBar;
 
     public MeetingListFragment() {
         meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
@@ -66,6 +67,7 @@ public class MeetingListFragment extends Fragment {
         isLoading = false;
         isLastPage = false;
         pageNumber = 0;
+        progressBar = view.findViewById(R.id.pb_loading);
         setupRecyclerView();
 
         FloatingActionButton fab =
@@ -204,14 +206,13 @@ public class MeetingListFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            //TODO arreglar refresh llista
-            swipeRefreshLayout.setRefreshing(true);
+            progressBar.setVisibility(View.VISIBLE);
+            isLoading = true;
         }
 
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            isLoading = true;
             meetings = meetingDBAdapter.getAllMeetings(pageNumber);//TODO arreglar paginas
             return null;
         }
@@ -229,6 +230,7 @@ public class MeetingListFragment extends Fragment {
             }
             swipeRefreshLayout.setRefreshing(false);
             isLoading = false;
+            progressBar.setVisibility(View.INVISIBLE);
             super.onPostExecute(s);
         }
     }
