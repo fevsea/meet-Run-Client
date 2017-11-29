@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
@@ -31,11 +32,17 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 
 public abstract class FriendUserListFragmentTemplate extends Fragment{
 
-    private View view;
-    FriendsAdapter friendsAdapter;
-    IFriendsAdapter friendsDBAdapter;
-    List<User> l;
-    FloatingActionButton fab;
+    protected View view;
+    protected FriendsAdapter friendsAdapter;
+    protected IFriendsAdapter friendsDBAdapter;
+    protected List<User> l;
+    protected FloatingActionButton fab;
+    protected SwipeRefreshLayout swipeRefreshLayout;
+
+    protected boolean isLoading;
+    protected boolean isLastPage;
+    protected int pageNumber;
+    protected ProgressBar progressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,13 +57,16 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
 
         l = new ArrayList<>();
 
+        initializePagination();
+        progressBar = view.findViewById(R.id.pb_loading_friends);
+
         setupRecyclerView();
 
         fab = getActivity().findViewById(R.id.activity_fab);
         
         floatingbutton();
         
-        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.fragment_friends_swipe);
+        swipeRefreshLayout = view.findViewById(R.id.fragment_friends_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -64,6 +74,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+        swipeRefreshLayout.setProgressViewOffset(true,200,400);
         return this.view;
     }
 
@@ -74,7 +85,8 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
     private void setupRecyclerView() {
 
         final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
-        friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        friendsList.setLayoutManager(layoutManager);
 
         List<User> users = new ArrayList<>();
 
@@ -90,6 +102,30 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
 
             }
         }, getContext(), false);
+
+        friendsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                if (!isLoading && !isLastPage) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0) {
+                        Log.d("MEETING_LIST","CRIDA A PAGINACIO");
+                        getMethod();
+                    }
+                }
+            }
+        });
+
         friendsList.setAdapter(friendsAdapter);
 
     }
@@ -136,5 +172,11 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
     public void onResume() {
         getMethod();
         super.onResume();
+    }
+
+    private void initializePagination() {
+        pageNumber = 0;
+        isLoading = false;
+        isLastPage = false;
     }
 }

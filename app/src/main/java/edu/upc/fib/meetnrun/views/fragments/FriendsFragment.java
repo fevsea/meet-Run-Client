@@ -48,9 +48,15 @@ public class FriendsFragment extends FriendUserListFragmentTemplate {
     private class getFriends extends AsyncTask<String,String,String> {
 
         @Override
+        protected void onPreExecute() {
+            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+            isLoading = true;
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
             try {
-                l = friendsDBAdapter.getUserFriends(0);//TODO arreglar paginas
+                l = friendsDBAdapter.getUserFriends(pageNumber);
             } catch (AutorizationException e) {
                 e.printStackTrace();
             }
@@ -59,8 +65,20 @@ public class FriendsFragment extends FriendUserListFragmentTemplate {
 
         @Override
         protected void onPostExecute(String s) {
-            friendsAdapter.updateFriendsList(l);
+            if (l != null) {
+                if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
+                else friendsAdapter.addFriends(l);
+
+                if (l.size() == 0) {
+                    isLastPage = true;
+                }
+                else pageNumber++;
+            }
+            swipeRefreshLayout.setRefreshing(false);
+            isLoading = false;
+            progressBar.setVisibility(View.INVISIBLE);
             super.onPostExecute(s);
         }
+
     }
 }

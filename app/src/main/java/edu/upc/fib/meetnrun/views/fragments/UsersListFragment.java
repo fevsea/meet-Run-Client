@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.LoginActivity;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
 
 /**
@@ -41,46 +43,42 @@ public class UsersListFragment extends FriendUserListFragmentTemplate {
 
     @Override
     protected void getMethod() {
-        l.clear();
         new getUsers().execute();
     }
 
 
     private class getUsers extends AsyncTask<String,String,String> {
 
-        List<User> friends = new ArrayList<>();
         List<User> users = new ArrayList<>();
 
         @Override
+        protected void onPreExecute() {
+            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+            isLoading = true;
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
-            users = usersDBAdapter.getAllUsers(0);//TODO arreglar paginas
-            try {
-                friends = friendsDBAdapter.getUserFriends(0);//TODO arreglar paginas
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            }
-            for (User user: users) {
-                boolean equal = false;
-                for (User friend: friends) {
-                    if (user.getUsername().equals(friend.getUsername())) {
-                        equal = true;
-                        friends.remove(friend);
-                        break;
-                    }
-                }
-                if (user.getUsername().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) {
-                    equal = true;
-                }
-                if (!equal) {
-                    l.add(user);
-                }
-            }
+            users = usersDBAdapter.getAllUsers(pageNumber);
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            friendsAdapter.updateFriendsList(l);
+            if (l != null) {
+                if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
+                else friendsAdapter.addFriends(l);
+
+                Log.e("SIZE", String.valueOf(l.size()));
+
+                if (l.size() == 0) {
+                    isLastPage = true;
+                }
+                else pageNumber++;
+            }
+            swipeRefreshLayout.setRefreshing(false);
+            isLoading = false;
+            progressBar.setVisibility(View.INVISIBLE);
             super.onPostExecute(s);
         }
     }
