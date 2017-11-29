@@ -73,7 +73,7 @@ public class ChatFragment extends Fragment {
 
     private int NUMB_MESSAGES = 15;
 
-    private int numbNewMessages = 0;
+    private int numbNewMessages;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -83,6 +83,9 @@ public class ChatFragment extends Fragment {
 
         chat = CurrentSession.getInstance().getChat();
         currentUser = CurrentSession.getInstance().getCurrentUser();
+
+        if (chat.getNumbNewMessages() > 0) numbNewMessages = chat.getNumbNewMessages();
+        else numbNewMessages = 0;
 
         if (chat.getType() == 0) {
             if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) chat.setChatName(chat.getUser1().getUsername());
@@ -337,5 +340,13 @@ public class ChatFragment extends Fragment {
         (view.findViewById(R.id.loading_layout)).setVisibility(View.GONE);
     }
 
-
+    @Override
+    public void onResume() {
+        if (!currentUser.getUsername().equals(chat.getMessage().getName()) && numbNewMessages > 0) {
+            numbNewMessages = 0;
+            chat.setNumbNewMessages(numbNewMessages);
+        }
+        Log.e("ONRESUME", String.valueOf(numbNewMessages));
+        super.onResume();
+    }
 }
