@@ -135,6 +135,10 @@ public class ChatFragment extends Fragment {
             }
         });
 
+        if (chat.getMessage().getMessage().equals("")) {
+            removeProgressChat();
+        }
+
         loadMessages();
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_messages_swipe);
