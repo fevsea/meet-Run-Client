@@ -42,6 +42,7 @@ public class MeetingListFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetings;
 
+    //variables para paginacion
     private boolean isLoading;
     private boolean isLastPage;
     private int pageNumber;
@@ -64,6 +65,7 @@ public class MeetingListFragment extends Fragment {
         this.view = view;
 
         meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
+        //iniciar paginacion y progressbar
         initializePagination();
         progressBar = view.findViewById(R.id.pb_loading);
         setupRecyclerView();
@@ -82,6 +84,7 @@ public class MeetingListFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                initializePagination();
                 updateMeetingList();
             }
         });
@@ -122,6 +125,8 @@ public class MeetingListFragment extends Fragment {
 
             }
         });
+
+        //scrollListener para detectar que se llega al final de la lista para pedir la siguiente pagina
         meetingsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -150,7 +155,6 @@ public class MeetingListFragment extends Fragment {
 
     @Override
     public void onResume() {
-        //updateMeetingList();
         super.onResume();
     }
 
@@ -188,6 +192,7 @@ public class MeetingListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    //funcion inicializar paginacion
     private void initializePagination() {
         pageNumber = 0;
         isLoading = false;
@@ -207,6 +212,8 @@ public class MeetingListFragment extends Fragment {
         new JoinMeeting().execute(meeting.getId());
     }
 
+    //en cada asynctask hay que hacer cambios, tomad esta como modelo
+    //si no usais swiperefreshlayout no lo pongais
     private class GetMeetings extends AsyncTask<String,String,String> {
 
         @Override
