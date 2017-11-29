@@ -73,7 +73,6 @@ public class ChatFragment extends Fragment {
 
     private int NUMB_MESSAGES = 15;
 
-    private boolean newChat = true;
     private int numbNewMessages = 0;
 
     @Override

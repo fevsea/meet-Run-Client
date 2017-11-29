@@ -30,7 +30,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         this.listener = new WeakReference<>(listener);
     }
 
-    public void bindChat(Chat chat, boolean newChat) {
+    public void bindChat(Chat chat) {
 
         if (chat.getType() == 0) {
             if (!CurrentSession.getInstance().getCurrentUser().getUsername().equals(chat.getUser1().getUsername())) chat.setChatName(chat.getUser1().getUsername());
@@ -71,9 +71,8 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
         TextView numberChats = view.findViewById(R.id.chat_new_messages);
 
-        if (newChat) {
+        if (!chat.getMessage().getName().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) {
             numberChats.setVisibility(View.VISIBLE);
-            newChat = false;
         }
         else numberChats.setVisibility(View.GONE);
 
