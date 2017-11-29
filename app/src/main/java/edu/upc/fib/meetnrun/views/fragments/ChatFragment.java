@@ -74,6 +74,7 @@ public class ChatFragment extends Fragment {
     private int NUMB_MESSAGES = 15;
 
     private int numbNewMessages;
+    private boolean firstTime;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -116,6 +117,7 @@ public class ChatFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
+                if (firstTime) firstTime = false;
                 String userName = currentUser.getUsername();
 
                 Calendar cal = Calendar.getInstance();
@@ -167,16 +169,19 @@ public class ChatFragment extends Fragment {
                 Message m = dataSnapshot.getValue(Message.class);
                 adapter.addMensaje(m);
 
-                if (currentUser.getUsername().equals(m.getName())) {
-                    numbNewMessages++;
-                    chat.setNumbNewMessages(numbNewMessages);
-                }
-                else {
-                    if (numbNewMessages > 0) {
-                        numbNewMessages = 0;
+                if (!firstTime) {
+                    if (currentUser.getUsername().equals(m.getName())) {
+                        numbNewMessages++;
                         chat.setNumbNewMessages(numbNewMessages);
                     }
+                    else {
+                        if (numbNewMessages > 0) {
+                            numbNewMessages = 0;
+                            chat.setNumbNewMessages(numbNewMessages);
+                        }
+                    }
                 }
+                Log.e("CHILDADDED", String.valueOf(numbNewMessages));
             }
 
             @Override
@@ -342,11 +347,11 @@ public class ChatFragment extends Fragment {
 
     @Override
     public void onResume() {
+        firstTime = true;
         if (!currentUser.getUsername().equals(chat.getMessage().getName()) && numbNewMessages > 0) {
             numbNewMessages = 0;
             chat.setNumbNewMessages(numbNewMessages);
         }
-        Log.e("ONRESUME", String.valueOf(numbNewMessages));
         super.onResume();
     }
 }
