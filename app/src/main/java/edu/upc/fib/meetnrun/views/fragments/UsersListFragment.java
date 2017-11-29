@@ -49,8 +49,6 @@ public class UsersListFragment extends FriendUserListFragmentTemplate {
 
     private class getUsers extends AsyncTask<String,String,String> {
 
-        List<User> users = new ArrayList<>();
-
         @Override
         protected void onPreExecute() {
             if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
@@ -59,7 +57,7 @@ public class UsersListFragment extends FriendUserListFragmentTemplate {
 
         @Override
         protected String doInBackground(String... strings) {
-            users = usersDBAdapter.getAllUsers(pageNumber);
+            l = usersDBAdapter.getAllUsers(pageNumber);
             return null;
         }
 
@@ -68,8 +66,6 @@ public class UsersListFragment extends FriendUserListFragmentTemplate {
             if (l != null) {
                 if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
                 else friendsAdapter.addFriends(l);
-
-                Log.e("SIZE", String.valueOf(l.size()));
 
                 if (l.size() == 0) {
                     isLastPage = true;
