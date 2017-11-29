@@ -1,6 +1,7 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.ChallengeActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChallengesAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
@@ -66,7 +68,9 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             @Override
             public void onMeetingClicked(int position) {
                 Challenge challenge = challengesAdapter.getChallengeAt(position);
-                challenge.getDeadline();
+                Intent i = new Intent(getActivity(), ChallengeActivity.class);
+                i.putExtra("id", challenge.getId());
+                startActivity(i);
             }
         });
         recyclerView.setAdapter(challengesAdapter);

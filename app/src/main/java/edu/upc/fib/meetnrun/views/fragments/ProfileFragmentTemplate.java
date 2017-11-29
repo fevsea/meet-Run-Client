@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
     IFriendsAdapter friendsDBAdapter;
     ImageView chat;
     User currentFriend;
+    Button challengeButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,6 +95,8 @@ public abstract class ProfileFragmentTemplate extends Fragment {
         postCode.setText(postcodeFriend);
 
         getCityFromPostcode(postcodeFriend);
+
+        this.challengeButton = view.findViewById(R.id.challenge_button);
 
         return this.view;
     }
@@ -181,5 +185,8 @@ public abstract class ProfileFragmentTemplate extends Fragment {
             Log.e("URL", "change view");
             postCode.setText(s);
         }
+
     }
+
+    abstract protected void configureChallengeButton();
 }
