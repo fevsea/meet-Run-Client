@@ -86,6 +86,7 @@ public class MeetingListFragment extends Fragment {
             }
         });
         swipeRefreshLayout.setProgressViewOffset(true,200,400);
+        updateMeetingList();
         return view;
     }
 
@@ -149,7 +150,7 @@ public class MeetingListFragment extends Fragment {
 
     @Override
     public void onResume() {
-        updateMeetingList();
+        //updateMeetingList();
         super.onResume();
     }
 
@@ -210,7 +211,7 @@ public class MeetingListFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
+            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
             isLoading = true;
         }
 
@@ -245,7 +246,7 @@ public class MeetingListFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
+            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
             isLoading = true;
         }
 
