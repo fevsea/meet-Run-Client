@@ -52,10 +52,8 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
 
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
         adapter();
-        
-        friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
-        l = new ArrayList<>();
+        friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
         initializePagination();
         progressBar = view.findViewById(R.id.pb_loading_friends);
@@ -63,9 +61,9 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         setupRecyclerView();
 
         fab = getActivity().findViewById(R.id.activity_fab);
-        
+
         floatingbutton();
-        
+
         swipeRefreshLayout = view.findViewById(R.id.fragment_friends_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -88,9 +86,9 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         friendsList.setLayoutManager(layoutManager);
 
-        List<User> users = new ArrayList<>();
+        l = new ArrayList<>();
 
-        friendsAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
+        friendsAdapter = new FriendsAdapter(l, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
@@ -119,7 +117,6 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
                 if (!isLoading && !isLastPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0) {
-                        Log.d("MEETING_LIST","CRIDA A PAGINACIO");
                         getMethod();
                     }
                 }
