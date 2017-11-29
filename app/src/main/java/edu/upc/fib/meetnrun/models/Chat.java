@@ -15,6 +15,7 @@ public class Chat{
     private int type;
     private Message message;
     private Meeting meeting;
+    private int numbNewMessages = 0;
 
     public Chat() {
         listUsersChat = new ArrayList<>();
@@ -102,5 +103,13 @@ public class Chat{
 
     public void setMeeting(Meeting meeting) {
         this.meeting = meeting;
+    }
+
+    public int getNumbNewMessages() {
+        return numbNewMessages;
+    }
+
+    public void setNumbNewMessages(int numbNewMessages) {
+        this.numbNewMessages = numbNewMessages;
     }
 }

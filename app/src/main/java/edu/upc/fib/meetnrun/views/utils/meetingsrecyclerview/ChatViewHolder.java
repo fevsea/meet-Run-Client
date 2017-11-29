@@ -72,7 +72,10 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         TextView numberChats = view.findViewById(R.id.chat_new_messages);
 
         if (!chat.getMessage().getName().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) {
-            numberChats.setVisibility(View.VISIBLE);
+            if (chat.getNumbNewMessages() != 0) {
+                numberChats.setVisibility(View.VISIBLE);
+                numberChats.setText(String.valueOf(chat.getNumbNewMessages()));
+            }
         }
         else numberChats.setVisibility(View.GONE);
 

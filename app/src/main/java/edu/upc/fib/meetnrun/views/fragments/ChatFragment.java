@@ -164,11 +164,15 @@ public class ChatFragment extends Fragment {
                 Message m = dataSnapshot.getValue(Message.class);
                 adapter.addMensaje(m);
 
-                if (!currentUser.getUsername().equals(m.getName())) {
+                if (currentUser.getUsername().equals(m.getName())) {
                     numbNewMessages++;
+                    chat.setNumbNewMessages(numbNewMessages);
                 }
                 else {
-                    if (numbNewMessages > 0) numbNewMessages = 0;
+                    if (numbNewMessages > 0) {
+                        numbNewMessages = 0;
+                        chat.setNumbNewMessages(numbNewMessages);
+                    }
                 }
             }
 
