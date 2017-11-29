@@ -26,7 +26,7 @@ import static edu.upc.fib.meetnrun.adapters.utils.Utils.checkErrorCodeAndThowExc
  */
 
 public class UserAdapterImpl implements IUserAdapter {
-    private SOServices mServices;
+    private final SOServices mServices;
 
     public UserAdapterImpl(SOServices soServices) {
         mServices = soServices;
@@ -40,9 +40,7 @@ public class UserAdapterImpl implements IUserAdapter {
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
             pus = ret.body();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GenericException e) {
+        } catch (IOException | GenericException e) {
             e.printStackTrace();
         }
         List<UserServer> lus = pus.getResults();

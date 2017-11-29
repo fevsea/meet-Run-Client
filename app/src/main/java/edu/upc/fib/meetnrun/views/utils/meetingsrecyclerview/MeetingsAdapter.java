@@ -2,7 +2,6 @@ package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,7 +13,7 @@ import edu.upc.fib.meetnrun.models.Meeting;
 public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
 
     private List<Meeting> meetings;
-    private RecyclerViewOnClickListener listener;
+    private final RecyclerViewOnClickListener listener;
 
     public MeetingsAdapter(List<Meeting> meetings, RecyclerViewOnClickListener listener) {
         this.meetings = meetings;
@@ -40,6 +39,11 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
         return meetings.size();
     }
 
+
+    public void addMeetings(List<Meeting> meetings) {
+        this.meetings.addAll(meetings);
+        notifyDataSetChanged();
+    }
 
     public void updateMeetingsList(List<Meeting> meetings) {
         this.meetings = meetings;

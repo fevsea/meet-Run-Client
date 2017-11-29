@@ -9,11 +9,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +19,6 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
-import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.LoginActivity;
 
@@ -34,7 +31,7 @@ public class SettingsFragment extends Fragment {
     private View view;
     private IUserAdapter controller;
     private CurrentSession cs;
-    public static final String MY_PREFS_NAME = "TokenFile";
+    private static final String MY_PREFS_NAME = "TokenFile";
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -45,7 +42,7 @@ public class SettingsFragment extends Fragment {
         controller = cs.getUserAdapter();
 
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
         TextView text = view.findViewById(R.id.delete_account);
@@ -106,11 +103,9 @@ public class SettingsFragment extends Fragment {
         @Override
         protected String doInBackground(String... s) {
             try {
-                controller.deleteUserByID(cs.getCurrentUser().getId().intValue());
+                controller.deleteUserByID(cs.getCurrentUser().getId());
                 ok = true;
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            } catch (AutorizationException e) {
+            } catch (NotFoundException | AutorizationException e) {
                 e.printStackTrace();
             }
             return null;

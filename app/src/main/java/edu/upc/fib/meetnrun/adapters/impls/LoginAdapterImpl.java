@@ -19,7 +19,7 @@ import static edu.upc.fib.meetnrun.adapters.utils.Utils.checkErrorCodeAndThowExc
  */
 
 public class LoginAdapterImpl implements ILoginAdapter {
-    private SOServices mServices;
+    private final SOServices mServices;
 
     public LoginAdapterImpl(SOServices soServices) {
         mServices = soServices;

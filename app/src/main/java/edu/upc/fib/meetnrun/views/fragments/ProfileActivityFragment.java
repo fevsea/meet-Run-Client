@@ -3,7 +3,6 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -31,9 +30,9 @@ import java.util.Scanner;
 
 public class ProfileActivityFragment extends Fragment {
 
-    User u;
+    private User u;
     private View view;
-    TextView userPostCodeTextView;
+    private TextView userPostCodeTextView;
 
     private String title;
     private int page;
@@ -79,9 +78,9 @@ public class ProfileActivityFragment extends Fragment {
         String postCode = u.getPostalCode();
 
 
-        TextView userNameTextView = (TextView) view.findViewById(R.id.userName);
-        TextView nameTextView = (TextView) view.findViewById(R.id.completeName);
-        userPostCodeTextView = (TextView) view.findViewById(R.id.userPostCode);
+        TextView userNameTextView = view.findViewById(R.id.userName);
+        TextView nameTextView = view.findViewById(R.id.completeName);
+        userPostCodeTextView = view.findViewById(R.id.userPostCode);
 
         TextView userPhoto = view.findViewById(R.id.userProfileImage);
         char letter = u.getUsername().charAt(0);

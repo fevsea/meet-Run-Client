@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import edu.upc.fib.meetnrun.models.User;
 
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -23,7 +22,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 @RunWith(AndroidJUnit4.class)
 public class UserProfileTest {
 
-    private User u;
+    private final User u;
 
     @Rule
     public ActivityTestRule<ProfileActivity> activityRule = new ActivityTestRule<ProfileActivity>(

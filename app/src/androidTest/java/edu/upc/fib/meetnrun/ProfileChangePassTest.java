@@ -31,7 +31,7 @@ public class ProfileChangePassTest {
     private User u;
 
     @Rule
-    public ActivityTestRule<ChangePasswordActivity> activityRule = new ActivityTestRule<ChangePasswordActivity>(
+    public final ActivityTestRule<ChangePasswordActivity> activityRule = new ActivityTestRule<ChangePasswordActivity>(
             ChangePasswordActivity.class) {
         @Override
         protected void beforeActivityLaunched() {

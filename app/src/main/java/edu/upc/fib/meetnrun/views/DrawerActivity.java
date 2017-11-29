@@ -20,7 +20,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
@@ -35,8 +34,8 @@ import edu.upc.fib.meetnrun.views.fragments.SettingsFragment;
 
 public class DrawerActivity extends AppCompatActivity{
 
-    protected DrawerLayout drawerLayout;
-    public static final String MY_PREFS_NAME = "TokenFile";
+    private DrawerLayout drawerLayout;
+    private static final String MY_PREFS_NAME = "TokenFile";
     private CurrentSession cs;
 
     private void replaceFragment(Fragment fragment) {
@@ -70,15 +69,15 @@ public class DrawerActivity extends AppCompatActivity{
 
         cs = CurrentSession.getInstance();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
+        Toolbar toolbar = findViewById(R.id.activity_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(R.drawable.ic_menu_black_18dp);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.activity_drawerlayout);
+        drawerLayout = findViewById(R.id.activity_drawerlayout);
         drawerLayout.setStatusBarBackground(R.color.colorPrimaryDark);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.activity_nav_view);
+        NavigationView navigationView = findViewById(R.id.activity_nav_view);
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(
                     new NavigationView.OnNavigationItemSelectedListener() {
@@ -89,6 +88,7 @@ public class DrawerActivity extends AppCompatActivity{
                             switch (menuItem.getItemId()) {
                                 case R.id.mymeetings:
                                     fragment = new MyMeetingsFragment();
+                                    setTitle(R.string.mymeetings_label);
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.logout:
@@ -100,18 +100,22 @@ public class DrawerActivity extends AppCompatActivity{
 
                                 case R.id.meetings:
                                     fragment = new MeetingListFragment();
+                                    setTitle(R.string.meeting_list_label);
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.friends:
                                     fragment = new FriendsFragment();
+                                    setTitle(R.string.friends_label);
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.chat:
                                     fragment = new ChatListFragment();
+                                    setTitle(R.string.chat_label);
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.settings:
                                     fragment = new SettingsFragment();
+                                    setTitle(R.string.settings);
                                     replaceFragment(fragment);
                                     break;
                                 default:
@@ -122,7 +126,7 @@ public class DrawerActivity extends AppCompatActivity{
                         }
                     });
 
-            TextView nav_user = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nameProfile);
+            TextView nav_user = navigationView.getHeaderView(0).findViewById(R.id.nameProfile);
             User user = cs.getCurrentUser();
             String name = user.getFirstName()+" "+user.getLastName();
             nav_user.setText(name);
@@ -145,6 +149,7 @@ public class DrawerActivity extends AppCompatActivity{
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.activity_contentFrame);
             if (currentFragment == null) {
 
+                setTitle(R.string.meeting_list_label);
                 currentFragment = new MeetingListFragment();
                 String backStateName = currentFragment.getClass().getName();
 
@@ -153,6 +158,7 @@ public class DrawerActivity extends AppCompatActivity{
                         .add(R.id.activity_contentFrame,currentFragment)
                         .addToBackStack(backStateName)
                         .commit();
+                navigationView.getMenu().getItem(0).setChecked(true);
             }
         }
 

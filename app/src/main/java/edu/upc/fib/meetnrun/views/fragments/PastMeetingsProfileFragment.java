@@ -1,21 +1,14 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -31,12 +24,8 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
-import edu.upc.fib.meetnrun.views.TrackingActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsAdapter;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 public class PastMeetingsProfileFragment extends Fragment {
@@ -87,7 +76,7 @@ public class PastMeetingsProfileFragment extends Fragment {
         setupRecyclerView();
 
         swipeRefreshLayout =
-                (SwipeRefreshLayout) view.findViewById(R.id.fragment_meeting_swipe);
+                view.findViewById(R.id.fragment_meeting_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -110,7 +99,7 @@ public class PastMeetingsProfileFragment extends Fragment {
             }
 
             @Override
-            public void onMeetingClicked(int position) {
+            public void onItemClicked(int position) {
                 Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
@@ -154,7 +143,7 @@ public class PastMeetingsProfileFragment extends Fragment {
             return null;
         }
 
-        @Override
+            @Override
         protected void onPostExecute(String s) {
             System.err.println("FINISHED");
             meetingsAdapter.updateMeetingsList(l);

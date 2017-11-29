@@ -26,10 +26,12 @@ import edu.upc.fib.meetnrun.views.ChatActivity;
 
 public class FriendProfileFragment extends ProfileFragmentTemplate {
 
-    private String friendUsername = currentFriend.getUsername();
+    private String friendUsername;
 
     @Override
     protected void setImage() {
+
+        friendUsername = currentFriend.getUsername();
 
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,24 +51,12 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                                 Chat chat = ChatListFragment.getChat(currentUsername, friendUsername);
                                 if (chat == null) {
                                     Calendar rightNow = Calendar.getInstance();
-                                    StringBuilder sb = new StringBuilder();
-                                    String hour = null;
-                                    String minute = null;
-                                    String aux = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
-                                    if (aux.length() == 1) hour = "0"+aux;
-                                    else hour = aux;
-                                    aux = String.valueOf(rightNow.get(Calendar.MINUTE));
-                                    if (aux.length() == 1) minute = "0"+aux;
-                                    else minute = aux;
-                                    sb.append(hour);
-                                    sb.append(":");
-                                    sb.append(minute);
 
                                     Date dateWithoutTime = rightNow.getTime();
 
-                                    Message m = new Message("", currentUsername, sb.toString(), dateWithoutTime);
+                                    Message m = new Message("", currentUsername, dateWithoutTime);
 
-                                    List<User> userList = new ArrayList<User>();
+                                    List<User> userList = new ArrayList<>();
                                     userList.add(user);
                                     userList.add(currentFriend);
 
@@ -117,9 +107,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                 ok = friendsDBAdapter.removeFriend(Integer.parseInt(s[0]));
                 //eliminar chat con amigo
                 ChatListFragment.deleteChat(friendUsername);
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
+            } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;

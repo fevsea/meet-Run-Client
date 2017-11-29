@@ -9,7 +9,7 @@ import static edu.upc.fib.meetnrun.R.*;
 
 public class PagerAdapterFragment extends FragmentPagerAdapter {
 
-    private static int NUM_ITEMS = 3;
+    private static final int NUM_ITEMS = 3;
 
         public PagerAdapterFragment(FragmentManager fragmentManager) {
             super(fragmentManager);

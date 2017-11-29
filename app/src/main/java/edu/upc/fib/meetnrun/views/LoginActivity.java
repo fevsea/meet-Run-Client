@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
@@ -22,17 +21,18 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText editUsername, editPassword;
     private String username, password;
-    public static final String MY_PREFS_NAME = "TokenFile";
+    private static final String MY_PREFS_NAME = "TokenFile";
     private ILoginAdapter loginAdapter;
     private CurrentSession cs;
+    private boolean see = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        editUsername = (EditText) findViewById(R.id.editUsername);
-        editPassword = (EditText) findViewById(R.id.editPassword);
+        editUsername = findViewById(R.id.editUsername);
+        editPassword = findViewById(R.id.editPassword);
 
         cs = CurrentSession.getInstance();
         loginAdapter = cs.getLoginAdapter();

@@ -107,4 +107,6 @@
     <string name="past_meetings_fragment_title">Tus quedadas pasadas</string>
     <string name="statistics_fragment_title">Tus estadísticas</string>
 
+    <string name="delete_history">Eliminar historial</string>
+
 </resources>

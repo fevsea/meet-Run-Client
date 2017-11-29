@@ -39,8 +39,8 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 public class ChatGroupsFragment extends Fragment {
 
     private View view;
-    protected FriendsAdapter friendsAdapter;
-    protected IFriendsAdapter friendsDBAdapter;
+    private FriendsAdapter friendsAdapter;
+    private IFriendsAdapter friendsDBAdapter;
     private FloatingActionButton fab;
     private List<User> l;
     private EditText groupName;
@@ -58,11 +58,11 @@ public class ChatGroupsFragment extends Fragment {
 
         friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
-        groupName = (EditText) view.findViewById(R.id.groupName);
-        ok = (Button) view.findViewById(R.id.btnOk);
-        numbFriends = (TextView) view.findViewById(R.id.numb_friends);
+        groupName = view.findViewById(R.id.groupName);
+        ok = view.findViewById(R.id.btnOk);
+        numbFriends = view.findViewById(R.id.numb_friends);
 
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
         l = new ArrayList<>();
@@ -85,22 +85,10 @@ public class ChatGroupsFragment extends Fragment {
                     User user = selectedFriends.get(0);
 
                     Calendar rightNow = Calendar.getInstance();
-                    StringBuilder sb = new StringBuilder();
-                    String hour = null;
-                    String minute = null;
-                    String aux = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
-                    if (aux.length() == 1) hour = "0"+aux;
-                    else hour = aux;
-                    aux = String.valueOf(rightNow.get(Calendar.MINUTE));
-                    if (aux.length() == 1) minute = "0"+aux;
-                    else minute = aux;
-                    sb.append(hour);
-                    sb.append(":");
-                    sb.append(minute);
 
                     Date dateWithoutTime = rightNow.getTime();
 
-                    Message m = new Message("", user.getUsername(), sb.toString(), dateWithoutTime);
+                    Message m = new Message("", user.getUsername(), dateWithoutTime);
 
                     Chat chat = new Chat(ChatListFragment.getCount(),name, selectedFriends, 1, m);
                     ChatListFragment.addChatFake(chat);
@@ -114,7 +102,7 @@ public class ChatGroupsFragment extends Fragment {
             }
         });
 
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_friends_group_swipe);
+        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.fragment_friends_group_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -140,7 +128,7 @@ public class ChatGroupsFragment extends Fragment {
             public void onButtonClicked(int position) {}
 
             @Override
-            public void onMeetingClicked(int position) {
+            public void onItemClicked(int position) {
 
                 User friend = friendsAdapter.getFriendAtPosition(position);
 
@@ -156,7 +144,7 @@ public class ChatGroupsFragment extends Fragment {
                 }
                 friendsAdapter.updateFriendsList(l);
             }
-        });
+        }, getContext(), true);
         friendsList.setAdapter(friendsAdapter);
     }
 
@@ -184,4 +172,6 @@ public class ChatGroupsFragment extends Fragment {
         updateFriends();
         super.onResume();
     }
+
+
 }

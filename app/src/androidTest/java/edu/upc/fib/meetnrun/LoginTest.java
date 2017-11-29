@@ -1,8 +1,5 @@
 package edu.upc.fib.meetnrun;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -32,7 +29,7 @@ public class LoginTest {
     private static final String EXTRA_PASSWORD = "ericR";
 
     @Rule
-    public ActivityTestRule<LoginActivity> activityRule = new ActivityTestRule<LoginActivity>(LoginActivity.class);
+    public ActivityTestRule<LoginActivity> activityRule = new ActivityTestRule<>(LoginActivity.class);
 
     @Test
     public void testLoginFields() {

@@ -9,9 +9,7 @@ import java.util.ArrayList;
 
 import edu.upc.fib.meetnrun.models.TrackingData;
 
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
-import static org.junit.Assert.assertThat;
 
 /**
  * Created by guillemcastro on 17/11/2017.
