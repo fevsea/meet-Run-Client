@@ -77,6 +77,7 @@ public class CurrentSession {
     public IMeetingAdapter getMeetingAdapter(){
         return adapterContainer.getMeetingAdapter();
     }
+
     public IUserAdapter getUserAdapter(){
         return adapterContainer.getUserAdapter();
     }

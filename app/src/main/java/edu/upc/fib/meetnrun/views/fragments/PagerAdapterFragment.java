@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
 
+import static edu.upc.fib.meetnrun.R.*;
+
 
 public class PagerAdapterFragment extends FragmentPagerAdapter {
 
@@ -24,11 +26,11 @@ public class PagerAdapterFragment extends FragmentPagerAdapter {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0: // Fragment # 0 - This will show FirstFragment
-                    return ProfileActivityFragment.newInstance(0, "Your profile");
+                    return ProfileActivityFragment.newInstance(0, "profile");
                 case 1:
-                    return PastMeetingsProfileFragment.newInstance(1, "Past Meetings");
+                    return PastMeetingsProfileFragment.newInstance(1, "meetings");
                 case 2:
-                    return StatisticsProfileFragment.newInstance(2, "Statistics");
+                    return StatisticsProfileFragment.newInstance(2, "statistics");
                 default:
                     return null;
             }
@@ -37,9 +39,9 @@ public class PagerAdapterFragment extends FragmentPagerAdapter {
         // Returns the page title for the top indicator
         @Override
         public CharSequence getPageTitle(int position) {
-            if(position == 0) return "Your profile";
-            else if(position == 1) return "Past Meetings";
-            else if(position == 2) return "Your Statistics";
+            if(position == 0) return "Your Profile";//string.profile_fragment_title;
+            else if(position == 1) return "Your Past Meetings";//string.past_meetings_fragment_title;
+            else if(position == 2) return "Your Statistics";//string.statistics_fragment_title;
             return null;
         }
     }

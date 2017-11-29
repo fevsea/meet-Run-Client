@@ -1,11 +1,13 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -23,19 +25,28 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
+import edu.upc.fib.meetnrun.views.TrackingActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 public class PastMeetingsProfileFragment extends Fragment {
 
+    private IUserAdapter userController;
+    private IMeetingAdapter meetingController;
+    private int userId;
     private MeetingsAdapter meetingsAdapter;
-    private IMeetingAdapter meetingDBAdapter;
+
+
     private View view;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetings;
@@ -48,7 +59,7 @@ public class PastMeetingsProfileFragment extends Fragment {
         PastMeetingsProfileFragment fragmentFirst = new PastMeetingsProfileFragment();
         Bundle args = new Bundle();
         args.putInt("1", page);
-        args.putString("Past Meetings", title);
+        args.putString("meetings", title);
         fragmentFirst.setArguments(args);
         return fragmentFirst;
     }
@@ -58,13 +69,8 @@ public class PastMeetingsProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("1", 1);
-        title = getArguments().getString("Past Meetings");
+        title = getArguments().getString("meetings");
         setHasOptionsMenu(true);
-    }
-
-
-    public PastMeetingsProfileFragment() {
-        meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
     }
 
     @Override
@@ -73,7 +79,11 @@ public class PastMeetingsProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
 
-        meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
+        User u = CurrentSession.getInstance().getCurrentUser();
+        userId = u.getId();
+
+        userController = CurrentSession.getInstance().getUserAdapter();
+        meetingController = CurrentSession.getInstance().getMeetingAdapter();
         setupRecyclerView();
 
         swipeRefreshLayout =
@@ -90,12 +100,13 @@ public class PastMeetingsProfileFragment extends Fragment {
     private void setupRecyclerView() {
         final RecyclerView meetingsList = view.findViewById(R.id.fragment_meeting_container);
         meetingsList.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         meetings = new ArrayList<>();
         meetingsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
+
             @Override
             public void onButtonClicked(int position) {
-                Meeting selectedMeeting = meetingsAdapter.getMeetingAtPosition(position);
-                joinMeeting(selectedMeeting);
+                //Meeting selectedMeeting = meetingsAdapter.getMeetingAtPosition(position);
             }
 
             @Override
@@ -118,106 +129,23 @@ public class PastMeetingsProfileFragment extends Fragment {
 
             }
         });
+        updateMeetingList();
         meetingsList.setAdapter(meetingsAdapter);
 
     }
 
-    @Override
-    public void onResume() {
-        updateMeetingList();
-        super.onResume();
-    }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.meeting_list_menu, menu);
-        MenuItem item = menu.findItem(R.id.meeting_list_menu_search);
-        SearchView searchView = (SearchView) item.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                query = query.toLowerCase();
-                new GetMeetingsFiltered().execute(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                updateMeetingList();
-                return false;
-            }
-        });
-
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-
-
     private void updateMeetingList() {
-        new GetMeetings().execute();
-    }
-
-    private void createNewMeeting() {
-        Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
-        startActivity(intent);
-    }
-
-    private void joinMeeting(Meeting meeting) {
-        new JoinMeeting().execute(meeting.getId());
-    }
-
-    private class GetMeetings extends AsyncTask<String,String,String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetings(0);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            meetingsAdapter.updateMeetingsList(meetings);
-            swipeRefreshLayout.setRefreshing(false);
-            super.onPostExecute(s);
-        }
+        new PastMeetingsProfileFragment.GetPastMeetings().execute(userId);
     }
 
 
-    private class GetMeetingsFiltered extends AsyncTask<String,String,String> {
-        @Override
-        protected String doInBackground(String... strings) {
-            Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0],0);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            meetingsAdapter.updateMeetingsList(meetings);
-            super.onPostExecute(s);
-        }
-    }
-
-    private class JoinMeeting extends AsyncTask<Integer,String,String> {
+    private class GetPastMeetings extends AsyncTask<Integer,String,String> {
+        List<Meeting> l = new ArrayList<>();
 
         @Override
         protected String doInBackground(Integer... integers) {
-            Log.e("MAIN","DOINGGGG");
-            //TODO handle exceptions
             try {
-                meetingDBAdapter.joinMeeting(integers[0]);
+                l = userController.getUserPastMeetings(integers[0]);//TODO arreglar paginas
             } catch (AutorizationException e) {
                 e.printStackTrace();
             } catch (ParamsException e) {
@@ -229,10 +157,15 @@ public class PastMeetingsProfileFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             System.err.println("FINISHED");
-            Toast.makeText(getActivity(),getString(R.string.joined_meeting),Toast.LENGTH_SHORT).show();
-            updateMeetingList();
+            meetingsAdapter.updateMeetingsList(l);
             super.onPostExecute(s);
         }
     }
 
-}
+
+        protected void onPostExecute(String s) {
+            System.err.println("FINISHED");
+            updateMeetingList();
+        }
+    }
+

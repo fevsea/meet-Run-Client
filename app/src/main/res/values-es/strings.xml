@@ -103,4 +103,8 @@
     <string name="log_in">Conectarse</string>
     <string name="password">Contraseña</string>
 
+    <string name="profile_fragment_title">Tu perfil</string>
+    <string name="past_meetings_fragment_title">Tus quedadas pasadas</string>
+    <string name="statistics_fragment_title">Tus estadísticas</string>
+
 </resources>
