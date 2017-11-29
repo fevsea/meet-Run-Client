@@ -74,6 +74,7 @@ public class ChatFragment extends Fragment {
     private int NUMB_MESSAGES = 15;
 
     private boolean newChat = true;
+    private int numbNewMessages = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -163,6 +164,13 @@ public class ChatFragment extends Fragment {
                 removeProgressChat();
                 Message m = dataSnapshot.getValue(Message.class);
                 adapter.addMensaje(m);
+
+                if (!currentUser.getUsername().equals(m.getName())) {
+                    numbNewMessages++;
+                }
+                else {
+                    if (numbNewMessages > 0) numbNewMessages = 0;
+                }
             }
 
             @Override
