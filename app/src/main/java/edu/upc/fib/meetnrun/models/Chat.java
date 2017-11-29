@@ -14,6 +14,7 @@ public class Chat{
     private List<User> listUsersChat;
     private int type;
     private Message message;
+    private Meeting meeting;
 
     public Chat() {
         listUsersChat = new ArrayList<>();
@@ -25,6 +26,16 @@ public class Chat{
         this.listUsersChat = listUsersChat;
         this.type = type;
         this.message = message;
+        this.meeting = null;
+    }
+
+    public Chat(Integer id, String chatName, List<User> listUsersChat, int type, Message message, Meeting meeting) {
+        this.id = id;
+        this.chatName = chatName;
+        this.listUsersChat = listUsersChat;
+        this.type = type;
+        this.message = message;
+        this.meeting = meeting;
     }
 
     public Integer getId() {
@@ -83,5 +94,13 @@ public class Chat{
 
     public void setMessage(Message message) {
         this.message = message;
+    }
+
+    public Meeting getMeeting() {
+        return meeting;
+    }
+
+    public void setMeeting(Meeting meeting) {
+        this.meeting = meeting;
     }
 }

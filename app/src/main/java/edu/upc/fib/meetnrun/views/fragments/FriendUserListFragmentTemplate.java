@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -82,13 +83,13 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
             public void onButtonClicked(int position) {}
 
             @Override
-            public void onMeetingClicked(int position) {
+            public void onItemClicked(int position) {
 
                 User friend = friendsAdapter.getFriendAtPosition(position);
                 getIntent(friend);
 
             }
-        });
+        }, getContext(), false);
         friendsList.setAdapter(friendsAdapter);
 
     }

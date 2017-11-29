@@ -24,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String MY_PREFS_NAME = "TokenFile";
     private ILoginAdapter loginAdapter;
     private CurrentSession cs;
+    private boolean see = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
