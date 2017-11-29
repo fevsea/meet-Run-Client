@@ -53,7 +53,7 @@ public class MyMeetingsFragment extends Fragment {
         setupRecyclerView();
 
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setImageResource(R.drawable.add_group_512);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,7 @@ public class MyMeetingsFragment extends Fragment {
             }
         });
         final SwipeRefreshLayout swipeRefreshLayout =
-                (SwipeRefreshLayout) view.findViewById(R.id.fragment_meeting_swipe);
+                view.findViewById(R.id.fragment_meeting_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -166,10 +166,8 @@ public class MyMeetingsFragment extends Fragment {
         protected String doInBackground(Integer... integers) {
             //TODO handle exceptions
             try {
-                l = userController.getUsersFutureMeetings(integers[0]);
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
+                l = userController.getUsersFutureMeetings(integers[0]);//TODO arreglar paginas
+            } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;
@@ -190,9 +188,7 @@ public class MyMeetingsFragment extends Fragment {
             //TODO handle exceptions
             try {
                 meetingController.leaveMeeting(integers[0]);
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
+            } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;

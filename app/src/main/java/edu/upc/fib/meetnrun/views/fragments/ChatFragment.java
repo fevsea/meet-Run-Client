@@ -94,12 +94,12 @@ public class ChatFragment extends Fragment {
 
         this.view = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        rvMessages = (RecyclerView) view.findViewById(R.id.rvMensajes);
-        txtMessage = (EditText) view.findViewById(R.id.txtMensaje);
-        btnSend = (Button) view.findViewById(R.id.btnEnviar);
+        rvMessages = view.findViewById(R.id.rvMensajes);
+        txtMessage = view.findViewById(R.id.txtMensaje);
+        btnSend = view.findViewById(R.id.btnEnviar);
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference(String.valueOf(chat.getId())); //Chat name

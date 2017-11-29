@@ -2,10 +2,6 @@ package edu.upc.fib.meetnrun.views;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,14 +11,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.views.BaseReturnActivity;
 import edu.upc.fib.meetnrun.views.fragments.PagerAdapterFragment;
 
 public class ProfileViewPagerFragment extends AppCompatActivity {
 
     ViewPager pager = null;
 
-    PagerAdapterFragment adapterViewPager;
+    private PagerAdapterFragment adapterViewPager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +30,7 @@ public class ProfileViewPagerFragment extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         ViewPager pager = findViewById(R.id.viewpager);
-        TabLayout tabs = (TabLayout) findViewById(R.id.pager_tabs);
+        TabLayout tabs = findViewById(R.id.pager_tabs);
 
         adapterViewPager = new PagerAdapterFragment(getSupportFragmentManager());
         pager.setAdapter(adapterViewPager);

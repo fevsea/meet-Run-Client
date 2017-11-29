@@ -82,7 +82,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         time.setText(meetingInfo.getString("time"));
 
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         if (CurrentSession.getInstance().getCurrentUser().getId() == meetingInfo.getInt("ownerId")) {
 
             fab.setImageResource(android.R.drawable.ic_menu_edit);
@@ -121,7 +121,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
         friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        List<User> users = new ArrayList<User>();
+        List<User> users = new ArrayList<>();
         getParticipantsList();
 
         participantsAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
@@ -171,8 +171,8 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     }
 
     private void setupScrollView() {
-        final ScrollView scroll = (ScrollView) view.findViewById(R.id.meeting_info_scroll);
-        ImageView transparent = (ImageView)view.findViewById(R.id.meeting_info_imagetrans);
+        final ScrollView scroll = view.findViewById(R.id.meeting_info_scroll);
+        ImageView transparent = view.findViewById(R.id.meeting_info_imagetrans);
         transparent.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -210,10 +210,8 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         protected String doInBackground(Integer... integers) {
             //TODO handle exceptions
             try {
-                l = meetingController.getParticipantsFromMeeting(integers[0]);
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
+                l = meetingController.getParticipantsFromMeeting(integers[0],0);//TODO arreglar paginas
+            } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;
@@ -231,7 +229,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         @Override
         protected String doInBackground(String... strings) {
             try {
-                friends = friendsController.getUserFriends();
+                friends = friendsController.getUserFriends(0); //TODO arreglar paginas
             } catch (AutorizationException e) {
                 e.printStackTrace();
             }

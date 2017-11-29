@@ -22,7 +22,6 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -32,7 +31,7 @@ public class ProfileEditTest {
     private User u;
 
     @Rule
-    public ActivityTestRule<EditProfileActivity> activityRule = new ActivityTestRule<EditProfileActivity>(
+    public final ActivityTestRule<EditProfileActivity> activityRule = new ActivityTestRule<EditProfileActivity>(
             EditProfileActivity.class) {
         @Override
         protected void beforeActivityLaunched() {

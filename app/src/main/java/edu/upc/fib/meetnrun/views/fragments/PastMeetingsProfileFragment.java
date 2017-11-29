@@ -77,7 +77,7 @@ public class PastMeetingsProfileFragment extends Fragment {
         setupRecyclerView();
 
         swipeRefreshLayout =
-                (SwipeRefreshLayout) view.findViewById(R.id.fragment_meeting_swipe);
+                view.findViewById(R.id.fragment_meeting_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -180,7 +180,7 @@ public class PastMeetingsProfileFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetings();
+            meetings = meetingDBAdapter.getAllMeetings(0);
             return null;
         }
 
@@ -198,7 +198,7 @@ public class PastMeetingsProfileFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0]);
+            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0],0);
             return null;
         }
 
@@ -218,9 +218,7 @@ public class PastMeetingsProfileFragment extends Fragment {
             //TODO handle exceptions
             try {
                 meetingDBAdapter.joinMeeting(integers[0]);
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
+            } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;

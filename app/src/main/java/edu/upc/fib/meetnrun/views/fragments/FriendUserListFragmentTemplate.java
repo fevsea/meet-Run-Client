@@ -1,6 +1,5 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -32,10 +31,10 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 
 public abstract class FriendUserListFragmentTemplate extends Fragment{
 
-    protected View view;
-    protected FriendsAdapter friendsAdapter;
-    protected IFriendsAdapter friendsDBAdapter;
-    protected List<User> l;
+    private View view;
+    FriendsAdapter friendsAdapter;
+    IFriendsAdapter friendsDBAdapter;
+    List<User> l;
     FloatingActionButton fab;
 
     @Override
@@ -49,15 +48,15 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         
         friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
-        l = new ArrayList<User>();
+        l = new ArrayList<>();
 
         setupRecyclerView();
 
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab = getActivity().findViewById(R.id.activity_fab);
         
         floatingbutton();
         
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_friends_swipe);
+        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.fragment_friends_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -77,7 +76,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
         friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        List<User> users = new ArrayList<User>();
+        List<User> users = new ArrayList<>();
 
         friendsAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
             @Override
@@ -115,7 +114,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
             @Override
             public boolean onQueryTextChange(String newText) {
                 newText = newText.toLowerCase();
-                ArrayList<User> newList = new ArrayList<User>();
+                ArrayList<User> newList = new ArrayList<>();
                 for (User friend : l) {
                     String userName = friend.getUsername().toLowerCase();
                     String name = (friend.getFirstName()+" "+friend.getLastName()).toLowerCase();

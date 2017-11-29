@@ -56,6 +56,7 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
         cardView = (CardView) view.findViewById(R.id.user_cardview);
 
         if (user.isSelected()) cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+
         else cardView.setCardBackgroundColor(Color.WHITE);
 
         /*if (isGroup) {

@@ -6,12 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 
 /**
@@ -21,7 +18,7 @@ import edu.upc.fib.meetnrun.models.User;
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsViewHolder> {
 
     private List<User> users;
-    private RecyclerViewOnClickListener listener;
+    private final RecyclerViewOnClickListener listener;
     private View v;
     private Context context;
     private boolean isGroup;

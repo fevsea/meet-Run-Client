@@ -20,8 +20,8 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 
 public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private View view;
-    private WeakReference<RecyclerViewOnClickListener> listener;
+    private final View view;
+    private final WeakReference<RecyclerViewOnClickListener> listener;
     private final static int MAX_CHAT_LAST_MESSAGE = 35;
 
     public ChatViewHolder(View itemView, RecyclerViewOnClickListener listener) {

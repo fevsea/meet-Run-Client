@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,15 +21,13 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
+import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -64,7 +61,7 @@ public class MeetingListFragment extends Fragment {
         setupRecyclerView();
 
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setImageResource(R.drawable.add_group_512);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +70,7 @@ public class MeetingListFragment extends Fragment {
             }
         });
         swipeRefreshLayout =
-                (SwipeRefreshLayout) view.findViewById(R.id.fragment_meeting_swipe);
+                view.findViewById(R.id.fragment_meeting_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -176,7 +173,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-                meetings = meetingDBAdapter.getAllMeetings();
+                meetings = meetingDBAdapter.getAllMeetings(0);//TODO arreglar paginas
             return null;
         }
 
@@ -194,7 +191,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0]);
+            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0],0);//TODO arreglar paginas
             return null;
         }
 
@@ -214,9 +211,7 @@ public class MeetingListFragment extends Fragment {
             //TODO handle exceptions
             try {
                 meetingDBAdapter.joinMeeting(integers[0]);
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
+            } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;

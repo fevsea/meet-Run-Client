@@ -9,5 +9,4 @@
     <item
         android:id="@+id/delete_chat"
         android:title="Delete chat" />
-
 </menu>

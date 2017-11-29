@@ -53,21 +53,21 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     private LatLng myLocation;
     private Marker myMarker;
     private final static String[] kind = {"@string/public_meeting","@string/private_meeting"};
-    EditText name;
-    EditText date;
-    EditText hour;
-    EditText level;
-    EditText description;
+    private EditText name;
+    private EditText date;
+    private EditText hour;
+    private EditText level;
+    private EditText description;
 
-    String Name;
-    String Description;
-    Boolean Public;
-    Integer Level;
-    String Date;
-    String Latitude;
-    String Longitude;
-    ScrollView sV;
-    Switch publicMeeting;
+    private String Name;
+    private String Description;
+    private Boolean Public;
+    private Integer Level;
+    private String Date;
+    private String Latitude;
+    private String Longitude;
+    private ScrollView sV;
+    private Switch publicMeeting;
     private IMeetingAdapter meetingAdapter;
 
     @Override
@@ -83,12 +83,12 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         View view = inflater.inflate(R.layout.fragment_create_meeting, container, false);
         this.view = view;
 
-        name = (EditText) view.findViewById(R.id.name);
-        date = (EditText) view.findViewById(R.id.date);
-        hour = (EditText) view.findViewById(R.id.hour);
-        level = (EditText) view.findViewById(R.id.level);
-        description = (EditText) view.findViewById(R.id.description);
-        Button dateButton = (Button) view.findViewById(R.id.pickDate);
+        name = view.findViewById(R.id.name);
+        date = view.findViewById(R.id.date);
+        hour = view.findViewById(R.id.hour);
+        level = view.findViewById(R.id.level);
+        description = view.findViewById(R.id.description);
+        Button dateButton = view.findViewById(R.id.pickDate);
         dateButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -96,16 +96,16 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
                 showDatePickerDialog();
             }
         });
-        Button hourButton = (Button) view.findViewById(R.id.pickHour);
+        Button hourButton = view.findViewById(R.id.pickHour);
         hourButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showTimePickerDialog();
             }
         });
-        sV=(ScrollView) view.findViewById(R.id.scrollView);
+        sV= view.findViewById(R.id.scrollView);
 
-        Button pickLocation=(Button) view.findViewById(R.id.pickLocation);
+        Button pickLocation= view.findViewById(R.id.pickLocation);
         pickLocation.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -113,7 +113,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
                 showLocationPicker();
             }
         });
-        Button createButton=(Button) view.findViewById(R.id.create);
+        Button createButton= view.findViewById(R.id.create);
         createButton.setOnClickListener(new View.OnClickListener (){
 
             @Override
@@ -123,10 +123,10 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         });
 
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        publicMeeting = (Switch) view.findViewById(R.id.switch_create);
+        publicMeeting = view.findViewById(R.id.switch_create);
         publicMeeting.setOnCheckedChangeListener(this);
 
         Public=false;
@@ -139,7 +139,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
 
     private void showTimePickerDialog() {
-        final EditText timeText = (EditText) view.findViewById(R.id.hour);
+        final EditText timeText = view.findViewById(R.id.hour);
         TimePickerFragment timePickerFragment = new TimePickerFragment();
         timePickerFragment.setListener(new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -155,7 +155,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     }
 
     private void showDatePickerDialog() {
-        final EditText dateText = (EditText) view.findViewById(R.id.date);
+        final EditText dateText = view.findViewById(R.id.date);
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -173,7 +173,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     }
 
 
-    public void create(){
+    private void create(){
         Name = name.getText().toString();
         Date = date.getText().toString();
         Level = Integer.parseInt(level.getText().toString());
@@ -271,9 +271,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         protected String doInBackground(String... strings){
             try {
                  m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
-            } catch (ParamsException  e) {
-                e.printStackTrace();
-            } catch (AutorizationException e) {
+            } catch (ParamsException | AutorizationException e) {
                 e.printStackTrace();
             }
             return null;

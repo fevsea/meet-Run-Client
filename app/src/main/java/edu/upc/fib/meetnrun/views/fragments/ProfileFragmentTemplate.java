@@ -92,7 +92,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
             }
         });
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
         userName.setText(currentFriend.getUsername());
@@ -114,7 +114,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
 
     protected abstract void getMethod(String s);
 
-    protected void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+    void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle(title);
         builder.setMessage(message);

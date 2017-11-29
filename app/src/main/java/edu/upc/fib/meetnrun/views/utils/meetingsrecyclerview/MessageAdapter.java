@@ -5,11 +5,9 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,8 +25,8 @@ import edu.upc.fib.meetnrun.models.Message;
 public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
 
-    private List<Message> messagesList = new ArrayList<>();
-    private Context c;
+    private final List<Message> messagesList = new ArrayList<>();
+    private final Context c;
     private View v;
     private boolean sameHour = false;
     private boolean showDate = false;
