@@ -40,6 +40,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         notifyItemInserted(messagesList.size());
     }
 
+    public List<Message> getMessagesList() {
+        return messagesList;
+    }
+
+    public void addListMessage(List<Message> list) {
+        messagesList.addAll(list);
+    }
+
     public void deleteMessages() {
         messagesList.clear();
     }

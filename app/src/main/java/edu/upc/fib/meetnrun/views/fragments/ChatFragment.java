@@ -39,6 +39,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -71,10 +72,15 @@ public class ChatFragment extends Fragment {
     private Chat chat;
     private User currentUser;
 
-    private int NUMB_MESSAGES = 15;
+    private int NUMB_MESSAGES_LOAD = 4;
 
     private int numbNewMessages;
     private boolean firstTime;
+
+    private boolean swipe = false;
+
+    private List<Message> messageList = new ArrayList<>();
+    private int count = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -150,9 +156,14 @@ public class ChatFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                /*NUMB_MESSAGES += 15;
+                messageList = adapter.getMessagesList();
                 adapter.deleteMessages();
-                loadMessages();*/
+                swipe = true;
+                loadMessages();
+                while (count != 4) {}
+                count = 0;
+                adapter.addListMessage(messageList);
+                swipe = false;
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -162,40 +173,65 @@ public class ChatFragment extends Fragment {
 
     private void loadMessages() {
 
-        databaseReference.limitToLast(50/*NUMB_MESSAGES*/).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                removeProgressChat();
-                Message m = dataSnapshot.getValue(Message.class);
-                adapter.addMensaje(m);
+        if (!swipe) {
+            databaseReference.limitToLast(NUMB_MESSAGES_LOAD).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    removeProgressChat();
+                    Message m = dataSnapshot.getValue(Message.class);
+                    adapter.addMensaje(m);
 
-                if (!firstTime) {
-                    if (currentUser.getUsername().equals(m.getName())) {
-                        numbNewMessages++;
-                        chat.setNumbNewMessages(numbNewMessages);
-                    }
-                    else {
-                        if (numbNewMessages > 0) {
-                            numbNewMessages = 0;
+                    if (!firstTime) {
+                        if (currentUser.getUsername().equals(m.getName())) {
+                            numbNewMessages++;
                             chat.setNumbNewMessages(numbNewMessages);
                         }
+                        else {
+                            if (numbNewMessages > 0) {
+                                numbNewMessages = 0;
+                                chat.setNumbNewMessages(numbNewMessages);
+                            }
+                        }
+                        NUMB_MESSAGES_LOAD++;
                     }
                 }
-                Log.e("CHILDADDED", String.valueOf(numbNewMessages));
-            }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {}
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+        }
+        else {
+            databaseReference.limitToLast(NUMB_MESSAGES_LOAD+4).limitToFirst(NUMB_MESSAGES_LOAD).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    removeProgressChat();
+                    Message m = dataSnapshot.getValue(Message.class);
+                    adapter.addMensaje(m);
+                    count++;
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+        }
 
     }
 
