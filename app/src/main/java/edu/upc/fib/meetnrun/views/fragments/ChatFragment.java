@@ -9,13 +9,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import android.support.v7.widget.Toolbar;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,8 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -35,17 +31,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
@@ -78,11 +69,12 @@ public class ChatFragment extends Fragment {
     private final int SUM_MESSAGES_LOAD = 15;
     private long MAX_MESSAGES_LOAD;
 
-    private int numbNewMessages;
     private boolean firstTime;
 
     private boolean swipe = false;
     private int itemPosition;
+
+    private int userPosition;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -93,8 +85,12 @@ public class ChatFragment extends Fragment {
         chat = CurrentSession.getInstance().getChat();
         currentUser = CurrentSession.getInstance().getCurrentUser();
 
-        if (chat.getNumbNewMessages() > 0) numbNewMessages = chat.getNumbNewMessages();
-        else numbNewMessages = 0;
+        for (int i = 0; i < chat.getListUsersChatSize(); i++) {
+            if (currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
+                userPosition = i;
+                break;
+            }
+        }
 
         if (chat.getType() == 0) {
             if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) chat.setChatName(chat.getUser1().getUsername());
@@ -156,6 +152,7 @@ public class ChatFragment extends Fragment {
                 Message m = new Message(txt, userName, dateWithoutTime);
                 databaseReference.push().setValue(m);
                 MAX_MESSAGES_LOAD++;
+                NUMB_MESSAGES_LOAD++;
                 txtMessage.setText("");
                 chat.setMessage(m);
             }
@@ -207,20 +204,24 @@ public class ChatFragment extends Fragment {
             databaseReference.limitToLast(NUMB_MESSAGES_LOAD).addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    removeProgressChat();
+                    if (firstTime) removeProgressChat();
                     Message m = dataSnapshot.getValue(Message.class);
                     adapter.addMensaje(m);
-                    Log.e("MESSAG", m.toString());
                     if (!swipe) {
                         if (!firstTime) {
+                            int size = chat.getListUsersChatSize();
                             if (currentUser.getUsername().equals(m.getName())) {
-                                numbNewMessages++;
-                                chat.setNumbNewMessages(numbNewMessages);
+                                for (int i = 0; i < size; i++) {
+                                    if (!currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
+                                        chat.sumNumbMessagesAtPosition(i);
+                                    }
+                                }
                             }
                             else {
-                                if (numbNewMessages > 0) {
-                                    numbNewMessages = 0;
-                                    chat.setNumbNewMessages(numbNewMessages);
+                                for (int i = 0; i < size; i++) {
+                                    if (!currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
+                                        chat.setNumbMessagesAtPosition(i, 0);
+                                    }
                                 }
                             }
                         }
@@ -396,10 +397,8 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume() {
         firstTime = true;
-        if (!currentUser.getUsername().equals(chat.getMessage().getName()) && numbNewMessages > 0) {
-            numbNewMessages = 0;
-            chat.setNumbNewMessages(numbNewMessages);
-        }
+        chat.setNumbMessagesAtPosition(userPosition, 0);
         super.onResume();
     }
+
 }
