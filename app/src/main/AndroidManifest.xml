@@ -100,6 +100,11 @@ package="edu.upc.fib.meetnrun">
         android:screenOrientation="portrait"
         android:label="Tracking"
         android:hardwareAccelerated="true"/>
+    <activity
+        android:name=".views.ChatGroupInfoActivity"
+        android:screenOrientation="portrait"/>
+
+
     <service android:name=".services.TrackingService">
         </service>
 </application>

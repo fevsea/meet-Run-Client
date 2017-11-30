@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -24,8 +23,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -35,19 +32,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.ChatGroupInfoActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MessageAdapter;
 
@@ -354,19 +347,23 @@ public class ChatFragment extends Fragment {
 
     private void openProfileView() {
 
-        Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
+        Intent chatIntent = null;
         User user = null;
         int type = chat.getType();
+        Log.e("AAA","PASSA");
         if (type == 0) {
+            chatIntent = new Intent(getActivity(),FriendProfileActivity.class);
             if (!currentUser.getUsername().equals(chat.getUser1().getUsername()))
                 user = chat.getUser1();
             else user = chat.getUser2();
+            CurrentSession.getInstance().setFriend(user);
         }
-        else if (type == 1) {
-
+        //else if (type == 1) {
+        else {
+            chatIntent = new Intent(getActivity(),ChatGroupInfoActivity.class);
+            //chatIntent.putExtra("name",chat.getChatName());
         }
-        CurrentSession.getInstance().setFriend(user);
-        startActivity(friendProfileIntent);
+        startActivity(chatIntent);
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {

@@ -116,4 +116,7 @@
     <string name="password">Password</string>
     <string name="delete_history">Delete history</string>
     <string name="group_name">Group Name</string>
+    <string name="add_user_to_group">+ Add another user</string>
+    <string name="number_of_users">Number of users</string>
 </resources>
+
