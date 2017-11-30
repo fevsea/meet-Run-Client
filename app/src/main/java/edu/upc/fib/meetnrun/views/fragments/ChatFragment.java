@@ -125,7 +125,6 @@ public class ChatFragment extends Fragment {
                 for (DataSnapshot snap: dataSnapshot.getChildren()) {
                     if (snap.getKey().equals(String.valueOf(chat.getId()))) {
                         MAX_MESSAGES_LOAD = snap.getChildrenCount();
-                        Log.e(snap.getKey(), String.valueOf(MAX_MESSAGES_LOAD));
                     }
                 }
                 ok = true;
@@ -184,7 +183,6 @@ public class ChatFragment extends Fragment {
             public void onRefresh() {
 
                 int resta = (int)MAX_MESSAGES_LOAD-NUMB_MESSAGES_LOAD;
-                Log.e("RESTA", String.valueOf(resta));
                 if (resta > SUM_MESSAGES_LOAD) NUMB_MESSAGES_LOAD += SUM_MESSAGES_LOAD;
                 else if (resta == 0) swipe = false;
                 else NUMB_MESSAGES_LOAD += resta;
