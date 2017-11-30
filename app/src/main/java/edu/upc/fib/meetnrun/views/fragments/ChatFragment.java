@@ -82,10 +82,10 @@ public class ChatFragment extends Fragment {
     private boolean firstTime;
 
     private boolean swipe = false;
-    private boolean ok = false;
+    private int itemPosition;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
@@ -127,7 +127,6 @@ public class ChatFragment extends Fragment {
                         MAX_MESSAGES_LOAD = snap.getChildrenCount();
                     }
                 }
-                ok = true;
                 loadMessages();
             }
 
@@ -182,10 +181,12 @@ public class ChatFragment extends Fragment {
             @Override
             public void onRefresh() {
 
+                itemPosition = NUMB_MESSAGES_LOAD;
                 int resta = (int)MAX_MESSAGES_LOAD-NUMB_MESSAGES_LOAD;
                 if (resta > SUM_MESSAGES_LOAD) NUMB_MESSAGES_LOAD += SUM_MESSAGES_LOAD;
                 else if (resta == 0) swipe = false;
                 else NUMB_MESSAGES_LOAD += resta;
+                itemPosition = NUMB_MESSAGES_LOAD - itemPosition;
                 if (resta != 0) {
                     adapter.deleteMessages();
                     swipe = true;
@@ -200,7 +201,7 @@ public class ChatFragment extends Fragment {
 
     private void loadMessages() {
 
-        if (ok && NUMB_MESSAGES_LOAD > MAX_MESSAGES_LOAD) NUMB_MESSAGES_LOAD = (int)MAX_MESSAGES_LOAD;
+        if (NUMB_MESSAGES_LOAD > MAX_MESSAGES_LOAD) NUMB_MESSAGES_LOAD = (int)MAX_MESSAGES_LOAD;
 
         if (NUMB_MESSAGES_LOAD > 0) {
             databaseReference.limitToLast(NUMB_MESSAGES_LOAD).addChildEventListener(new ChildEventListener() {
@@ -209,6 +210,7 @@ public class ChatFragment extends Fragment {
                     removeProgressChat();
                     Message m = dataSnapshot.getValue(Message.class);
                     adapter.addMensaje(m);
+                    Log.e("MESSAG", m.toString());
                     if (!swipe) {
                         if (!firstTime) {
                             if (currentUser.getUsername().equals(m.getName())) {
@@ -246,7 +248,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void setScrollbarUp() {
-        rvMessages.scrollToPosition(0);
+        rvMessages.scrollToPosition(itemPosition);
     }
 
     @Override
