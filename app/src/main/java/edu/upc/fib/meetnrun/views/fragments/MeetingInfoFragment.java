@@ -129,7 +129,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
             public void onButtonClicked(int position) {}
 
             @Override
-            public void onMeetingClicked(int position) {
+            public void onItemClicked(int position) {
                 User participant = participantsAdapter.getFriendAtPosition(position);
                 Intent profileIntent;
                 if (participant.getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
@@ -155,7 +155,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
                 startActivity(profileIntent);
 
             }
-        });
+        }, getContext(), false);
         friendsList.setAdapter(participantsAdapter);
       /*  LinearLayoutManager layoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);

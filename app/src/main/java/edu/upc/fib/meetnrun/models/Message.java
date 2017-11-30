@@ -10,16 +10,14 @@ public class Message {
 
     private String message;
     private String name;
-    private String hour;
     private Date dateTime;
 
     public Message() {
     }
 
-    public Message(String message, String name, String hour, Date dateTime) {
+    public Message(String message, String name, Date dateTime) {
         this.message = message;
         this.name = name;
-        this.hour = hour;
         this.dateTime = dateTime;
     }
 
@@ -37,14 +35,6 @@ public class Message {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getHour() {
-        return hour;
-    }
-
-    public void setHour(String hour) {
-        this.hour = hour;
     }
 
     public Date getDateTime() {

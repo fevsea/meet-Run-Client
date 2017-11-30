@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
@@ -19,16 +20,19 @@ import edu.upc.fib.meetnrun.models.User;
 
 public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private final View view;
-    private final WeakReference<RecyclerViewOnClickListener> listener;
+    private View view;
+    private WeakReference<RecyclerViewOnClickListener> listener;
+    private CardView cardView;
+    private Context context;
 
-    public FriendsViewHolder(View itemView, RecyclerViewOnClickListener listener) {
+    public FriendsViewHolder(View itemView, RecyclerViewOnClickListener listener, Context context) {
         super(itemView);
         view = itemView;
         this.listener = new WeakReference<>(listener);
+        this.context = context;
     }
 
-    public void bindMeeting(User user) {
+    public void bindMeeting(User user, boolean isGroup) {
         TextView userPhoto = view.findViewById(R.id.user_photo);
         char letter = user.getUsername().charAt(0);
         String firstLetter = String.valueOf(letter);
@@ -44,14 +48,33 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
         TextView postCode = view.findViewById(R.id.user_postcode);
         postCode.setText(user.getPostalCode());
 
-        TextView meetingLevel = view.findViewById(R.id.user_level);
+        TextView userLevel = view.findViewById(R.id.user_level);
         String level = String.valueOf(user.getLevel());
         if (level.equals("null")) level = "0";
-        meetingLevel.setText(String.valueOf(level));
+        userLevel.setText(String.valueOf(level));
 
-        CardView cardView = view.findViewById(R.id.user_cardview);
-        if (user.isSelected()) cardView.setCardBackgroundColor(Color.parseColor("#B3E5FC"));
+        cardView = (CardView) view.findViewById(R.id.user_cardview);
+
+        if (user.isSelected()) cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+
         else cardView.setCardBackgroundColor(Color.WHITE);
+
+        /*if (isGroup) {
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (cardView.isSelected()) {
+                        cardView.setCardBackgroundColor(Color.WHITE);
+                        cardView.setSelected(false);
+                    }
+                    else {
+                        cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
+                        cardView.setSelected(true);
+                    }
+                }
+            });
+        }*/
+
 
         view.setOnClickListener(this);
     }
@@ -67,7 +90,7 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
     @Override
     public void onClick(View view) {
 
-        listener.get().onMeetingClicked(getAdapterPosition());
+        listener.get().onItemClicked(getAdapterPosition());
 
     }
 

@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
+import java.util.Calendar;
+import java.util.Date;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -51,7 +53,21 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         lastConverse.setText(txt);
 
         TextView lastHour = view.findViewById(R.id.chat_hour);
-        lastHour.setText(chat.getMessage().getHour());
+
+        Date date = chat.getMessage().getDateTime();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int min = cal.get(Calendar.MINUTE);
+        String aux = String.valueOf(min);
+        if (aux.length() == 1) {
+            aux = "0"+aux;
+        }
+
+        String messageHourMin = String.valueOf(hour)+":"+aux;
+
+        lastHour.setText(messageHourMin);
 
         TextView numberChats = view.findViewById(R.id.chat_new_messages);
 
@@ -75,7 +91,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
     @Override
     public void onClick(View view) {
-        listener.get().onMeetingClicked(getAdapterPosition());
+        listener.get().onItemClicked(getAdapterPosition());
     }
 
 }

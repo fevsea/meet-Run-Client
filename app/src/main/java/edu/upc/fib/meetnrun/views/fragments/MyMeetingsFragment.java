@@ -121,7 +121,6 @@ public class MyMeetingsFragment extends Fragment {
 
     private void createNewMeeting() {
         Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
-        getActivity().finish();
         startActivity(intent);
     }
 

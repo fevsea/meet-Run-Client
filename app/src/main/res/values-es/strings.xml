@@ -100,6 +100,7 @@
     <string name="meetings">Quedadas</string>
     <string name="log_in">Conectarse</string>
     <string name="password">Contraseña</string>
+
     <string name="private_friends">¿Quiere correr con amigos, o solo?</string>
     <string name="private_no_friends">Quiero correr solo</string>
     <string name="private_yes_friends">Quiero añadir amigos</string>
@@ -127,4 +128,5 @@
     <string name="total_meetings">Quedadas completadas</string>
     <string name="total_steps">Número de pasos total</string>
 
+    <string name="delete_history">Eliminar historial</string>
 </resources>
