@@ -33,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.w3c.dom.Text;
 
@@ -68,19 +69,20 @@ public class ChatFragment extends Fragment {
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
+    private DatabaseReference myRef;
 
     private Chat chat;
     private User currentUser;
 
-    private int NUMB_MESSAGES_LOAD = 4;
+    private int NUMB_MESSAGES_LOAD = 80;
+    private final int SUM_MESSAGES_LOAD = 15;
+    private long MAX_MESSAGES_LOAD = 0;
 
     private int numbNewMessages;
     private boolean firstTime;
 
     private boolean swipe = false;
-
-    private List<Message> messageList = new ArrayList<>();
-    private int count = 0;
+    private boolean ok = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -99,7 +101,6 @@ public class ChatFragment extends Fragment {
             else chat.setChatName(chat.getUser2().getUsername());
         }
 
-        //getActivity().setTitle(chat.getChatName());
         getActivity().setTitle("");
 
         this.view = inflater.inflate(R.layout.fragment_chat, container, false);
@@ -113,6 +114,24 @@ public class ChatFragment extends Fragment {
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference(String.valueOf(chat.getId())); //Chat name
+        myRef = database.getReference();
+
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snap: dataSnapshot.getChildren()) {
+                    if (snap.getKey().equals(String.valueOf(chat.getId()))) {
+                        MAX_MESSAGES_LOAD = snap.getChildrenCount();
+                        ok = true;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         adapter = new MessageAdapter(getContext());
         LinearLayoutManager l = new LinearLayoutManager(getContext());
@@ -141,8 +160,11 @@ public class ChatFragment extends Fragment {
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                setScrollbar();
+                if (!swipe) setScrollbar();
+                else setScrollbarUp();
+                if (swipe && adapter.getItemCount() == NUMB_MESSAGES_LOAD) {
+                    swipe = false;
+                }
             }
         });
 
@@ -156,14 +178,18 @@ public class ChatFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                messageList = adapter.getMessagesList();
-                adapter.deleteMessages();
-                swipe = true;
-                loadMessages();
-                while (count != 4) {}
-                count = 0;
-                adapter.addListMessage(messageList);
-                swipe = false;
+                if (MAX_MESSAGES_LOAD == 0) {
+                    while (!ok) ;
+                }
+                int resta = (int)MAX_MESSAGES_LOAD-NUMB_MESSAGES_LOAD;
+                if (resta > SUM_MESSAGES_LOAD) NUMB_MESSAGES_LOAD += SUM_MESSAGES_LOAD;
+                else if (resta == 0) swipe = false;
+                else NUMB_MESSAGES_LOAD += resta;
+                if (resta != 0) {
+                    adapter.deleteMessages();
+                    swipe = true;
+                    loadMessages();
+                }
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -173,14 +199,13 @@ public class ChatFragment extends Fragment {
 
     private void loadMessages() {
 
-        if (!swipe) {
-            databaseReference.limitToLast(NUMB_MESSAGES_LOAD).addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    removeProgressChat();
-                    Message m = dataSnapshot.getValue(Message.class);
-                    adapter.addMensaje(m);
-
+        databaseReference.limitToLast(NUMB_MESSAGES_LOAD).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                removeProgressChat();
+                Message m = dataSnapshot.getValue(Message.class);
+                adapter.addMensaje(m);
+                if (!swipe) {
                     if (!firstTime) {
                         if (currentUser.getUsername().equals(m.getName())) {
                             numbNewMessages++;
@@ -192,51 +217,32 @@ public class ChatFragment extends Fragment {
                                 chat.setNumbNewMessages(numbNewMessages);
                             }
                         }
-                        NUMB_MESSAGES_LOAD++;
                     }
                 }
 
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            }
 
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
 
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {}
-            });
-        }
-        else {
-            databaseReference.limitToLast(NUMB_MESSAGES_LOAD+4).limitToFirst(NUMB_MESSAGES_LOAD).addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    removeProgressChat();
-                    Message m = dataSnapshot.getValue(Message.class);
-                    adapter.addMensaje(m);
-                    count++;
-                }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {}
-            });
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
 
     }
 
     private void setScrollbar() {
         rvMessages.scrollToPosition(adapter.getItemCount()-1);
+    }
+
+    private void setScrollbarUp() {
+        rvMessages.scrollToPosition(0);
     }
 
     @Override
