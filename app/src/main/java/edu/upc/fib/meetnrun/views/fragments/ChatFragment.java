@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -215,6 +216,7 @@ public class ChatFragment extends Fragment {
                                     if (!currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
                                         chat.sumNumbMessagesAtPosition(i);
                                     }
+                                    Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
                                 }
                             }
                             else {
@@ -222,6 +224,7 @@ public class ChatFragment extends Fragment {
                                     if (!currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
                                         chat.setNumbMessagesAtPosition(i, 0);
                                     }
+                                    Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
                                 }
                             }
                         }
@@ -398,6 +401,9 @@ public class ChatFragment extends Fragment {
     public void onResume() {
         firstTime = true;
         chat.setNumbMessagesAtPosition(userPosition, 0);
+        for (int i = 0; i < chat.getListUsersChatSize(); i++) {
+            Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
+        }
         super.onResume();
     }
 
