@@ -9,12 +9,12 @@ import edu.upc.fib.meetnrun.models.User;
  */
 
 public interface ILoginAdapter {
-    public String login(String username, String password) throws AutorizationException;
+    String login(String username, String password) throws AutorizationException;
 
-    public User getCurrentUser() throws AutorizationException;
+    User getCurrentUser() throws AutorizationException;
 
-    public boolean logout() throws AutorizationException;
+    boolean logout() throws AutorizationException;
 
-    public boolean changePassword(String oldPassword, String newPassword) throws AutorizationException, ForbiddenException;
+    boolean changePassword(String oldPassword, String newPassword) throws AutorizationException, ForbiddenException;
 
 }

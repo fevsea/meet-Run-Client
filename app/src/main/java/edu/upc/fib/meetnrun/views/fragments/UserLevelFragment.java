@@ -29,10 +29,10 @@ public class UserLevelFragment extends Fragment {
         this.view = view;
         u = CurrentSession.getInstance().getCurrentUser();
         int level= u.getLevel();
-        userLevel= (ProgressBar) view.findViewById(R.id.totalProgressBar);
-        km=        (ProgressBar) view.findViewById(R.id.kmProgressBar);
-        speed=     (ProgressBar) view.findViewById(R.id.speedProgressBar);
-        meetings=  (ProgressBar) view.findViewById(R.id.meetingsProgressBar);
+        userLevel= view.findViewById(R.id.totalProgressBar);
+        km= view.findViewById(R.id.kmProgressBar);
+        speed= view.findViewById(R.id.speedProgressBar);
+        meetings= view.findViewById(R.id.meetingsProgressBar);
         return view;
     }
 

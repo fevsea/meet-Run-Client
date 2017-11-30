@@ -127,4 +127,5 @@
     <string name="total_steps">Total number of steps</string>
     <string name="total_meetings">Completed meetings</string>
     <string name="total_km">Total distance (in Km)</string>
+    <string name="total_time">Total run time</string>
 </resources>

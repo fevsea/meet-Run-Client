@@ -49,9 +49,9 @@ public class UserProfileTest {
 
             CurrentSession.getInstance().setCurrentUser(u);*/
         }
-    };
+    }
 
-    @Test
+@Test
     public void testVisibility() {
       //  onView(withId(R.id.fragment_meeting_container)).check(matches(isDisplayed()));
     }

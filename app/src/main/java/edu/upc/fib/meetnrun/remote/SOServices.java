@@ -22,7 +22,7 @@ import retrofit2.http.Query;
 
 public interface SOServices {
 
-    public int PAGELIMIT = 10;
+    int PAGELIMIT = 10;
 
     //MEETINGS
     @GET("/meetings")

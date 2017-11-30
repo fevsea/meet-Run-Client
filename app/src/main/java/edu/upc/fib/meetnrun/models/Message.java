@@ -56,8 +56,7 @@ public class Message {
     }
 
     public boolean isSender() {
-        if (name.equals(CurrentSession.getInstance().getCurrentUser().getUsername())) return true;
-        return false;
+        return name.equals(CurrentSession.getInstance().getCurrentUser().getUsername());
     }
 
 }

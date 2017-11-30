@@ -107,12 +107,12 @@ public class MeetingFriendsFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-            try {
+          /*  try {
                 friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
                 l = friendsDBAdapter.getUserFriends();
             } catch (AutorizationException e) {
                 e.printStackTrace();
-            }
+            }*/
             return null;
         }
 
