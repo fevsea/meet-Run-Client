@@ -6,5 +6,5 @@ public interface RecyclerViewOnClickListener {
 
     void onButtonClicked(int position);
 
-    void onMeetingClicked(int position);
+    void onItemClicked(int position);
 }

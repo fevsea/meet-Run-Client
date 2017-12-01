@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.UsersListActivity;
 import edu.upc.fib.meetnrun.views.fragments.UsersListFragment;
@@ -39,7 +38,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 public class UsersListTest {
 
     @Rule
-    public ActivityTestRule<UsersListActivity> activityRule = new ActivityTestRule<UsersListActivity>(UsersListActivity.class) {
+    public final ActivityTestRule<UsersListActivity> activityRule = new ActivityTestRule<UsersListActivity>(UsersListActivity.class) {
         protected void beforeActivityLaunched() {
             AdaptersContainer adaptersContainer = AdaptersContainer.getInstance();
             adaptersContainer.setUserAdapter(MockUserAdapter.getInstance());
@@ -96,7 +95,7 @@ public class UsersListTest {
 
             @Override
             protected boolean matchesSafely(FriendsViewHolder item) {
-                TextView timeViewText = (TextView) item.itemView.findViewById(R.id.meeting_item_username);
+                TextView timeViewText = item.itemView.findViewById(R.id.meeting_item_username);
                 if (timeViewText == null) {
                     return false;
                 }

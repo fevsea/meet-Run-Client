@@ -3,14 +3,13 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
@@ -20,7 +19,6 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
-import edu.upc.fib.meetnrun.views.ChatListActivity;
 
 /**
  * Created by eric on 2/11/17.
@@ -28,16 +26,18 @@ import edu.upc.fib.meetnrun.views.ChatListActivity;
 
 public class FriendProfileFragment extends ProfileFragmentTemplate {
 
+    private String friendUsername;
+
     @Override
     protected void setImage() {
+
+        friendUsername = currentFriend.getUsername();
 
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final int friendId = Integer.parseInt(profileInfo.getString("id"));
-                final String friend = profileInfo.getString("userName");
-                String title = getResources().getString(R.string.chat_friend_dialog_title)+" "+friend;
-                String message = getResources().getString(R.string.chat_friend_dialog_message)+" "+friend+"?";
+                String title = getResources().getString(R.string.chat_friend_dialog_title)+" "+friendUsername;
+                String message = getResources().getString(R.string.chat_friend_dialog_message)+" "+friendUsername+"?";
 
                 String ok = getResources().getString(R.string.ok);
                 String cancel = getResources().getString(R.string.cancel);
@@ -47,28 +47,20 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                                 //Crear o cojer chat
 
                                 User user = CurrentSession.getInstance().getCurrentUser();
-                                Chat chat = ChatListFragment.getChat(user.getUsername(), friend);
+                                String currentUsername = user.getUsername();
+                                Chat chat = ChatListFragment.getChat(currentUsername, friendUsername);
                                 if (chat == null) {
-                                    String chatName = user.getUsername()+" - "+friend;
                                     Calendar rightNow = Calendar.getInstance();
-                                    StringBuilder sb = new StringBuilder();
-                                    String hour = null;
-                                    String minute = null;
-                                    String aux = String.valueOf(rightNow.get(Calendar.HOUR_OF_DAY));
-                                    if (aux.length() == 1) hour = "0"+aux;
-                                    else hour = aux;
-                                    aux = String.valueOf(rightNow.get(Calendar.MINUTE));
-                                    if (aux.length() == 1) minute = "0"+aux;
-                                    else minute = aux;
-                                    sb.append(hour);
-                                    sb.append(":");
-                                    sb.append(minute);
 
                                     Date dateWithoutTime = rightNow.getTime();
 
-                                    Message m = new Message("", user.getUsername(), sb.toString(), dateWithoutTime);
+                                    Message m = new Message("", currentUsername, dateWithoutTime);
 
-                                    chat = new Chat(1,chatName, user, friend, m);
+                                    List<User> userList = new ArrayList<>();
+                                    userList.add(user);
+                                    userList.add(currentFriend);
+
+                                    chat = new Chat(ChatListFragment.getCount(),friendUsername, userList, 0, m);
                                     ChatListFragment.addChatFake(chat);
                                 }
                                 Intent i = new Intent(getContext(), ChatActivity.class);
@@ -97,7 +89,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
 
     @Override
     protected String setDialogMessage() {
-        return getResources().getString(R.string.delete_friend_dialog_message)+" "+profileInfo.getString("userName")+"?";
+        return getResources().getString(R.string.delete_friend_dialog_message)+" "+friendUsername+"?";
     }
 
     @Override
@@ -114,10 +106,8 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
             try {
                 ok = friendsDBAdapter.removeFriend(Integer.parseInt(s[0]));
                 //eliminar chat con amigo
-                ChatListFragment.deleteChat(profileInfo.getString("userName"));
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
+                ChatListFragment.deleteChat(friendUsername);
+            } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;

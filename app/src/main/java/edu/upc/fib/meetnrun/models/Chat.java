@@ -1,6 +1,7 @@
 package edu.upc.fib.meetnrun.models;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by eric on 21/11/17.
@@ -10,19 +11,31 @@ public class Chat{
 
     private Integer id;
     private String chatName;
-    private User user1;
-    private String user2;
+    private List<User> listUsersChat;
+    private int type;
     private Message message;
+    private Meeting meeting;
 
     public Chat() {
+        listUsersChat = new ArrayList<>();
     }
 
-    public Chat(Integer id, String chatName, User user1, String user2, Message message) {
+    public Chat(Integer id, String chatName, List<User> listUsersChat, int type, Message message) {
         this.id = id;
         this.chatName = chatName;
-        this.user1 = user1;
-        this.user2 = user2;
+        this.listUsersChat = listUsersChat;
+        this.type = type;
         this.message = message;
+        this.meeting = null;
+    }
+
+    public Chat(Integer id, String chatName, List<User> listUsersChat, int type, Message message, Meeting meeting) {
+        this.id = id;
+        this.chatName = chatName;
+        this.listUsersChat = listUsersChat;
+        this.type = type;
+        this.message = message;
+        this.meeting = meeting;
     }
 
     public Integer getId() {
@@ -41,20 +54,38 @@ public class Chat{
         this.chatName = chatName;
     }
 
+    public List<User> getListUsersChat() {
+        return listUsersChat;
+    }
+
+    public void setListUsersChat(List<User> listUsersChat) {
+        this.listUsersChat = listUsersChat;
+    }
+
     public User getUser1() {
-        return user1;
+        return listUsersChat.get(0);
     }
 
     public void setUser1(User user1) {
-        this.user1 = user1;
+        listUsersChat.remove(0);
+        listUsersChat.add(0, user1);
     }
 
-    public String getUser2() {
-        return user2;
+    public User getUser2() {
+        return listUsersChat.get(1);
     }
 
-    public void setUser2(String user2) {
-        this.user2 = user2;
+    public void setUser2(User user2) {
+        listUsersChat.remove(1);
+        listUsersChat.add(1, user2);
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public Message getMessage() {
@@ -63,5 +94,13 @@ public class Chat{
 
     public void setMessage(Message message) {
         this.message = message;
+    }
+
+    public Meeting getMeeting() {
+        return meeting;
+    }
+
+    public void setMeeting(Meeting meeting) {
+        this.meeting = meeting;
     }
 }

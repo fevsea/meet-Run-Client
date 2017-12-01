@@ -39,14 +39,18 @@ public class ChatListFragment extends Fragment {
 
     private View view;
     private FloatingActionButton fab, fab2, fab3;
-    Animation FabOpen, FabClose, FabRClockWise, FabRantiClockWise;
+    private Animation FabOpen;
+    private Animation FabClose;
+    private Animation FabRClockWise;
+    private Animation FabRantiClockWise;
     private List<Chat> l;
     private ChatAdapter chatAdapter;
     private String friendUserName = null;
     private User currentUser;
     private boolean isOpen = false;
 
-    private static List<Chat> list = new ArrayList<Chat>();
+    private static final List<Chat> list = new ArrayList<>();
+    private static int count = 0;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -58,15 +62,15 @@ public class ChatListFragment extends Fragment {
 
         currentUser = CurrentSession.getInstance().getCurrentUser();
 
-        l = new ArrayList<Chat>();
+        l = new ArrayList<>();
 
         setupRecyclerView();
 
-        fab = (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+        fab = getActivity().findViewById(R.id.activity_fab);
         fab.setImageResource(R.drawable.chat);
 
-        fab2 = (FloatingActionButton) view.findViewById(R.id.fab2);
-        fab3 = (FloatingActionButton) view.findViewById(R.id.fab3);
+        fab2 = view.findViewById(R.id.fab2);
+        fab3 = view.findViewById(R.id.fab3);
 
         FabOpen = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
         FabClose = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
@@ -94,7 +98,7 @@ public class ChatListFragment extends Fragment {
             }
         });
 
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_chat_swipe);
+        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.fragment_chat_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -149,14 +153,14 @@ public class ChatListFragment extends Fragment {
         final RecyclerView chatList = view.findViewById(R.id.fragment_chat_container);
         chatList.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        List<Chat> chats = new ArrayList<Chat>();
+        List<Chat> chats = new ArrayList<>();
 
         chatAdapter = new ChatAdapter(chats, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
             @Override
-            public void onMeetingClicked(int position) {
+            public void onItemClicked(int position) {
 
                 Chat chat = chatAdapter.getChatAtPosition(position);
                 Intent chatIntent = new Intent(getActivity(),ChatActivity.class);
@@ -183,11 +187,11 @@ public class ChatListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
                 newText = newText.toLowerCase();
-                ArrayList<Chat> newList = new ArrayList<Chat>();
+                ArrayList<Chat> newList = new ArrayList<>();
                 for (Chat chat : l) {
 
                     if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) friendUserName = chat.getUser1().getUsername();
-                    else friendUserName = chat.getUser2();
+                    else friendUserName = chat.getUser2().getUsername();
 
                     String friendName = friendUserName.toLowerCase();
                     if (friendName != null) {
@@ -228,13 +232,19 @@ public class ChatListFragment extends Fragment {
         list.add(c);
     }
 
+    public static int getCount() {
+        int aux = count;
+        count++;
+        return aux;
+    }
+
     public static Chat getChat(String user, String friend) {
 
         for (Chat chat : list) {
 
             String chatUserName = chat.getUser1().getUsername();
             if (chatUserName.equals(user) || chatUserName.equals(friend)) {
-                String chatFriendUserName = chat.getUser2();
+                String chatFriendUserName = chat.getUser2().getUsername();
                 if (chatFriendUserName.equals(user) || chatFriendUserName.equals(friend)) {
                     return chat;
                 }
@@ -245,7 +255,7 @@ public class ChatListFragment extends Fragment {
 
     public static boolean deleteChat(String name) {
         for (Chat chat : list) {
-            if (chat.getUser1().getUsername().equals(name) || chat.getUser2().equals(name)) {
+            if (chat.getUser1().getUsername().equals(name) || chat.getUser2().getUsername().equals(name)) {
                 list.remove(chat);
                 return true;
             }
@@ -253,7 +263,7 @@ public class ChatListFragment extends Fragment {
         return false;
     }
 
-    public void sortList() {
+    private void sortList() {
        /* Collections.sort(list, new Comparator<Chat>() {
             @Override
             public int compare(Chat c2, Chat c1) {

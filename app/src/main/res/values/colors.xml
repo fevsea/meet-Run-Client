@@ -2,10 +2,8 @@
 <resources>
     <color name="colorPrimary">#03A9F4</color>
     <color name="colorPrimaryDark">#0288D1</color>
-    <color name="colorAccent">#FF4081</color>
     <color name="colorPrimaryLight">#B3E5FC</color>
-
-    <color name="color_fab_green">#4CAF50</color>
+    <color name="colorAccent">#FF619E</color>
 
     <color name="red">#E53935</color>
     <color name="blue">#1E88E5</color>
@@ -14,6 +12,7 @@
     <color name="light_blue">#039BE5</color>
     <color name="black_overlay">#66000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="semi_white">#F5F5F5</color>
     <color name="black">#000000</color>
 
     <color name="red_profile">#EF9A9A</color>
@@ -26,8 +25,20 @@
     <color name="teal_profile">#80CBC4</color>
     <color name="green_profile">#A5D6A7</color>
     <color name="light_green_profile">#C5E1A5</color>
-    <color name="yellow_profile">#FFF59D</color>
     <color name="orange_profile">#FFCC80</color>
     <color name="deep_orange_profile">#FFAB91</color>
+
+    <color name="red_chat">#F44336</color>
+    <color name="pink_chat">#E91E63</color>
+    <color name="purple_chat">#9C27B0</color>
+    <color name="deep_purple_chat">#673AB7</color>
+    <color name="indigo_chat">#3F51B5</color>
+    <color name="blue_chat">#2196F3</color>
+    <color name="cyan_chat">#00BCD4</color>
+    <color name="teal_chat">#009688</color>
+    <color name="green_chat">#4CAF50</color>
+    <color name="light_green_chat">#8BC34A</color>
+    <color name="orange_chat">#FF9800</color>
+    <color name="deep_orange_chat">#FF5722</color>
 
 </resources>

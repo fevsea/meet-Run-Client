@@ -1,7 +1,6 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,6 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Message;
-import edu.upc.fib.meetnrun.models.User;
 
 /**
  * Created by eric on 21/11/17.
@@ -21,7 +18,7 @@ import edu.upc.fib.meetnrun.models.User;
 public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
 
     private List<Chat> chats;
-    private RecyclerViewOnClickListener listener;
+    private final RecyclerViewOnClickListener listener;
     private View v;
     private boolean newChat = false;
 

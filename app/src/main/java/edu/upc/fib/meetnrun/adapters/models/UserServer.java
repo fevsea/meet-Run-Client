@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import edu.upc.fib.meetnrun.models.User;
 
-public class UserServer {
+public class UserServer implements IServerModel {
 
     @SerializedName("id")
     @Expose
