@@ -20,7 +20,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     private List<Chat> chats;
     private final RecyclerViewOnClickListener listener;
     private View v;
-    private boolean newChat = false;
 
     public ChatAdapter(List<Chat> chats, RecyclerViewOnClickListener listener) {
         this.chats = chats;
@@ -38,10 +37,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     @Override
     public void onBindViewHolder(final ChatViewHolder holder, int position) {
         Chat chat = chats.get(position);
-        if (!chat.getMessage().getName().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) {
-            newChat = true;
-        }
-        holder.bindChat(chat, newChat);
+        holder.bindChat(chat);
     }
 
     @Override

@@ -7,15 +7,21 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.services.FirebaseInstanceService;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -26,10 +32,17 @@ public class LoginActivity extends AppCompatActivity {
     private CurrentSession cs;
     private boolean see = false;
 
+    private static final String TAG = LoginActivity.class.getSimpleName();
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "Actual token token: " + refreshedToken);
 
         editUsername = findViewById(R.id.editUsername);
         editPassword = findViewById(R.id.editPassword);
@@ -81,6 +94,11 @@ public class LoginActivity extends AppCompatActivity {
         editor.commit();
     }
 
+    private void updateFirebaseToken(){
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
+        new FirebaseInstanceService().onTokenRefresh();
+    }
+
     private class login extends AsyncTask<String,String,String> {
 
         String token = null;
@@ -98,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
             if(token != null && !token.equals("")){
                 cs.setToken(token);
                 saveToken();
+                updateFirebaseToken();
                 try {
                     u = loginAdapter.getCurrentUser();
                     //TODO Pending to catch correctly
