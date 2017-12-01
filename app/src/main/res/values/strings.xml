@@ -122,4 +122,10 @@
     <string name="ends_in_hours_minutes">Ends in %1$d hours %2$d minutes</string>
     <string name="you">You</string>
     <string name="challenge_progress_km">%1$d of %2$d km completed (%3$.2f %4$s)</string>
+    <string name="error_loading">Sorry, there was an error while loading this view</string>
+    <string name="saving_challenge">Saving challenge</string>
+    <string name="error_saving_challenge">Sorry, there was an error while saving this challenge</string>
+    <string name="distance">Distance</string>
+    <string name="deadline">Deadline</string>
+    <string name="to_challenge">Challenge</string>
 </resources>

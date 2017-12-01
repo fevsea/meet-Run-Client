@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/profile_layout2"
             android:layout_centerHorizontal="true"
-            android:text="@string/challenge"/>
+            android:text="@string/to_challenge"/>
 
     </RelativeLayout>
 

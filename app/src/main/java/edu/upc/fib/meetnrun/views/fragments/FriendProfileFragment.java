@@ -98,10 +98,10 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
         new removeFriend().execute(s);
     }
 
-    /*@Override
+    @Override
     protected void configureChallengeButton() {
         challengeButton.setOnClickListener(this);
-    }*/
+    }
 
     @Override
     public void onClick(View v) {

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -43,18 +44,18 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_createchallenge);
 
-        setTitle("Create challenge");
+        setTitle(R.string.create_challenge);
 
         userID = getIntent().getIntExtra("id", -1);
         if (userID == -1) {
-            Toast.makeText(this, R.string.tracking_error_loading, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.error_loading, Toast.LENGTH_LONG).show();
             finish();
         }
 
         distancePicker = findViewById(R.id.distance_picker);
         distancePicker.setMinValue(0);
         distancePicker.setMaxValue(1000);
-        distancePicker.setWrapSelectorWheel(true);
+        distancePicker.setWrapSelectorWheel(false);
         deadlineText = findViewById(R.id.deadline_picker);
         deadlineText.setFocusable(false);
         deadlineText.setClickable(true);
@@ -157,7 +158,7 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
             super.onPreExecute();
             mProgressDialog = new ProgressDialog(CreateChallengeActivity.this);
             mProgressDialog.setTitle(R.string.saving);
-            mProgressDialog.setMessage(getResources().getString(R.string.saving_meeting));
+            mProgressDialog.setMessage(getResources().getString(R.string.saving_challenge));
             mProgressDialog.setIndeterminate(true);
             mProgressDialog.setCancelable(false);
             mProgressDialog.show();
@@ -177,7 +178,7 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         protected void onPostExecute(Boolean result) {
             mProgressDialog.dismiss();
             if (exception != null || !result) {
-                Toast.makeText(CreateChallengeActivity.this, getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateChallengeActivity.this, getResources().getString(R.string.error_saving_challenge), Toast.LENGTH_SHORT).show();
             }
             else {
                 finish();
