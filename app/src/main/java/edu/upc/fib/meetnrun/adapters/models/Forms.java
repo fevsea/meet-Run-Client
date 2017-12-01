@@ -3,6 +3,12 @@ package edu.upc.fib.meetnrun.adapters.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import edu.upc.fib.meetnrun.models.Chat;
+import edu.upc.fib.meetnrun.utils.UtilsGlobal;
+
 /**
  * Created by Awais Iqbal on 26/10/2017.
  */
@@ -306,5 +312,68 @@ public class Forms {
         }
     }
 
+    public static class ChatCreateUpdate {
+
+        @SerializedName("chatName")
+        @Expose
+        private String chatName;
+
+        @SerializedName("listUsersChat")
+        @Expose
+        private List<Integer> listUsersChat;
+
+        @SerializedName("type")
+        @Expose
+        private int type;
+
+        @SerializedName("meeting")
+        @Expose
+        private int meetingToRelate;
+
+        @SerializedName("lastMessage")
+        @Expose
+        private String lastMessage;
+
+        @SerializedName("lastMessageUserName")
+        @Expose
+        private int lastMessageUsernamePosition;
+
+        @SerializedName("lastDateTime")
+        @Expose
+        private String lastMessageDateTime;
+
+        public ChatCreateUpdate(String chatName, List<Integer> listUsersChat, int type,
+                                int meetingToRelate, String lastMessage, int lastMessageUsernamePosition,
+                                String lastMessageDateTime) {
+            this.chatName = chatName;
+            this.listUsersChat = listUsersChat;
+            this.type = type;
+            this.meetingToRelate = meetingToRelate;
+            this.lastMessage = lastMessage;
+            this.lastMessageUsernamePosition = lastMessageUsernamePosition;
+            this.lastMessageDateTime = lastMessageDateTime;
+        }
+
+        public ChatCreateUpdate(Chat c) {
+            this.chatName = c.getChatName();
+            List<Integer> lic = new ArrayList<>();
+            for (int i = 0; i < c.getListUsersChat().size(); i++) {
+                lic.add(c.getListUsersChat().get(i).getId());
+            }
+            this.listUsersChat = lic;
+            this.type = c.getType();
+            this.meetingToRelate = c.getMeeting().getId();
+            this.lastMessage = c.getMessage().getMessage();
+            for (int i = 0; i < c.getListUsersChat().size(); i++) {
+                if (c.getMessage().getName().equals(c.getListUsersChat().get(i).getUsername())) {
+                    this.lastMessageUsernamePosition = i;
+                    break;//BAD SMELL
+                }
+            }
+            this.lastMessageDateTime = UtilsGlobal.formatDate(c.getMessage().getDateTime());
+        }
+
+
+    }
 }
 
