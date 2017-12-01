@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -22,11 +23,15 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
 
     final private View view;
     final private WeakReference<RecyclerViewOnClickListener> listener;
+    private String expirationTextResourceDays;
+    private String expirationTextResourceNoDays;
 
     public ChallengesViewHolder(View itemView, RecyclerViewOnClickListener listener) {
         super(itemView);
         view = itemView;
         this.listener = new WeakReference<>(listener);
+        expirationTextResourceDays = view.getResources().getString(R.string.ends_in_days_hours_minutes);
+        expirationTextResourceNoDays = view.getResources().getString(R.string.ends_in_hours_minutes);
     }
 
     public void bindChallenge(Challenge challenge) {
@@ -51,7 +56,9 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         String totalText = String.format(Locale.forLanguageTag("es"), "%d km", challenge.getDistance());
         totalView.setText(totalText);
         TextView opponentName = view.findViewById(R.id.opponent);
+        TextView youName = view.findViewById(R.id.you);
 
+        youName.setText(R.string.you);
         opponentName.setText(opponent.getUsername());
 
         opponentBar.setMax(challenge.getDistance());
@@ -83,10 +90,10 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
         String expirationText;
         if (days > 0) {
-            expirationText = String.format(Locale.forLanguageTag("es"), "Expires in %d days %d hours %d minutes", days, hours, minutes);
+            expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceDays, days, hours, minutes);
         }
         else {
-            expirationText = String.format(Locale.forLanguageTag("es"), "Expires in %d hours %d minutes", hours, minutes);
+            expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceNoDays, hours, minutes);
         }
         return expirationText;
     }

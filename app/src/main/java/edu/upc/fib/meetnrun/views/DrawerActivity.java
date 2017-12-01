@@ -111,6 +111,7 @@ public class DrawerActivity extends AppCompatActivity{
                                     break;
                                 case R.id.challenges:
                                     fragment = new ChallengesListFragment();
+                                    setTitle(R.string.challenges);
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.chat:

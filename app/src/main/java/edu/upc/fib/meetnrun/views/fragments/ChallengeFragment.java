@@ -41,6 +41,9 @@ public class ChallengeFragment extends Fragment {
     private TextView opponentPhoto;
     private TextView opponentProgressText;
     private ProgressBar opponentProgressBar;
+    private String expirationTextResourceDays;
+    private String expirationTextResourceNoDays;
+    private String progressTextResource;
 
     private TextView endsIn;
 
@@ -73,6 +76,9 @@ public class ChallengeFragment extends Fragment {
         opponentProgressBar = view.findViewById(R.id.opponent_progress_bar);
 
         endsIn = view.findViewById(R.id.ends_in);
+        expirationTextResourceDays = view.getResources().getString(R.string.ends_in_days_hours_minutes);
+        expirationTextResourceNoDays = view.getResources().getString(R.string.ends_in_hours_minutes);
+        progressTextResource = view.getResources().getString(R.string.challenge_progress_km);
 
         GetChallenge getChallenge = new GetChallenge();
         getChallenge.execute(challengeId);
@@ -103,7 +109,7 @@ public class ChallengeFragment extends Fragment {
         userProgressBar.setMax(challenge.getDistance());
         userProgressBar.setProgress(userProgress);
         String userProgressString = String.format(Locale.forLanguageTag("es"),
-                "%d of %d km completed (%.2f %s)", userProgress, challenge.getDistance(),
+                progressTextResource, userProgress, challenge.getDistance(),
                 ((float)userProgress)/((float)challenge.getDistance())*100, "%");
         userProgressText.setText(userProgressString);
 
@@ -114,7 +120,7 @@ public class ChallengeFragment extends Fragment {
         opponentProgressBar.setMax(challenge.getDistance());
         opponentProgressBar.setProgress(opponentProgress);
         String opponentProgressString = String.format(Locale.forLanguageTag("es"),
-                "%d of %d km completed (%.2f %s)", opponentProgress, challenge.getDistance(),
+                progressTextResource, opponentProgress, challenge.getDistance(),
                 ((float)opponentProgress)/((float)challenge.getDistance())*100, "%");
         opponentProgressText.setText(opponentProgressString);
 
@@ -136,10 +142,10 @@ public class ChallengeFragment extends Fragment {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
         String expirationText;
         if (days > 0) {
-            expirationText = String.format(Locale.forLanguageTag("es"), "Ends in %d days %d hours %d minutes", days, hours, minutes);
+            expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceDays, days, hours, minutes);
         }
         else {
-            expirationText = String.format(Locale.forLanguageTag("es"), "Ends in %d hours %d minutes", hours, minutes);
+            expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceNoDays, hours, minutes);
         }
         return expirationText;
     }

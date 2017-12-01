@@ -118,4 +118,8 @@
     <string name="challenges">Challenges</string>
     <string name="challenge">Challenge</string>
     <string name="create_challenge">Create challenge</string>
+    <string name="ends_in_days_hours_minutes">Ends in %1$d days %2$d hours %3$d minutes</string>
+    <string name="ends_in_hours_minutes">Ends in %1$d hours %2$d minutes</string>
+    <string name="you">You</string>
+    <string name="challenge_progress_km">%1$d of %2$d km completed (%3$.2f %4$s)</string>
 </resources>
