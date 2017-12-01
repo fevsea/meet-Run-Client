@@ -20,8 +20,9 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="250dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
         android:paddingRight="4dp"
         android:paddingBottom="1dp"
         android:paddingTop="1dp"
@@ -46,7 +47,6 @@
         cardview:cardElevation="@dimen/card_depth"
         android:layout_marginRight="8dp"
        android:layout_marginBottom="4dp"
-        android:layout_marginLeft="4dp"
         android:layout_marginTop="1dp"
         cardview:cardBackgroundColor="@color/colorPrimaryLight">
 
