@@ -1,5 +1,7 @@
 package edu.upc.fib.meetnrun.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +126,7 @@ public class Chat{
     public void sumNumbMessagesAtPosition(int i) {
         Integer aux = listNumbMessages.get(i);
         this.listNumbMessages.remove(i);
-        this.listNumbMessages.add(i, aux+1);
+        this.listNumbMessages.add(i, aux++);
     }
 
     public void setNumbMessagesAtPosition(int i, Integer x) {

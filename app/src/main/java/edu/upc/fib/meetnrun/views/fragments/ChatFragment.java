@@ -71,11 +71,14 @@ public class ChatFragment extends Fragment {
     private long MAX_MESSAGES_LOAD;
 
     private boolean firstTime;
+    private boolean first;
 
     private boolean swipe = false;
     private int itemPosition;
 
     private int userPosition;
+
+    private ChildEventListener childEventListener;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -85,6 +88,8 @@ public class ChatFragment extends Fragment {
 
         chat = CurrentSession.getInstance().getChat();
         currentUser = CurrentSession.getInstance().getCurrentUser();
+
+        first = true;
 
         for (int i = 0; i < chat.getListUsersChatSize(); i++) {
             if (currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
@@ -105,7 +110,7 @@ public class ChatFragment extends Fragment {
         fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        NUMB_MESSAGES_LOAD = 15;
+        NUMB_MESSAGES_LOAD = SUM_MESSAGES_LOAD;
         MAX_MESSAGES_LOAD = 0;
 
         rvMessages = view.findViewById(R.id.rvMensajes);
@@ -124,7 +129,8 @@ public class ChatFragment extends Fragment {
                         MAX_MESSAGES_LOAD = snap.getChildrenCount();
                     }
                 }
-                loadMessages();
+                if (NUMB_MESSAGES_LOAD > MAX_MESSAGES_LOAD) NUMB_MESSAGES_LOAD = (int)MAX_MESSAGES_LOAD;
+                changeNumbMessages();
             }
 
             @Override
@@ -132,6 +138,28 @@ public class ChatFragment extends Fragment {
 
             }
         });
+
+        childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                /*if (!first)*/ loadMessages(dataSnapshot);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+
+        databaseReference.addChildEventListener(childEventListener);
+        //databaseReference.limitToLast(NUMB_MESSAGES_LOAD).addChildEventListener(childEventListener);
 
         adapter = new MessageAdapter(getContext());
         LinearLayoutManager l = new LinearLayoutManager(getContext());
@@ -188,7 +216,8 @@ public class ChatFragment extends Fragment {
                 if (resta != 0) {
                     adapter.deleteMessages();
                     swipe = true;
-                    loadMessages();
+                    databaseReference.limitToLast(NUMB_MESSAGES_LOAD);
+                    changeNumbMessages();
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -197,53 +226,40 @@ public class ChatFragment extends Fragment {
         return this.view;
     }
 
-    private void loadMessages() {
+    private  void changeNumbMessages() {
+        first = false;
+        /*databaseReference.limitToLast(NUMB_MESSAGES_LOAD);
+        synchronized (childEventListener){childEventListener.notify();}*/
+    }
 
-        if (NUMB_MESSAGES_LOAD > MAX_MESSAGES_LOAD) NUMB_MESSAGES_LOAD = (int)MAX_MESSAGES_LOAD;
+    private void loadMessages(DataSnapshot dataSnapshot) {
 
         if (NUMB_MESSAGES_LOAD > 0) {
-            databaseReference.limitToLast(NUMB_MESSAGES_LOAD).addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    if (firstTime) removeProgressChat();
-                    Message m = dataSnapshot.getValue(Message.class);
-                    adapter.addMensaje(m);
-                    if (!swipe) {
-                        if (!firstTime) {
-                            int size = chat.getListUsersChatSize();
-                            if (currentUser.getUsername().equals(m.getName())) {
-                                for (int i = 0; i < size; i++) {
-                                    if (!currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
-                                        chat.sumNumbMessagesAtPosition(i);
-                                    }
-                                    Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
-                                }
+
+            if (firstTime) removeProgressChat();
+            Message m = dataSnapshot.getValue(Message.class);
+            adapter.addMensaje(m);
+            if (!swipe) {
+                if (!firstTime) {
+                    int size = chat.getListUsersChatSize();
+                    if (currentUser.getUsername().equals(m.getName())) {
+                        for (int i = 0; i < size; i++) {
+                            if (!currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
+                                chat.sumNumbMessagesAtPosition(i);
                             }
-                            else {
-                                for (int i = 0; i < size; i++) {
-                                    if (!currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
-                                        chat.setNumbMessagesAtPosition(i, 0);
-                                    }
-                                    Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
-                                }
-                            }
+                            Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
                         }
                     }
-
+                    else {
+                        for (int i = 0; i < size; i++) {
+                            if (!currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
+                                chat.setNumbMessagesAtPosition(i, 0);
+                            }
+                            Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
+                        }
+                    }
                 }
-
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {}
-            });
+            }
         }
     }
 
