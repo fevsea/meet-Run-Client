@@ -20,12 +20,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-<<<<<<< HEAD
-            android:layout_height="match_parent"
-
-=======
             android:layout_height="wrap_content"
->>>>>>> 7dad4bb544b9fc486252e524895535ad847ebd85
             android:padding="@dimen/meeting_item_padding_vertical">
             <TextView
                 android:id="@+id/user_photo"

@@ -197,7 +197,8 @@ public class MeetingFriendsFragment extends Fragment {
         protected String doInBackground(String... strings) {
             try {
                 friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
-                l = friendsDBAdapter.getUserFriends();
+                //TODO pagination
+                l = friendsDBAdapter.getUserFriends(0);
             } catch (AutorizationException e) {
                 e.printStackTrace();
             }

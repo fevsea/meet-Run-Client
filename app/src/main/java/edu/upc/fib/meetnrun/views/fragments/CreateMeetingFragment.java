@@ -115,6 +115,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         date = view.findViewById(R.id.date);
         hour = view.findViewById(R.id.hour);
         level = view.findViewById(R.id.level);
+        location = view.findViewById(R.id.meetingLocation);
         description = view.findViewById(R.id.description);
         Button dateButton = view.findViewById(R.id.pickDate);
         dateButton.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +157,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
         publicMeeting = view.findViewById(R.id.switch_create);
         publicMeeting.setOnCheckedChangeListener(this);
-
+        publicMeeting.setText(R.string.private_meeting);
         Public=false;
 
         geocoder = new Geocoder(this.getContext(), Locale.getDefault());
@@ -303,6 +304,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
             for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
                 strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
             }
+            Log.e("CREATE MEETING", strReturnedAddress.toString());
             location.setText(strReturnedAddress.toString());
         }
 
@@ -362,6 +364,8 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         Public=b;
+        if (Public) publicMeeting.setText(R.string.public_meeting);
+        else publicMeeting.setText(R.string.private_meeting);
     }
 
     private class newMeeting extends AsyncTask<String,String,String> {
