@@ -29,9 +29,12 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
+import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 
 import static android.R.layout.simple_list_item_activated_2;
 
@@ -110,15 +113,14 @@ public class MeetingFriendsFragment extends Fragment {
         int id = item.getItemId();
         if (id == R.id.done_button) {
             SparseBooleanArray checked = lv.getCheckedItemPositions();
-            ArrayList<User> selectedItems = new ArrayList<User>();
+            ArrayList<Integer> selectedItems = new ArrayList<>();
             for (int i = 0; i < checked.size(); i++) {
                 int position = checked.keyAt(i);
                 if (checked.valueAt(i)) {
-                    selectedItems.add(adapter.getItem(position));
+                    selectedItems.add(adapter.getItem(position).getId());
                 }
             }
-            Toast.makeText(context,"WORK IN PROGRESS, USERS ADDED", Toast.LENGTH_LONG).show();
-            //TODO crida al servidor enviar llista d'amics a enviar
+            new JoinMeeting().execute(selectedItems);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -209,6 +211,33 @@ public class MeetingFriendsFragment extends Fragment {
         protected void onPostExecute(String s) {
             adapter = new UsersArrayAdapter(context, R.layout.user_item_simple,l);
             lv.setAdapter(adapter);
+            super.onPostExecute(s);
+        }
+    }
+
+    private class JoinMeeting extends AsyncTask<ArrayList<Integer>,String,String> {
+
+        @Override
+        protected String doInBackground(ArrayList<Integer>... ids) {
+            try {
+                IMeetingAdapter meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
+                for (int id : ids[0]) {
+                    //TODO handle exceptions
+                    try {
+                        meetingAdapter.joinMeeting(meetingId,id);
+                    } catch (ParamsException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            getActivity().finish();
             super.onPostExecute(s);
         }
     }
