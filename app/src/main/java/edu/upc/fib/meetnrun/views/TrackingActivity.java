@@ -27,10 +27,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -72,14 +68,14 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private static final int DEFAULT_ZOOM = 17;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
-    FusedLocationProviderClient mFusedLocationProviderClient;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
 
-    Chronometer chronometer;
-    TextView stepsCounter;
-    TextView speedCounter;
-    TextView distanceCounter;
-    TextView caloriesCounter;
-    FloatingActionButton pauseButton;
+    private Chronometer chronometer;
+    private TextView stepsCounter;
+    private TextView speedCounter;
+    private TextView distanceCounter;
+    private TextView caloriesCounter;
+    private FloatingActionButton pauseButton;
 
     private Integer meetingId;
 
@@ -214,7 +210,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                             // Set the map's camera position to the current location of the device.
                             Location location = (Location) task.getResult();
                             if (location != null) {
-                                ArrayList<LatLng> routePoints = new ArrayList<LatLng>();
+                                ArrayList<LatLng> routePoints = new ArrayList<>();
                                 routePoints.add(new LatLng(location.getLatitude(), location.getLongitude()));
                                 updateLocationViews(routePoints);
                             }
@@ -362,7 +358,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         updateLocationViews(trackingData.getRoutePoints());
     }
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             trackingData = intent.getParcelableExtra("Data");
@@ -383,7 +379,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         }
     };
 
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {

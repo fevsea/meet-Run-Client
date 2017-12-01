@@ -28,9 +28,9 @@ public class JsonUtils {
         ParamsException, NotFoundException, AutorizationException
     }
 
-    public static final String TAG = "JSONUTILS";
+    private static final String TAG = "JSONUTILS";
 
-    public static Map<String, String> ParseJsonToGetProblems(String json) {
+    private static Map<String, String> ParseJsonToGetProblems(String json) {
         Map<String, String> m = new HashMap<>();
         JsonObject jObj = new Gson().fromJson(json, JsonObject.class);
         for (Map.Entry<String, JsonElement> entry : jObj.entrySet()) {

@@ -41,21 +41,21 @@ public class RegisterActivity extends AppCompatActivity{
 
         controller = CurrentSession.getInstance().getUserAdapter();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
+        Toolbar toolbar = findViewById(R.id.activity_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        editName = (EditText) findViewById(R.id.editName);
-        editSurname = (EditText) findViewById(R.id.editSurname);
-        editUsername = (EditText) findViewById(R.id.editUsernameR);
-        editPc = (EditText) findViewById(R.id.editPostalCode);
-        editPassword1 = (EditText) findViewById(R.id.editPassword1);
-        editPassword2 = (EditText) findViewById(R.id.editPassword2);
-        spinnerQuestion = (Spinner) findViewById(R.id.spinnerQuestion);
-        editAnswer = (EditText) findViewById(R.id.editAnswer);
+        editName = findViewById(R.id.editName);
+        editSurname = findViewById(R.id.editSurname);
+        editUsername = findViewById(R.id.editUsernameR);
+        editPc = findViewById(R.id.editPostalCode);
+        editPassword1 = findViewById(R.id.editPassword1);
+        editPassword2 = findViewById(R.id.editPassword2);
+        spinnerQuestion = findViewById(R.id.spinnerQuestion);
+        editAnswer = findViewById(R.id.editAnswer);
 
-        spinnerQuestion.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, questionsList));
+        spinnerQuestion.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, questionsList));
     }
 
     public void register(View v) {

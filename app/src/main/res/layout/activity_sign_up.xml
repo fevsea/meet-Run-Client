@@ -126,7 +126,7 @@
             <EditText
                 android:id="@+id/editPassword1"
                 android:textSize="17dp"
-                android:layout_width="match_parent"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPassword"
@@ -146,7 +146,7 @@
             <EditText
                 android:id="@+id/editPassword2"
                 android:textSize="17dp"
-                android:layout_width="match_parent"
+                android:layout_width="370dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textPassword"

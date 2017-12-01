@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -116,6 +117,7 @@ public class MeetingFriendsFragment extends Fragment {
                     selectedItems.add(adapter.getItem(position));
                 }
             }
+            Toast.makeText(context,"WORK IN PROGRESS, USERS ADDED", Toast.LENGTH_LONG).show();
             //TODO crida al servidor enviar llista d'amics a enviar
         }
         return super.onOptionsItemSelected(item);

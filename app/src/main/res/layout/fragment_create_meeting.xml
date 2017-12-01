@@ -9,8 +9,7 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.03">
+        android:layout_height="match_parent">
 
 
         <LinearLayout
@@ -38,7 +37,7 @@
 
                 <Switch
                     android:id="@+id/switch_create"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="10dp"
                     android:layout_weight="0.60"
                     android:switchTextAppearance="@android:style/TextAppearance.Material.Medium"

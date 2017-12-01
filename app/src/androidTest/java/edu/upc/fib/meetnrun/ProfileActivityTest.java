@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.EditProfileActivity;
-import edu.upc.fib.meetnrun.views.ProfileActivity;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.fragments.ChangePasswordFragment;
 import edu.upc.fib.meetnrun.views.fragments.ProfileActivityFragment;
@@ -39,7 +38,7 @@ public class ProfileActivityTest {
     private User u;
 
     @Rule
-    public ActivityTestRule<ProfileActivity> activityRule = new ActivityTestRule<ProfileActivity>(
+    public final ActivityTestRule<ProfileActivity> activityRule = new ActivityTestRule<ProfileActivity>(
             ProfileActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
