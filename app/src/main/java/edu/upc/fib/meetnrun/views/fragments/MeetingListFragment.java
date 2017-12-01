@@ -298,7 +298,7 @@ public class MeetingListFragment extends Fragment {
             Log.e("MAIN","DOINGGGG");
             //TODO handle exceptions
             try {
-                meetingDBAdapter.joinMeeting(integers[0]);
+                meetingDBAdapter.joinMeeting(integers[0],CurrentSession.getInstance().getCurrentUser().getId());
             } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
