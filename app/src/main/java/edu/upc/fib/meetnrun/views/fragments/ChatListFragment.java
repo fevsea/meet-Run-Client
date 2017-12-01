@@ -132,7 +132,6 @@ public class ChatListFragment extends Fragment {
 
     private void updateChats() {
         //new getChats().execute();
-        sortList();
         chatAdapter.updateChatList(list);
     }
 
@@ -228,6 +227,8 @@ public class ChatListFragment extends Fragment {
         super.onResume();
     }
 
+    //FAKE
+
     public static void addChatFake(Chat c) {
         list.add(c);
     }
@@ -261,22 +262,5 @@ public class ChatListFragment extends Fragment {
             }
         }
         return false;
-    }
-
-    private void sortList() {
-       /* Collections.sort(list, new Comparator<Chat>() {
-            @Override
-            public int compare(Chat c2, Chat c1) {
-                Message m1 = c1.getMessage();
-                Message m2= c2.getMessage();
-                if (m1.getDate().equals(m2.getDate())) {
-                    if (m1.getHour().equals(m2.getHour())) {
-                        return m1.getSeconds().compareTo(m2.getSeconds());
-                    }
-                    else return m1.getHour().compareTo(m2.getHour());
-                }
-                else return m1.getDate().compareTo(m2.getDate());
-            }
-        });*/
     }
 }
