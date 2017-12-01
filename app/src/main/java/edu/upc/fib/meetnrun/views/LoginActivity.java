@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
@@ -94,6 +95,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void updateFirebaseToken(){
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
         new FirebaseInstanceService().onTokenRefresh();
     }
 
