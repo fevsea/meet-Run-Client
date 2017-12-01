@@ -94,6 +94,9 @@ package="edu.upc.fib.meetnrun">
             android:name=".views.ChangePasswordActivity"
             android:label="@string/action_change_pass"
             android:screenOrientation="portrait"/>
+    <activity
+        android:name=".views.PastMeetingInfoActivity"
+        android:screenOrientation="portrait"/>
 
     <activity
         android:name=".views.TrackingActivity"

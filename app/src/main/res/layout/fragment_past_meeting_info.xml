@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/past_meeting_info_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+
+        <TextView
+            android:id="@+id/meeting_info_title"
+            android:layout_width="wrap_content"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            style="@style/TextAppearance.AppCompat.Title"/>
+
+        <LinearLayout
+            android:id="@+id/meeting_info_creatorlevel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_below="@+id/meeting_info_title">
+
+            <TextView
+                android:id="@+id/meeting_info_creator"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/TextAppearance.AppCompat.Body2"/>
+            <TextView
+                android:id="@+id/meeting_info_level"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="50dp"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:background="@drawable/level_circular_text_view"
+                style="@style/TextAppearance.AppCompat.Body2"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/meeting_info_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/meeting_info_creatorlevel"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentEnd="true"
+            style="@style/TextAppearance.AppCompat.Subhead"/>
+
+        <TextView
+            android:id="@+id/meeting_info_datelabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:layout_below="@+id/meeting_info_description"
+            android:layout_marginTop="10dp"
+            android:text="@string/date"
+            style="@style/TextAppearance.AppCompat.Body2"/>
+
+        <TextView
+            android:id="@+id/meeting_info_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/meeting_info_datelabel"
+            android:layout_marginTop="10dp"
+            android:inputType="none"
+            style="@style/TextAppearance.AppCompat.Body1"/>
+
+
+        <TextView
+            android:id="@+id/meeting_info_timelabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:textStyle="bold"
+            android:layout_below="@+id/meeting_info_date"
+            android:layout_marginTop="10dp"
+            android:text="@string/time"
+            style="@style/TextAppearance.AppCompat.Body2"/>
+
+        <TextView
+            android:id="@+id/meeting_info_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/meeting_info_timelabel"
+            android:layout_marginTop="10dp"
+            style="@style/TextAppearance.AppCompat.Body1"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/meeting_info_statistics"
+            android:layout_below="@id/meeting_info_time">
+
+            <TextView
+                android:id="@+id/meeting_info_distancelabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Total distance"
+                style="@style/TextAppearance.AppCompat.Body2"/>
+            <!--TODO @string/...-->
+
+            <TextView
+                android:id="@+id/meeting_info_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/meeting_info_distancelabel"
+                android:layout_marginTop="10dp"
+                android:inputType="none"
+                style="@style/TextAppearance.AppCompat.Body1"/>
+
+            <TextView
+                android:id="@+id/meeting_info_stepslabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/meeting_info_distance"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Steps"
+                style="@style/TextAppearance.AppCompat.Body2"/>
+            <!--TODO @string/...-->
+
+            <TextView
+                android:id="@+id/meeting_info_steps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/meeting_info_stepslabel"
+                android:layout_marginTop="10dp"
+                android:inputType="none"
+                style="@style/TextAppearance.AppCompat.Body1"/>
+
+            <TextView
+                android:id="@+id/meeting_info_totaltimelabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/meeting_info_steps"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Total time"
+                style="@style/TextAppearance.AppCompat.Body2"/>
+            <!--TODO @string/...-->
+
+            <TextView
+                android:id="@+id/meeting_info_totaltime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/meeting_info_totaltimelabel"
+                android:layout_marginTop="10dp"
+                android:inputType="none"
+                style="@style/TextAppearance.AppCompat.Body1"/>
+
+            <TextView
+                android:id="@+id/meeting_info_avspeedlabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/meeting_info_totaltime"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Average Speed"
+                style="@style/TextAppearance.AppCompat.Body2"/>
+            <!--TODO @string/...-->
+
+            <TextView
+                android:id="@+id/meeting_info_avspeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/meeting_info_avspeedlabel"
+                android:layout_marginTop="10dp"
+                android:inputType="none"
+                style="@style/TextAppearance.AppCompat.Body1"/>
+
+            <TextView
+                android:id="@+id/meeting_info_calorieslabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/meeting_info_avspeed"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:text="Calories"
+                style="@style/TextAppearance.AppCompat.Body2"/>
+            <!--TODO @string/...-->
+
+            <TextView
+                android:id="@+id/meeting_info_calories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/meeting_info_calorieslabel"
+                android:layout_marginTop="10dp"
+                android:inputType="none"
+                style="@style/TextAppearance.AppCompat.Body1"/>
+
+        </RelativeLayout>
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:id="@+id/meeting_info_map"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_below="@+id/meeting_info_statistics"
+            android:layout_marginTop="20dp" >
+        </fragment>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:id="@+id/meeting_info_imagetrans"
+            android:layout_below="@+id/meeting_info_statistics"
+            android:src="@android:color/transparent"
+            android:layout_marginTop="20dp" />
+        <!-- TODO  recyclerview extends to the bottom, solve this -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_friends_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/meeting_info_map"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:orientation="vertical">
+        </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+</ScrollView>
