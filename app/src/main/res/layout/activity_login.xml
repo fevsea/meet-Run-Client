@@ -17,12 +17,12 @@
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
             android:gravity="center"
             android:text="Meet and Run"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="50dp"
-            android:textStyle="bold"
-            android:layout_marginTop="25dp"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="wrap_content"
