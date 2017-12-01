@@ -40,6 +40,11 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
     }
 
 
+    public void addMeetings(List<Meeting> meetings) {
+        this.meetings.addAll(meetings);
+        notifyDataSetChanged();
+    }
+
     public void updateMeetingsList(List<Meeting> meetings) {
         this.meetings = meetings;
         notifyDataSetChanged();
