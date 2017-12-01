@@ -126,7 +126,7 @@ public class Chat{
     public void sumNumbMessagesAtPosition(int i) {
         Integer aux = listNumbMessages.get(i);
         this.listNumbMessages.remove(i);
-        this.listNumbMessages.add(i, aux++);
+        this.listNumbMessages.add(i, aux + (Integer)1);
     }
 
     public void setNumbMessagesAtPosition(int i, Integer x) {

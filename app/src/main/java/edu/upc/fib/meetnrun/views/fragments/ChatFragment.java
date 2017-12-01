@@ -93,6 +93,7 @@ public class ChatFragment extends Fragment {
 
         for (int i = 0; i < chat.getListUsersChatSize(); i++) {
             if (currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
+                Log.e(" INICIO xd"+currentUser.getUsername(), chat.getUserAtPosition(i).getUsername());
                 userPosition = i;
                 break;
             }
@@ -170,7 +171,6 @@ public class ChatFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if (firstTime) firstTime = false;
                 String userName = currentUser.getUsername();
 
                 Calendar cal = Calendar.getInstance();
@@ -194,6 +194,9 @@ public class ChatFragment extends Fragment {
                 else setScrollbarUp();
                 if (swipe && adapter.getItemCount() == NUMB_MESSAGES_LOAD) {
                     swipe = false;
+                }
+                if (firstTime && adapter.getItemCount() == MAX_MESSAGES_LOAD) {
+                    firstTime = false;
                 }
             }
         });
@@ -239,26 +242,27 @@ public class ChatFragment extends Fragment {
             if (firstTime) removeProgressChat();
             Message m = dataSnapshot.getValue(Message.class);
             adapter.addMensaje(m);
-            if (!swipe) {
-                if (!firstTime) {
-                    int size = chat.getListUsersChatSize();
-                    if (currentUser.getUsername().equals(m.getName())) {
-                        for (int i = 0; i < size; i++) {
-                            if (!currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
-                                chat.sumNumbMessagesAtPosition(i);
-                            }
-                            Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
-                        }
-                    }
-                    else {
-                        for (int i = 0; i < size; i++) {
-                            if (!currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
-                                chat.setNumbMessagesAtPosition(i, 0);
-                            }
-                            Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
+            if (!swipe && !firstTime) {
+
+                int size = chat.getListUsersChatSize();
+                Log.e(currentUser.getUsername(), m.getName());
+                if (currentUser.getUsername().equals(m.getName())) {
+                    Log.e("SOY YO", m.getName());
+                    for (int i = 0; i < size; i++) {
+                        if (!currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
+                            chat.sumNumbMessagesAtPosition(i);
                         }
                     }
                 }
+                else {
+                    chat.setNumbMessagesAtPosition(userPosition, 0);
+                    Log.e("NO SOY YO", m.getName());
+                }
+
+                for (int i = 0; i < size; i++) {
+                    Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
+                }
+
             }
         }
     }
@@ -418,7 +422,7 @@ public class ChatFragment extends Fragment {
         firstTime = true;
         chat.setNumbMessagesAtPosition(userPosition, 0);
         for (int i = 0; i < chat.getListUsersChatSize(); i++) {
-            Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
+            //Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
         }
         super.onResume();
     }
