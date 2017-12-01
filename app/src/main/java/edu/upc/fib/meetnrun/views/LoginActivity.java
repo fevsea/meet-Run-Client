@@ -20,6 +20,7 @@ import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.services.FirebaseInstanceService;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -91,6 +92,10 @@ public class LoginActivity extends AppCompatActivity {
         editor.commit();
     }
 
+    private void updateFirebaseToken(){
+        new FirebaseInstanceService().onTokenRefresh();
+    }
+
     private class login extends AsyncTask<String,String,String> {
 
         String token = null;
@@ -108,6 +113,7 @@ public class LoginActivity extends AppCompatActivity {
             if(token != null && !token.equals("")){
                 cs.setToken(token);
                 saveToken();
+                updateFirebaseToken();
                 try {
                     u = loginAdapter.getCurrentUser();
                     //TODO Pending to catch correctly

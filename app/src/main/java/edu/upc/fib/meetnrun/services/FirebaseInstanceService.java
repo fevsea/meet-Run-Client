@@ -5,6 +5,14 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
+import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.adapters.impls.LoginAdapterImpl;
+import edu.upc.fib.meetnrun.adapters.impls.UserAdapterImpl;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
+
 /**
  * Created by alejandro on 28/11/17.
  */
@@ -18,6 +26,14 @@ public class FirebaseInstanceService extends FirebaseInstanceIdService {
         // Get updated InstanceID token.
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Refreshed token: " + refreshedToken);
+        ILoginAdapter userAdapter = CurrentSession.getInstance().getLoginAdapter();
+        try {
+            userAdapter.uppdateFirebaseToken(refreshedToken);
+        } catch (AutorizationException e) {
+            e.printStackTrace();
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
 
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
