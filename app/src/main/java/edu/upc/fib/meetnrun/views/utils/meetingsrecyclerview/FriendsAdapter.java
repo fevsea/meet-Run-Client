@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 
 /**
@@ -47,6 +48,11 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsViewHolder> {
     @Override
     public int getItemCount() {
         return users.size();
+    }
+
+    public void addFriends(List<User> friends) {
+        this.users.addAll(friends);
+        notifyDataSetChanged();
     }
 
 
