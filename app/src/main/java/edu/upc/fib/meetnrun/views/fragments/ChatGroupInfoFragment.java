@@ -45,7 +45,6 @@ public class ChatGroupInfoFragment extends Fragment {
 
         this.view = inflater.inflate(R.layout.fragment_chat_group_info, container, false);
 
-        //TODO de donde saco la info del grupo?
         friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
         chat = CurrentSession.getInstance().getChat();
 
@@ -103,7 +102,7 @@ public class ChatGroupInfoFragment extends Fragment {
     protected void getIntent(User friend) {
         Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
         startActivity(friendProfileIntent);
-        //TODO check if its friend or not to load different atcitivy
+        //TODO check if its friend or not to load different actitivy
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {
