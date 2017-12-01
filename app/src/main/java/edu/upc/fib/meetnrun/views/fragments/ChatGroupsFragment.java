@@ -93,6 +93,10 @@ public class ChatGroupsFragment extends Fragment {
                     Chat chat = new Chat(ChatListFragment.getCount(),name, selectedFriends, 1, m);
                     ChatListFragment.addChatFake(chat);
 
+                    for (User userSelected : selectedFriends) {
+                        userSelected.setSelected(false);
+                    }
+
                     Intent i = new Intent(getContext(), ChatActivity.class);
                     CurrentSession.getInstance().setChat(chat);
                     getActivity().finish();
