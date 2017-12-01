@@ -9,8 +9,8 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
  * Created by alejandro on 28/11/17.
  */
 
-public class FirebaseService extends FirebaseInstanceIdService {
-    private static final String TAG = FirebaseService.class.getSimpleName();
+public class FirebaseInstanceService extends FirebaseInstanceIdService {
+    private static final String TAG = FirebaseInstanceService.class.getSimpleName();
 
 
     @Override
