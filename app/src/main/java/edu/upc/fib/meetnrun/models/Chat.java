@@ -1,5 +1,7 @@
 package edu.upc.fib.meetnrun.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class Chat{
     private int type;
     private Message message;
     private Meeting meeting;
+    private List<Integer> listNumbMessages;
 
     public Chat() {
         listUsersChat = new ArrayList<>();
@@ -27,6 +30,8 @@ public class Chat{
         this.type = type;
         this.message = message;
         this.meeting = null;
+        listNumbMessages = new ArrayList<>();
+        for (int i = 0; i < listUsersChat.size(); i++) listNumbMessages.add(0);
     }
 
     public Chat(Integer id, String chatName, List<User> listUsersChat, int type, Message message, Meeting meeting) {
@@ -36,6 +41,8 @@ public class Chat{
         this.type = type;
         this.message = message;
         this.meeting = meeting;
+        listNumbMessages = new ArrayList<>();
+        for (int i = 0; i < listUsersChat.size(); i++) listNumbMessages.add(0);
     }
 
     public Integer getId() {
@@ -58,8 +65,16 @@ public class Chat{
         return listUsersChat;
     }
 
+    public int getListUsersChatSize() {
+        return listUsersChat.size();
+    }
+
     public void setListUsersChat(List<User> listUsersChat) {
         this.listUsersChat = listUsersChat;
+    }
+
+    public User getUserAtPosition(int i) {
+        return listUsersChat.get(i);
     }
 
     public User getUser1() {
@@ -102,5 +117,20 @@ public class Chat{
 
     public void setMeeting(Meeting meeting) {
         this.meeting = meeting;
+    }
+
+    public Integer getNumbMessagesAtPosition(int i) {
+        return listNumbMessages.get(i);
+    }
+
+    public void sumNumbMessagesAtPosition(int i) {
+        Integer aux = listNumbMessages.get(i);
+        this.listNumbMessages.remove(i);
+        this.listNumbMessages.add(i, aux + (Integer)1);
+    }
+
+    public void setNumbMessagesAtPosition(int i, Integer x) {
+        this.listNumbMessages.remove(i);
+        this.listNumbMessages.add(i, x);
     }
 }
