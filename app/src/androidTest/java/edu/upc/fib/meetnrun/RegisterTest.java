@@ -1,8 +1,5 @@
 package edu.upc.fib.meetnrun;
 
-import android.content.Context;
-import android.content.Intent;
-import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -13,14 +10,9 @@ import org.junit.runner.RunWith;
 
 import edu.upc.fib.meetnrun.views.RegisterActivity;
 
-import static android.os.DropBoxManager.EXTRA_TIME;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by eric on 27/10/17.
@@ -39,7 +31,7 @@ public class RegisterTest {
     private static final String EXTRA_ANSWER = "Yosha";
 
     @Rule
-    public ActivityTestRule<RegisterActivity> activityRule = new ActivityTestRule<RegisterActivity>(RegisterActivity.class) ;
+    public ActivityTestRule<RegisterActivity> activityRule = new ActivityTestRule<>(RegisterActivity.class) ;
 
     @Test
     public void testRegisterFields() {

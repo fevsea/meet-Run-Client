@@ -26,9 +26,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText editUsername, editPassword;
     private String username, password;
-    public static final String MY_PREFS_NAME = "TokenFile";
+    private static final String MY_PREFS_NAME = "TokenFile";
     private ILoginAdapter loginAdapter;
     private CurrentSession cs;
+    private boolean see = false;
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -42,8 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         String refreshedToken = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG, "Actual token token: " + refreshedToken);
 
-        editUsername = (EditText) findViewById(R.id.editUsername);
-        editPassword = (EditText) findViewById(R.id.editPassword);
+        editUsername = findViewById(R.id.editUsername);
+        editPassword = findViewById(R.id.editPassword);
 
         cs = CurrentSession.getInstance();
         loginAdapter = cs.getLoginAdapter();

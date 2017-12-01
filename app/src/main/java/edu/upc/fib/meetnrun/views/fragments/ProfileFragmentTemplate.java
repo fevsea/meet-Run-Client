@@ -1,10 +1,12 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.DialogInterface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +35,7 @@ import edu.upc.fib.meetnrun.models.User;
 public abstract class ProfileFragmentTemplate extends Fragment {
 
     protected View view;
+    protected TextView profileImg;
     protected TextView postCode;
     protected TextView userName;
     protected TextView name;
@@ -47,15 +50,21 @@ public abstract class ProfileFragmentTemplate extends Fragment {
 
         this.view = inflater.inflate(R.layout.fragment_friends_profile, container, false);
 
+        this.currentFriend = CurrentSession.getInstance().getFriend();
+        this.friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
+
         this.userName = view.findViewById(R.id.userName2);
         this.name = view.findViewById(R.id.completeName2);
         this.postCode = view.findViewById(R.id.userPostCode2);
+        this.profileImg = view.findViewById(R.id.profileImage);
         this.img = view.findViewById(R.id.action_friend);
         this.chat = view.findViewById(R.id.chat_friend);
         setImage();
 
-        this.currentFriend = CurrentSession.getInstance().getFriend();
-        this.friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
+        char letter = currentFriend.getUsername().charAt(0);
+        String firstLetter = String.valueOf(letter);
+        profileImg.setBackground(getColoredCircularShape(letter));
+        profileImg.setText(firstLetter);
 
         img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +92,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
             }
         });
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
         userName.setText(currentFriend.getUsername());
@@ -105,7 +114,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
 
     protected abstract void getMethod(String s);
 
-    protected void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+    void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
         builder.setTitle(title);
         builder.setMessage(message);
@@ -181,5 +190,14 @@ public abstract class ProfileFragmentTemplate extends Fragment {
             Log.e("URL", "change view");
             postCode.setText(s);
         }
+    }
+
+    private GradientDrawable getColoredCircularShape(char letter) {
+
+        int[] colors = view.getResources().getIntArray(R.array.colors);
+        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(view.getContext(),R.drawable.user_profile_circular_text_view);
+        int position = letter%colors.length;
+        circularShape.setColor(colors[position]);
+        return circularShape;
     }
 }

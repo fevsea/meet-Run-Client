@@ -1,13 +1,9 @@
 package edu.upc.fib.meetnrun.views;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
 import android.view.MenuItem;
 
 import edu.upc.fib.meetnrun.views.fragments.ChatFragment;
-import edu.upc.fib.meetnrun.views.fragments.UsersListFragment;
-
 
 
 public class ChatActivity extends BaseReturnActivity {

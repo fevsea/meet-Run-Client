@@ -1,6 +1,5 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -24,18 +23,18 @@ import edu.upc.fib.meetnrun.models.User;
 
 public class EditProfileFragment extends Fragment {
 
-    User u;
+    private User u;
     private View view;
-    private IUserAdapter controller = CurrentSession.getInstance().getUserAdapter();
-    EditText userNameText;
-    EditText firstNameText;
-    EditText lastNameText;
-    EditText userPostCodeText;
+    private final IUserAdapter controller = CurrentSession.getInstance().getUserAdapter();
+    private EditText userNameText;
+    private EditText firstNameText;
+    private EditText lastNameText;
+    private EditText userPostCodeText;
 
-    String userName;
-    String firstName;
-    String lastName;
-    String postCode;
+    private String userName;
+    private String firstName;
+    private String lastName;
+    private String postCode;
 
 
 
@@ -48,7 +47,7 @@ public class EditProfileFragment extends Fragment {
         View newView = updateView(view);
 
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
         final Button button = newView.findViewById(R.id.save_button);
@@ -61,7 +60,7 @@ public class EditProfileFragment extends Fragment {
         return newView;
     }
 
-    public View updateView(View v) {
+    private View updateView(View v) {
 
         u = CurrentSession.getInstance().getCurrentUser();
 
@@ -70,10 +69,10 @@ public class EditProfileFragment extends Fragment {
         lastName = u.getLastName();
         postCode = u.getPostalCode();
 
-        userNameText = (EditText) v.findViewById(R.id.userName_edit);
-        firstNameText = (EditText) v.findViewById(R.id.firstName_edit);
-        lastNameText = (EditText) v.findViewById(R.id.lastName_edit);
-        userPostCodeText = (EditText) v.findViewById(R.id.postCode_edit);
+        userNameText = v.findViewById(R.id.userName_edit);
+        firstNameText = v.findViewById(R.id.firstName_edit);
+        lastNameText = v.findViewById(R.id.lastName_edit);
+        userPostCodeText = v.findViewById(R.id.postCode_edit);
 
 
         userNameText.setText(userName, TextView.BufferType.EDITABLE);
@@ -84,7 +83,7 @@ public class EditProfileFragment extends Fragment {
         return v;
     }
 
-    public void changeProfile() {
+    private void changeProfile() {
 
         userName = String.valueOf(userNameText.getText());
         firstName = String.valueOf(firstNameText.getText());

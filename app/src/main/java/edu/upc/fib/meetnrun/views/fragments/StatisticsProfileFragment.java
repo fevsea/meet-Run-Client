@@ -5,10 +5,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.User;
 
 public class StatisticsProfileFragment extends Fragment {
 

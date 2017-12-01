@@ -2,7 +2,6 @@ package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
@@ -17,7 +16,6 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
     private TextView message;
     private TextView hour;
     private TextView date;
-    private TextView photo;
 
     public MessageViewHolder(View itemView) {
         super(itemView);
@@ -25,7 +23,6 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         message = (TextView) itemView.findViewById(R.id.messageTxt);
         hour = (TextView) itemView.findViewById(R.id.messageHour);
         date = (TextView) itemView.findViewById(R.id.messageDate);
-        photo = (TextView) itemView.findViewById(R.id.messagePhoto);
 
     }
 
@@ -51,14 +48,6 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
 
     public void setHour(TextView hour) {
         this.hour = hour;
-    }
-
-    public TextView getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(TextView photo) {
-        this.photo = photo;
     }
 
     public TextView getDate() {

@@ -77,7 +77,7 @@ public class PastMeetingsProfileFragment extends Fragment {
         setupRecyclerView();
 
         swipeRefreshLayout =
-                (SwipeRefreshLayout) view.findViewById(R.id.fragment_meeting_swipe);
+                view.findViewById(R.id.fragment_meeting_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -99,7 +99,7 @@ public class PastMeetingsProfileFragment extends Fragment {
             }
 
             @Override
-            public void onMeetingClicked(int position) {
+            public void onItemClicked(int position) {
                 Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
@@ -218,9 +218,7 @@ public class PastMeetingsProfileFragment extends Fragment {
             //TODO handle exceptions
             try {
                 meetingDBAdapter.joinMeeting(integers[0]);
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
+            } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;

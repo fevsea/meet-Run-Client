@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
     android:background="@drawable/side_nav_bar"
@@ -10,19 +9,19 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:backgroundTint="@color/colorPrimary">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <TextView
         android:id="@+id/imageView"
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:background="@drawable/user_profile_circular_text_view"
-        android:textSize="40dp"
+        android:textSize="30dp"
         android:layout_centerVertical="true"
         android:gravity="center"
         android:text="e"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:textAllCaps="true"/>
 
     <TextView
         android:id="@+id/nameProfile"

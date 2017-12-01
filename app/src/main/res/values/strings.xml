@@ -44,6 +44,12 @@
     <string name="delete_account_title">Delete account</string>
     <string name="chat_friend_dialog_message">Are you sure you want to send a message to</string>
     <string name="chat_friend_dialog_title">Chat with</string>
+
+    <string name="chat_delete_historial_message">Are you sure you want to delete the historial?</string>
+    <string name="chat_delete_historial_title">Delete historial</string>
+    <string name="chat_delete_chat_message">Are you sure you want to delete this chat?</string>
+    <string name="chat_delete_chat_title">Delete chat</string>
+
     <string name="ok">OK</string>
     <string name="accept_request">Send request</string>
     <string name="cancel">Cancel</string>
@@ -108,4 +114,6 @@
     <string name="meetings">Meetings</string>
     <string name="log_in">Log in</string>
     <string name="password">Password</string>
+    <string name="delete_history">Delete history</string>
+    <string name="group_name">Group Name</string>
 </resources>
