@@ -105,4 +105,5 @@
     <string name="delete_history">Eliminar historial</string>
     <string name="challenges">Desafíos</string>
     <string name="challenge">Desafío</string>
+    <string name="create_challenge">Crear desafío</string>
 </resources>
