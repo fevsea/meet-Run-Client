@@ -87,6 +87,18 @@ public class Statistics {
         return totalCalories;
     }
 
+    public float getRhythm(){
+        return totalTimeMillis/(1000*totalKm);
+    }
+
+    public String getRhythmInString(){
+        return String.format("%sh %sm %ss", getRhythm());
+    }
+
+    public String getSpeedInString(float speed){
+        return String.valueOf(speed) + " km/h";
+    }
+
     public float getMaxSpeed() {
         return maxSpeed;
     }

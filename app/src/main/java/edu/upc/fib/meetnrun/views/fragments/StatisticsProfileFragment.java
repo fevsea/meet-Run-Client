@@ -1,5 +1,7 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -10,6 +12,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Statistics;
+import edu.upc.fib.meetnrun.models.User;
 
 
 public class StatisticsProfileFragment extends Fragment {
@@ -36,6 +44,10 @@ public class StatisticsProfileFragment extends Fragment {
     ProgressBar percentLevel;
     private FragmentActivity context;
     private int userLevel;
+    private IUserAdapter iUserAdapter;
+    Statistics s;
+    int userId;
+    User u;
 
     // newInstance constructor for creating fragment with arguments
     public static StatisticsProfileFragment newInstance(int page, String title) {
@@ -54,8 +66,10 @@ public class StatisticsProfileFragment extends Fragment {
         page = getArguments().getInt("2", 2);
         title = getArguments().getString("Statistics");
         //TODO: Hallar nivel usuario al que se le mira las estadísticas. Abajo es fake
-        userLevel=0;
-
+        getStats();
+        userLevel=u.getLevel();
+        Bundle bundle = getActivity().getIntent().getExtras();
+        userId=bundle.getInt("userId");
     }
 
     public void calcLevel (int meetings, float km){
@@ -111,22 +125,42 @@ public class StatisticsProfileFragment extends Fragment {
         percentKm = view.findViewById (R.id.percentKm);
         percentLevel=view.findViewById(R.id.percentLevel);
 
-        username.setText ("Fulanito");
-        level.setText (String.valueOf(userLevel));
-        meetings.setText("20000");
-        steps.setText("1500000");
-        totalKm.setText("150");
-        totalTime.setText("20h59m30s");
-        calories.setText("300000");
-        rhythm.setText("4.5min/km");
-        avgSpeed.setText("12 km/h");
-        maxSpeed.setText("6 km/h");
-        minSpeed.setText("30 km/h");
-        maxTime.setText("0h25m30s");
-        maxLength.setText("2.025");
-        minLength.setText("0.015");
-        minTime.setText("0h25m30s");
-        calcLevel(20000,150);
+        username.setText (u.getUsername());
+        level.setText (u.getLevel());
+        meetings.setText(s.getNumberMeetings());
+        steps.setText(s.getTotalSteps());
+        totalKm.setText(String.valueOf(s.getTotalKm()));
+        totalTime.setText(s.getTotalTimeInString());
+        calories.setText((int) s.getTotalCalories());
+        rhythm.setText(s.getRhythmInString());
+        avgSpeed.setText(s.getSpeedInString(s.getAvgSpeed()));
+        maxSpeed.setText(s.getSpeedInString(s.getMaxSpeed()));
+        minSpeed.setText(s.getSpeedInString(s.getMinSpeed()));
+        maxTime.setText(s.getMaxTimeInString());
+        maxLength.setText(String.valueOf(s.getMaxLength())+" km");
+        minLength.setText(String.valueOf(s.getMinLength())+" km");
+        minTime.setText(s.getMinTimeInString());
+        calcLevel(s.getNumberMeetings(), s.getTotalKm());
         return view;
     }
+
+    private void getStats(){
+        new userStats().execute();
+    }
+    private class userStats extends AsyncTask<String,String,String> {
+        @Override
+        protected String doInBackground(String... strings){
+            try {
+                //TODO: Que tot no sigui de current user
+                u = CurrentSession.getInstance().getCurrentUser();
+                s=iUserAdapter.getUserStatisticsByID(u.getId());
+                //u=iUserAdapter.getUser(userId);
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            }/* catch (NotFoundException e) {
+                e.printStackTrace();
+            }*/
+            return null;
+        }
+            }
 }

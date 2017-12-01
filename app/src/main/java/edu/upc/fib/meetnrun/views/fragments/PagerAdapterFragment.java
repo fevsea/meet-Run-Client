@@ -28,6 +28,7 @@ public class PagerAdapterFragment extends FragmentPagerAdapter {
                 case 1:
                     return PastMeetingsProfileFragment.newInstance(1, "Past Meetings");
                 case 2:
+
                     return StatisticsProfileFragment.newInstance(2, "Statistics");
                 default:
                     return null;
