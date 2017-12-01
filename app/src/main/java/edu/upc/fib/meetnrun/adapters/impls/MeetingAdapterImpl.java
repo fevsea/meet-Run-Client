@@ -177,10 +177,10 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     }
 
     @Override
-    public boolean joinMeeting(int meetingId) throws AutorizationException, ParamsException {
+    public boolean joinMeeting(int meetingId, int targetUserId) throws AutorizationException, ParamsException {
         boolean ok = false;
         try {
-            Response<Void> ret = mServices.joinMeeting(meetingId).execute();
+            Response<Void> ret = mServices.joinMeeting(meetingId,targetUserId).execute();
             if (ret.isSuccessful()) {
                 ok = true;
             } else {
@@ -197,10 +197,10 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     }
 
     @Override
-    public boolean leaveMeeting(int meetingId) throws AutorizationException, ParamsException {
+    public boolean leaveMeeting(int meetingId, int targetUserId) throws AutorizationException, ParamsException {
         boolean ok = false;
         try {
-            Response<Void> ret = mServices.leaveMeeting(meetingId).execute();
+            Response<Void> ret = mServices.leaveMeeting(meetingId,targetUserId).execute();
             if (ret.isSuccessful()) {
                 ok = true;
             } else {

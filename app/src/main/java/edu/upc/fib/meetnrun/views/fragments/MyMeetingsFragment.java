@@ -186,7 +186,7 @@ public class MyMeetingsFragment extends Fragment {
         protected String doInBackground(Integer... integers) {
             //TODO handle exceptions
             try {
-                meetingController.leaveMeeting(integers[0]);
+                meetingController.leaveMeeting(integers[0],CurrentSession.getInstance().getCurrentUser().getId());
             } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
