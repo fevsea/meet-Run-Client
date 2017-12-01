@@ -89,6 +89,7 @@ public class DrawerActivity extends AppCompatActivity{
                             switch (menuItem.getItemId()) {
                                 case R.id.mymeetings:
                                     fragment = new MyMeetingsFragment();
+                                    setTitle(R.string.mymeetings_label);
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.logout:
@@ -100,10 +101,12 @@ public class DrawerActivity extends AppCompatActivity{
 
                                 case R.id.meetings:
                                     fragment = new MeetingListFragment();
+                                    setTitle(R.string.meeting_list_label);
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.friends:
                                     fragment = new FriendsFragment();
+                                    setTitle(R.string.friends_label);
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.challenges:
@@ -112,10 +115,12 @@ public class DrawerActivity extends AppCompatActivity{
                                     break;
                                 case R.id.chat:
                                     fragment = new ChatListFragment();
+                                    setTitle(R.string.chat_label);
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.settings:
                                     fragment = new SettingsFragment();
+                                    setTitle(R.string.settings);
                                     replaceFragment(fragment);
                                     break;
                                 default:
@@ -149,6 +154,7 @@ public class DrawerActivity extends AppCompatActivity{
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.activity_contentFrame);
             if (currentFragment == null) {
 
+                setTitle(R.string.meeting_list_label);
                 currentFragment = new MeetingListFragment();
                 String backStateName = currentFragment.getClass().getName();
 
