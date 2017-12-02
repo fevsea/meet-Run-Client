@@ -26,6 +26,7 @@ import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.ChatGroupsActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
@@ -76,7 +77,10 @@ public class ChatGroupInfoFragment extends Fragment {
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO Intent para añadir usuario
+                CurrentSession.getInstance().setChat(chat);
+                Intent addUserIntent = new Intent(getContext(), ChatGroupsActivity.class);
+                addUserIntent.putExtra("action","adduser");
+                startActivity(addUserIntent);
             }
         });
         setupRecyclerView();
@@ -115,9 +119,20 @@ public class ChatGroupInfoFragment extends Fragment {
     protected void getIntent(User friend) {
         if (isLoading) Toast.makeText(getContext(),R.string.loading_list,Toast.LENGTH_LONG).show();
         else {
+            CurrentSession.getInstance().setFriend(friend);
             Intent userProfileIntent = null;
-            if (isFriend(friend)) userProfileIntent = new Intent(getActivity(), FriendProfileActivity.class);
-            else userProfileIntent = new Intent(getActivity(), UserProfileActivity.class);
+            //TODO pendiente de que actualizen la parte de perfiles de usuario
+            if (CurrentSession.getInstance().getCurrentUser().getId().equals(friend.getId())) {
+                //TODO tiene que hacer intent al perfil personal
+                userProfileIntent = new Intent(getActivity(), UserProfileActivity.class);
+            }
+            else if (isFriend(friend)) {
+                userProfileIntent = new Intent(getActivity(), FriendProfileActivity.class);
+            }
+            else {
+                //TODO tiene que hacer intent al perfil de un usuario que no es amigo
+                userProfileIntent = new Intent(getActivity(), UserProfileActivity.class);
+            }
             startActivity(userProfileIntent);
         }
     }
@@ -174,5 +189,13 @@ public class ChatGroupInfoFragment extends Fragment {
         }
 
     }
+
+    @Override
+    public void onResume() {
+        groupUsers = chat.getListUsersChat();
+        friendsAdapter.updateFriendsList(groupUsers);
+        super.onResume();
+    }
+
 
 }

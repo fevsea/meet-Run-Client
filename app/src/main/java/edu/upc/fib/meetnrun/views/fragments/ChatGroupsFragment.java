@@ -47,6 +47,7 @@ public class ChatGroupsFragment extends Fragment {
     private Button ok;
     private TextView numbFriends;
     private List<User> selectedFriends;
+    private boolean adduser;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -58,7 +59,15 @@ public class ChatGroupsFragment extends Fragment {
 
         friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
 
+        String action = getActivity().getIntent().getExtras().getString("action");
+        if (action != null && action.equals("adduser")) adduser = true;
+        else adduser = false;
+
         groupName = view.findViewById(R.id.groupName);
+        if (adduser) {
+            groupName.setFocusable(false);
+            groupName.setText(CurrentSession.getInstance().getChat().getChatName());
+        }
         ok = view.findViewById(R.id.btnOk);
         numbFriends = view.findViewById(R.id.numb_friends);
 
@@ -67,7 +76,7 @@ public class ChatGroupsFragment extends Fragment {
 
         l = new ArrayList<>();
         selectedFriends = new ArrayList<>();
-        selectedFriends.add(CurrentSession.getInstance().getCurrentUser());
+        if (!adduser) selectedFriends.add(CurrentSession.getInstance().getCurrentUser());
 
         setupRecyclerView();
 
@@ -89,18 +98,29 @@ public class ChatGroupsFragment extends Fragment {
                     Date dateWithoutTime = rightNow.getTime();
 
                     Message m = new Message("", user.getUsername(), dateWithoutTime);
-
-                    Chat chat = new Chat(ChatListFragment.getCount(),name, selectedFriends, 1, m);
-                    ChatListFragment.addChatFake(chat);
+                    Chat chat = null;
+                    if (adduser) {
+                        chat = CurrentSession.getInstance().getChat();
+                        List<User> groupUsers = chat.getListUsersChat();
+                        groupUsers.addAll(selectedFriends);
+                        chat.setListUsersChat(groupUsers);
+                    }
+                    else {
+                        chat = new Chat(ChatListFragment.getCount(), name, selectedFriends, 1, m);
+                        ChatListFragment.addChatFake(chat);
+                    }
 
                     for (User userSelected : selectedFriends) {
                         userSelected.setSelected(false);
                     }
 
-                    Intent i = new Intent(getContext(), ChatActivity.class);
-                    CurrentSession.getInstance().setChat(chat);
+                    if (!adduser) {
+                        Intent i = new Intent(getContext(), ChatActivity.class);
+                        CurrentSession.getInstance().setChat(chat);
+                        startActivity(i);
+                    }
+
                     getActivity().finish();
-                    startActivity(i);
 
                 }
             }
@@ -166,6 +186,10 @@ public class ChatGroupsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
+            if (adduser) {
+                List<User> usersInGroup = CurrentSession.getInstance().getChat().getListUsersChat();
+                l.removeAll(usersInGroup);
+            }
             friendsAdapter.updateFriendsList(l);
             super.onPostExecute(s);
         }

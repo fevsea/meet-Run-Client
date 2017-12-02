@@ -144,6 +144,7 @@ public class ChatListFragment extends Fragment {
 
     private void addGroup() {
         Intent intent = new Intent(getActivity(), ChatGroupsActivity.class);
+        intent.putExtra("action","addgroup");
         animFab();
         startActivity(intent);
     }

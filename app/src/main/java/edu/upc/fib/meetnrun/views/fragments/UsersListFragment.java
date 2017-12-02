@@ -87,6 +87,7 @@ public class UsersListFragment extends FriendUserListFragmentTemplate {
                 count++;
             }
 
+
             for (User user: l) {
                 boolean equal = false;
                 for (User friend: friends) {
