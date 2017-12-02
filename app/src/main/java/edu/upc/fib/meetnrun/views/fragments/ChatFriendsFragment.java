@@ -65,10 +65,12 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
             new createChat().execute();
 
         }
-        Intent i = new Intent(getContext(), ChatActivity.class);
-        CurrentSession.getInstance().setChat(chat);
-        getActivity().finish();
-        startActivity(i);
+        if (chat != null) {
+            Intent i = new Intent(getContext(), ChatActivity.class);
+            CurrentSession.getInstance().setChat(chat);
+            getActivity().finish();
+            startActivity(i);
+        }
     }
 
     @Override

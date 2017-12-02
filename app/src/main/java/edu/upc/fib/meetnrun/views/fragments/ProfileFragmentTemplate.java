@@ -41,7 +41,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
     protected TextView name;
     protected ImageView img;
     protected IFriendsAdapter friendsDBAdapter;
-    protected ImageView chat;
+    protected ImageView chatImage;
     protected User currentFriend;
 
     @Override
@@ -58,7 +58,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
         this.postCode = view.findViewById(R.id.userPostCode2);
         this.profileImg = view.findViewById(R.id.profileImage);
         this.img = view.findViewById(R.id.action_friend);
-        this.chat = view.findViewById(R.id.chat_friend);
+        this.chatImage = view.findViewById(R.id.chat_friend);
         setImage();
 
         char letter = currentFriend.getUsername().charAt(0);

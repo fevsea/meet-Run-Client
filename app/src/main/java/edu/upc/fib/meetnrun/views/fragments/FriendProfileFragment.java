@@ -29,6 +29,9 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
 
     private String friendUsername;
     private IChatAdapter chatDBAdapter;
+    private Date dateWithoutTime;
+    private List<Integer> userList;
+    private Chat chat;
 
     @Override
     protected void setImage() {
@@ -36,7 +39,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
         friendUsername = currentFriend.getUsername();
         chatDBAdapter = CurrentSession.getInstance().getChatAdapter();
 
-        chat.setOnClickListener(new View.OnClickListener() {
+        chatImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String title = getResources().getString(R.string.chat_friend_dialog_title)+" "+friendUsername;
@@ -51,28 +54,24 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
 
                                 User user = CurrentSession.getInstance().getCurrentUser();
                                 String currentUsername = user.getUsername();
-                                Chat chat = ChatListFragment.getChat(currentUsername, friendUsername);
+                                chat = ChatListFragment.getChat(currentUsername, friendUsername);
                                 if (chat == null) {
                                     Calendar rightNow = Calendar.getInstance();
-                                    Date dateWithoutTime = rightNow.getTime();
+                                    dateWithoutTime = rightNow.getTime();
 
-                                    List<Integer> userList = new ArrayList<>();
+                                    userList = new ArrayList<>();
                                     userList.add(user.getId());
                                     userList.add(currentFriend.getId());
 
-                                    try {
-                                        chat = chatDBAdapter.createChat(friendUsername, userList, 0, -1, "", 0, dateWithoutTime.toString());
-                                    } catch (AutorizationException e) {
-                                        e.printStackTrace();
-                                    } catch (ParamsException e) {
-                                        e.printStackTrace();
-                                    }
+                                    new createChat().execute();
 
                                 }
-                                Intent i = new Intent(getContext(), ChatActivity.class);
-                                CurrentSession.getInstance().setChat(chat);
-                                getActivity().finish();
-                                startActivity(i);
+                                if (chat != null) {
+                                    Intent i = new Intent(getContext(), ChatActivity.class);
+                                    CurrentSession.getInstance().setChat(chat);
+                                    getActivity().finish();
+                                    startActivity(i);
+                                }
                             }
                         },
                         new DialogInterface.OnClickListener() {
@@ -127,6 +126,21 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                 getActivity().finish();
             }
             super.onPostExecute(s);
+        }
+    }
+
+    private class createChat extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... s) {
+            try {
+                chat = chatDBAdapter.createChat(friendUsername, userList, 0, null, "", 0, dateWithoutTime);
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 

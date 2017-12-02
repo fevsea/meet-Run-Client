@@ -51,6 +51,11 @@ public class ChatGroupsFragment extends Fragment {
     private TextView numbFriends;
     private List<User> selectedFriends;
 
+    private Chat chat;
+    private String name;
+    private Date dateWithoutTime;
+    private List<Integer> selectedFriendsID;
+
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,7 +84,7 @@ public class ChatGroupsFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                String name = groupName.getText().toString();
+                name = groupName.getText().toString();
                 if (name.equals("")) {
                     Toast.makeText(getContext(), "Name group field is empty", Toast.LENGTH_SHORT).show();
                 }
@@ -87,27 +92,22 @@ public class ChatGroupsFragment extends Fragment {
                     groupName.setText("");
 
                     Calendar rightNow = Calendar.getInstance();
-                    Date dateWithoutTime = rightNow.getTime();
+                    dateWithoutTime = rightNow.getTime();
 
-                    List<Integer> selectedFriendsID = new ArrayList<>();
+                    selectedFriendsID = new ArrayList<>();
                     for (User user : selectedFriends) {
                         selectedFriendsID.add(user.getId());
                     }
 
-                    Chat chat = new Chat();
+                    chat = null;
+                    new createChat().execute();
 
-                    try {
-                        chat = chatDBAdapter.createChat(name, selectedFriendsID, 1, -1, "", 0, dateWithoutTime.toString());
-                    } catch (AutorizationException e) {
-                        e.printStackTrace();
-                    } catch (ParamsException e) {
-                        e.printStackTrace();
+                    if (chat != null) {
+                        Intent i = new Intent(getContext(), ChatActivity.class);
+                        CurrentSession.getInstance().setChat(chat);
+                        getActivity().finish();
+                        startActivity(i);
                     }
-
-                    Intent i = new Intent(getContext(), ChatActivity.class);
-                    CurrentSession.getInstance().setChat(chat);
-                    getActivity().finish();
-                    startActivity(i);
 
                 }
             }
@@ -175,6 +175,21 @@ public class ChatGroupsFragment extends Fragment {
         protected void onPostExecute(String s) {
             friendsAdapter.updateFriendsList(l);
             super.onPostExecute(s);
+        }
+    }
+
+    private class createChat extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... s) {
+            try {
+                chat = chatDBAdapter.createChat(name, selectedFriendsID, 1, null, "", 0, dateWithoutTime);
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 
