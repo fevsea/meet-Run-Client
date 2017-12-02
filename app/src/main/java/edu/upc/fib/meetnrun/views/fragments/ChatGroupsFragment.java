@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -187,8 +188,11 @@ public class ChatGroupsFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             if (adduser) {
+                Log.e("CGF","Entra");
                 List<User> usersInGroup = CurrentSession.getInstance().getChat().getListUsersChat();
+                Log.e("CGF",usersInGroup.toString());
                 l.removeAll(usersInGroup);
+                Log.e("CGF",l.toString());
             }
             friendsAdapter.updateFriendsList(l);
             super.onPostExecute(s);

@@ -28,6 +28,7 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatGroupsActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -121,16 +122,13 @@ public class ChatGroupInfoFragment extends Fragment {
         else {
             CurrentSession.getInstance().setFriend(friend);
             Intent userProfileIntent = null;
-            //TODO pendiente de que actualizen la parte de perfiles de usuario
             if (CurrentSession.getInstance().getCurrentUser().getId().equals(friend.getId())) {
-                //TODO tiene que hacer intent al perfil personal
-                userProfileIntent = new Intent(getActivity(), UserProfileActivity.class);
+                userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
             }
             else if (isFriend(friend)) {
                 userProfileIntent = new Intent(getActivity(), FriendProfileActivity.class);
             }
             else {
-                //TODO tiene que hacer intent al perfil de un usuario que no es amigo
                 userProfileIntent = new Intent(getActivity(), UserProfileActivity.class);
             }
             startActivity(userProfileIntent);
