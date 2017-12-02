@@ -17,7 +17,7 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
     @Override
     protected void setImage() {
         img.setImageResource(R.drawable.send);
-        chat.setVisibility(View.GONE);
+        chatImage.setVisibility(View.GONE);
     }
 
     @Override

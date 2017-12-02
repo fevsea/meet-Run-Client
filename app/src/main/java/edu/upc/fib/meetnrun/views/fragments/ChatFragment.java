@@ -241,7 +241,7 @@ public class ChatFragment extends Fragment {
 
             if (firstTime) removeProgressChat();
             Message m = dataSnapshot.getValue(Message.class);
-            adapter.addMensaje(m);
+            adapter.addMessage(m);
             if (!swipe && !firstTime) {
 
                 int size = chat.getListUsersChatSize();
