@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,12 +17,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
@@ -45,12 +49,15 @@ public class ChatListFragment extends Fragment {
     private Animation FabRantiClockWise;
     private List<Chat> l;
     private ChatAdapter chatAdapter;
-    private String friendUserName = null;
-    private User currentUser;
     private boolean isOpen = false;
+    private IChatAdapter chatDBAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    private static final List<Chat> list = new ArrayList<>();
-    private static int count = 0;
+    private LinearLayoutManager layoutManager;
+    private boolean isLoading;
+    private boolean isLastPage;
+    private int pageNumber;
+    private ProgressBar progressBar;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -60,10 +67,10 @@ public class ChatListFragment extends Fragment {
 
         this.view = inflater.inflate(R.layout.fragment_chat_list, container, false);
 
-        currentUser = CurrentSession.getInstance().getCurrentUser();
+        chatDBAdapter = CurrentSession.getInstance().getChatAdapter();
 
-        l = new ArrayList<>();
-
+        initializePagination();
+        progressBar = view.findViewById(R.id.pb_loading_chat);
         setupRecyclerView();
 
         fab = getActivity().findViewById(R.id.activity_fab);
@@ -98,15 +105,16 @@ public class ChatListFragment extends Fragment {
             }
         });
 
-        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.fragment_chat_swipe);
+        swipeRefreshLayout = view.findViewById(R.id.fragment_chat_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                initializePagination();
                 updateChats();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-
+        swipeRefreshLayout.setProgressViewOffset(true,200,400);
 
         return this.view;
     }
@@ -131,9 +139,7 @@ public class ChatListFragment extends Fragment {
     }
 
     private void updateChats() {
-        //new getChats().execute();
-        sortList();
-        chatAdapter.updateChatList(list);
+        new getChats().execute();
     }
 
     private void addChat() {
@@ -152,11 +158,12 @@ public class ChatListFragment extends Fragment {
     private void setupRecyclerView() {
 
         final RecyclerView chatList = view.findViewById(R.id.fragment_chat_container);
-        chatList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        layoutManager = new LinearLayoutManager(getActivity());
+        chatList.setLayoutManager(layoutManager);
 
-        List<Chat> chats = new ArrayList<>();
+        l = new ArrayList<>();
 
-        chatAdapter = new ChatAdapter(chats, new RecyclerViewOnClickListener() {
+        chatAdapter = new ChatAdapter(l, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
@@ -169,6 +176,33 @@ public class ChatListFragment extends Fragment {
                 startActivity(chatIntent);
             }
         });
+
+        chatList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                fab.setVisibility(View.VISIBLE);
+
+                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0) {
+                    if (!isLastPage) {
+                        updateChats();
+                    }
+                    else {
+                        fab.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
+
         chatList.setAdapter(chatAdapter);
     }
 
@@ -190,15 +224,10 @@ public class ChatListFragment extends Fragment {
                 newText = newText.toLowerCase();
                 ArrayList<Chat> newList = new ArrayList<>();
                 for (Chat chat : l) {
-
-                    if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) friendUserName = chat.getUser1().getUsername();
-                    else friendUserName = chat.getUser2().getUsername();
-
-                    String friendName = friendUserName.toLowerCase();
-                    if (friendName != null) {
-                        if (friendName.contains(newText)) newList.add(chat);
+                    String chatName = chat.getChatName().toLowerCase();
+                    if (chatName != null) {
+                        if (chatName.contains(newText)) newList.add(chat);
                     }
-
                 }
                 chatAdapter.updateChatList(newList);
                 return true;
@@ -208,76 +237,63 @@ public class ChatListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+
     private class getChats extends AsyncTask<String,String,String> {
 
         @Override
+        protected void onPreExecute() {
+            setLoading();
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
-                //l = chatDBAdapter.getUserChats();
+            try {
+                l = chatDBAdapter.getChats(pageNumber);
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            //chatAdapter.updateChatList(l);
+            updateData();
             super.onPostExecute(s);
         }
     }
 
+    private void updateData() {
+
+        if (l != null) {
+            if (pageNumber == 0) chatAdapter.updateChatList(l);
+            else chatAdapter.addChats(l);
+
+            if (l.size() == 0) {
+                isLastPage = true;
+            }
+            else pageNumber++;
+        }
+
+        swipeRefreshLayout.setRefreshing(false);
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    private void setLoading() {
+        if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+    }
+
+    private void initializePagination() {
+        pageNumber = 0;
+        isLoading = false;
+        isLastPage = false;
+    }
+
     @Override
     public void onResume() {
+        initializePagination();
         updateChats();
         super.onResume();
-    }
-
-    public static void addChatFake(Chat c) {
-        list.add(c);
-    }
-
-    public static int getCount() {
-        int aux = count;
-        count++;
-        return aux;
-    }
-
-    public static Chat getChat(String user, String friend) {
-
-        for (Chat chat : list) {
-
-            String chatUserName = chat.getUser1().getUsername();
-            if (chatUserName.equals(user) || chatUserName.equals(friend)) {
-                String chatFriendUserName = chat.getUser2().getUsername();
-                if (chatFriendUserName.equals(user) || chatFriendUserName.equals(friend)) {
-                    return chat;
-                }
-            }
-        }
-        return null;
-    }
-
-    public static boolean deleteChat(String name) {
-        for (Chat chat : list) {
-            if (chat.getUser1().getUsername().equals(name) || chat.getUser2().getUsername().equals(name)) {
-                list.remove(chat);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private void sortList() {
-       /* Collections.sort(list, new Comparator<Chat>() {
-            @Override
-            public int compare(Chat c2, Chat c1) {
-                Message m1 = c1.getMessage();
-                Message m2= c2.getMessage();
-                if (m1.getDate().equals(m2.getDate())) {
-                    if (m1.getHour().equals(m2.getHour())) {
-                        return m1.getSeconds().compareTo(m2.getSeconds());
-                    }
-                    else return m1.getHour().compareTo(m2.getHour());
-                }
-                else return m1.getDate().compareTo(m2.getDate());
-            }
-        });*/
     }
 }

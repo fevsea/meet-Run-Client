@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.remote;
 
 import java.util.List;
 
+import edu.upc.fib.meetnrun.adapters.models.ChatServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
@@ -13,6 +14,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -22,7 +24,7 @@ import retrofit2.http.Query;
 
 public interface SOServices {
 
-    public int PAGELIMIT = 10;
+    int PAGELIMIT = 10;
 
     //MEETINGS
     @GET("/meetings")
@@ -75,6 +77,14 @@ public interface SOServices {
     @GET("/users/current")
     Call<UserServer> getCurrentUser();
 
+    @GET("/users/token")
+    Call<Forms.Token> getFibaseToken();
+
+    @POST("/users/token")
+    Call<Void> updateFirebaseToken(@Body Forms.Token token);
+
+
+
     //PARTICIPANTS
 
     @GET("/meetings/{id}/participants")
@@ -113,4 +123,20 @@ public interface SOServices {
     @DELETE("/meetings/{idMeeting}/tracking/{idUser}")
     Call<Void> deleteTracking(@Path("idUser") int userID, @Path("idMeeting") int meetingID);
 
+
+    //CHATS
+    @GET("/chats")
+    Call<PageServer<ChatServer>> getChats(@Query("limit") int limit, @Query("offset") int offset);
+
+    @POST("/chats")
+    Call<ChatServer> createChat(@Body Forms.ChatCreateUpdate cs);
+
+    @GET("/chats/{id}")
+    Call<ChatServer> getChat(@Path("id") int id);
+
+    @PUT("/chats/{id}")
+    Call<Void> updateChat(@Path("id") int id, @Body Forms.ChatCreateUpdate cs);
+
+    @DELETE("/chats/{id}")
+    Call<Void> deleteChat(@Path("id") int id);
 }

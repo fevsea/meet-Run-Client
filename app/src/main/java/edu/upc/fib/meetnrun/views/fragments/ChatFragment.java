@@ -71,14 +71,18 @@ public class ChatFragment extends Fragment {
     private final int SUM_MESSAGES_LOAD = 15;
     private long MAX_MESSAGES_LOAD;
 
-    private int numbNewMessages;
     private boolean firstTime;
+    private boolean first;
 
     private boolean swipe = false;
-    private boolean ok = false;
+    private int itemPosition;
+
+    private int userPosition;
+
+    private ChildEventListener childEventListener;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
@@ -86,8 +90,15 @@ public class ChatFragment extends Fragment {
         chat = CurrentSession.getInstance().getChat();
         currentUser = CurrentSession.getInstance().getCurrentUser();
 
-        if (chat.getNumbNewMessages() > 0) numbNewMessages = chat.getNumbNewMessages();
-        else numbNewMessages = 0;
+        first = true;
+
+        for (int i = 0; i < chat.getListUsersChatSize(); i++) {
+            if (currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
+                Log.e(" INICIO xd"+currentUser.getUsername(), chat.getUserAtPosition(i).getUsername());
+                userPosition = i;
+                break;
+            }
+        }
 
         if (chat.getType() == 0) {
             if (!currentUser.getUsername().equals(chat.getUser1().getUsername())) chat.setChatName(chat.getUser1().getUsername());
@@ -101,7 +112,7 @@ public class ChatFragment extends Fragment {
         fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        NUMB_MESSAGES_LOAD = 15;
+        NUMB_MESSAGES_LOAD = SUM_MESSAGES_LOAD;
         MAX_MESSAGES_LOAD = 0;
 
         rvMessages = view.findViewById(R.id.rvMensajes);
@@ -120,8 +131,8 @@ public class ChatFragment extends Fragment {
                         MAX_MESSAGES_LOAD = snap.getChildrenCount();
                     }
                 }
-                ok = true;
-                loadMessages();
+                if (NUMB_MESSAGES_LOAD > MAX_MESSAGES_LOAD) NUMB_MESSAGES_LOAD = (int)MAX_MESSAGES_LOAD;
+                changeNumbMessages();
             }
 
             @Override
@@ -129,6 +140,28 @@ public class ChatFragment extends Fragment {
 
             }
         });
+
+        childEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                /*if (!first)*/ loadMessages(dataSnapshot);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+
+        databaseReference.addChildEventListener(childEventListener);
+        //databaseReference.limitToLast(NUMB_MESSAGES_LOAD).addChildEventListener(childEventListener);
 
         adapter = new MessageAdapter(getContext());
         LinearLayoutManager l = new LinearLayoutManager(getContext());
@@ -139,7 +172,6 @@ public class ChatFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if (firstTime) firstTime = false;
                 String userName = currentUser.getUsername();
 
                 Calendar cal = Calendar.getInstance();
@@ -150,6 +182,7 @@ public class ChatFragment extends Fragment {
                 Message m = new Message(txt, userName, dateWithoutTime);
                 databaseReference.push().setValue(m);
                 MAX_MESSAGES_LOAD++;
+                NUMB_MESSAGES_LOAD++;
                 txtMessage.setText("");
                 chat.setMessage(m);
             }
@@ -163,6 +196,9 @@ public class ChatFragment extends Fragment {
                 if (swipe && adapter.getItemCount() == NUMB_MESSAGES_LOAD) {
                     swipe = false;
                 }
+                if (firstTime && adapter.getItemCount() == MAX_MESSAGES_LOAD) {
+                    firstTime = false;
+                }
             }
         });
 
@@ -175,14 +211,17 @@ public class ChatFragment extends Fragment {
             @Override
             public void onRefresh() {
 
+                itemPosition = NUMB_MESSAGES_LOAD;
                 int resta = (int)MAX_MESSAGES_LOAD-NUMB_MESSAGES_LOAD;
                 if (resta > SUM_MESSAGES_LOAD) NUMB_MESSAGES_LOAD += SUM_MESSAGES_LOAD;
                 else if (resta == 0) swipe = false;
                 else NUMB_MESSAGES_LOAD += resta;
+                itemPosition = NUMB_MESSAGES_LOAD - itemPosition;
                 if (resta != 0) {
                     adapter.deleteMessages();
                     swipe = true;
-                    loadMessages();
+                    databaseReference.limitToLast(NUMB_MESSAGES_LOAD);
+                    changeNumbMessages();
                 }
                 swipeRefreshLayout.setRefreshing(false);
             }
@@ -191,46 +230,41 @@ public class ChatFragment extends Fragment {
         return this.view;
     }
 
-    private void loadMessages() {
+    private  void changeNumbMessages() {
+        first = false;
+        /*databaseReference.limitToLast(NUMB_MESSAGES_LOAD);
+        synchronized (childEventListener){childEventListener.notify();}*/
+    }
 
-        if (ok && NUMB_MESSAGES_LOAD > MAX_MESSAGES_LOAD) NUMB_MESSAGES_LOAD = (int)MAX_MESSAGES_LOAD;
+    private void loadMessages(DataSnapshot dataSnapshot) {
 
         if (NUMB_MESSAGES_LOAD > 0) {
-            databaseReference.limitToLast(NUMB_MESSAGES_LOAD).addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    removeProgressChat();
-                    Message m = dataSnapshot.getValue(Message.class);
-                    adapter.addMensaje(m);
-                    if (!swipe) {
-                        if (!firstTime) {
-                            if (currentUser.getUsername().equals(m.getName())) {
-                                numbNewMessages++;
-                                chat.setNumbNewMessages(numbNewMessages);
-                            }
-                            else {
-                                if (numbNewMessages > 0) {
-                                    numbNewMessages = 0;
-                                    chat.setNumbNewMessages(numbNewMessages);
-                                }
-                            }
+
+            if (firstTime) removeProgressChat();
+            Message m = dataSnapshot.getValue(Message.class);
+            adapter.addMensaje(m);
+            if (!swipe && !firstTime) {
+
+                int size = chat.getListUsersChatSize();
+                Log.e(currentUser.getUsername(), m.getName());
+                if (currentUser.getUsername().equals(m.getName())) {
+                    Log.e("SOY YO", m.getName());
+                    for (int i = 0; i < size; i++) {
+                        if (!currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
+                            chat.sumNumbMessagesAtPosition(i);
                         }
                     }
-
+                }
+                else {
+                    chat.setNumbMessagesAtPosition(userPosition, 0);
+                    Log.e("NO SOY YO", m.getName());
                 }
 
-                @Override
-                public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+                for (int i = 0; i < size; i++) {
+                    Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
+                }
 
-                @Override
-                public void onChildRemoved(DataSnapshot dataSnapshot) {}
-
-                @Override
-                public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {}
-            });
+            }
         }
     }
 
@@ -239,7 +273,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void setScrollbarUp() {
-        rvMessages.scrollToPosition(0);
+        rvMessages.scrollToPosition(itemPosition);
     }
 
     @Override
@@ -391,10 +425,11 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume() {
         firstTime = true;
-        if (!currentUser.getUsername().equals(chat.getMessage().getName()) && numbNewMessages > 0) {
-            numbNewMessages = 0;
-            chat.setNumbNewMessages(numbNewMessages);
+        chat.setNumbMessagesAtPosition(userPosition, 0);
+        for (int i = 0; i < chat.getListUsersChatSize(); i++) {
+            //Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
         }
         super.onResume();
     }
+
 }

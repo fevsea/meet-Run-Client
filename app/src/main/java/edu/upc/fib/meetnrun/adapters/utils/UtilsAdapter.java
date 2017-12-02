@@ -1,28 +1,29 @@
 package edu.upc.fib.meetnrun.adapters.utils;
 
 import edu.upc.fib.meetnrun.exceptions.GenericException;
-import edu.upc.fib.meetnrun.utils.JsonUtils;
+import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 
 /**
  * Created by Awais Iqbal on 07/11/2017.
  */
 
-public class Utils {
+public class UtilsAdapter {
 
     public static void checkErrorCodeAndThowException(int code, String string) throws GenericException {
         switch (code) {
             case 400:
-                throw JsonUtils.CreateParamExceptionFromJson(string);
+                throw UtilsGlobal.CreateParamExceptionFromJson(string);
             case 401:
-                throw JsonUtils.CreateAutorizationExceptionFromJson(string);
+                throw UtilsGlobal.CreateAutorizationExceptionFromJson(string);
             case 403:
-                throw JsonUtils.CreateForbiddenExceptionFromJson();
+                throw UtilsGlobal.CreateForbiddenExceptionFromJson();
             case 404:
-                throw JsonUtils.CreateNotFoundExceptionFromJson(string);
+                throw UtilsGlobal.CreateNotFoundExceptionFromJson(string);
         }
     }
 
     public static int calculateOffset(int limit,int page){
         return limit*page;
     }
+
 }

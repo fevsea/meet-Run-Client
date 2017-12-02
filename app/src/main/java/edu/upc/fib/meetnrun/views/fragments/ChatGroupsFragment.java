@@ -23,8 +23,10 @@ import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
@@ -41,6 +43,7 @@ public class ChatGroupsFragment extends Fragment {
 
     private View view;
     private FriendsAdapter friendsAdapter;
+    private IChatAdapter chatDBAdapter;
     private IFriendsAdapter friendsDBAdapter;
     private FloatingActionButton fab;
     private List<User> l;
@@ -59,6 +62,7 @@ public class ChatGroupsFragment extends Fragment {
         this.view = inflater.inflate(R.layout.fragment_chat_groups, container, false);
 
         friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
+        chatDBAdapter = CurrentSession.getInstance().getChatAdapter();
 
         String action = getActivity().getIntent().getExtras().getString("action");
         if (action != null && action.equals("adduser")) adduser = true;
@@ -92,13 +96,9 @@ public class ChatGroupsFragment extends Fragment {
                 else {
                     groupName.setText("");
 
-                    User user = selectedFriends.get(0);
-
                     Calendar rightNow = Calendar.getInstance();
-
                     Date dateWithoutTime = rightNow.getTime();
 
-                    Message m = new Message("", user.getUsername(), dateWithoutTime);
                     Chat chat = null;
                     if (adduser) {
                         chat = CurrentSession.getInstance().getChat();
@@ -107,12 +107,20 @@ public class ChatGroupsFragment extends Fragment {
                         chat.setListUsersChat(groupUsers);
                     }
                     else {
-                        chat = new Chat(ChatListFragment.getCount(), name, selectedFriends, 1, m);
-                        ChatListFragment.addChatFake(chat);
+                        chat = new Chat();
                     }
 
-                    for (User userSelected : selectedFriends) {
-                        userSelected.setSelected(false);
+                    List<Integer> selectedFriendsID = new ArrayList<>();
+                    for (User user : selectedFriends) {
+                        selectedFriendsID.add(user.getId());
+                    }
+
+                    try {
+                        chat = chatDBAdapter.createChat(name, selectedFriendsID, 1, -1, "", 0, dateWithoutTime);
+                    } catch (AutorizationException e) {
+                        e.printStackTrace();
+                    } catch (ParamsException e) {
+                        e.printStackTrace();
                     }
 
                     if (!adduser) {
@@ -120,9 +128,7 @@ public class ChatGroupsFragment extends Fragment {
                         CurrentSession.getInstance().setChat(chat);
                         startActivity(i);
                     }
-
                     getActivity().finish();
-
                 }
             }
         });
