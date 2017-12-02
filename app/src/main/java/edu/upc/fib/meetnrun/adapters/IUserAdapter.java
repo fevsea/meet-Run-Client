@@ -24,9 +24,14 @@ public interface IUserAdapter {
     boolean updateUser(User obj) throws ParamsException, NotFoundException, AutorizationException;
 
     boolean deleteUserByID(int targetUserId) throws NotFoundException, AutorizationException;
+<<<<<<< HEAD
 
     List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException;
 
     Statistics getUserStatisticsByID(int id) throws AutorizationException;
 
+=======
+
+    List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException;
+>>>>>>> ef4af1ad1bc07193c255446aa495f0dc78a6b05d
 }

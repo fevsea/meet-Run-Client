@@ -1,6 +1,6 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
-import android.content.Intent;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
-import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.User;
@@ -48,6 +47,7 @@ public class StatisticsProfileFragment extends Fragment {
     Statistics s;
     int userId;
     User u;
+    View view;
 
     // newInstance constructor for creating fragment with arguments
     public static StatisticsProfileFragment newInstance(int page, String title) {
@@ -66,10 +66,8 @@ public class StatisticsProfileFragment extends Fragment {
         page = getArguments().getInt("2", 2);
         title = getArguments().getString("Statistics");
         //TODO: Hallar nivel usuario al que se le mira las estadísticas. Abajo es fake
-        getStats();
-        userLevel=u.getLevel();
-        Bundle bundle = getActivity().getIntent().getExtras();
-        userId=bundle.getInt("userId");
+       /* Bundle bundle = getActivity().getIntent().getExtras();
+        userId=bundle.getInt("userId");*/
     }
 
     public void calcLevel (int meetings, float km){
@@ -102,10 +100,8 @@ public class StatisticsProfileFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_statistics_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_statistics_profile, container, false);
         context=this.getActivity();
-
-        //TODO: Hacerlo bien, sin hardcoded
         username  = view.findViewById (R.id.username);
         level     = view.findViewById (R.id.level);
         meetings  = view.findViewById (R.id.nMeetings);
@@ -124,23 +120,7 @@ public class StatisticsProfileFragment extends Fragment {
         percentMeetings = view.findViewById (R.id.percentMeetings);
         percentKm = view.findViewById (R.id.percentKm);
         percentLevel=view.findViewById(R.id.percentLevel);
-
-        username.setText (u.getUsername());
-        level.setText (u.getLevel());
-        meetings.setText(s.getNumberMeetings());
-        steps.setText(s.getTotalSteps());
-        totalKm.setText(String.valueOf(s.getTotalKm()));
-        totalTime.setText(s.getTotalTimeInString());
-        calories.setText((int) s.getTotalCalories());
-        rhythm.setText(s.getRhythmInString());
-        avgSpeed.setText(s.getSpeedInString(s.getAvgSpeed()));
-        maxSpeed.setText(s.getSpeedInString(s.getMaxSpeed()));
-        minSpeed.setText(s.getSpeedInString(s.getMinSpeed()));
-        maxTime.setText(s.getMaxTimeInString());
-        maxLength.setText(String.valueOf(s.getMaxLength())+" km");
-        minLength.setText(String.valueOf(s.getMinLength())+" km");
-        minTime.setText(s.getMinTimeInString());
-        calcLevel(s.getNumberMeetings(), s.getTotalKm());
+        getStats();
         return view;
     }
 
@@ -148,18 +128,40 @@ public class StatisticsProfileFragment extends Fragment {
         new userStats().execute();
     }
     private class userStats extends AsyncTask<String,String,String> {
+        private void setValues(){
+            username.setText (u.getUsername());
+            level.setText (String.valueOf(u.getLevel()));
+            meetings.setText(String.valueOf(s.getNumberMeetings()));
+            steps.setText(String.valueOf(s.getTotalSteps()));
+            totalKm.setText(String.valueOf(s.getTotalKm()));
+            totalTime.setText(s.getTotalTimeInString());
+            calories.setText(String.valueOf( s.getTotalCalories()));
+            rhythm.setText(s.getRhythmInString());
+            avgSpeed.setText(s.getSpeedInString(s.getAvgSpeed()));
+            maxSpeed.setText(s.getSpeedInString(s.getMaxSpeed()));
+            minSpeed.setText(s.getSpeedInString(s.getMinSpeed()));
+            maxTime.setText(s.getMaxTimeInString());
+            maxLength.setText(String.valueOf(s.getMaxLength())+" km");
+            minLength.setText(String.valueOf(s.getMinLength())+" km");
+            minTime.setText(s.getMinTimeInString());
+        }
+
         @Override
         protected String doInBackground(String... strings){
             try {
                 //TODO: Que tot no sigui de current user
                 u = CurrentSession.getInstance().getCurrentUser();
-                s=iUserAdapter.getUserStatisticsByID(u.getId());
-                //u=iUserAdapter.getUser(userId);
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            }/* catch (NotFoundException e) {
-                e.printStackTrace();
-            }*/
+                s = iUserAdapter.getUserStatisticsByID(u.getId());
+
+                //TODO: Hacerlo bien, sin hardcoded
+                setValues();
+                calcLevel(s.getNumberMeetings(), s.getTotalKm());
+                        //u=iUserAdapter.getUser(userId);
+                    } catch (AutorizationException e) {
+                        e.printStackTrace();
+                    }/* catch (NotFoundException e) {
+                        e.printStackTrace();
+                    }*/
             return null;
         }
             }

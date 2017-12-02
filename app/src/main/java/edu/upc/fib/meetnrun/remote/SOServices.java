@@ -79,6 +79,14 @@ public interface SOServices {
     @GET("/users/current")
     Call<UserServer> getCurrentUser();
 
+    @GET("/users/token")
+    Call<Forms.Token> getFibaseToken();
+
+    @POST("/users/token")
+    Call<Void> updateFirebaseToken(@Body Forms.Token token);
+
+
+
     //PARTICIPANTS
 
     @GET("/meetings/{id}/participants")
