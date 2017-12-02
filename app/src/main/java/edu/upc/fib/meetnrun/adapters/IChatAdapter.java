@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.adapters;
 
+import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
@@ -27,8 +28,8 @@ public interface IChatAdapter {
      * @throws AutorizationException Throwed when the user is not logged
      * @throws ParamsException       Throwed when one or more parameters are incorrect
      */
-    public Chat createChat(String chatName, List<Integer> listUsersChatIDs, int type, int meetingID,
-                           String lastMessage, int lastMessageUserNamePosition, String lastDateTime)
+    public Chat createChat(String chatName, List<Integer> listUsersChatIDs, int type, Integer meetingID,
+                           String lastMessage, int lastMessageUserNamePosition, Date lastDateTime)
             throws AutorizationException, ParamsException;
 
     /**

@@ -46,11 +46,6 @@ dependencies {
 
     //Chat
 
-    
-
-
-
-
 
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:support-v4:26.+'

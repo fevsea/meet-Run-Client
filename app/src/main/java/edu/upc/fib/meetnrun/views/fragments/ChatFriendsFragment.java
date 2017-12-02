@@ -3,13 +3,16 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
@@ -22,6 +25,12 @@ import edu.upc.fib.meetnrun.views.ChatActivity;
 
 public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
 
+    private IChatAdapter chatDBAdapter;
+    private Chat chat;
+    private String friendUserName;
+    private List<Integer> userList;
+    private Date dateWithoutTime;
+
     @Override
     protected void initList() {
         getMethod();
@@ -33,28 +42,28 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
     }
 
     @Override
-    protected void adapter() {}
+    protected void adapter() {
+        chatDBAdapter = CurrentSession.getInstance().getChatAdapter();
+    }
 
     @Override
     protected void getIntent(User friend) {
 
-        String friendUserName = friend.getUsername();
+        friendUserName = friend.getUsername();
         User user = CurrentSession.getInstance().getCurrentUser();
         String currentUsername = user.getUsername();
-        Chat chat = ChatListFragment.getChat(currentUsername, friendUserName);
+        chat = ChatListFragment.getChat(currentUsername, friendUserName);
         if (chat == null) {
             Calendar rightNow = Calendar.getInstance();
 
-            Date dateWithoutTime = rightNow.getTime();
+            dateWithoutTime = rightNow.getTime();
 
-            Message m = new Message("", currentUsername, dateWithoutTime);
+            userList = new ArrayList<>();
+            userList.add(user.getId());
+            userList.add(friend.getId());
 
-            List<User> userList = new ArrayList<>();
-            userList.add(user);
-            userList.add(friend);
+            new createChat().execute();
 
-            chat = new Chat(ChatListFragment.getCount(),friendUserName, userList, 0, m);
-            ChatListFragment.addChatFake(chat);
         }
         Intent i = new Intent(getContext(), ChatActivity.class);
         CurrentSession.getInstance().setChat(chat);
@@ -102,6 +111,21 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
             super.onPostExecute(s);
         }
 
+    }
+
+    private class createChat extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... s) {
+            try {
+                chat = chatDBAdapter.createChat(friendUserName, userList, 0, null, "", 0, dateWithoutTime);
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
 }

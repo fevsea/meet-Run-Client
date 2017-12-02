@@ -52,7 +52,7 @@ public class ChatServer implements IServerModel {
 
     public ChatServer(int id, String chatName, List<UserServer> participantUsers, int type,
                       MeetingServer meetingToRelate, String lastMessage, int lastMessageUsernamePosition,
-                      String lastMessageDateTime) {
+                      Date lastMessageDateTime) {
         this.id = id;
         this.chatName = chatName;
         this.participantUsers = participantUsers;
@@ -60,13 +60,18 @@ public class ChatServer implements IServerModel {
         this.meetingToRelate = meetingToRelate;
         this.lastMessage = lastMessage;
         this.lastMessageUsernamePosition = lastMessageUsernamePosition;
-        this.lastMessageDateTime = lastMessageDateTime;
+        this.lastMessageDateTime = UtilsGlobal.formatDate(lastMessageDateTime);
     }
 
     public ChatServer(Chat c) {
         List<UserServer> lus = new ArrayList<>();
         for (int i = 0; i < c.getListUsersChat().size(); i++) {
+
             lus.add(new UserServer(c.getListUsersChat().get(i)));
+
+            if (c.getMessage().getName().equals(c.getListUsersChat().get(i).getUsername())) {
+                this.lastMessageUsernamePosition = i;
+            }
         }
         this.participantUsers = lus;
         this.id = c.getId();
@@ -74,12 +79,6 @@ public class ChatServer implements IServerModel {
         this.type = c.getType();
         this.meetingToRelate = new MeetingServer(c.getMeeting());
         this.lastMessage = c.getMessage().getMessage();
-        for (int i = 0; i < c.getListUsersChat().size(); i++) {
-            if (c.getMessage().getName().equals(c.getListUsersChat().get(i).getUsername())) {
-                this.lastMessageUsernamePosition = i;
-                break;//BAD SMELL
-            }
-        }
         this.lastMessageDateTime = UtilsGlobal.formatDate(c.getMessage().getDateTime());
 
     }

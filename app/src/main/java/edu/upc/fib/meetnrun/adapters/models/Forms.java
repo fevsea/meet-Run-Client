@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.models.Chat;
@@ -328,7 +329,7 @@ public class Forms {
 
         @SerializedName("meeting")
         @Expose
-        private int meetingToRelate;
+        private Integer meetingToRelate;
 
         @SerializedName("lastMessage")
         @Expose
@@ -343,15 +344,15 @@ public class Forms {
         private String lastMessageDateTime;
 
         public ChatCreateUpdate(String chatName, List<Integer> listUsersChat, int type,
-                                int meetingToRelate, String lastMessage, int lastMessageUsernamePosition,
-                                String lastMessageDateTime) {
+                                Integer meetingToRelate, String lastMessage, int lastMessageUsernamePosition,
+                                Date lastMessageDateTime) {
             this.chatName = chatName;
             this.listUsersChat = listUsersChat;
             this.type = type;
             this.meetingToRelate = meetingToRelate;
             this.lastMessage = lastMessage;
             this.lastMessageUsernamePosition = lastMessageUsernamePosition;
-            this.lastMessageDateTime = lastMessageDateTime;
+            this.lastMessageDateTime = UtilsGlobal.formatDate(lastMessageDateTime);
         }
 
         public ChatCreateUpdate(Chat c) {
@@ -359,17 +360,14 @@ public class Forms {
             List<Integer> lic = new ArrayList<>();
             for (int i = 0; i < c.getListUsersChat().size(); i++) {
                 lic.add(c.getListUsersChat().get(i).getId());
+                if (c.getMessage().getName().equals(c.getListUsersChat().get(i).getUsername())) {
+                    this.lastMessageUsernamePosition = i;
+                }
             }
             this.listUsersChat = lic;
             this.type = c.getType();
             this.meetingToRelate = c.getMeeting().getId();
             this.lastMessage = c.getMessage().getMessage();
-            for (int i = 0; i < c.getListUsersChat().size(); i++) {
-                if (c.getMessage().getName().equals(c.getListUsersChat().get(i).getUsername())) {
-                    this.lastMessageUsernamePosition = i;
-                    break;//BAD SMELL
-                }
-            }
             this.lastMessageDateTime = UtilsGlobal.formatDate(c.getMessage().getDateTime());
         }
 

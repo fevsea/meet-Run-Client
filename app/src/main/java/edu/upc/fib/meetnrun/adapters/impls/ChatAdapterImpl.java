@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.adapters.impls;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.models.ChatServer;
@@ -31,7 +32,7 @@ public class ChatAdapterImpl implements IChatAdapter {
     }
 
     @Override
-    public Chat createChat(String chatName, List<Integer> listUsersChatIDs, int type, int meetingID, String lastMessage, int lastMessageUserNamePosition, String lastDateTime) throws AutorizationException, ParamsException {
+    public Chat createChat(String chatName, List<Integer> listUsersChatIDs, int type, Integer meetingID, String lastMessage, int lastMessageUserNamePosition, Date lastDateTime) throws AutorizationException, ParamsException {
         Forms.ChatCreateUpdate ur = new Forms.ChatCreateUpdate(chatName, listUsersChatIDs, type, meetingID, lastMessage, lastMessageUserNamePosition, lastDateTime);
         ChatServer u = null;
         try {

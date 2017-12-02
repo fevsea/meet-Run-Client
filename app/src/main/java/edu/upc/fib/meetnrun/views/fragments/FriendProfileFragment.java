@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -27,11 +28,13 @@ import edu.upc.fib.meetnrun.views.ChatActivity;
 public class FriendProfileFragment extends ProfileFragmentTemplate {
 
     private String friendUsername;
+    private IChatAdapter chatDBAdapter;
 
     @Override
     protected void setImage() {
 
         friendUsername = currentFriend.getUsername();
+        chatDBAdapter = CurrentSession.getInstance().getChatAdapter();
 
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,17 +54,20 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
                                 Chat chat = ChatListFragment.getChat(currentUsername, friendUsername);
                                 if (chat == null) {
                                     Calendar rightNow = Calendar.getInstance();
-
                                     Date dateWithoutTime = rightNow.getTime();
 
-                                    Message m = new Message("", currentUsername, dateWithoutTime);
+                                    List<Integer> userList = new ArrayList<>();
+                                    userList.add(user.getId());
+                                    userList.add(currentFriend.getId());
 
-                                    List<User> userList = new ArrayList<>();
-                                    userList.add(user);
-                                    userList.add(currentFriend);
+                                    try {
+                                        chat = chatDBAdapter.createChat(friendUsername, userList, 0, -1, "", 0, dateWithoutTime.toString());
+                                    } catch (AutorizationException e) {
+                                        e.printStackTrace();
+                                    } catch (ParamsException e) {
+                                        e.printStackTrace();
+                                    }
 
-                                    chat = new Chat(ChatListFragment.getCount(),friendUsername, userList, 0, m);
-                                    ChatListFragment.addChatFake(chat);
                                 }
                                 Intent i = new Intent(getContext(), ChatActivity.class);
                                 CurrentSession.getInstance().setChat(chat);
@@ -105,8 +111,8 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
         protected String doInBackground(String... s) {
             try {
                 ok = friendsDBAdapter.removeFriend(Integer.parseInt(s[0]));
-                //eliminar chat con amigo
-                ChatListFragment.deleteChat(friendUsername);
+                //TODO eliminar chat con amigo
+
             } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
