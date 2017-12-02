@@ -32,6 +32,7 @@ import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
 import edu.upc.fib.meetnrun.views.ChatFriendsActivity;
 import edu.upc.fib.meetnrun.views.ChatGroupsActivity;
+import edu.upc.fib.meetnrun.views.Pagination;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChatAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
