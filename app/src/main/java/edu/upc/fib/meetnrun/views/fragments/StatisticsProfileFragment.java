@@ -42,12 +42,12 @@ public class StatisticsProfileFragment extends Fragment {
     ProgressBar percentKm;
     ProgressBar percentLevel;
     private FragmentActivity context;
-    private int userLevel;
     private IUserAdapter iUserAdapter;
     Statistics s;
-    int userId;
     User u;
     View view;
+    String user;
+    private int userLevel;
 
     // newInstance constructor for creating fragment with arguments
     public static StatisticsProfileFragment newInstance(int page, String title) {
@@ -102,7 +102,6 @@ public class StatisticsProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_statistics_profile, container, false);
         context=this.getActivity();
-        username  = view.findViewById (R.id.username);
         level     = view.findViewById (R.id.level);
         meetings  = view.findViewById (R.id.nMeetings);
         steps     = view.findViewById (R.id.nSteps);
@@ -120,7 +119,10 @@ public class StatisticsProfileFragment extends Fragment {
         percentMeetings = view.findViewById (R.id.percentMeetings);
         percentKm = view.findViewById (R.id.percentKm);
         percentLevel=view.findViewById(R.id.percentLevel);
+        u = CurrentSession.getInstance().getCurrentUser();
+
         getStats();
+
         return view;
     }
 
@@ -128,33 +130,34 @@ public class StatisticsProfileFragment extends Fragment {
         new userStats().execute();
     }
     private class userStats extends AsyncTask<String,String,String> {
-        private void setValues(){
-            username.setText (u.getUsername());
-            level.setText (String.valueOf(u.getLevel()));
-            meetings.setText(String.valueOf(s.getNumberMeetings()));
-            steps.setText(String.valueOf(s.getTotalSteps()));
-            totalKm.setText(String.valueOf(s.getTotalKm()));
-            totalTime.setText(s.getTotalTimeInString());
-            calories.setText(String.valueOf( s.getTotalCalories()));
-            rhythm.setText(s.getRhythmInString());
-            avgSpeed.setText(s.getSpeedInString(s.getAvgSpeed()));
-            maxSpeed.setText(s.getSpeedInString(s.getMaxSpeed()));
-            minSpeed.setText(s.getSpeedInString(s.getMinSpeed()));
-            maxTime.setText(s.getMaxTimeInString());
-            maxLength.setText(String.valueOf(s.getMaxLength())+" km");
-            minLength.setText(String.valueOf(s.getMinLength())+" km");
-            minTime.setText(s.getMinTimeInString());
+        private void setValues(Statistics ss){
+            /*username.setText(s.);
+            level.setText (userLevel);*/
+            meetings.setText(String.valueOf(ss.getNumberMeetings()));
+            steps.setText(String.valueOf(ss.getTotalSteps()));
+            totalKm.setText(String.valueOf(ss.getTotalKm()));
+            totalTime.setText(ss.getTotalTimeInString());
+            calories.setText(String.valueOf( ss.getTotalCalories()));
+            rhythm.setText(ss.getRhythmInString());
+            avgSpeed.setText(ss.getSpeedInString(ss.getAvgSpeed()));
+            maxSpeed.setText(ss.getSpeedInString(ss.getMaxSpeed()));
+            minSpeed.setText(ss.getSpeedInString(ss.getMinSpeed()));
+            maxTime.setText(ss.getMaxTimeInString());
+            maxLength.setText(ss.getMaxLength()+" km");
+            minLength.setText(ss.getMinLength()+" km");
+            minTime.setText(ss.getMinTimeInString());
         }
 
         @Override
         protected String doInBackground(String... strings){
             try {
                 //TODO: Que tot no sigui de current user
-                u = CurrentSession.getInstance().getCurrentUser();
-                s = iUserAdapter.getUserStatisticsByID(u.getId());
+                int id=u.getId();
+                iUserAdapter=CurrentSession.getInstance().getUserAdapter();
+                s = iUserAdapter.getUserStatisticsByID(id);
 
                 //TODO: Hacerlo bien, sin hardcoded
-                setValues();
+                setValues(s);
                 calcLevel(s.getNumberMeetings(), s.getTotalKm());
                         //u=iUserAdapter.getUser(userId);
                     } catch (AutorizationException e) {

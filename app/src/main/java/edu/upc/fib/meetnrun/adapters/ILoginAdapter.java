@@ -17,12 +17,10 @@ public interface ILoginAdapter {
     boolean logout() throws AutorizationException;
 
     boolean changePassword(String oldPassword, String newPassword) throws AutorizationException, ForbiddenException;
-<<<<<<< HEAD
-=======
+
 
     String getFirebaseToken() throws AutorizationException, NotFoundException;
 
     boolean uppdateFirebaseToken(String token) throws AutorizationException, NotFoundException;
->>>>>>> ef4af1ad1bc07193c255446aa495f0dc78a6b05d
 
 }
