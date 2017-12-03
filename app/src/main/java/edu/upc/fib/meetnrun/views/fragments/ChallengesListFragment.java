@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
@@ -90,26 +92,34 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
         updateChallengesList();
     }
 
-    private class GetChallenges extends AsyncTask<String,String,String> {
+    private class GetChallenges extends AsyncTask<String,String,Boolean> {
+
+        private Exception ex;
 
         @Override
-        protected String doInBackground(String... params) {
-            User current = CurrentSession.getInstance().getCurrentUser();
-            User other = new User(56, "aUsername", "Name", "Surname", "08001", "A?", 0);
-            Date deadline = new Date();
-            Calendar c = Calendar.getInstance();
-            c.setTime(deadline);
-            c.add(Calendar.DATE, 6);
-            deadline = c.getTime();
-            challenges = new ArrayList<>();
-            challenges.add(new Challenge(0, current, other, 50, deadline.toString(), new Date().toString(), 25, 32));
-            return null;
+        protected Boolean doInBackground(String... params) {
+            try {
+                challenges = CurrentSession.getInstance().getChallengeAdapter().getCurrentUserChallenges();
+            }
+            catch (AutorizationException e) {
+                this.ex = e;
+                return false;
+            }
+            return true;
         }
 
         @Override
-        protected void onPostExecute(String s) {
-            challengesAdapter.updateChallengeList(challenges);
-            swipeRefreshLayout.setRefreshing(false);
+        protected void onPostExecute(Boolean s) {
+            if (s && ex == null) {
+                challengesAdapter.updateChallengeList(challenges);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+            else if (ex instanceof AutorizationException){
+                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
+            }
             super.onPostExecute(s);
         }
     }

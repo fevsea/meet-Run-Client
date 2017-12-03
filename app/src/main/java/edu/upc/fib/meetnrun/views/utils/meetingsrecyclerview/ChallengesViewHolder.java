@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,6 +26,8 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
     final private WeakReference<RecyclerViewOnClickListener> listener;
     private String expirationTextResourceDays;
     private String expirationTextResourceNoDays;
+    private String expirationPastTextResourceDays;
+    private String expirationPastTextResourceNoDays;
 
     public ChallengesViewHolder(View itemView, RecyclerViewOnClickListener listener) {
         super(itemView);
@@ -32,6 +35,8 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         this.listener = new WeakReference<>(listener);
         expirationTextResourceDays = view.getResources().getString(R.string.ends_in_days_hours_minutes);
         expirationTextResourceNoDays = view.getResources().getString(R.string.ends_in_hours_minutes);
+        expirationPastTextResourceDays = view.getResources().getString(R.string.ended_in_days_hours_minutes);
+        expirationPastTextResourceNoDays = view.getResources().getString(R.string.ended_in_hours_minutes);
     }
 
     public void bindChallenge(Challenge challenge) {
@@ -77,23 +82,35 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
     }
 
     private String getExpirationText(String deadline) {
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.forLanguageTag("es"));
         Date dateTime;
+        String expirationText;
         try {
             dateTime = inputFormat.parse(deadline);
         } catch (ParseException e) {
             dateTime = new Date(deadline);
         }
-        final long millis = dateTime.getTime() - System.currentTimeMillis();
-        long days = TimeUnit.MILLISECONDS.toDays(millis);
-        long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(days);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
-        String expirationText;
-        if (days > 0) {
-            expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceDays, days, hours, minutes);
+        if (dateTime.getTime() > System.currentTimeMillis()) {
+            final long millis = dateTime.getTime() - System.currentTimeMillis();
+            long days = TimeUnit.MILLISECONDS.toDays(millis);
+            long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(days);
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
+            if (days > 0) {
+                expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceDays, days, hours, minutes);
+            } else {
+                expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceNoDays, hours, minutes);
+            }
         }
         else {
-            expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceNoDays, hours, minutes);
+            final long millis = System.currentTimeMillis() - dateTime.getTime();
+            long days = TimeUnit.MILLISECONDS.toDays(millis);
+            long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(days);
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
+            if (days > 0) {
+                expirationText = String.format(Locale.forLanguageTag("es"), expirationPastTextResourceDays, days, hours, minutes);
+            } else {
+                expirationText = String.format(Locale.forLanguageTag("es"), expirationPastTextResourceNoDays, hours, minutes);
+            }
         }
         return expirationText;
     }

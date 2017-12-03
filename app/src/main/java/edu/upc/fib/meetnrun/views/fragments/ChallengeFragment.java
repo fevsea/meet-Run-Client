@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,8 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
@@ -43,6 +46,8 @@ public class ChallengeFragment extends Fragment {
     private ProgressBar opponentProgressBar;
     private String expirationTextResourceDays;
     private String expirationTextResourceNoDays;
+    private String expirationPastTextResourceDays;
+    private String expirationPastTextResourceNoDays;
     private String progressTextResource;
 
     private TextView endsIn;
@@ -78,6 +83,8 @@ public class ChallengeFragment extends Fragment {
         endsIn = view.findViewById(R.id.ends_in);
         expirationTextResourceDays = view.getResources().getString(R.string.ends_in_days_hours_minutes);
         expirationTextResourceNoDays = view.getResources().getString(R.string.ends_in_hours_minutes);
+        expirationPastTextResourceDays = view.getResources().getString(R.string.ended_in_days_hours_minutes);
+        expirationPastTextResourceNoDays = view.getResources().getString(R.string.ended_in_hours_minutes);
         progressTextResource = view.getResources().getString(R.string.challenge_progress_km);
 
         GetChallenge getChallenge = new GetChallenge();
@@ -129,37 +136,50 @@ public class ChallengeFragment extends Fragment {
     }
 
     private String getExpirationText(String deadline) {
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.forLanguageTag("es"));
         Date dateTime;
+        String expirationText;
         try {
             dateTime = inputFormat.parse(deadline);
         } catch (ParseException e) {
             dateTime = new Date(deadline);
         }
-        final long millis = dateTime.getTime() - System.currentTimeMillis();
-        long days = TimeUnit.MILLISECONDS.toDays(millis);
-        long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(days);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
-        String expirationText;
-        if (days > 0) {
-            expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceDays, days, hours, minutes);
+        if (dateTime.getTime() > System.currentTimeMillis()) {
+            final long millis = dateTime.getTime() - System.currentTimeMillis();
+            long days = TimeUnit.MILLISECONDS.toDays(millis);
+            long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(days);
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
+            if (days > 0) {
+                expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceDays, days, hours, minutes);
+            } else {
+                expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceNoDays, hours, minutes);
+            }
         }
         else {
-            expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceNoDays, hours, minutes);
+            final long millis = System.currentTimeMillis() - dateTime.getTime();
+            long days = TimeUnit.MILLISECONDS.toDays(millis);
+            long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(days);
+            long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
+            if (days > 0) {
+                expirationText = String.format(Locale.forLanguageTag("es"), expirationPastTextResourceDays, days, hours, minutes);
+            } else {
+                expirationText = String.format(Locale.forLanguageTag("es"), expirationPastTextResourceNoDays, hours, minutes);
+            }
         }
         return expirationText;
     }
 
     private class GetChallenge extends AsyncTask<Integer, String, Boolean> {
 
-        ProgressDialog progressDialog;
+        private ProgressDialog progressDialog;
+        private Exception ex;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setTitle("Loading");
-            progressDialog.setMessage("Loading challenge");
+            progressDialog.setTitle(getResources().getString(R.string.loading));
+            progressDialog.setMessage(getResources().getString(R.string.loading_challenge));
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(false);
             progressDialog.show();
@@ -167,21 +187,31 @@ public class ChallengeFragment extends Fragment {
 
         @Override
         protected Boolean doInBackground(Integer... params) {
-            User current = CurrentSession.getInstance().getCurrentUser();
-            User other = new User(56, "aUsername", "Name", "Surname", "08001", "A?", 0);
-            Date deadline = new Date();
-            Calendar c = Calendar.getInstance();
-            c.setTime(deadline);
-            c.add(Calendar.DATE, 6);
-            deadline = c.getTime();
-            challenge = new Challenge(0, current, other, 51, deadline.toString(), new Date().toString(), 25, 33);
+            try {
+                challenge = CurrentSession.getInstance().getChallengeAdapter().getChallenge(params[0]);
+            }
+            catch(AutorizationException | NotFoundException e) {
+                ex = e;
+                return false;
+            }
             return true;
         }
 
         @Override
         protected void onPostExecute(Boolean result) {
             progressDialog.dismiss();
-            updateViews();
+            if (result && ex == null) {
+                updateViews();
+            }
+            else if (ex instanceof AutorizationException) {
+                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            }
+            else if (ex instanceof NotFoundException) {
+                Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
+            }
         }
 
     }

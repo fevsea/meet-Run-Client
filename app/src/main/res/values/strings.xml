@@ -93,7 +93,7 @@
     <string name="error_connecting_google_reconnect">Error connecting with the Google API, trying to reconnect</string>
     <string name="error_connecting_google">Could not connect with Google</string>
     <string name="vertical_ellipsis">&#8942;</string>
-    <string name="user_name">User Name</string>
+    <string name="user_name">There was an error authorizing this request</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
     <string name="post_code">Postal Code</string>
@@ -128,4 +128,11 @@
     <string name="distance">Distance</string>
     <string name="deadline">Deadline</string>
     <string name="to_challenge">Challenge</string>
+    <string name="authorization_error">There was an error authorizing this request</string>
+    <string name="not_found_error">The resource was not found</string>
+    <string name="loading">Loading</string>
+    <string name="loading_challenge">Loading challenge</string>
+    <string name="ended_in_days_hours_minutes">Ended %1$d days %2$d hours %3$d minutes ago</string>
+    <string name="ended_in_hours_minutes">Ended %1$d hours %2$d minutes ago</string>
+    <string name="params_error">There are missing parameters or with incorrect format</string>
 </resources>

@@ -23,7 +23,9 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
@@ -167,8 +169,9 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         @Override
         protected Boolean doInBackground(Challenge[] params) {
             try {
-                Thread.sleep(1000L);
-            } catch (InterruptedException e) {
+                User current = CurrentSession.getInstance().getCurrentUser();
+                CurrentSession.getInstance().getChallengeAdapter().createNewChallenge(current, challenged, (int)challenge.getDistance(), challenge.getDateDeadline());
+            } catch (AutorizationException | ParamsException e) {
                 this.exception = e;
             }
             return true;
@@ -177,12 +180,19 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         @Override
         protected void onPostExecute(Boolean result) {
             mProgressDialog.dismiss();
-            if (exception != null || !result) {
-                Toast.makeText(CreateChallengeActivity.this, getResources().getString(R.string.error_saving_challenge), Toast.LENGTH_SHORT).show();
-            }
-            else {
+            if (result && exception != null) {
                 finish();
             }
+            else if (exception instanceof AutorizationException) {
+                Toast.makeText(CreateChallengeActivity.this, R.string.authorization_error, Toast.LENGTH_LONG);
+            }
+            else if (exception instanceof ParamsException) {
+                Toast.makeText(CreateChallengeActivity.this, R.string.params_error, Toast.LENGTH_LONG);
+            }
+            else {
+                Toast.makeText(CreateChallengeActivity.this, getResources().getString(R.string.error_saving_challenge), Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
