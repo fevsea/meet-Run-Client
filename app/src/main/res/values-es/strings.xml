@@ -103,4 +103,24 @@
     <string name="log_in">Conectarse</string>
     <string name="password">Contraseña</string>
     <string name="delete_history">Eliminar historial</string>
+    <string name="challenges">Desafíos</string>
+    <string name="challenge">Desafío</string>
+    <string name="create_challenge">Crear desafío</string>
+    <string name="ends_in_days_hours_minutes">Finaliza en %1$d días %2$d horas %3$d minutos</string>
+    <string name="ends_in_hours_minutes">Finaliza en %1$d horas y %2$d minutos</string>
+    <string name="you">Tú</string>
+    <string name="challenge_progress_km">%1$.2f de %2$.2f km completados (%3$.2f %4$s)</string>
+    <string name="error_loading">Lo siento, ha ocurrido un error cargando esta vista</string>
+    <string name="saving_challenge">Guardando desafío</string>
+    <string name="error_saving_challenge">Lo siento, ha ocurrido un error al guardar este desafío</string>
+    <string name="distance">Distancia</string>
+    <string name="deadline">Fecha límite</string>
+    <string name="to_challenge">Desafiar</string>
+    <string name="authorization_error">Ha habido un error autorizando esta petición</string>
+    <string name="not_found_error">El recurso no pudo ser encontrado</string>
+    <string name="loading">Cargando</string>
+    <string name="loading_challenge">Cargando desafío</string>
+    <string name="ended_in_days_hours_minutes">Terminó hace %1$d días %2$d horas %3$d minutos</string>
+    <string name="ended_in_hours_minutes">Terminó hace %1$d horas %2$d minutos</string>
+    <string name="params_error">Faltan parametros o tienen un formato inválido</string>
 </resources>

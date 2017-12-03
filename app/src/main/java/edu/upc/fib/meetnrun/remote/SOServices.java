@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.remote;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.models.ChatServer;
+import edu.upc.fib.meetnrun.adapters.models.ChallengeServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
@@ -141,4 +142,18 @@ public interface SOServices {
 
     @GET("/chats/p2p/{id}")
     Call<ChatServer> getPrivateChat(@Path("id") int id);
+
+    //CHALLENGES
+    @GET("/challenges")
+    Call<List<ChallengeServer>> getAllCurrentUserChallenges();
+
+    @POST("/challenges")
+    Call<ChallengeServer> createNewChallenge(@Body Forms.ChallengeCreator cs);
+
+    @GET("/challenges/{id}")
+    Call<ChallengeServer> getChallenge(@Path("id") int id);
+
+    @DELETE("/challenges/{id}")
+    Call<Void> deleteChallenge(@Path("id") int id);
+
 }
