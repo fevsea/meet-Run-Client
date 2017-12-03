@@ -14,6 +14,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -54,7 +55,15 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
 
                                 User user = CurrentSession.getInstance().getCurrentUser();
                                 String currentUsername = user.getUsername();
-                                chat = ChatListFragment.getChat(currentUsername, friendUsername);
+                                try {
+                                    chat = chatDBAdapter.getPrivateChat(currentFriend.getId());
+                                } catch (AutorizationException e) {
+                                    e.printStackTrace();
+                                    chat = null;
+                                } catch (NotFoundException e) {
+                                    e.printStackTrace();
+                                    chat = null;
+                                }
                                 if (chat == null) {
                                     Calendar rightNow = Calendar.getInstance();
                                     dateWithoutTime = rightNow.getTime();
