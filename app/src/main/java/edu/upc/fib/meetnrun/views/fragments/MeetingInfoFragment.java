@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -270,6 +271,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         @Override
         protected void onPreExecute() {
             setLoading();
+            Log.e("MEETINGINFO","ID = " + meetingId);
         }
 
         @Override
