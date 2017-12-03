@@ -37,8 +37,8 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
     public void bindChallenge(Challenge challenge) {
         User currentUser = CurrentSession.getInstance().getCurrentUser();
         User opponent;
-        int currentUserDistance;
-        int opponentDistance;
+        float currentUserDistance;
+        float opponentDistance;
         if (challenge.getCreator().getId().equals(currentUser.getId())) {
             currentUserDistance = challenge.getCreatorDistance();
             opponentDistance = challenge.getChallengedDistance();
@@ -53,7 +53,7 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         ProgressBar opponentBar = view.findViewById(R.id.opponent_progress);
         ProgressBar youBar = view.findViewById(R.id.my_progress);
         TextView expirationView = view.findViewById(R.id.expires_in);
-        String totalText = String.format(Locale.forLanguageTag("es"), "%d km", challenge.getDistance());
+        String totalText = String.format(Locale.forLanguageTag("es"), "%.0f km", challenge.getDistance());
         totalView.setText(totalText);
         TextView opponentName = view.findViewById(R.id.opponent);
         TextView youName = view.findViewById(R.id.you);
@@ -61,11 +61,11 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         youName.setText(R.string.you);
         opponentName.setText(opponent.getUsername());
 
-        opponentBar.setMax(challenge.getDistance());
-        opponentBar.setProgress(opponentDistance);
+        opponentBar.setMax((int)challenge.getDistance());
+        opponentBar.setProgress((int)opponentDistance);
 
-        youBar.setMax(challenge.getDistance());
-        youBar.setProgress(currentUserDistance);
+        youBar.setMax((int)challenge.getDistance());
+        youBar.setProgress((int)currentUserDistance);
 
         expirationView.setText(getExpirationText(challenge.getDeadline()));
         view.setOnClickListener(this);

@@ -11,17 +11,17 @@ public class Challenge {
     private Integer id;
     private User creator;
     private User challenged;
-    private int distance;
+    private float distance;
     private String dateDeadline;
     private String creationDate;
-    private Integer creatorDistance;
-    private Integer challengedDistance;
+    private float creatorDistance;
+    private float challengedDistance;
 
     public Challenge() {
 
     }
 
-    public Challenge(Integer id, User creator, User challenged, int distance, String dateDeadline, String creationDate, Integer creatorDistance, Integer challengedDistance) {
+    public Challenge(Integer id, User creator, User challenged, float distance, String dateDeadline, String creationDate, float creatorDistance, float challengedDistance) {
         this.id = id;
         this.creator = creator;
         this.challenged = challenged;
@@ -32,7 +32,7 @@ public class Challenge {
         this.challengedDistance = challengedDistance;
     }
 
-    public Challenge(User creator, User challenged, int distance, String dateDeadline) {
+    public Challenge(User creator, User challenged, float distance, String dateDeadline) {
         this.creator = creator;
         this.challenged = challenged;
         this.distance = distance;
@@ -55,19 +55,19 @@ public class Challenge {
         this.dateDeadline = dateDeadline;
     }
 
-    public Integer getCreatorDistance() {
+    public float getCreatorDistance() {
         return creatorDistance;
     }
 
-    public void setCreatorDistance(Integer creatorDistance) {
+    public void setCreatorDistance(float creatorDistance) {
         this.creatorDistance = creatorDistance;
     }
 
-    public Integer getChallengedDistance() {
+    public float getChallengedDistance() {
         return challengedDistance;
     }
 
-    public void setChallengedDistance(Integer challengedDistance) {
+    public void setChallengedDistance(float challengedDistance) {
         this.challengedDistance = challengedDistance;
     }
 
@@ -87,11 +87,11 @@ public class Challenge {
         this.challenged = challenged;
     }
 
-    public int getDistance() {
+    public float getDistance() {
         return distance;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(float distance) {
         this.distance = distance;
     }
 

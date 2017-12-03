@@ -109,7 +109,7 @@
     <string name="ends_in_days_hours_minutes">Finaliza en %1$d días %2$d horas %3$d minutos</string>
     <string name="ends_in_hours_minutes">Finaliza en %1$d horas y %2$d minutos</string>
     <string name="you">Tú</string>
-    <string name="challenge_progress_km">%1$d de %2$d km completados (%3$.2f %4$s)</string>
+    <string name="challenge_progress_km">%1$.2f de %2$.2f km completados (%3$.2f %4$s)</string>
     <string name="error_loading">Lo siento, ha ocurrido un error cargando esta vista</string>
     <string name="saving_challenge">Guardando desafío</string>
     <string name="error_saving_challenge">Lo siento, ha ocurrido un error al guardar este desafío</string>

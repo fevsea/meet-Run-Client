@@ -89,8 +89,8 @@ public class ChallengeFragment extends Fragment {
 
         User currentUser = CurrentSession.getInstance().getCurrentUser();
         User opponent;
-        int userProgress;
-        int opponentProgress;
+        float userProgress;
+        float opponentProgress;
         if (currentUser.getId().equals(challenge.getCreator().getId())) {
             opponent = challenge.getChallenged();
             userProgress = challenge.getCreatorDistance();
@@ -106,8 +106,8 @@ public class ChallengeFragment extends Fragment {
         userName.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
         userLevel.setText(String.valueOf(currentUser.getLevel()));
         userPhoto.setText(String.valueOf(currentUser.getUsername().charAt(0)));
-        userProgressBar.setMax(challenge.getDistance());
-        userProgressBar.setProgress(userProgress);
+        userProgressBar.setMax((int)challenge.getDistance());
+        userProgressBar.setProgress((int)userProgress);
         String userProgressString = String.format(Locale.forLanguageTag("es"),
                 progressTextResource, userProgress, challenge.getDistance(),
                 ((float)userProgress)/((float)challenge.getDistance())*100, "%");
@@ -117,8 +117,8 @@ public class ChallengeFragment extends Fragment {
         opponentName.setText(opponent.getFirstName() + " " + opponent.getLastName());
         opponentLevel.setText(String.valueOf(opponent.getLevel()));
         opponentPhoto.setText(String.valueOf(opponent.getUsername().charAt(0)));
-        opponentProgressBar.setMax(challenge.getDistance());
-        opponentProgressBar.setProgress(opponentProgress);
+        opponentProgressBar.setMax((int)challenge.getDistance());
+        opponentProgressBar.setProgress((int)opponentProgress);
         String opponentProgressString = String.format(Locale.forLanguageTag("es"),
                 progressTextResource, opponentProgress, challenge.getDistance(),
                 ((float)opponentProgress)/((float)challenge.getDistance())*100, "%");
