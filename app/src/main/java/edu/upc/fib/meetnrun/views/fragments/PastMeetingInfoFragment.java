@@ -24,6 +24,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +43,9 @@ import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
-public class PastMeetingInfoFragment extends Fragment //implements OnMapReadyCallback
-         {
+public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallback {
     private View view;
-    private LatLng location;
+    private List<LatLng> path;
     private GoogleMap map;
     private Marker marker;
     private FriendsAdapter participantsAdapter;
@@ -90,25 +90,28 @@ public class PastMeetingInfoFragment extends Fragment //implements OnMapReadyCal
         time.setText(pastMeetingInfo.getString("time"));
 
         String distanceValue = pastMeetingInfo.getString("distance");
-        if(distance.equals("null")) distanceValue = "123";
         distance.setText(distanceValue);
-        steps.setText(pastMeetingInfo.getString("steps"));
-        totalTime.setText(pastMeetingInfo.getString("totaltime"));
-        avSpeed.setText(pastMeetingInfo.getString("avspeed"));
-        calories.setText(pastMeetingInfo.getString("calories"));
+        String stepsValue  = pastMeetingInfo.getString("steps");
+        steps.setText(stepsValue);
+        String timeValue = pastMeetingInfo.getString("totaltime");
+        totalTime.setText(timeValue);
+        String avSpeedValue = pastMeetingInfo.getString("avspeed");
+        avSpeed.setText(avSpeedValue);
+        String caloriesValue = pastMeetingInfo.getString("calories");
+        calories.setText(caloriesValue);
 
 
         setupRecyclerView();
         setupScrollView();
-        /*location = new LatLng(Double.parseDouble(pastMeetingInfo.getString("latitude")),Double.parseDouble(meetingInfo.getString("longitude")));
+
+        path = (List<LatLng>) pastMeetingInfo.get("path");
 
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
         getFragmentManager()
                 .beginTransaction()
-                .add(R.id.meeting_info_map, mapFragment)
+                .add(R.id.past_meeting_info_map, mapFragment)
                 .commit();
         mapFragment.getMapAsync(this);
-        TODO pintar punts al mapa ??*/
 
         return view;
     }
@@ -234,13 +237,16 @@ public class PastMeetingInfoFragment extends Fragment //implements OnMapReadyCal
         }
     }
 
-   /* @Override
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
-        marker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
-        CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(location,15);
+
+        CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(path.get(0),15);
         map.moveCamera(camera);
-        marker.remove();
-        marker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
-    }*/
+
+        for(int i = 0; i < path.size(); ++i) {
+            map.addPolyline(new PolylineOptions().geodesic(true)
+                    .add(path.get(i)));
+        }
+    }
 }

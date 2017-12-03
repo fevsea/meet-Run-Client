@@ -4,6 +4,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,18 +125,30 @@ public class PastMeetingsProfileFragment extends Fragment {
                 pastMeetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
                 pastMeetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
 
+                String distance, steps, totalTime, avSpeed, calories;
+                List<LatLng> path = null;
 
-                pastMeetingInfoIntent.putExtra("distance", "123");
-                pastMeetingInfoIntent.putExtra("steps", "123");
-                pastMeetingInfoIntent.putExtra("totaltime", "123");
-                pastMeetingInfoIntent.putExtra("avspeed", "123");
-                pastMeetingInfoIntent.putExtra("calories", "123");
+                if(tracking == null) {
+                    distance = "0";
+                    steps = "0";
+                    totalTime = "0";
+                    avSpeed = "0";
+                    calories = "0";
+                } else {
+                    distance = String.valueOf(tracking.getDistance());
+                    steps = String.valueOf(tracking.getSteps());
+                    totalTime = String.valueOf(tracking.getTotalTimeMillis());
+                    avSpeed = String.valueOf(tracking.getAverageSpeed());
+                    calories = String.valueOf(tracking.getCalories());
+                    path = tracking.getRoutePoints();
+                }
+                pastMeetingInfoIntent.putExtra("distance", distance);
+                pastMeetingInfoIntent.putExtra("steps", steps);
+                pastMeetingInfoIntent.putExtra("totaltime", totalTime);
+                pastMeetingInfoIntent.putExtra("avspeed", avSpeed);
+                pastMeetingInfoIntent.putExtra("calories", calories);
 
-                /*pastMeetingInfoIntent.putExtra("distance", tracking.getDistance());
-                pastMeetingInfoIntent.putExtra("steps", tracking.getSteps());
-                pastMeetingInfoIntent.putExtra("totaltime", tracking.getTotalTimeMillis());
-                pastMeetingInfoIntent.putExtra("avspeed", tracking.getAverageSpeed());
-                pastMeetingInfoIntent.putExtra("calories", tracking.getCalories());*/
+                pastMeetingInfoIntent.putExtra("path", (Parcelable) path);
 
                 startActivity(pastMeetingInfoIntent);
 

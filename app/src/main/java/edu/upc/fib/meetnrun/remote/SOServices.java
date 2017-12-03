@@ -22,7 +22,7 @@ import retrofit2.http.Query;
 
 public interface SOServices {
 
-    public int PAGELIMIT = 10;
+    int PAGELIMIT = 10;
 
     //MEETINGS
     @GET("/meetings")
@@ -77,6 +77,14 @@ public interface SOServices {
 
     @GET("/users/current")
     Call<UserServer> getCurrentUser();
+
+    @GET("/users/token")
+    Call<Forms.Token> getFibaseToken();
+
+    @POST("/users/token")
+    Call<Void> updateFirebaseToken(@Body Forms.Token token);
+
+
 
     //PARTICIPANTS
 

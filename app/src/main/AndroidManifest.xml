@@ -94,17 +94,32 @@ package="edu.upc.fib.meetnrun">
             android:name=".views.ChangePasswordActivity"
             android:label="@string/action_change_pass"
             android:screenOrientation="portrait"/>
-    <activity
-        android:name=".views.PastMeetingInfoActivity"
-        android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.PastMeetingInfoActivity"
+            android:screenOrientation="portrait"/>
 
-    <activity
-        android:name=".views.TrackingActivity"
-        android:screenOrientation="portrait"
-        android:label="Tracking"
-        android:hardwareAccelerated="true"/>
-    <service android:name=".services.TrackingService">
+        <activity
+            android:name=".views.TrackingActivity"
+            android:hardwareAccelerated="true"
+            android:label="Tracking"
+            android:screenOrientation="portrait" />
+
+        <service android:name=".services.TrackingService"></service>
+
+        <service android:name=".services.FirebaseInstanceService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
         </service>
-</application>
+
+        <service
+            android:name=".services.FirebaseMsgService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+        </intent-filter>
+>>>>>>> 1372d0549018c3d19b3d67f3121cd590e85a321f
+
+        </service>
+    </application>
 
 </manifest>
