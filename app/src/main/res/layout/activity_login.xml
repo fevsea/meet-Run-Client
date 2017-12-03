@@ -1,86 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="edu.upc.fib.meetnrun.views.LoginActivity">
+    tools:context="edu.upc.fib.meetnrun.views.LoginActivity"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Meet and Run"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="50dp"
-        android:textStyle="bold" />
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
 
-    <ImageView
-        android:id="@+id/img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/signin"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/title"
-        android:layout_marginBottom="260dp"
-        android:src="@drawable/mr" />
-
-    <Button
-        android:id="@+id/login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/signin"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="17dp"
-        android:onClick="loginButton"
-        android:text="@string/log_in" />
-
-    <Button
-        android:id="@+id/signin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:onClick="registerButton"
-        android:text="@string/register_label" />
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/usernameInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:hintEnabled="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="22dp"
-        android:layout_above="@+id/login"
-        android:layout_marginBottom="86dp"
-        app:passwordToggleEnabled="true">
-
-        <EditText
-            android:id="@+id/editPassword"
-            android:layout_width="370dp"
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword"
-            android:textSize="17dp"
-            android:layout_centerHorizontal="true"
-            android:hint="Password"
-            />
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:text="Meet and Run"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="50dp"
+            android:textStyle="bold" />
 
-    </android.support.design.widget.TextInputLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="250dp"
+            android:id="@+id/img"
+            android:src="@drawable/mr"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"/>
 
+        <!--<de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/mr"
+            app:civ_border_width="0dp"
+            app:civ_border_color="@color/white"
+            android:layout_marginTop="25dp"
+            android:layout_gravity="center"/>-->
 
+    </LinearLayout>
 
-
-    <EditText
-        android:id="@+id/editUsername"
-        android:layout_width="370dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/login"
-        android:layout_alignStart="@+id/usernameInput"
-        android:layout_marginBottom="16dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:textSize="17dp" />
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp">
 
-</RelativeLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/usernameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintEnabled="true">
+
+            <EditText
+                android:id="@+id/editUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:textSize="17dp"
+                android:layout_gravity="center"
+                android:hint="Username"/>
+
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/passwordInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintEnabled="true"
+            app:passwordToggleEnabled="true"
+            android:layout_marginTop="10dp">
+
+            <EditText
+                android:id="@+id/editPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPassword"
+                android:textSize="17dp"
+                android:layout_gravity="center"
+                android:hint="Password"
+                />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/login"
+                android:layout_width="180dp"
+                android:layout_height="60dp"
+                android:onClick="loginButton"
+                android:text="@string/log_in"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginRight="10dp"
+                />
+
+            <Button
+                android:id="@+id/signin"
+                android:layout_width="180dp"
+                android:layout_height="60dp"
+                android:onClick="registerButton"
+                android:text="@string/register_label"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginLeft="10dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -11,11 +11,11 @@ import edu.upc.fib.meetnrun.models.User;
  */
 
 public interface IFriendsAdapter {
-    public boolean addFriend(int targetUserId) throws AutorizationException, ParamsException;
+    boolean addFriend(int targetUserId) throws AutorizationException, ParamsException;
 
-    public List<User> getUserFriends(int page) throws AutorizationException;
+    List<User> getUserFriends(int page) throws AutorizationException;
 
-    public boolean removeFriend(int targetUserId) throws AutorizationException, ParamsException;
+    boolean removeFriend(int targetUserId) throws AutorizationException, ParamsException;
 
-    public List<User> listFriendsOfUser(int targetUserId, int page) throws AutorizationException, ParamsException;
+    List<User> listFriendsOfUser(int targetUserId, int page) throws AutorizationException, ParamsException;
 }

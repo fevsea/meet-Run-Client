@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.adapters;
 
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.User;
 
 /**
@@ -9,12 +10,16 @@ import edu.upc.fib.meetnrun.models.User;
  */
 
 public interface ILoginAdapter {
-    public String login(String username, String password) throws AutorizationException;
+    String login(String username, String password) throws AutorizationException;
 
-    public User getCurrentUser() throws AutorizationException;
+    User getCurrentUser() throws AutorizationException;
 
-    public boolean logout() throws AutorizationException;
+    boolean logout() throws AutorizationException;
 
-    public boolean changePassword(String oldPassword, String newPassword) throws AutorizationException, ForbiddenException;
+    boolean changePassword(String oldPassword, String newPassword) throws AutorizationException, ForbiddenException;
+
+    String getFirebaseToken() throws AutorizationException, NotFoundException;
+
+    boolean uppdateFirebaseToken(String token) throws AutorizationException, NotFoundException;
 
 }

@@ -23,6 +23,11 @@ import edu.upc.fib.meetnrun.views.ChatActivity;
 public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
 
     @Override
+    protected void initList() {
+        getMethod();
+    }
+
+    @Override
     protected void floatingbutton() {
         fab.setVisibility(View.GONE);
     }
@@ -65,9 +70,15 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
     private class getFriends extends AsyncTask<String,String,String> {
 
         @Override
+        protected void onPreExecute() {
+            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+            isLoading = true;
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
             try {
-                l = friendsDBAdapter.getUserFriends(0);
+                l = friendsDBAdapter.getUserFriends(pageNumber);
             } catch (AutorizationException e) {
                 e.printStackTrace();
             }
@@ -76,8 +87,21 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
 
         @Override
         protected void onPostExecute(String s) {
-            friendsAdapter.updateFriendsList(l);
+            if (l != null) {
+                if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
+                else friendsAdapter.addFriends(l);
+
+                if (l.size() == 0) {
+                    isLastPage = true;
+                }
+                else pageNumber++;
+            }
+            swipeRefreshLayout.setRefreshing(false);
+            isLoading = false;
+            progressBar.setVisibility(View.INVISIBLE);
             super.onPostExecute(s);
         }
+
     }
+
 }

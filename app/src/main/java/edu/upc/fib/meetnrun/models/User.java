@@ -13,6 +13,7 @@ public class User {
     private String question;
     private Integer level;
     private boolean selected = false;
+    private boolean isFriend = false;
 
     public User(Integer id, String username, String firstName, String lastName, String postalCode, String question,Integer level) {
         this.id = id;
@@ -87,6 +88,14 @@ public class User {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    public boolean isFriend() {
+        return isFriend;
+    }
+
+    public void setFriend(boolean friend) {
+        isFriend = friend;
     }
 
     @Override

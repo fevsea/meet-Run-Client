@@ -23,6 +23,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
     private final View view;
     private final WeakReference<RecyclerViewOnClickListener> listener;
     private final static int MAX_CHAT_LAST_MESSAGE = 35;
+    private int userPosition;
 
     public ChatViewHolder(View itemView, RecyclerViewOnClickListener listener) {
         super(itemView);
@@ -30,7 +31,14 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         this.listener = new WeakReference<>(listener);
     }
 
-    public void bindChat(Chat chat, boolean newChat) {
+    public void bindChat(Chat chat) {
+
+        for (int i = 0; i < chat.getListUsersChatSize(); i++) {
+            if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
+                userPosition = i;
+                break;
+            }
+        }
 
         if (chat.getType() == 0) {
             if (!CurrentSession.getInstance().getCurrentUser().getUsername().equals(chat.getUser1().getUsername())) chat.setChatName(chat.getUser1().getUsername());
@@ -71,9 +79,13 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
         TextView numberChats = view.findViewById(R.id.chat_new_messages);
 
-        if (newChat) {
-            numberChats.setVisibility(View.VISIBLE);
-            newChat = false;
+        if (!chat.getMessage().getName().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) {
+
+            if (chat.getNumbMessagesAtPosition(userPosition) != 0) {
+                numberChats.setVisibility(View.VISIBLE);
+                numberChats.setText(String.valueOf(chat.getNumbMessagesAtPosition(userPosition)));
+            }
+            else numberChats.setVisibility(View.GONE);
         }
         else numberChats.setVisibility(View.GONE);
 

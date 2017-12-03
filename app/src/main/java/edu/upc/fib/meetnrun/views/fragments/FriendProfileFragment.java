@@ -130,6 +130,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
         protected void onPostExecute(String s) {
             if (ok) {
                 Toast.makeText(getContext(), "Friend removed", Toast.LENGTH_SHORT).show();
+                currentFriend.setFriend(false);
                 getActivity().finish();
             }
             super.onPostExecute(s);

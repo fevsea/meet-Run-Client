@@ -93,13 +93,27 @@
         <activity
             android:name=".views.ChangePasswordActivity"
             android:label="@string/action_change_pass"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".views.TrackingActivity"
-            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"
             android:label="Tracking"
-            android:hardwareAccelerated="true"/>
+            android:screenOrientation="portrait" />
+
+        <service android:name=".services.TrackingService"/>
+
+        <service android:name=".services.FirebaseInstanceService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".services.FirebaseMsgService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+        </intent-filter>
+        </service>
 
         <activity android:name=".views.ChallengeActivity"
             android:screenOrientation="portrait"
@@ -109,8 +123,7 @@
             android:screenOrientation="portrait"
             android:label="@string/challenge"
             android:theme="@style/AppTheme"/>
-        <service android:name=".services.TrackingService">
-        </service>
+
     </application>
 
 </manifest>
