@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.remote;
 
 import java.util.List;
 
+import edu.upc.fib.meetnrun.adapters.models.ChallengeServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
@@ -120,5 +121,18 @@ public interface SOServices {
 
     @DELETE("/meetings/{idMeeting}/tracking/{idUser}")
     Call<Void> deleteTracking(@Path("idUser") int userID, @Path("idMeeting") int meetingID);
+
+    //CHALLENGES
+    @GET("/challenges")
+    Call<List<ChallengeServer>> getAllCurrentUserChallenges();
+
+    @POST("/challenges")
+    Call<ChallengeServer> createNewChallenge(@Body Forms.ChallengeCreator cs);
+
+    @GET("/challenges/{id}")
+    Call<ChallengeServer> getChallenge(@Path("id") int id);
+
+    @DELETE("/challenges/{id}")
+    Call<Void> deleteChallenge(@Path("id") int id);
 
 }
