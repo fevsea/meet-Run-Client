@@ -75,8 +75,11 @@ public class Statistics {
     public float getTotalTimeMillis(){
         return totalTimeMillis;
     }
-    public String getTotalTimeInString() {
-        return String.format("%sh %sm %ss", this.totalTimeMillis/1000);
+    public String getTimeInString(float time) {
+        float hours=time/3600000;
+        float mins=(time%3600000)/60000;
+        float secs=(time%60000)/1000;
+        return String.format("%sh %sm %ss", (int) hours, (int) mins, (int) secs);
     }
 
     public int getNumberMeetings() {
@@ -92,7 +95,11 @@ public class Statistics {
     }
 
     public String getRhythmInString(){
-        return String.format("%sh %sm %ss", getRhythm());
+        float secstotals=getRhythm();
+        float hours=secstotals/3600;
+        float mins=(secstotals%3600)/60;
+        float secs=secstotals%60;
+        return String.format("%sh %sm %ss", (int) hours, (int) mins, (int) secs);
     }
 
     public String getSpeedInString(float speed){
@@ -119,16 +126,8 @@ public class Statistics {
         return maxTime;
     }
 
-    public String getMaxTimeInString(){
-        return String.format("%sh %sm %ss", this.maxTime/1000);
-    }
-
     public float getMinTime() {
         return minTime;
-    }
-
-    public String getMinTimeInString(){
-        return String.format("%sh %sm %ss", this.minTime/1000);
     }
 
     public void setMaxSpeed(float maxSpeed) {

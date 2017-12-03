@@ -48,6 +48,7 @@ public class StatisticsProfileFragment extends Fragment {
     View view;
     String user;
     private int userLevel;
+    String name, userlevel, usermeetings, usersteps, userkm, usertime, usercalories, userrhythm, userspeed, usermaxspeed, userminspeed, usermaxtime, usermintime, usermaxlength, userminlength;
 
     // newInstance constructor for creating fragment with arguments
     public static StatisticsProfileFragment newInstance(int page, String title) {
@@ -70,24 +71,29 @@ public class StatisticsProfileFragment extends Fragment {
         userId=bundle.getInt("userId");*/
     }
 
-    public void calcLevel (int meetings, float km){
-        meetings--;
-        for (int i=1; i<userLevel; i++){
-            meetings -= 10*(i-1);
-        }
+    public int getActualLevel (int meetings, float km, int level){
         float  resMeetings;
-        if (userLevel>0) resMeetings = (float) (meetings/(10*userLevel));
-        else resMeetings = (float) meetings++;
+        float resUser;
+        if (level==0){
+            resMeetings=(float) meetings;
+        }
+        else {
+            meetings--;
+            for (int i = 1; i < level; i++) {
+                meetings -= 10 * (i - 1);
+            }
+            resMeetings = (float) (meetings / (10 * level));
+        }
         if (resMeetings>1.0) resMeetings=(float) 1.0;
-        float resUser = (float) (km/(10+2.5*(userLevel*userLevel)));
+        resUser = (float) (km/(10+2.5*(level*level)));
         if (resUser>1.0) resUser=(float) 1.0;
         float res= (float) (0.5*resMeetings+0.5*resUser);
         while (res>=1.0) {
-            meetings-=10*(userLevel);
-            userLevel++;
-            resMeetings= (float) (meetings/(10*userLevel));
+            meetings-=10*(level);
+            level++;
+            resMeetings= (float) (meetings/(10*level));
             if (resMeetings>1.0) resMeetings=(float) 1.0;
-            resUser = (float) (km /(10+2.5*(userLevel*userLevel)));
+            resUser = (float) (km /(10+2.5*(level*level)));
             if (resUser>1.0) resUser=(float) 1.0;
             res= (float) (0.5*resMeetings+0.5*resUser);
         }
@@ -95,13 +101,14 @@ public class StatisticsProfileFragment extends Fragment {
         percentMeetings.setProgress ((int) (100*resMeetings));
         percentKm.setProgress((int) (100*resUser));
         percentLevel.setProgress((int) (100*res));
-        level.setText (String.valueOf(userLevel));
+        return level;
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_statistics_profile, container, false);
         context=this.getActivity();
+        username  = view.findViewById (R.id.username);
         level     = view.findViewById (R.id.level);
         meetings  = view.findViewById (R.id.nMeetings);
         steps     = view.findViewById (R.id.nSteps);
@@ -130,22 +137,22 @@ public class StatisticsProfileFragment extends Fragment {
         new userStats().execute();
     }
     private class userStats extends AsyncTask<String,String,String> {
-        private void setValues(Statistics ss){
-            /*username.setText(s.);
-            level.setText (userLevel);*/
-            meetings.setText(String.valueOf(ss.getNumberMeetings()));
-            steps.setText(String.valueOf(ss.getTotalSteps()));
-            totalKm.setText(String.valueOf(ss.getTotalKm()));
-            totalTime.setText(ss.getTotalTimeInString());
-            calories.setText(String.valueOf( ss.getTotalCalories()));
-            rhythm.setText(ss.getRhythmInString());
-            avgSpeed.setText(ss.getSpeedInString(ss.getAvgSpeed()));
-            maxSpeed.setText(ss.getSpeedInString(ss.getMaxSpeed()));
-            minSpeed.setText(ss.getSpeedInString(ss.getMinSpeed()));
-            maxTime.setText(ss.getMaxTimeInString());
-            maxLength.setText(ss.getMaxLength()+" km");
-            minLength.setText(ss.getMinLength()+" km");
-            minTime.setText(ss.getMinTimeInString());
+        private void setValues(){
+            name=u.getUsername();
+            userlevel=String.valueOf(u.getLevel());
+            usercalories=String.valueOf(s.getTotalCalories());
+            userrhythm=s.getRhythmInString();
+            usersteps=String.valueOf(s.getTotalSteps());
+            userspeed=s.getSpeedInString(s.getAvgSpeed());
+            usermaxspeed=s.getSpeedInString(s.getMaxSpeed());
+            userminspeed=s.getSpeedInString(s.getMinSpeed());
+            usermaxtime=s.getTimeInString(s.getMaxTime());
+            usermintime=s.getTimeInString(s.getMinTime());
+            usermaxlength=String.valueOf(s.getMaxLength())+" km";
+            userminlength=String.valueOf(s.getMinLength())+" km";
+            usertime=s.getTimeInString(s.getTotalTimeMillis());
+            int l=getActualLevel(s.getNumberMeetings(), s.getTotalKm(), (int) u.getLevel());
+            userlevel=String.valueOf(l);
         }
 
         @Override
@@ -157,8 +164,8 @@ public class StatisticsProfileFragment extends Fragment {
                 s = iUserAdapter.getUserStatisticsByID(id);
 
                 //TODO: Hacerlo bien, sin hardcoded
-                setValues(s);
-                calcLevel(s.getNumberMeetings(), s.getTotalKm());
+                setValues();
+
                         //u=iUserAdapter.getUser(userId);
                     } catch (AutorizationException e) {
                         e.printStackTrace();
@@ -166,6 +173,26 @@ public class StatisticsProfileFragment extends Fragment {
                         e.printStackTrace();
                     }*/
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result){
+            username.setText(name);
+            level.setText(userlevel);
+            meetings.setText(usermeetings);
+            steps.setText(usersteps);
+            totalKm.setText(userkm);
+            totalTime.setText(usertime);
+            calories.setText(usercalories);
+            rhythm.setText(userrhythm);
+            avgSpeed.setText(userspeed);
+            maxSpeed.setText(usermaxspeed);
+            minSpeed.setText(userminspeed);
+            maxTime.setText(usermaxtime);
+            maxLength.setText(usermaxlength);
+            minLength.setText(userminlength);
+            minTime.setText(usermintime);
+
         }
             }
 }
