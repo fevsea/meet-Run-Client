@@ -25,7 +25,7 @@ public class ChallengeServer implements IServerModel {
 
     @SerializedName("distance")
     @Expose
-    private int distance;
+    private Float distance;
 
     @SerializedName("deadline")
     @Expose
@@ -37,14 +37,14 @@ public class ChallengeServer implements IServerModel {
 
     @SerializedName("creatorDistance")
     @Expose
-    private Integer creatorDistance;
+    private Float creatorDistance;
 
     @SerializedName("challengedDistance")
     @Expose
-    private Integer challengedDistance;
+    private Float challengedDistance;
 
-    public ChallengeServer(UserServer creator, UserServer challenged, int distance, String dateDeadline, String creationDate,
-                           Integer creatorDistance, Integer challengedDistance) {
+    public ChallengeServer(UserServer creator, UserServer challenged, Float distance, String dateDeadline, String creationDate,
+                           Float creatorDistance, Float challengedDistance) {
         this.creator = creator;
         this.challenged = challenged;
         this.distance = distance;

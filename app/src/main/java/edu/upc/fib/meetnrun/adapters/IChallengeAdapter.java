@@ -20,7 +20,6 @@ public interface IChallengeAdapter {
 
     public boolean deleteChallenge(int challengeID) throws AutorizationException, NotFoundException;
 
-    public Challenge createNewChallenge(User creator, User challenged, int distance, String deadlineDate,
-                                        String creationDate, int creatorDistance, int challengedDistance)
+    public Challenge createNewChallenge(User creator, User challenged, int distance, String deadlineDate)
             throws AutorizationException, ParamsException;
 }

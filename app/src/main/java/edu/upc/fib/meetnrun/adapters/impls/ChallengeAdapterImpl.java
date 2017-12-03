@@ -98,11 +98,9 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
     }
 
     @Override
-    public Challenge createNewChallenge(User creator, User challenged, int distance, String deadlineDate,
-                                        String creationDate, int creatorDistance, int challengedDistance)
+    public Challenge createNewChallenge(User creator, User challenged, int distance, String deadlineDate)
             throws AutorizationException, ParamsException {
-        Forms.ChallengeCreator cs = new Forms.ChallengeCreator(0, creator.getId(), challenged.getId(), distance, deadlineDate, creationDate,
-                challengedDistance, challengedDistance);
+        Forms.ChallengeCreator cs = new Forms.ChallengeCreator(0, creator.getId(), challenged.getId(), distance, deadlineDate);
         ChallengeServer c = null;
         try {
             Response<ChallengeServer> ret = mServices.createNewChallenge(cs).execute();

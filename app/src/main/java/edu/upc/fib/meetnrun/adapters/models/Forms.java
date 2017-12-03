@@ -327,29 +327,13 @@ public class Forms {
         @Expose
         private String dateDeadline;
 
-        @SerializedName("created")
-        @Expose
-        private String creationDate;
-
-        @SerializedName("creatorDistance")
-        @Expose
-        private Integer creatorDistance;
-
-        @SerializedName("challengedDistance")
-        @Expose
-        private Integer challengedDistance;
-
         public ChallengeCreator(Integer id, Integer creator, Integer challenged, Integer distance,
-                                String dateDeadline, String creationDate, Integer creatorDistance,
-                                Integer challengedDistance) {
+                                String dateDeadline) {
             this.id = id;
             this.creator = creator;
             this.challenged = challenged;
             this.distance = distance;
             this.dateDeadline = dateDeadline;
-            this.creationDate = creationDate;
-            this.creatorDistance = creatorDistance;
-            this.challengedDistance = challengedDistance;
         }
     }
 
