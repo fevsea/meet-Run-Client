@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -51,8 +52,16 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     private FriendsAdapter participantsAdapter;
     private IMeetingAdapter meetingController;
     private IFriendsAdapter friendsController;
+    private List<User> meetingUsers;
     private List<User> friends;
     private int meetingId;
+    private boolean isLoading;
+    private boolean isLastPage;
+    private int pageNumber;
+    private ProgressBar progressBar;
+    private LinearLayoutManager layoutManager;
+    private FloatingActionButton fab;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,8 +90,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         date.setText(meetingInfo.getString("date"));
         time.setText(meetingInfo.getString("time"));
 
-        FloatingActionButton fab =
-                getActivity().findViewById(R.id.activity_fab);
+        fab = getActivity().findViewById(R.id.activity_fab);
         if (CurrentSession.getInstance().getCurrentUser().getId() == meetingInfo.getInt("ownerId")) {
 
             fab.setImageResource(android.R.drawable.ic_menu_edit);
@@ -101,6 +109,8 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
             fab.setVisibility(View.INVISIBLE);
         }
 
+        progressBar = view.findViewById(R.id.pb_loading);
+        initializePagination();
 
         setupRecyclerView();
         setupScrollView();
@@ -119,12 +129,11 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     private void setupRecyclerView() {
 
         final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
-        friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        layoutManager = new LinearLayoutManager(getActivity());
+        friendsList.setLayoutManager(layoutManager);
 
-        List<User> users = new ArrayList<>();
-        getParticipantsList();
-
-        participantsAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
+        meetingUsers = new ArrayList<>();
+        participantsAdapter = new FriendsAdapter(meetingUsers, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
@@ -156,18 +165,46 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
 
             }
         }, getContext(), false);
+
+        friendsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                fab.setVisibility(View.VISIBLE);
+
+                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0) {
+                    if (!isLastPage) {
+                        getParticipantsList();
+                    }
+                    else {
+                        fab.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
+
+        getParticipantsList();
+
         friendsList.setAdapter(participantsAdapter);
-      /*  LinearLayoutManager layoutManager
-                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        friends.setLayoutManager(layoutManager);*/
+
 
 
     }
 
-    @Override
-    public void onResume() {
-        getParticipantsList();
-        super.onResume();
+
+    private void initializePagination() {
+        pageNumber = 0;
+        isLoading = false;
+        isLastPage = false;
     }
 
     private void setupScrollView() {
@@ -202,15 +239,44 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         new getFriends().execute(CurrentSession.getInstance().getCurrentUser().getId().toString());
     }
 
+    private void setLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+    }
+
+    private void updateData() {
+        if (meetingUsers != null) {
+            if (pageNumber != 0) {
+
+                participantsAdapter.updateFriendsList(meetingUsers);
+            }
+            else {
+                participantsAdapter.addFriends(meetingUsers);
+            }
+
+            if (meetingUsers.size() == 0) {
+                isLastPage = true;
+            }
+            else pageNumber++;
+        }
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+
     private class getParticipants extends AsyncTask<Integer,String,String> {
 
-        private List<User> l = new ArrayList<>();
+
+        @Override
+        protected void onPreExecute() {
+            setLoading();
+        }
 
         @Override
         protected String doInBackground(Integer... integers) {
             //TODO handle exceptions
             try {
-                l = meetingController.getParticipantsFromMeeting(integers[0],0);//TODO arreglar paginas
+                meetingUsers = meetingController.getParticipantsFromMeeting(integers[0],pageNumber);//TODO arreglar paginas
             } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
@@ -219,7 +285,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
 
         @Override
         protected void onPostExecute(String s) {
-            participantsAdapter.updateFriendsList(l);
+            updateData();
             super.onPostExecute(s);
         }
     }
