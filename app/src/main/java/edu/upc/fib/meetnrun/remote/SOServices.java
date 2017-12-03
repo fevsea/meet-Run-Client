@@ -84,7 +84,6 @@ public interface SOServices {
     Call<Void> updateFirebaseToken(@Body Forms.Token token);
 
 
-
     //PARTICIPANTS
 
     @GET("/meetings/{id}/participants")
@@ -139,4 +138,7 @@ public interface SOServices {
 
     @DELETE("/chats/{id}")
     Call<Void> deleteChat(@Path("id") int id);
+
+    @GET("/chats/p2p/{id}")
+    Call<ChatServer> getPrivateChat(@Path("id") int id);
 }

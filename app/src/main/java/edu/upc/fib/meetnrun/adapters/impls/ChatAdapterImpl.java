@@ -2,8 +2,8 @@ package edu.upc.fib.meetnrun.adapters.impls;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.models.ChatServer;
@@ -51,7 +51,7 @@ public class ChatAdapterImpl implements IChatAdapter {
                 throw (AutorizationException) e;
             }
         }
-        return u.toGenericModel();
+        return u != null ? u.toGenericModel() : null;
     }
 
     @Override
@@ -115,8 +115,6 @@ public class ChatAdapterImpl implements IChatAdapter {
                 throw (NotFoundException) e;
             } else if (e instanceof AutorizationException) {
                 throw (AutorizationException) e;
-            } else if (e instanceof NotFoundException) {
-                throw (NotFoundException) e;
             }
         }
         return ok;
@@ -134,8 +132,30 @@ public class ChatAdapterImpl implements IChatAdapter {
             e.printStackTrace();
         } catch (GenericException e) {
             e.printStackTrace();
-            if (e instanceof NotFoundException) throw (NotFoundException) e;
+            if (e instanceof AutorizationException) throw (AutorizationException) e;
+            else if (e instanceof NotFoundException) throw (NotFoundException) e;
         }
-        return cs.toGenericModel();
+        return cs != null ? cs.toGenericModel() : null;
+    }
+
+    @Override
+    public Chat getPrivateChat(int targetUserID) throws AutorizationException, NotFoundException {
+        ChatServer cs = null;
+        try {
+            Response<ChatServer> ret = mServices.getPrivateChat(targetUserID).execute();
+            if (!ret.isSuccessful())
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            cs = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GenericException e) {
+            e.printStackTrace();
+            if (e instanceof NotFoundException) {
+                throw (NotFoundException) e;
+            } else if (e instanceof AutorizationException) {
+                throw (AutorizationException) e;
+            }
+        }
+        return cs != null ? cs.toGenericModel() : null;
     }
 }
