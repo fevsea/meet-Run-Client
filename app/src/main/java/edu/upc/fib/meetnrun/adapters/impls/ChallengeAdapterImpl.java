@@ -16,7 +16,6 @@ import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.remote.SOServices;
 import retrofit2.Response;
 
-import static android.R.attr.id;
 import static edu.upc.fib.meetnrun.adapters.utils.Utils.checkErrorCodeAndThowException;
 
 /**
@@ -59,7 +58,7 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
     public Challenge getChallenge(int challengeID) throws AutorizationException, NotFoundException {
         ChallengeServer m = null;
         try {
-            Response<ChallengeServer> ret = mServices.getChallenge(id).execute();
+            Response<ChallengeServer> ret = mServices.getChallenge(challengeID).execute();
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
             m = ret.body();
@@ -80,7 +79,7 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
     public boolean deleteChallenge(int challengeID) throws AutorizationException, NotFoundException {
         boolean ok = true;
         try {
-            Response<Void> ret = mServices.deleteChallenge(id).execute();
+            Response<Void> ret = mServices.deleteChallenge(challengeID).execute();
             if (!ret.isSuccessful()) {
                 ok = false;
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
