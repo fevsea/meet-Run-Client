@@ -23,6 +23,8 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,6 +78,9 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private TextView distanceCounter;
     private TextView caloriesCounter;
     private FloatingActionButton pauseButton;
+    private LinearLayout contentMain;
+
+    private ProgressBar progressBar;
 
     private Integer meetingId;
 
@@ -87,7 +92,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracking);
 
-        Integer meetingId = getIntent().getIntExtra("id", -1);
+        meetingId = getIntent().getIntExtra("id", -1);
         if (meetingId == -1) {
             Toast.makeText(this, R.string.tracking_error_loading, Toast.LENGTH_LONG).show();
             finish();
@@ -117,6 +122,10 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         caloriesCounter.setText("0 kcal");
 
         pauseButton = findViewById(R.id.pause_fab);
+
+        contentMain = findViewById(R.id.content_main);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setIndeterminate(true);
 
         pauseButton.setOnClickListener(this);
 
@@ -288,23 +297,17 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private void save() {
         SaveTrackingData saveTrackingData = new SaveTrackingData();
         saveTrackingData.execute(trackingData);
-        stopService(new Intent(this, TrackingService.class));
     }
 
     private class SaveTrackingData extends AsyncTask<TrackingData, String, Boolean> {
 
         Exception exception = null;
-        ProgressDialog mProgressDialog;
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressDialog = new ProgressDialog(TrackingActivity.this);
-            mProgressDialog.setTitle(R.string.saving);
-            mProgressDialog.setMessage(getResources().getString(R.string.saving_tracking_data));
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.show();
+            contentMain.setVisibility(View.GONE);
+            pauseButton.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -313,6 +316,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                 IMeetingAdapter meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
                 Integer userID = CurrentSession.getInstance().getCurrentUser().getId();
                 TrackingData td = params[0];
+                Log.i(TAG, "Saving for (user, meeting)" + userID + " " + meetingId);
                 Log.i(TAG, "Saving... " + params[0].toString());
                 meetingAdapter.addTracking(userID, meetingId, td.getAverageSpeed(), td.getDistance(), td.getSteps(), td.getTotalTimeMillis(), td.getCalories(), td.getRoutePoints());
             } catch (ForbiddenException | AutorizationException e) {
@@ -324,10 +328,10 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
         @Override
         protected void onPostExecute(Boolean result) {
-            mProgressDialog.dismiss();
             if (exception != null || !result) {
                 Toast.makeText(TrackingActivity.this, getResources().getString(R.string.tracking_error_toast_message), Toast.LENGTH_LONG).show();
             }
+            stopService(new Intent(TrackingActivity.this, TrackingService.class));
             finish();
         }
 
@@ -335,7 +339,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.e(TAG, "onActivityResult" + resultCode);
+        Log.e(TAG, "onActivityResult (requestCode+resultCode) " + requestCode+ " " + resultCode);
 
         if (requestCode == ConnectionResult.SIGN_IN_REQUIRED) {
 
