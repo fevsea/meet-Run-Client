@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.utils;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
@@ -34,8 +35,8 @@ public class UtilsViews {
         return circularShape;
     }
 
-    public AlertDialog showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel, View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+    public AlertDialog showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel, Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(title);
         builder.setMessage(message);
         builder.setPositiveButton(okButtonText, ok);

@@ -28,10 +28,11 @@ import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Message;
+import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 /**
@@ -45,7 +46,7 @@ public class ChatGroupsFragment extends Fragment {
     private IChatAdapter chatDBAdapter;
     private IFriendsAdapter friendsDBAdapter;
     private FloatingActionButton fab;
-    private List<User> l;
+    private List<Friend> l;
     private EditText groupName;
     private Button ok;
     private TextView numbFriends;
@@ -141,7 +142,7 @@ public class ChatGroupsFragment extends Fragment {
             @Override
             public void onItemClicked(int position) {
 
-                User friend = friendsAdapter.getFriendAtPosition(position);
+                User friend = friendsAdapter.getFriendAtPosition(position).getFriend();
 
                 if (friend.isSelected()) {
                     selectedFriends.remove(friend);
@@ -155,7 +156,7 @@ public class ChatGroupsFragment extends Fragment {
                 }
                 friendsAdapter.updateFriendsList(l);
             }
-        }, getContext(), true);
+        }, getContext());
         friendsList.setAdapter(friendsAdapter);
     }
 

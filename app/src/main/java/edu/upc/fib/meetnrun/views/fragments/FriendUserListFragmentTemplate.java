@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,8 +21,10 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 /**
@@ -35,7 +36,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
     protected View view;
     protected FriendsAdapter friendsAdapter;
     protected IFriendsAdapter friendsDBAdapter;
-    protected List<User> l;
+    protected List<Friend> l;
     protected FloatingActionButton fab;
     protected SwipeRefreshLayout swipeRefreshLayout;
 
@@ -101,11 +102,11 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
             @Override
             public void onItemClicked(int position) {
 
-                User friend = friendsAdapter.getFriendAtPosition(position);
+                User friend = friendsAdapter.getFriendAtPosition(position).getFriend();
                 getIntent(friend);
 
             }
-        }, getContext(), false);
+        }, getContext());
 
         friendsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -153,13 +154,14 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
             @Override
             public boolean onQueryTextChange(String newText) {
                 newText = newText.toLowerCase();
-                ArrayList<User> newList = new ArrayList<>();
-                for (User friend : l) {
+                ArrayList<Friend> newList = new ArrayList<>();
+                for (Friend f : l) {
+                    User friend = f.getFriend();
                     String userName = friend.getUsername().toLowerCase();
                     String name = (friend.getFirstName()+" "+friend.getLastName()).toLowerCase();
                     String postCode = friend.getPostalCode();
                     if (userName != null && name != null && postCode != null) {
-                        if (name.contains(newText) || userName.contains(newText) || postCode.contains(newText)) newList.add(friend);
+                        if (name.contains(newText) || userName.contains(newText) || postCode.contains(newText)) newList.add(f);
                     }
 
                 }

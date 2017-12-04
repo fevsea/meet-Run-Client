@@ -39,7 +39,7 @@ import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback {
@@ -48,7 +48,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     private LatLng location;
     private GoogleMap map;
     private Marker marker;
-    private FriendsAdapter participantsAdapter;
+    private UsersAdapter participantsAdapter;
     private IMeetingAdapter meetingController;
     private IFriendsAdapter friendsController;
     private List<User> friends;
@@ -124,7 +124,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         List<User> users = new ArrayList<>();
         getParticipantsList();
 
-        participantsAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
+        participantsAdapter = new UsersAdapter(users, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
@@ -155,7 +155,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
                 startActivity(profileIntent);
 
             }
-        }, getContext(), false);
+        }, getContext());
         friendsList.setAdapter(participantsAdapter);
       /*  LinearLayoutManager layoutManager
                 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
