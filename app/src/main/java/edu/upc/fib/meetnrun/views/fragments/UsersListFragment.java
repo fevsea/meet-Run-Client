@@ -48,6 +48,7 @@ public class UsersListFragment extends Fragment {
     private List<User> l;
     private FloatingActionButton fab;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private User currentUser;
 
     private boolean isLoading;
     private boolean isLastPage;
@@ -62,8 +63,10 @@ public class UsersListFragment extends Fragment {
 
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
 
-        usersDBAdapter = CurrentSession.getInstance().getUserAdapter();
-        friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
+        CurrentSession cs = CurrentSession.getInstance();
+        usersDBAdapter = cs.getUserAdapter();
+        friendsDBAdapter = cs.getFriendsAdapter();
+        currentUser = cs.getCurrentUser();
 
         initializePagination();
         progressBar = view.findViewById(R.id.pb_loading_friends);
@@ -231,6 +234,7 @@ public class UsersListFragment extends Fragment {
                 boolean equal = false;
                 for (Friend f: friends) {
                     User friend = f.getFriend();
+                    if (currentUser.getUsername().equals(friend.getUsername())) friend = f.getUser();
                     if (user.getUsername().equals(friend.getUsername())) {
                         equal = true;
                         friends.remove(friend);

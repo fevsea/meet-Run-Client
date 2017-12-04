@@ -421,9 +421,6 @@ public class ChatFragment extends Fragment {
     public void onResume() {
         firstTime = true;
         chat.setNumbMessagesAtPosition(userPosition, 0);
-        for (int i = 0; i < chat.getListUsersChatSize(); i++) {
-            //Log.e(chat.getUserAtPosition(i).getUsername(), chat.getNumbMessagesAtPosition(i).toString());
-        }
         super.onResume();
     }
 

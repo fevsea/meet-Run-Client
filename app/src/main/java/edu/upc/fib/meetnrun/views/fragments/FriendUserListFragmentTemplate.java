@@ -39,6 +39,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
     protected List<Friend> l;
     protected FloatingActionButton fab;
     protected SwipeRefreshLayout swipeRefreshLayout;
+    private User currentUser;
 
     protected boolean isLoading;
     protected boolean isLastPage;
@@ -54,7 +55,9 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
         adapter();
 
-        friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
+        CurrentSession cs = CurrentSession.getInstance();
+        currentUser = cs.getCurrentUser();
+        friendsDBAdapter = cs.getFriendsAdapter();
 
         initializePagination();
         progressBar = view.findViewById(R.id.pb_loading_friends);
@@ -103,6 +106,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
             public void onItemClicked(int position) {
 
                 User friend = friendsAdapter.getFriendAtPosition(position).getFriend();
+                if (currentUser.getUsername().equals(friend.getUsername())) friend = friendsAdapter.getFriendAtPosition(position).getUser();
                 getIntent(friend);
 
             }
@@ -157,6 +161,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
                 ArrayList<Friend> newList = new ArrayList<>();
                 for (Friend f : l) {
                     User friend = f.getFriend();
+                    if (currentUser.getUsername().equals(friend.getUsername())) friend = f.getUser();
                     String userName = friend.getUsername().toLowerCase();
                     String name = (friend.getFirstName()+" "+friend.getLastName()).toLowerCase();
                     String postCode = friend.getPostalCode();

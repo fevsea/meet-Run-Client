@@ -51,6 +51,7 @@ public class ChatGroupsFragment extends Fragment {
     private Button ok;
     private TextView numbFriends;
     private List<User> selectedFriends;
+    private User currentUser;
 
     private Chat chat;
     private String name;
@@ -65,8 +66,11 @@ public class ChatGroupsFragment extends Fragment {
 
         this.view = inflater.inflate(R.layout.fragment_chat_groups, container, false);
 
-        friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
-        chatDBAdapter = CurrentSession.getInstance().getChatAdapter();
+        CurrentSession cs = CurrentSession.getInstance();
+        chatDBAdapter = cs.getChatAdapter();
+        friendsDBAdapter = cs.getFriendsAdapter();
+        currentUser = cs.getCurrentUser();
+
 
         groupName = view.findViewById(R.id.groupName);
         ok = view.findViewById(R.id.btnOk);
@@ -143,6 +147,7 @@ public class ChatGroupsFragment extends Fragment {
             public void onItemClicked(int position) {
 
                 User friend = friendsAdapter.getFriendAtPosition(position).getFriend();
+                if (currentUser.getUsername().equals(friend.getUsername())) friend = friendsAdapter.getFriendAtPosition(position).getUser();
 
                 if (friend.isSelected()) {
                     selectedFriends.remove(friend);
