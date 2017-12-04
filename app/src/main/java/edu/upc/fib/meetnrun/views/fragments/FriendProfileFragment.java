@@ -14,6 +14,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.views.CreateChallengeActivity;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
@@ -24,7 +25,7 @@ import edu.upc.fib.meetnrun.views.ChatActivity;
  * Created by eric on 2/11/17.
  */
 
-public class FriendProfileFragment extends ProfileFragmentTemplate {
+public class FriendProfileFragment extends ProfileFragmentTemplate implements View.OnClickListener {
 
     private String friendUsername;
 
@@ -95,6 +96,18 @@ public class FriendProfileFragment extends ProfileFragmentTemplate {
     @Override
     protected void getMethod(String s) {
         new removeFriend().execute(s);
+    }
+
+    @Override
+    protected void configureChallengeButton() {
+        challengeButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent i = new Intent(getActivity(), CreateChallengeActivity.class);
+        i.putExtra("id",this.currentFriend.getId());
+        startActivity(i);
     }
 
     private class removeFriend extends AsyncTask<String,String,String> {
