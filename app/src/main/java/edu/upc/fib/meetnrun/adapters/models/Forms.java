@@ -306,5 +306,36 @@ public class Forms {
         }
     }
 
+    public static class ChallengeCreator {
+        @SerializedName("id")
+        @Expose
+        private Integer id;
+
+        @SerializedName("creator")
+        @Expose
+        private Integer creator;
+
+        @SerializedName("challenged")
+        @Expose
+        private Integer challenged;
+
+        @SerializedName("distance")
+        @Expose
+        private Integer distance;
+
+        @SerializedName("deadline")
+        @Expose
+        private String dateDeadline;
+
+        public ChallengeCreator(Integer id, Integer creator, Integer challenged, Integer distance,
+                                String dateDeadline) {
+            this.id = id;
+            this.creator = creator;
+            this.challenged = challenged;
+            this.distance = distance;
+            this.dateDeadline = dateDeadline;
+        }
+    }
+
 }
 

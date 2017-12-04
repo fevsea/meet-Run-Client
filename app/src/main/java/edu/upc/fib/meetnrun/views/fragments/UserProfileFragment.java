@@ -15,6 +15,11 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 public class UserProfileFragment extends ProfileFragmentTemplate {
 
     @Override
+    protected void configureChallengeButton() {
+        challengeButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
     protected void setImage() {
         img.setImageResource(R.drawable.send);
         chat.setVisibility(View.GONE);
@@ -34,6 +39,11 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
     protected void getMethod(String s) {
         new addFriend().execute(s);
     }
+
+    /*@Override
+    protected void configureChallengeButton() {
+        challengeButton.setVisibility(View.INVISIBLE);
+    }*/
 
     private class addFriend extends AsyncTask<String,String,String> {
 

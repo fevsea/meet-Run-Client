@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.remote;
 
 import java.util.List;
 
+import edu.upc.fib.meetnrun.adapters.models.ChallengeServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
@@ -22,7 +23,7 @@ import retrofit2.http.Query;
 
 public interface SOServices {
 
-    public int PAGELIMIT = 10;
+    int PAGELIMIT = 10;
 
     //MEETINGS
     @GET("/meetings")
@@ -75,6 +76,14 @@ public interface SOServices {
     @GET("/users/current")
     Call<UserServer> getCurrentUser();
 
+    @GET("/users/token")
+    Call<Forms.Token> getFibaseToken();
+
+    @POST("/users/token")
+    Call<Void> updateFirebaseToken(@Body Forms.Token token);
+
+
+
     //PARTICIPANTS
 
     @GET("/meetings/{id}/participants")
@@ -112,5 +121,18 @@ public interface SOServices {
 
     @DELETE("/meetings/{idMeeting}/tracking/{idUser}")
     Call<Void> deleteTracking(@Path("idUser") int userID, @Path("idMeeting") int meetingID);
+
+    //CHALLENGES
+    @GET("/challenges")
+    Call<List<ChallengeServer>> getAllCurrentUserChallenges();
+
+    @POST("/challenges")
+    Call<ChallengeServer> createNewChallenge(@Body Forms.ChallengeCreator cs);
+
+    @GET("/challenges/{id}")
+    Call<ChallengeServer> getChallenge(@Path("id") int id);
+
+    @DELETE("/challenges/{id}")
+    Call<Void> deleteChallenge(@Path("id") int id);
 
 }

@@ -17,27 +17,27 @@ import edu.upc.fib.meetnrun.models.User;
  */
 
 public interface IMeetingAdapter {
-    public List<Meeting> getAllMeetings(int page);
+    List<Meeting> getAllMeetings(int page);
 
-    public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException, AutorizationException;
+    Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException, AutorizationException;
 
-    public Meeting getMeeting(int targetMeetingid) throws NotFoundException;
+    Meeting getMeeting(int targetMeetingid) throws NotFoundException;
 
-    public boolean updateMeeting(Meeting obj) throws ParamsException, NotFoundException, AutorizationException;
+    boolean updateMeeting(Meeting obj) throws ParamsException, NotFoundException, AutorizationException;
 
-    public boolean deleteMeetingByID(int id) throws NotFoundException, AutorizationException;
+    boolean deleteMeetingByID(int id) throws NotFoundException, AutorizationException;
 
-    public List<User> getParticipantsFromMeeting(int targetMeetingId, int page) throws AutorizationException, ParamsException;
+    List<User> getParticipantsFromMeeting(int targetMeetingId, int page) throws AutorizationException, ParamsException;
 
     public boolean joinMeeting(int targetMeetingId, int targetUserId) throws AutorizationException, ParamsException;
 
     public boolean leaveMeeting(int targetMeetingId, int targetUserId) throws AutorizationException, ParamsException;
 
-    public List<Meeting> getAllMeetingsFilteredByName(String query, int page);
+    List<Meeting> getAllMeetingsFilteredByName(String query, int page);
 
-    public boolean addTracking(Integer userID, Integer meetingID, Float averageSpeed, Float distance, Integer steps, Long totalTimeMillis, Float calories, List<LatLng> routePoints) throws ForbiddenException, AutorizationException;
+    boolean addTracking(Integer userID, Integer meetingID, Float averageSpeed, Float distance, Integer steps, Long totalTimeMillis, Float calories, List<LatLng> routePoints) throws ForbiddenException, AutorizationException;
 
-    public TrackingData getTracking(int userID, int meetingID) throws AutorizationException, NotFoundException;
+    TrackingData getTracking(int userID, int meetingID) throws AutorizationException, NotFoundException;
 
-    public boolean deleteTrackingInMeeting(int userID, int meetingID) throws AutorizationException, NotFoundException;
+    boolean deleteTrackingInMeeting(int userID, int meetingID) throws AutorizationException, NotFoundException;
 }
