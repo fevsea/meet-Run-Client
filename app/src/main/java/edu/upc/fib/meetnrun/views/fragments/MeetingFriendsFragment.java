@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -16,12 +17,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,9 +33,6 @@ import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
-
-import static android.R.layout.simple_list_item_activated_2;
 
 
 /**
@@ -52,7 +48,7 @@ public class MeetingFriendsFragment extends Fragment {
     private UsersArrayAdapter adapter;
 
     private IFriendsAdapter friendsDBAdapter;
-    List<User> l;
+    List<User> friendsList;
     HashMap<Integer,Boolean> selectedUsers;
 
     ListView lv;
@@ -76,8 +72,8 @@ public class MeetingFriendsFragment extends Fragment {
         lv = (ListView) view.findViewById(R.id.myFriends);
         lv.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         Bundle meetingLevel= getActivity().getIntent().getExtras();
-        meetingId=meetingLevel.getInt("meetingId");
-        level=meetingLevel.getInt("level");
+        //meetingId=meetingLevel.getInt("meetingId");
+        //level=meetingLevel.getInt("level");
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -95,6 +91,9 @@ public class MeetingFriendsFragment extends Fragment {
               lv.setItemChecked(pos, setSelected);
             }
         });
+
+        adapter = new UsersArrayAdapter(context, R.layout.user_item_simple, friendsList);
+        //lv.setAdapter(adapter);
         new getFriends().execute();
 
         return view;
@@ -139,12 +138,13 @@ public class MeetingFriendsFragment extends Fragment {
             this._users = objects;
         }
 
+        @NonNull
         @Override
         public View getView(int position, View view, ViewGroup parent) {
             if (view == null){
                 view = this._li.inflate(this._resource, null);
             }
-
+            /*
             User user = this._users.get(position);
 
             TextView userPhoto = view.findViewById(R.id.meeting_item_user_photo2);
@@ -166,16 +166,13 @@ public class MeetingFriendsFragment extends Fragment {
             String level = String.valueOf(user.getLevel());
             if (level.equals("null")) level = "0";
             meetingLevel.setText(String.valueOf(level));
-
-/*
-            User item = this._users.get(position);
-            TextView tvTitle = (TextView)convertView.findViewById(android.R.id.text1);
-            TextView tvSubtitle = (TextView)convertView.findViewById(android.R.id.text2);
-
-            tvTitle.setText(item.getFirstName()+" "+item.getLastName());
-            tvSubtitle.setText(item.getUsername()+" -> "+item.getPostalCode());
 */
             return view;
+        }
+
+        public void updateList(List<User> list) {
+            _users = list;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -200,7 +197,7 @@ public class MeetingFriendsFragment extends Fragment {
             try {
                 friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
                 //TODO pagination
-                l = friendsDBAdapter.getUserFriends(0);
+                friendsList = friendsDBAdapter.getUserFriends(0);
             } catch (AutorizationException e) {
                 e.printStackTrace();
             }
@@ -209,8 +206,8 @@ public class MeetingFriendsFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            adapter = new UsersArrayAdapter(context, R.layout.user_item_simple,l);
-            lv.setAdapter(adapter);
+            Log.e("MFF",friendsList.toString());
+            adapter.updateList(friendsList);
             super.onPostExecute(s);
         }
     }

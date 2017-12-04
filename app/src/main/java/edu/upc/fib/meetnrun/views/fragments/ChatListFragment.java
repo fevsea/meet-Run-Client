@@ -210,13 +210,13 @@ public class ChatListFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
-                //l = chatDBAdapter.getUserChats();
+                //friendsList = chatDBAdapter.getUserChats();
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            //chatAdapter.updateChatList(l);
+            //chatAdapter.updateChatList(friendsList);
             super.onPostExecute(s);
         }
     }
