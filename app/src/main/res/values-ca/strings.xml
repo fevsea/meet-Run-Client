@@ -123,7 +123,7 @@
     <string name="authorization_error">Hi ha hagut un error autoritzant aquesta petició</string>
     <string name="challenge">Desafiament</string>
     <string name="challenge_progress_km">%1$.2f de %2$.2f km completats (%3$.2f %4$s)</string>
-    <string name="challenges"></string>
+    <string name="challenges">Desafiaments</string>
     <string name="chat_delete_chat_message">Està segur que vol esborrar aquest xat?</string>
     <string name="chat_delete_chat_title">Esborrar xat</string>
     <string name="chat_delete_historial_message">Està segur que vol esborrar l\'historial?</string>
