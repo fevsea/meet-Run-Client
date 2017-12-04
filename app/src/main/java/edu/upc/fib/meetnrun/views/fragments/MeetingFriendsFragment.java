@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -17,9 +18,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -46,12 +49,16 @@ public class MeetingFriendsFragment extends Fragment {
     private int meetingId;
     private FragmentActivity context;
     private UsersArrayAdapter adapter;
-
     private IFriendsAdapter friendsDBAdapter;
     List<User> friendsList;
     HashMap<Integer,Boolean> selectedUsers;
-
     ListView lv;
+    private FloatingActionButton fab;
+
+    private boolean isLoading;
+    private boolean isLastPage;
+    private int pageNumber;
+    private ProgressBar progressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +72,8 @@ public class MeetingFriendsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_meeting_friends, container, false);
         this.view = view;
         context=this.getActivity();
-        FloatingActionButton fab =
+        initializePagination();
+        fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.INVISIBLE);
         selectedUsers = new HashMap<>();
@@ -92,13 +100,38 @@ public class MeetingFriendsFragment extends Fragment {
             }
         });
 
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int firstVisibleItemPosition, int visibleItemCount, int totalItemCount) {
+
+                if (!isLoading && !isLastPage && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0) {
+                        updateFriendsList();
+                }
+            }
+        });
+
+
         adapter = new UsersArrayAdapter(context, R.layout.user_item_simple, friendsList);
         //lv.setAdapter(adapter);
-        new getFriends().execute();
+        updateFriendsList();
 
         return view;
     }
 
+    public void updateFriendsList() {
+        new getFriends().execute();
+    }
+
+    private void initializePagination() {
+        pageNumber = 0;
+        isLoading = false;
+        isLastPage = false;
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -175,12 +208,39 @@ public class MeetingFriendsFragment extends Fragment {
             notifyDataSetChanged();
         }
 
+        public void addFriendsToList(List<User> list) {
+            _users.addAll(list);
+            notifyDataSetChanged();
+        }
+
         @Override
         public int getCount() {
             return _users.size();
         }
     }
 
+    private void setLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+    }
+
+    private void updateData() {
+        if (friendsList != null) {
+            if (pageNumber == 0) {
+                adapter.updateList(friendsList);
+            }
+            else {
+                adapter.addFriendsToList(friendsList);
+            }
+
+            if (friendsList.size() == 0) {
+                isLastPage = true;
+            }
+            else pageNumber++;
+        }
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
+    }
 
     private GradientDrawable getColoredCircularShape(char letter) {
         int[] colors = view.getResources().getIntArray(R.array.colors);
@@ -193,11 +253,15 @@ public class MeetingFriendsFragment extends Fragment {
     private class getFriends extends AsyncTask<String,String,String> {
 
         @Override
+        protected void onPreExecute() {
+            setLoading();
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
             try {
                 friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
-                //TODO pagination
-                friendsList = friendsDBAdapter.listFriendsOfUser(CurrentSession.getInstance().getCurrentUser().getId(),0);
+                friendsList = friendsDBAdapter.listFriendsOfUser(CurrentSession.getInstance().getCurrentUser().getId(),pageNumber);
             } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
@@ -207,7 +271,7 @@ public class MeetingFriendsFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             Log.e("MFF",friendsList.toString());
-            adapter.updateList(friendsList);
+            updateData();
             super.onPostExecute(s);
         }
     }
