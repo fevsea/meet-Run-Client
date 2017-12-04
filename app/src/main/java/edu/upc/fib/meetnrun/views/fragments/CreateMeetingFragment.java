@@ -144,9 +144,13 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         timePickerFragment.setListener(new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hourSet, int minuteSet) {
-                hour2 = hourSet;
-                minute = minuteSet;
-                final String selectedTime = hour2 + ":" + minute;
+                String resHour=String.valueOf(hourSet);
+                String resMin=String.valueOf(minuteSet);
+                hour2=hourSet;
+                minute=minuteSet;
+                if (minuteSet<10) resMin="0"+resMin;
+                if (hourSet<10) resHour="0"+resHour;
+                final String selectedTime = resHour + ":" + resMin;
                 timeText.setText(selectedTime);
             }
         });
