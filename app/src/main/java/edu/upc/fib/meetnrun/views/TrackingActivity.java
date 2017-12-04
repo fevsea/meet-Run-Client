@@ -28,7 +28,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.fitness.FitnessOptions;
+import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -86,6 +89,8 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
     private TrackingService trackingService;
     private boolean mBound;
+    private final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 0533;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +142,25 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
         Intent serviceIntent = new Intent(this, TrackingService.class);
         startService(serviceIntent);
+
+        FitnessOptions fitnessOptions = FitnessOptions.builder()
+                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_LOCATION_SAMPLE, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_SPEED, FitnessOptions.ACCESS_READ)
+                .build();
+
+        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
+            GoogleSignIn.requestPermissions(
+                    this,
+                    GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
+                    GoogleSignIn.getLastSignedInAccount(this),
+                    fitnessOptions);
+        }
+        else if(trackingService != null) {
+            trackingService.onLogInDone();
+        }
     }
 
 
@@ -341,14 +365,12 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
         Log.e(TAG, "onActivityResult (requestCode+resultCode) " + requestCode+ " " + resultCode);
 
-        if (requestCode == ConnectionResult.SIGN_IN_REQUIRED) {
+        if (requestCode == ConnectionResult.SIGN_IN_REQUIRED || requestCode == GOOGLE_FIT_PERMISSIONS_REQUEST_CODE) {
 
             if (resultCode == ConnectionResult.SUCCESS) {
                 Log.i(TAG, "SIGN IN SUCCESS");
-                if (trackingService != null) {
-                    trackingService.onLogInDone();
-                }
             }
+            trackingService.onLogInDone();
 
         }
 
@@ -371,9 +393,9 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
             }
             else {
 
-                PendingIntent pendingIntent = intent.getParcelableExtra("error");
+                ConnectionResult connectionResult = intent.getParcelableExtra("error");
                 try {
-                    startIntentSenderForResult(pendingIntent.getIntentSender(), ConnectionResult.SIGN_IN_REQUIRED,null,0,0,0);
+                    connectionResult.startResolutionForResult(TrackingActivity.this, ConnectionResult.SIGN_IN_REQUIRED);
                 }
                 catch (IntentSender.SendIntentException ex) {
                     Log.e(TAG, ex.toString());
