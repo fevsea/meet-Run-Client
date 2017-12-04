@@ -246,6 +246,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     }
 
     private void updateData() {
+        Log.e("MEETINGINFO","LIST = " + meetingUsers.toString());
         if (meetingUsers != null) {
             if (pageNumber != 0) {
 

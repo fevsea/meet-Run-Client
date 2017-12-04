@@ -113,7 +113,7 @@
             android:layout_below="@+id/meeting_info_time"
             android:src="@android:color/transparent"
             android:layout_marginTop="20dp" />
-        <!-- TODO  recyclerview extends to the bottom, solve this -->
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/fragment_friends_container"
             android:layout_width="match_parent"
