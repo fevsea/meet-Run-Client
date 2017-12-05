@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,7 +32,7 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChallengesListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class ChallengesListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -54,7 +55,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
         setupRecyclerView();
 
         FloatingActionButton fab = getActivity().findViewById(R.id.activity_fab);
-        fab.setVisibility(View.INVISIBLE);
+        fab.setOnClickListener(this);
 
         return view;
     }
@@ -90,6 +91,17 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
     public void onResume() {
         super.onResume();
         updateChallengesList();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.activity_fab) {
+            Fragment friendsListFragment = new FriendsFragment();
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+            transaction.replace(R.id.activity_contentFrame, friendsListFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
     }
 
     private class GetChallenges extends AsyncTask<String,String,Boolean> {
