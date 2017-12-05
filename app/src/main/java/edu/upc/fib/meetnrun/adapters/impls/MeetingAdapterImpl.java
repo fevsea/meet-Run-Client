@@ -152,8 +152,8 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
         try {
             int offset = calculateOffset(SOServices.PAGELIMIT, page);
             Response<PageServer<UserServer>> ret =
-                    mServices.getAllParticipantsFromMeeting(SOServices.PAGELIMIT,
-                            offset, meetingId).execute();
+                    mServices.getAllParticipantsFromMeeting(meetingId,SOServices.PAGELIMIT,
+                            offset).execute();
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
 

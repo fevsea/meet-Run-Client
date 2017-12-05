@@ -14,4 +14,5 @@
     <dimen name="map_size">150dp</dimen>
     <dimen name="map_margin">20dp</dimen>
     <dimen name="cardview_margin">4dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

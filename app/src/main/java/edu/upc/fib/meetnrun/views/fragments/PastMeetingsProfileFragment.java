@@ -135,11 +135,11 @@ public class PastMeetingsProfileFragment extends Fragment {
                     avSpeed = "0";
                     calories = "0";
                 } else {
-                    distance = String.valueOf(tracking.getDistance());
+                    distance = String.valueOf(tracking.getDistance()); //m
                     steps = String.valueOf(tracking.getSteps());
-                    totalTime = String.valueOf(tracking.getTotalTimeMillis());
-                    avSpeed = String.valueOf(tracking.getAverageSpeed());
-                    calories = String.valueOf(tracking.getCalories());
+                    totalTime = String.valueOf(tracking.getTotalTimeMillis()); //ms
+                    avSpeed = String.valueOf(tracking.getAverageSpeed()); // m/s
+                    calories = String.valueOf(tracking.getCalories()); // kcal
                     path = tracking.getRoutePoints();
                 }
                 pastMeetingInfoIntent.putExtra("distance", distance);

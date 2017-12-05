@@ -235,7 +235,7 @@
             android:id="@+id/fragment_friends_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/meeting_info_map"
+            android:layout_below="@id/meeting_info_imagetrans"
             android:layout_marginTop="20dp"
             android:clickable="true"
             android:orientation="vertical">

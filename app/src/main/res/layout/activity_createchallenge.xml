@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="edu.upc.fib.meetnrun.views.CreateChallengeActivity">
+
+    <TextView
+        android:id="@+id/distance_picker_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black_overlay"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:text="@string/distance" />
+
+    <NumberPicker
+        android:id="@+id/distance_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/distance_picker_label" />
+    <TextView
+        android:id="@+id/deadline_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/distance_picker"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:text="@string/deadline"/>
+    <EditText
+        android:id="@+id/deadline_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/deadline_label"
+        android:layout_marginStart="15dp"
+        android:layout_below="@+id/distance_picker"
+        android:inputType="date"
+        android:editable="false"/>
+
+
+</RelativeLayout>
