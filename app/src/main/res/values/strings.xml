@@ -135,4 +135,8 @@
     <string name="ended_in_days_hours_minutes">Ended %1$d days %2$d hours %3$d minutes ago</string>
     <string name="ended_in_hours_minutes">Ended %1$d hours %2$d minutes ago</string>
     <string name="params_error">There are missing parameters or with incorrect format</string>
+    <string name="tracking_steps">%1$d steps</string>
+    <string name="tracking_distance">%1$.2f m</string>
+    <string name="tracking_speed">%1$.2f m/s</string>
+    <string name="tracking_calories">%1$.2f kcal</string>
 </resources>

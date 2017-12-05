@@ -123,4 +123,8 @@
     <string name="ended_in_days_hours_minutes">Terminó hace %1$d días %2$d horas %3$d minutos</string>
     <string name="ended_in_hours_minutes">Terminó hace %1$d horas %2$d minutos</string>
     <string name="params_error">Faltan parametros o tienen un formato inválido</string>
+    <string name="tracking_steps">%1$d pasos</string>
+    <string name="tracking_distance">%1$.2f m</string>
+    <string name="tracking_speed">%1$.2f m/s</string>
+    <string name="tracking_calories">%1$.2f kcal</string>
 </resources>

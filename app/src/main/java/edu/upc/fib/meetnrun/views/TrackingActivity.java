@@ -91,6 +91,11 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private boolean mBound;
     private final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 0533;
 
+    private String stepsText;
+    private String speedText;
+    private String caloriesText;
+    private String distanceText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,16 +120,21 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
 
 
+        stepsText = getResources().getString(R.string.tracking_steps);
+        distanceText = getResources().getString(R.string.tracking_distance);
+        speedText = getResources().getString(R.string.tracking_speed);
+        caloriesText = getResources().getString(R.string.tracking_calories);
+
         chronometer = findViewById(R.id.chronometer);
         chronometer.start();
         stepsCounter = findViewById(R.id.steps);
-        stepsCounter.setText(String.valueOf(0) + " steps");
+        stepsCounter.setText(String.format(Locale.forLanguageTag("es"), stepsText, 0));
         speedCounter = findViewById(R.id.speed);
-        speedCounter.setText("0 m/s");
+        speedCounter.setText(String.format(Locale.forLanguageTag("es"), speedText, 0.0f));
         distanceCounter = findViewById(R.id.distance);
-        distanceCounter.setText("0 m");
+        distanceCounter.setText(String.format(Locale.forLanguageTag("es"), distanceText, 0.0f));
         caloriesCounter = findViewById(R.id.calories);
-        caloriesCounter.setText("0 kcal");
+        caloriesCounter.setText(String.format(Locale.forLanguageTag("es"), caloriesText, 0.0f));
 
         pauseButton = findViewById(R.id.pause_fab);
 
@@ -377,10 +387,10 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     private void updateUI(TrackingData trackingData) {
-        distanceCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", trackingData.getDistance()) + " m");
-        speedCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", trackingData.getAverageSpeed()) + " m/s");
-        caloriesCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", trackingData.getCalories()) + " kcal");
-        stepsCounter.setText(String.valueOf(trackingData.getSteps()) + " steps");
+        distanceCounter.setText(String.format(Locale.forLanguageTag("ES"), distanceText, trackingData.getDistance()));
+        speedCounter.setText(String.format(Locale.forLanguageTag("ES"), speedText, trackingData.getAverageSpeed()));
+        caloriesCounter.setText(String.format(Locale.forLanguageTag("ES"), caloriesText, trackingData.getCalories()));
+        stepsCounter.setText(String.format(Locale.forLanguageTag("es"), stepsText ,trackingData.getSteps()));
         updateLocationViews(trackingData.getRoutePoints());
     }
 
