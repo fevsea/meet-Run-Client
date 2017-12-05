@@ -127,7 +127,7 @@ public class TrackingData implements Parcelable, Cloneable {
 
     @Override
     public String toString() {
-        return "avSpeed: " + averageSpeed + " distance: " + distance + " steps: " + steps + " time: " + totalTimeMillis;
+        return "avSpeed: " + averageSpeed + " distance: " + distance + " steps: " + steps + " time: " + totalTimeMillis + " routePoints " + routePoints.toString();
     }
 
     @Override

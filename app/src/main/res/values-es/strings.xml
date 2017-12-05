@@ -155,4 +155,8 @@
     <string name="chat_delete_historial_title">Eliminar historial</string>
     <string name="group_name">Nombre del grupo</string>
     <string name="total_time">Tiempo total corriendo</string>
+    <string name="tracking_steps">%1$d pasos</string>
+    <string name="tracking_distance">%1$.2f m</string>
+    <string name="tracking_speed">%1$.2f m/s</string>
+    <string name="tracking_calories">%1$.2f kcal</string>
 </resources>
