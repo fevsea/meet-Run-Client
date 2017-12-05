@@ -6,6 +6,7 @@ import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.User;
 
 /**
@@ -30,4 +31,5 @@ public interface IUserAdapter {
 
     public List<Meeting> getUserPastMeetings(int targetUserId) throws AutorizationException, ParamsException;
 
+    Statistics getUserStatisticsByID(int id) throws AutorizationException;
 }

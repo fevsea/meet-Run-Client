@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,10 +44,10 @@ import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
-public class PastMeetingInfoFragment extends Fragment //implements OnMapReadyCallback
+public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallback
         {
     private View view;
-    private List<LatLng> path;
+    private ArrayList<LatLng> path;
     private GoogleMap map;
     private Marker marker;
     private FriendsAdapter participantsAdapter;
@@ -105,14 +106,18 @@ public class PastMeetingInfoFragment extends Fragment //implements OnMapReadyCal
         setupRecyclerView();
         setupScrollView();
 
-        /*path = (List<LatLng>) pastMeetingInfo.get("path");
+        path = (ArrayList<LatLng>) pastMeetingInfo.get("path");
+
+        Log.e("ARRAY TRACKING", String.valueOf(path.get(0)));
+        Log.e("ARRAY TRACKING", String.valueOf(path.get(1)));
+        Log.e("ARRAY TRACKING", String.valueOf(path.get(2)));
 
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
         getFragmentManager()
                 .beginTransaction()
                 .add(R.id.past_meeting_info_map, mapFragment)
                 .commit();
-        mapFragment.getMapAsync(this);*/
+        mapFragment.getMapAsync(this);
 
         return view;
     }
@@ -238,7 +243,7 @@ public class PastMeetingInfoFragment extends Fragment //implements OnMapReadyCal
         }
     }
 
-    /*@Override
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
 
@@ -249,5 +254,5 @@ public class PastMeetingInfoFragment extends Fragment //implements OnMapReadyCal
             map.addPolyline(new PolylineOptions().geodesic(true)
                     .add(path.get(i)));
         }
-    }*/
+    }
 }

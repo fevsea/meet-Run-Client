@@ -20,9 +20,19 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 @RunWith(AndroidJUnit4.class)
+<<<<<<< HEAD
+@SmallTest
+=======
 public class UserProfileTest {
+>>>>>>> 2ae17c2f8351a6ce00bcc750c10fc2738d3ecdde
 
+<<<<<<< HEAD
+public class UserProfileTest {
+/*
+    private User u;
+=======
     private final User u;
+>>>>>>> 981d79ddb6ff684e5ab64bd281f30d7c6e8bb630
 
     @Rule
     public ActivityTestRule<ProfileActivity> activityRule = new ActivityTestRule<ProfileActivity>(
@@ -39,9 +49,9 @@ public class UserProfileTest {
 
             CurrentSession.getInstance().setCurrentUser(u);*/
         }
-    };
+    }
 
-    @Test
+@Test
     public void testVisibility() {
       //  onView(withId(R.id.fragment_meeting_container)).check(matches(isDisplayed()));
     }
@@ -52,5 +62,9 @@ public class UserProfileTest {
         onView(withId(R.id.completeName)).check(matches(withText(u.getFirstName() + " " + u.getLastName())));
         onView(withId(R.id.userName)).check(matches(withText(u.getUsername())));
     }
+<<<<<<< HEAD
+    */
+=======
 
+>>>>>>> 2ae17c2f8351a6ce00bcc750c10fc2738d3ecdde
 }

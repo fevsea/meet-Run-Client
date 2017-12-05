@@ -22,6 +22,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -46,6 +47,8 @@ public class PastMeetingsProfileFragment extends Fragment {
     private View view;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetings;
+    private List<LatLng> path;
+
 
     private TrackingData tracking;
 
@@ -126,7 +129,13 @@ public class PastMeetingsProfileFragment extends Fragment {
                 pastMeetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
 
                 String distance, steps, totalTime, avSpeed, calories;
-                List<LatLng> path = null;
+                path = new ArrayList<>();
+                path.add(new LatLng(-35.016, 143.321));
+                path.add(new LatLng(-34.747, 145.592));
+                path.add(new LatLng(-34.364, 147.891));
+                path.add(new LatLng(-33.501, 150.217));
+                path.add(new LatLng(-32.306, 149.248));
+                path.add(new LatLng(-32.491, 147.309));
 
                 if(tracking == null) {
                     distance = "0";
@@ -140,7 +149,7 @@ public class PastMeetingsProfileFragment extends Fragment {
                     totalTime = String.valueOf(tracking.getTotalTimeMillis()); //ms
                     avSpeed = String.valueOf(tracking.getAverageSpeed()); // m/s
                     calories = String.valueOf(tracking.getCalories()); // kcal
-                    path = tracking.getRoutePoints();
+                    //path = tracking.getRoutePoints();
                 }
                 pastMeetingInfoIntent.putExtra("distance", distance);
                 pastMeetingInfoIntent.putExtra("steps", steps);
