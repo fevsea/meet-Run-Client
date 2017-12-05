@@ -6,6 +6,9 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -132,11 +135,33 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
         protected String doInBackground(String... s) {
             try {
                 ok = friendsDBAdapter.removeFriend(Integer.parseInt(s[0]));
-                //TODO eliminar chat con amigo
-
             } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
+            try {
+                chat = chatDBAdapter.getPrivateChat(currentFriend.getId());
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+                chat = null;
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+                chat = null;
+            }
+
+            if (chat != null) {
+                try {
+                    FirebaseDatabase.getInstance().getReference(String.valueOf(chat.getId())).removeValue();
+                    chatDBAdapter.deleteChat(chat.getId());
+                } catch (AutorizationException e) {
+                    e.printStackTrace();
+                } catch (ParamsException e) {
+                    e.printStackTrace();
+                } catch (NotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+            //TODO eliminar chat con amigo
+
             return null;
         }
 
