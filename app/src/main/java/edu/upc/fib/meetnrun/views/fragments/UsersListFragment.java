@@ -47,6 +47,7 @@ public class UsersListFragment extends Fragment {
     private UsersAdapter usersAdapter;
     private IFriendsAdapter friendsDBAdapter;
     private List<User> l;
+    private List<Friend> friends;
     private FloatingActionButton fab;
     private SwipeRefreshLayout swipeRefreshLayout;
     private User currentUser;
@@ -68,6 +69,8 @@ public class UsersListFragment extends Fragment {
         usersDBAdapter = cs.getUserAdapter();
         friendsDBAdapter = cs.getFriendsAdapter();
         currentUser = cs.getCurrentUser();
+
+        friends = new ArrayList<>();
 
         initializePagination();
         progressBar = view.findViewById(R.id.pb_loading_friends);
@@ -195,23 +198,15 @@ public class UsersListFragment extends Fragment {
     }
 
     private void getMethod() {
+        //new getFriends().execute();
         new getUsers().execute();
     }
 
 
-    private class getUsers extends AsyncTask<String,String,String> {
-
-        List<Friend> friends = new ArrayList<>();
-
-        @Override
-        protected void onPreExecute() {
-            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
-            isLoading = true;
-        }
+    private class getFriends extends AsyncTask<String,String,String> {
 
         @Override
         protected String doInBackground(String... strings) {
-            l = usersDBAdapter.getAllUsers(pageNumber);
 
             List<Friend> aux = new ArrayList<>();
 
@@ -235,6 +230,27 @@ public class UsersListFragment extends Fragment {
                 }
                 count++;
             }
+            return null;
+        }
+
+    }
+
+    private class getUsers extends AsyncTask<String,String,String> {
+
+        @Override
+        protected void onPreExecute() {
+            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+            isLoading = true;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            l = usersDBAdapter.getAllUsers(pageNumber);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
 
             for (User user: l) {
                 boolean equal = false;
@@ -248,14 +264,8 @@ public class UsersListFragment extends Fragment {
                     }
                 }
                 if (user.getUsername().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) l.remove(user);
-
                 if (equal) user.setFriend(true);
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
 
             if (l != null) {
                 if (pageNumber == 0) usersAdapter.updateFriendsList(l);
