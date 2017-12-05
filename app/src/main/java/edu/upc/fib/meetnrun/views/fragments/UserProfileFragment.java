@@ -58,7 +58,7 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
         protected void onPostExecute(String s) {
             if (ok) {
                 Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
-                currentFriend.setFriend(true);
+                //currentFriend.setFriend(true);
                 getActivity().finish();
             }
             super.onPostExecute(s);
