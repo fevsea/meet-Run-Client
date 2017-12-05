@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
@@ -58,6 +63,7 @@ public class ChatFragment extends Fragment {
     private Button btnSend;
 
     private MessageAdapter adapter;
+    private IChatAdapter chatDBAdapter;
 
     private FirebaseDatabase database;
     private DatabaseReference databaseReference;
@@ -86,8 +92,10 @@ public class ChatFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        chat = CurrentSession.getInstance().getChat();
-        currentUser = CurrentSession.getInstance().getCurrentUser();
+        CurrentSession cs = CurrentSession.getInstance();
+        chat = cs.getChat();
+        currentUser = cs.getCurrentUser();
+        chatDBAdapter = cs.getChatAdapter();
 
         first = true;
 
@@ -184,6 +192,8 @@ public class ChatFragment extends Fragment {
                 NUMB_MESSAGES_LOAD++;
                 txtMessage.setText("");
                 chat.setMessage(m);
+                new updateChat().execute();
+
             }
         });
 
@@ -422,6 +432,25 @@ public class ChatFragment extends Fragment {
         firstTime = true;
         chat.setNumbMessagesAtPosition(userPosition, 0);
         super.onResume();
+    }
+
+    private class updateChat extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... s) {
+
+            try {
+                chatDBAdapter.updateChat(chat);
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
     }
 
 }
