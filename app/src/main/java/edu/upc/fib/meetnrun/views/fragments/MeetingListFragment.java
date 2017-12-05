@@ -153,7 +153,7 @@ public class MeetingListFragment extends Fragment {
                         updateMeetingList();
                     }
                     else {
-                        fab.setVisibility(View.INVISIBLE);
+                        if (!recyclerView.canScrollVertically(1)) fab.setVisibility(View.INVISIBLE);
                     }
                 }
             }
@@ -232,7 +232,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetings(pageNumber);//TODO arreglar paginas
+            meetings = meetingDBAdapter.getAllMeetings(pageNumber);
             return null;
         }
 
@@ -279,7 +279,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0],pageNumber);//TODO arreglar paginas
+            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0],pageNumber);
             return null;
         }
 
@@ -311,6 +311,19 @@ public class MeetingListFragment extends Fragment {
             updateMeetingList();
             super.onPostExecute(s);
         }
+    }
+
+    private boolean isViewOverlapping(View firstView, View secondView) {
+        int[] firstPosition = new int[2];
+        int[] secondPosition = new int[2];
+
+        firstView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        firstView.getLocationOnScreen(firstPosition);
+        secondView.getLocationOnScreen(secondPosition);
+
+        int r = firstView.getMeasuredWidth() + firstPosition[0];
+        int l = secondPosition[0];
+        return r >= l && (r != 0 && l != 0);
     }
 
 }
