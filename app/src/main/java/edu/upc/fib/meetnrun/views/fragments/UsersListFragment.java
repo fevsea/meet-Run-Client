@@ -25,6 +25,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
@@ -213,9 +214,12 @@ public class UsersListFragment extends Fragment {
             l = usersDBAdapter.getAllUsers(pageNumber);
 
             List<Friend> aux = new ArrayList<>();
+
             try {
-                aux = friendsDBAdapter.getUserFriends(0);
+                aux = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), 0);
             } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (NotFoundException e) {
                 e.printStackTrace();
             }
 
@@ -223,8 +227,10 @@ public class UsersListFragment extends Fragment {
             while (aux.size() != 0) {
                 friends.addAll(aux);
                 try {
-                    aux = friendsDBAdapter.getUserFriends(count);
+                    aux = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), count);
                 } catch (AutorizationException e) {
+                    e.printStackTrace();
+                } catch (NotFoundException e) {
                     e.printStackTrace();
                 }
                 count++;

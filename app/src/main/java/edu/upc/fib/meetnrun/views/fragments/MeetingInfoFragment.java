@@ -32,8 +32,10 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
@@ -51,7 +53,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     private UsersAdapter participantsAdapter;
     private IMeetingAdapter meetingController;
     private IFriendsAdapter friendsController;
-    private List<User> friends;
+    private List<Friend> friends;
     private int meetingId;
 
     @Override
@@ -137,7 +139,9 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
                 }
                 else {
                     boolean isFriend = false;
-                    for (User friend : friends) {
+                    for (Friend f : friends) {
+                        User friend = f.getFriend();
+                        if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
                         if (participant.getId().equals(friend.getId())) isFriend = true;
                     }
                     if (isFriend) {
@@ -228,9 +232,12 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
 
         @Override
         protected String doInBackground(String... strings) {
+
             try {
-                friends = friendsController.getUserFriends(0); //TODO llamada
+                friends = friendsController.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(), 0);
             } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (NotFoundException e) {
                 e.printStackTrace();
             }
             return null;

@@ -39,7 +39,7 @@ public abstract class FriendUserListFragmentTemplate extends Fragment{
     protected List<Friend> l;
     protected FloatingActionButton fab;
     protected SwipeRefreshLayout swipeRefreshLayout;
-    private User currentUser;
+    protected User currentUser;
 
     protected boolean isLoading;
     protected boolean isLastPage;

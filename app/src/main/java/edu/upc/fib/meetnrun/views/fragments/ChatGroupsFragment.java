@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -58,6 +60,13 @@ public class ChatGroupsFragment extends Fragment {
     private Date dateWithoutTime;
     private List<Integer> selectedFriendsID;
 
+    private boolean isLoading;
+    private boolean isLastPage;
+    private int pageNumber;
+    private ProgressBar progressBar;
+    private LinearLayoutManager layoutManager;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -71,6 +80,8 @@ public class ChatGroupsFragment extends Fragment {
         friendsDBAdapter = cs.getFriendsAdapter();
         currentUser = cs.getCurrentUser();
 
+        progressBar = view.findViewById(R.id.pb_loading_group_chat);
+        initializePagination();
 
         groupName = view.findViewById(R.id.groupName);
         ok = view.findViewById(R.id.btnOk);
@@ -118,7 +129,7 @@ public class ChatGroupsFragment extends Fragment {
             }
         });
 
-        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.fragment_friends_group_swipe);
+        swipeRefreshLayout = view.findViewById(R.id.fragment_friends_group_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -137,7 +148,8 @@ public class ChatGroupsFragment extends Fragment {
     private void setupRecyclerView() {
 
         final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_group_container);
-        friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        layoutManager = new LinearLayoutManager(getActivity());
+        friendsList.setLayoutManager(layoutManager);
 
         friendsAdapter = new FriendsAdapter(l, new RecyclerViewOnClickListener() {
             @Override
@@ -162,24 +174,76 @@ public class ChatGroupsFragment extends Fragment {
                 friendsAdapter.updateFriendsList(l);
             }
         }, getContext());
+
+        friendsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+
+                if (!isLoading && !isLastPage) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0) {
+                        updateFriends();
+                    }
+                }
+            }
+        });
+
         friendsList.setAdapter(friendsAdapter);
+    }
+
+    private void setLoading() {
+        if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+    }
+
+    private void updateData() {
+        if (l != null) {
+            if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
+            else friendsAdapter.addFriends(l);
+
+            if (l.size() == 0) {
+                isLastPage = true;
+            }
+            else pageNumber++;
+        }
+        swipeRefreshLayout.setRefreshing(false);
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     private class getFriends extends AsyncTask<String,String,String> {
 
         @Override
+        protected void onPreExecute() {
+            setLoading();
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
+
             try {
-                l = friendsDBAdapter.getUserFriends(0);
+                l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
             } catch (AutorizationException e) {
                 e.printStackTrace();
+            } catch (NotFoundException e) {
+                e.printStackTrace();
             }
+
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            friendsAdapter.updateFriendsList(l);
+            updateData();
             super.onPostExecute(s);
         }
     }
@@ -197,6 +261,12 @@ public class ChatGroupsFragment extends Fragment {
             }
             return null;
         }
+    }
+
+    private void initializePagination() {
+        pageNumber = 0;
+        isLoading = false;
+        isLastPage = false;
     }
 
     @Override

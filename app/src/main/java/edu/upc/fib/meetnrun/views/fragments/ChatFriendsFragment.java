@@ -98,8 +98,10 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                l = friendsDBAdapter.getUserFriends(pageNumber);
+                l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
             } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (NotFoundException e) {
                 e.printStackTrace();
             }
             return null;
