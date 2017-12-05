@@ -109,7 +109,7 @@
                 android:id="@+id/caloriesTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/min_speed"/>
+                android:text="@string/calories"/>
             <TextView
                 android:id="@+id/calories"
                 android:layout_width="wrap_content"

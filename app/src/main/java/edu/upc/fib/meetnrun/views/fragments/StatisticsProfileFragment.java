@@ -66,7 +66,6 @@ public class StatisticsProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("2", 2);
         title = getArguments().getString("Statistics");
-        //TODO: Hallar nivel usuario al que se le mira las estadísticas. Abajo es fake
        /* Bundle bundle = getActivity().getIntent().getExtras();
         userId=bundle.getInt("userId");*/
     }
@@ -153,6 +152,7 @@ public class StatisticsProfileFragment extends Fragment {
             usertime=s.getTimeInString(s.getTotalTimeMillis());
             int l=getActualLevel(s.getNumberMeetings(), s.getTotalKm(), (int) u.getLevel());
             userlevel=String.valueOf(l);
+            if (u.getLevel()<l) u.setLevel(l);
         }
 
         @Override
@@ -169,9 +169,7 @@ public class StatisticsProfileFragment extends Fragment {
                         //u=iUserAdapter.getUser(userId);
                     } catch (AutorizationException e) {
                         e.printStackTrace();
-                    }/* catch (NotFoundException e) {
-                        e.printStackTrace();
-                    }*/
+                    }
             return null;
         }
 

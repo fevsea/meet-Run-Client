@@ -132,10 +132,10 @@
     <string name="delete_history">Eliminar historial</string>
     <string name="create_challenge">Crear desafiament</string>
     <string name="distance">Distància</string>
-    <string name="ended_in_days_hours_minutes">Va acabar fa %1Sd dies %2$d hores %3$d minuts</string>
-    <string name="ended_in_hours_minutes">Va acabar fa %2$d hores %3$d minuts</string>
-    <string name="ends_in_days_hours_minutes">Finalitza en %1$d dies</string>
-    <string name="ends_in_hours_minutes">Finalitza en %1Sd dies %2$d hores %3$d minuts</string>
+    <string name="ended_in_days_hours_minutes">Va acabar fa %1$d dies %2$d hores %3$d minuts</string>
+    <string name="ended_in_hours_minutes">Va acabar fa %1$d hores %2$d minuts</string>
+    <string name="ends_in_days_hours_minutes">Finalitza en %1$d dies %2$d hores %3$d minuts</string>
+    <string name="ends_in_hours_minutes">Finalitza en %1$d hores %2$d minuts</string>
     <string name="error_loading">Ho sentim, però hi ha hagut un error carregant aquesta vista</string>
     <string name="error_saving_challenge">Ho sentim, però hi ha hagut un error mentres es guardava aquest desafiament</string>
     <string name="group_name">Nom del grup</string>
