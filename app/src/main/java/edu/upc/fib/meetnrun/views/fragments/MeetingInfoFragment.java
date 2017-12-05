@@ -229,7 +229,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         @Override
         protected String doInBackground(String... strings) {
             try {
-                friends = friendsController.getUserFriends(0); //TODO arreglar paginas
+                friends = friendsController.getUserFriends(0); //TODO llamada
             } catch (AutorizationException e) {
                 e.printStackTrace();
             }
