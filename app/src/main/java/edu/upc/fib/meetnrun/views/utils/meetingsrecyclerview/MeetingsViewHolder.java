@@ -70,8 +70,11 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
         meetingDate.setText(datetime.substring(0,datetime.indexOf('T')));
         meetingTime.setText(datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('T')+9));
         if (isMeetingAvailable(meeting.getDate())) {
+            addUserButton.setVisibility(View.VISIBLE);
             int userId = CurrentSession.getInstance().getCurrentUser().getId();
             if (notParticipating(meeting.getParticipants(), meeting.getOwner(), userId)) {
+                addUserButton.setEnabled(true);
+                addUserButton.setImageAlpha(255);
                 addUserButton.setOnClickListener(this);
             } else {
                 addUserButton.setEnabled(false);
