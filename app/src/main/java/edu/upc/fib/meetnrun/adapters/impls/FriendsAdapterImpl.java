@@ -129,11 +129,12 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
     }
 
     @Override
-    public List<Friend> listUserPendingFriends(int targetUserId) throws AutorizationException, NotFoundException {
+    public List<Friend> listUserPendingFriends(int targetUserId, int page) throws AutorizationException, NotFoundException {
         //TODO pending to TEST
         List<Friend> ul = new ArrayList<>();
         try {
-            Response<PageServer<FriendServer>> ret = mServices.getUserPendingFriends(targetUserId).execute();
+            int offset = calculateOffset(SOServices.PAGELIMIT, page);
+            Response<PageServer<FriendServer>> ret = mServices.getUserPendingFriends(targetUserId, SOServices.PAGELIMIT, offset).execute();
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
             PageServer<FriendServer> u = ret.body();
@@ -151,11 +152,12 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
     }
 
     @Override
-    public List<Friend> listUserAcceptedFriends(int targetUserId) throws AutorizationException, NotFoundException {
+    public List<Friend> listUserAcceptedFriends(int targetUserId, int page) throws AutorizationException, NotFoundException {
         //TODO pending to TEST
         List<Friend> ul = new ArrayList<>();
         try {
-            Response<PageServer<FriendServer>> ret = mServices.getUserAcceptedFriends(targetUserId).execute();
+            int offset = calculateOffset(SOServices.PAGELIMIT, page);
+            Response<PageServer<FriendServer>> ret = mServices.getUserAcceptedFriends(targetUserId, SOServices.PAGELIMIT, offset).execute();
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
             PageServer<FriendServer> u = ret.body();

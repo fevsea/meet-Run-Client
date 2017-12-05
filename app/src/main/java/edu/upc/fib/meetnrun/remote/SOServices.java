@@ -115,10 +115,10 @@ public interface SOServices {
     Call<PageServer<FriendServer>> getAllFriendsOfUser(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
 
     @GET("/users/friends/{id}?accepted=True")
-    Call<PageServer<FriendServer>> getUserAcceptedFriends(@Path("id") int id);
+    Call<PageServer<FriendServer>> getUserAcceptedFriends(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
 
     @GET("/users/friends/{id}?accepted=False")
-    Call<PageServer<FriendServer>> getUserPendingFriends(@Path("id") int id);
+    Call<PageServer<FriendServer>> getUserPendingFriends(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
 
 
     //TRACKING

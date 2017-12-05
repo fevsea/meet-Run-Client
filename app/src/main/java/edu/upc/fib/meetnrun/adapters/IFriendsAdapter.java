@@ -20,7 +20,7 @@ public interface IFriendsAdapter {
 
     List<Friend> listFriendsOfUser(int targetUserId, int page) throws AutorizationException, ParamsException;
 
-    List<Friend> listUserPendingFriends(int targetUserId) throws AutorizationException,NotFoundException;
+    List<Friend> listUserPendingFriends(int targetUserId, int page) throws AutorizationException,NotFoundException;
 
-    List<Friend> listUserAcceptedFriends(int targetUserId) throws AutorizationException,NotFoundException;
+    List<Friend> listUserAcceptedFriends(int targetUserId, int page) throws AutorizationException,NotFoundException;
 }
