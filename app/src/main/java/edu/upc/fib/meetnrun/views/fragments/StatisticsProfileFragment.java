@@ -84,7 +84,7 @@ public class StatisticsProfileFragment extends Fragment {
             resMeetings = (float) (meetings / (10 * level));
         }
         if (resMeetings>1.0) resMeetings=(float) 1.0;
-        resUser = (float) (km/(10+2.5*(level*level)));
+        resUser = (float) (km/(2+2.5*(level*level)));
         if (resUser>1.0) resUser=(float) 1.0;
         float res= (float) (0.5*resMeetings+0.5*resUser);
         while (res>=1.0) {
