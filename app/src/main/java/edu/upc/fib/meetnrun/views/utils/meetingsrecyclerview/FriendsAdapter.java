@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 
@@ -39,8 +40,10 @@ public class FriendsAdapter extends RecyclerView.Adapter<UsersViewHolder> {
 
     @Override
     public void onBindViewHolder(final UsersViewHolder holder, int position) {
-        Friend friend = friends.get(position);
-        holder.bindMeeting(friend.getFriend());
+        Friend f = friends.get(position);
+        User friend = f.getFriend();
+        if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
+        holder.bindMeeting(friend);
     }
 
     @Override
