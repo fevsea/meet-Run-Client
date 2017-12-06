@@ -54,7 +54,6 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
 
     @Override
     public List<Friend> getUserFriends(int page) throws AutorizationException {
-        //TODO pending to TEST
         List<Friend> ul = new ArrayList<>();
         try {
             int offset = calculateOffset(SOServices.PAGELIMIT, page);
@@ -104,7 +103,6 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
 
     @Override
     public List<Friend> listFriendsOfUser(int targetUserId, int page) throws AutorizationException, ParamsException {
-        //TODO not tested
         List<Friend> ul = new ArrayList<>();
         try {
             int offset = calculateOffset(SOServices.PAGELIMIT, page);
@@ -130,7 +128,6 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
 
     @Override
     public List<Friend> listUserPendingFriends(int targetUserId, int page) throws AutorizationException, NotFoundException {
-        //TODO pending to TEST
         List<Friend> ul = new ArrayList<>();
         try {
             int offset = calculateOffset(SOServices.PAGELIMIT, page);
@@ -153,7 +150,6 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
 
     @Override
     public List<Friend> listUserAcceptedFriends(int targetUserId, int page) throws AutorizationException, NotFoundException {
-        //TODO pending to TEST
         List<Friend> ul = new ArrayList<>();
         try {
             int offset = calculateOffset(SOServices.PAGELIMIT, page);
