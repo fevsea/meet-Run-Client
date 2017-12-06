@@ -198,8 +198,7 @@ public class UsersListFragment extends Fragment {
     }
 
     private void getMethod() {
-        //new getFriends().execute();
-        new getUsers().execute();
+        new getFriends().execute();
     }
 
 
@@ -233,6 +232,11 @@ public class UsersListFragment extends Fragment {
             return null;
         }
 
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            new getUsers().execute();
+        }
     }
 
     private class getUsers extends AsyncTask<String,String,String> {
@@ -253,6 +257,7 @@ public class UsersListFragment extends Fragment {
         protected void onPostExecute(String s) {
 
             for (User user: l) {
+                if (user.getUsername().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) l.remove(user);
                 boolean equal = false;
                 for (Friend f: friends) {
                     User friend = f.getFriend();
@@ -263,7 +268,6 @@ public class UsersListFragment extends Fragment {
                         break;
                     }
                 }
-                if (user.getUsername().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) l.remove(user);
                 if (equal) user.setFriend(true);
             }
 
