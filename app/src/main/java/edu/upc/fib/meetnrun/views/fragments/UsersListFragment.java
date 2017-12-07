@@ -257,7 +257,7 @@ public class UsersListFragment extends Fragment {
         protected void onPostExecute(String s) {
 
             for (User user: l) {
-                /*if (user.getUsername().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) l.remove(user);
+                if (user.getUsername().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) l.remove(user);
                 boolean equal = false;
                 for (Friend f: friends) {
                     User friend = f.getFriend();
@@ -268,7 +268,7 @@ public class UsersListFragment extends Fragment {
                         break;
                     }
                 }
-                if (equal) user.setFriend(true);*/
+                if (equal) user.setFriend(true);
             }
 
             if (l != null) {

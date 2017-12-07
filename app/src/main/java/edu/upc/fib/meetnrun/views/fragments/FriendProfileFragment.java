@@ -163,6 +163,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            
             if (chat != null) {
                 Intent i = new Intent(getContext(), ChatActivity.class);
                 CurrentSession.getInstance().setChat(chat);
