@@ -340,8 +340,8 @@ public class ChatFragment extends Fragment {
                                 adapter.deleteMessages();
                                 rvMessages.setAdapter(adapter);
                                 //TODO eliminar chat
-                                chat.getListUsersChat().remove(currentUser);
-                                new updateChat().execute();
+                                //chat.getListUsersChat().remove(currentUser);
+                                //new updateChat().execute();
                                 getActivity().finish();
                             }
                         },

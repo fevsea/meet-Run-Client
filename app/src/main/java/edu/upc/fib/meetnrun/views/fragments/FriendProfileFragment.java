@@ -55,36 +55,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                 showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //Crear o cojer chat
-
-                                User user = CurrentSession.getInstance().getCurrentUser();
-                                String currentUsername = user.getUsername();
-                                try {
-                                    chat = chatDBAdapter.getPrivateChat(currentFriend.getId());
-                                } catch (AutorizationException e) {
-                                    e.printStackTrace();
-                                    chat = null;
-                                } catch (NotFoundException e) {
-                                    e.printStackTrace();
-                                    chat = null;
-                                }
-                                if (chat == null) {
-                                    Calendar rightNow = Calendar.getInstance();
-                                    dateWithoutTime = rightNow.getTime();
-
-                                    userList = new ArrayList<>();
-                                    userList.add(user.getId());
-                                    userList.add(currentFriend.getId());
-
-                                    new createChat().execute();
-
-                                }
-                                if (chat != null) {
-                                    Intent i = new Intent(getContext(), ChatActivity.class);
-                                    CurrentSession.getInstance().setChat(chat);
-                                    getActivity().finish();
-                                    startActivity(i);
-                                }
+                                new getChat().execute();
                             }
                         },
                         new DialogInterface.OnClickListener() {
@@ -160,7 +131,6 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                     e.printStackTrace();
                 }
             }
-            //TODO eliminar chat con amigo
 
             return null;
         }
@@ -188,6 +158,64 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (chat != null) {
+                Intent i = new Intent(getContext(), ChatActivity.class);
+                CurrentSession.getInstance().setChat(chat);
+                getActivity().finish();
+                startActivity(i);
+            }
+        }
+    }
+
+    private class getChat extends AsyncTask<String,String,String> {
+
+        User user;
+
+        @Override
+        protected void onPreExecute() {
+            user = CurrentSession.getInstance().getCurrentUser();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... s) {
+            try {
+                chat = chatDBAdapter.getPrivateChat(currentFriend.getId());
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+                chat = null;
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+                chat = null;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (chat == null) {
+                Calendar rightNow = Calendar.getInstance();
+                dateWithoutTime = rightNow.getTime();
+
+                userList = new ArrayList<>();
+                userList.add(user.getId());
+                userList.add(currentFriend.getId());
+
+                new createChat().execute();
+
+            }
+            else {
+                Intent i = new Intent(getContext(), ChatActivity.class);
+                CurrentSession.getInstance().setChat(chat);
+                getActivity().finish();
+                startActivity(i);
+            }
         }
     }
 
