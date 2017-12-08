@@ -118,13 +118,14 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
 
         @Override
         protected void onPostExecute(String s) {
-            super.onPostExecute(s);
+
             if (chat != null) {
                 Intent i = new Intent(getContext(), ChatActivity.class);
                 CurrentSession.getInstance().setChat(chat);
                 getActivity().finish();
                 startActivity(i);
             }
+            super.onPostExecute(s);
         }
     }
 
@@ -155,7 +156,6 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
 
         @Override
         protected void onPostExecute(String s) {
-            super.onPostExecute(s);
             if (chat == null) {
                 Calendar rightNow = Calendar.getInstance();
 
@@ -173,6 +173,7 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
                 getActivity().finish();
                 startActivity(i);
             }
+            super.onPostExecute(s);
         }
     }
 
