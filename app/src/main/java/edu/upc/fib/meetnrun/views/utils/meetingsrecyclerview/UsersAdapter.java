@@ -9,23 +9,21 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 
 /**
- * Created by eric on 4/12/17.
+ * Created by eric on 2/11/17.
  */
 
-public class FriendsAdapter extends RecyclerView.Adapter<UsersViewHolder> {
+public class UsersAdapter extends RecyclerView.Adapter<UsersViewHolder> {
 
-    private List<Friend> friends;
+    private List<User> users;
     private final RecyclerViewOnClickListener listener;
     private View v;
     private Context context;
 
-    public FriendsAdapter(List<Friend> friends, RecyclerViewOnClickListener listener, Context context) {
-        this.friends = friends;
+    public UsersAdapter(List<User> users, RecyclerViewOnClickListener listener, Context context) {
+        this.users = users;
         this.listener = listener;
         this.context = context;
         notifyDataSetChanged();
@@ -40,30 +38,27 @@ public class FriendsAdapter extends RecyclerView.Adapter<UsersViewHolder> {
 
     @Override
     public void onBindViewHolder(final UsersViewHolder holder, int position) {
-        Friend f = friends.get(position);
-        User friend = f.getFriend();
-        if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
-        holder.bindMeeting(friend);
+        User user = users.get(position);
+        holder.bindMeeting(user);
     }
 
     @Override
     public int getItemCount() {
-        return friends.size();
+        return users.size();
     }
 
-    public void addFriends(List<Friend> friends) {
-        this.friends.addAll(friends);
+    public void addFriends(List<User> friends) {
+        this.users.addAll(friends);
         notifyDataSetChanged();
     }
 
 
-    public void updateFriendsList(List<Friend> friends) {
-        this.friends = friends;
+    public void updateFriendsList(List<User> users) {
+        this.users = users;
         notifyDataSetChanged();
     }
 
-    public Friend getFriendAtPosition(int position) {
-
-        return friends.get(position);
+    public User getFriendAtPosition(int position) {
+        return users.get(position);
     }
 }

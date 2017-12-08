@@ -375,14 +375,14 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     private class newMeeting extends AsyncTask<String,String,String> {
         @Override
         protected String doInBackground(String... strings){
-          /*  try {
+            try {
                 m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
             } catch (ParamsException  e) {
                 e.printStackTrace();
             } catch (AutorizationException e) {
 
                 e.printStackTrace();
-            }*/
+            }
             return null;
         }
 
@@ -392,9 +392,9 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
             if (friends){
                 Log.e("CREATE",String.valueOf(friends));
                 Intent i=new Intent(getActivity(), MeetingFriendsActivity.class);
-                //Integer MeetingId=m.getId();
-                //i.putExtra("level", Level);
-                //i.putExtra("meetingId",MeetingId);
+                Integer MeetingId=m.getId();
+                i.putExtra("level", Level);
+                i.putExtra("meetingId",MeetingId);
                 startActivity(i);
             }
             getActivity().finish();
