@@ -2,9 +2,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,8 +15,6 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Friend;
-import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
 
@@ -26,7 +22,7 @@ import edu.upc.fib.meetnrun.views.ChatActivity;
  * Created by eric on 22/11/17.
  */
 
-public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
+public class ChatFriendsFragment extends FriendListFragmentTemplate {
 
     private IChatAdapter chatDBAdapter;
     private Chat chat;

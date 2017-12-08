@@ -137,13 +137,6 @@ public class ChatGroupsFragment extends Fragment {
                     }
                     else {
                         new createChat().execute();
-
-                        if (chat != null) {
-                            Intent i = new Intent(getContext(), ChatActivity.class);
-                            CurrentSession.getInstance().setChat(chat);
-                            getActivity().finish();
-                            startActivity(i);
-                        }
                     }
 
                     getActivity().finish();
@@ -296,6 +289,17 @@ public class ChatGroupsFragment extends Fragment {
                 e.printStackTrace();
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (chat != null) {
+                Intent i = new Intent(getContext(), ChatActivity.class);
+                CurrentSession.getInstance().setChat(chat);
+                getActivity().finish();
+                startActivity(i);
+            }
+            super.onPostExecute(s);
         }
     }
 

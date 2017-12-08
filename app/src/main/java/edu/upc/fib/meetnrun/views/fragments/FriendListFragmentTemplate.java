@@ -32,7 +32,7 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
  * Created by eric on 16/11/17.
  */
 
-public abstract class FriendUserListFragmentTemplate extends Fragment{
+public abstract class FriendListFragmentTemplate extends Fragment{
 
     protected View view;
     protected FriendsAdapter friendsAdapter;

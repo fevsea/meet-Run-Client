@@ -2,20 +2,18 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.View;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.UsersListActivity;
 
 
-public class FriendsFragment extends FriendUserListFragmentTemplate {
+public class FriendsFragment extends FriendListFragmentTemplate {
 
     @Override
     protected void initList() {}
