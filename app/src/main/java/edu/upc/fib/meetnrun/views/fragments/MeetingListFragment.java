@@ -113,6 +113,7 @@ public class MeetingListFragment extends Fragment {
             }
 
             @Override
+
             public void onItemClicked(int position) {
                 Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
@@ -298,7 +299,7 @@ public class MeetingListFragment extends Fragment {
             Log.e("MAIN","DOINGGGG");
             //TODO handle exceptions
             try {
-                meetingDBAdapter.joinMeeting(integers[0]);
+                meetingDBAdapter.joinMeeting(integers[0],CurrentSession.getInstance().getCurrentUser().getId());
             } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }

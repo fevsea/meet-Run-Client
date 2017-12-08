@@ -26,6 +26,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.fragments.ChallengesListFragment;
 import edu.upc.fib.meetnrun.views.fragments.ChatListFragment;
 import edu.upc.fib.meetnrun.views.fragments.FriendsFragment;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
@@ -106,6 +107,11 @@ public class DrawerActivity extends AppCompatActivity{
                                 case R.id.friends:
                                     fragment = new FriendsFragment();
                                     setTitle(R.string.friends_label);
+                                    replaceFragment(fragment);
+                                    break;
+                                case R.id.challenges:
+                                    fragment = new ChallengesListFragment();
+                                    setTitle(R.string.challenges);
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.chat:

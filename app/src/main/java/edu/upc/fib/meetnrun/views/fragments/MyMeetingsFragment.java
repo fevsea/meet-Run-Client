@@ -93,7 +93,7 @@ public class MyMeetingsFragment extends Fragment {
 
             @Override
             public void onMeetingClicked(int position) {
-                Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Showing selectedUsers meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
@@ -186,7 +186,7 @@ public class MyMeetingsFragment extends Fragment {
         protected String doInBackground(Integer... integers) {
             //TODO handle exceptions
             try {
-                meetingController.leaveMeeting(integers[0]);
+                meetingController.leaveMeeting(integers[0],CurrentSession.getInstance().getCurrentUser().getId());
             } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }

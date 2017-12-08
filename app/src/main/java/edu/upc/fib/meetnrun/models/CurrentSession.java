@@ -1,6 +1,8 @@
 package edu.upc.fib.meetnrun.models;
 
 import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
+import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
@@ -66,19 +68,29 @@ public class CurrentSession {
     public void setAdapterContainer(AdaptersContainer adapterContainer) {
         this.adapterContainer = adapterContainer;
     }
-    public IFriendsAdapter getFriendsAdapter(){
+
+    public IFriendsAdapter getFriendsAdapter() {
         return adapterContainer.getFriendsAdapter();
     }
 
-    public ILoginAdapter getLoginAdapter(){
+    public ILoginAdapter getLoginAdapter() {
         return adapterContainer.getLoginAdapter();
     }
 
-    public IMeetingAdapter getMeetingAdapter(){
+    public IMeetingAdapter getMeetingAdapter() {
         return adapterContainer.getMeetingAdapter();
     }
-    public IUserAdapter getUserAdapter(){
+
+    public IUserAdapter getUserAdapter() {
         return adapterContainer.getUserAdapter();
+    }
+
+    public IChatAdapter getChatAdapter() {
+        return adapterContainer.getChatAdapter();
+    }
+
+    public IChallengeAdapter getChallengeAdapter() {
+        return adapterContainer.getChallengesAdapter();
     }
 
 }

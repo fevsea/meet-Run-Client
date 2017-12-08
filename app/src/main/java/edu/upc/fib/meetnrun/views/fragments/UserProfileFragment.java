@@ -15,9 +15,14 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 public class UserProfileFragment extends ProfileFragmentTemplate {
 
     @Override
+    protected void configureChallengeButton() {
+        challengeButton.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
     protected void setImage() {
         img.setImageResource(R.drawable.send);
-        chat.setVisibility(View.GONE);
+        chatImage.setVisibility(View.GONE);
     }
 
     @Override
@@ -53,7 +58,7 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
         protected void onPostExecute(String s) {
             if (ok) {
                 Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
-                currentFriend.setFriend(true);
+                //currentFriend.setFriend(true);
                 getActivity().finish();
             }
             super.onPostExecute(s);

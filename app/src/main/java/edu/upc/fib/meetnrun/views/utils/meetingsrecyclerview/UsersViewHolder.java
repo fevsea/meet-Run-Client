@@ -18,21 +18,21 @@ import edu.upc.fib.meetnrun.models.User;
  * Created by eric on 2/11/17.
  */
 
-public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class UsersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     private View view;
     private WeakReference<RecyclerViewOnClickListener> listener;
     private CardView cardView;
     private Context context;
 
-    public FriendsViewHolder(View itemView, RecyclerViewOnClickListener listener, Context context) {
+    public UsersViewHolder(View itemView, RecyclerViewOnClickListener listener, Context context) {
         super(itemView);
         view = itemView;
         this.listener = new WeakReference<>(listener);
         this.context = context;
     }
 
-    public void bindMeeting(User user, boolean isGroup) {
+    public void bindMeeting(User user) {
         TextView userPhoto = view.findViewById(R.id.user_photo);
         char letter = user.getUsername().charAt(0);
         String firstLetter = String.valueOf(letter);
@@ -59,29 +59,12 @@ public class FriendsViewHolder extends RecyclerView.ViewHolder implements View.O
 
         else cardView.setCardBackgroundColor(Color.WHITE);
 
-        /*if (isGroup) {
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (cardView.isSelected()) {
-                        cardView.setCardBackgroundColor(Color.WHITE);
-                        cardView.setSelected(false);
-                    }
-                    else {
-                        cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryLight));
-                        cardView.setSelected(true);
-                    }
-                }
-            });
-        }*/
-
-
         view.setOnClickListener(this);
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {
         int[] colors = view.getResources().getIntArray(R.array.colors);
-        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(view.getContext(),R.drawable.user_profile_circular_text_view);
+        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(context,R.drawable.user_profile_circular_text_view);
         int position = letter%colors.length;
         circularShape.setColor(colors[position]);
         return circularShape;

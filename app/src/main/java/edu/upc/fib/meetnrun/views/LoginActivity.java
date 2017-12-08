@@ -177,6 +177,7 @@ public class LoginActivity extends AppCompatActivity {
                 mProgressDialog.dismiss();
                 changeToMainActivity();
             }
+            else deleteToken();
             mProgressDialog.dismiss();
             super.onPostExecute(s);
         }
