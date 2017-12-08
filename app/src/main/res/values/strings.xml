@@ -128,6 +128,7 @@
 
     <string name="profile_fragment_title">Your profile</string>
     <string name="past_meetings_fragment_title">Your past meetings</string>
+    <string name="statistics_fragment_title">Your Statistics</string>
 
 
 

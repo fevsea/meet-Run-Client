@@ -147,4 +147,7 @@
     <string name="to_challenge">Desafiar</string>
     <string name="total_time">Temps total corrent</string>
     <string name="you">Tú</string>
+    <string name="profile_fragment_title">El teu perfil</string>
+    <string name="past_meetings_fragment_title">Les teves trobades passades</string>
+    <string name="statistics_fragment_title">Les teves estadístiques</string>
 </resources>

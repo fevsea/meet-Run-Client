@@ -110,9 +110,8 @@
                 android:layout_alignParentStart="true"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
-                android:text="Total distance"
+                android:text="@string/total_km"
                 style="@style/TextAppearance.AppCompat.Body2"/>
-            <!--TODO @string/...-->
 
             <TextView
                 android:id="@+id/meeting_info_distance"
@@ -132,9 +131,8 @@
                 android:layout_below="@+id/meeting_info_distance"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
-                android:text="Steps"
+                android:text="@string/total_steps"
                 style="@style/TextAppearance.AppCompat.Body2"/>
-            <!--TODO @string/...-->
 
             <TextView
                 android:id="@+id/meeting_info_steps"
@@ -154,9 +152,8 @@
                 android:layout_below="@+id/meeting_info_steps"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
-                android:text="Total time"
+                android:text="@string/total_time"
                 style="@style/TextAppearance.AppCompat.Body2"/>
-            <!--TODO @string/...-->
 
             <TextView
                 android:id="@+id/meeting_info_totaltime"
@@ -176,9 +173,8 @@
                 android:layout_below="@+id/meeting_info_totaltime"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
-                android:text="Average Speed"
+                android:text="@string/avg_speed"
                 style="@style/TextAppearance.AppCompat.Body2"/>
-            <!--TODO @string/...-->
 
             <TextView
                 android:id="@+id/meeting_info_avspeed"
@@ -198,9 +194,8 @@
                 android:layout_below="@+id/meeting_info_avspeed"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
-                android:text="Calories"
+                android:text="@string/calories"
                 style="@style/TextAppearance.AppCompat.Body2"/>
-            <!--TODO @string/...-->
 
             <TextView
                 android:id="@+id/meeting_info_calories"

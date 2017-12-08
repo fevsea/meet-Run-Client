@@ -37,7 +37,6 @@ import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
@@ -61,6 +60,10 @@ public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallb
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_past_meeting_info,container,false);
         this.view = view;
+
+        FloatingActionButton fab =
+                getActivity().findViewById(R.id.activity_fab);
+        fab.setVisibility(View.INVISIBLE);
 
         meetingController = CurrentSession.getInstance().getMeetingAdapter();
         friendsController = CurrentSession.getInstance().getFriendsAdapter();
@@ -91,7 +94,7 @@ public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallb
         date.setText(pastMeetingInfo.getString("date"));
         time.setText(pastMeetingInfo.getString("time"));
 
-        String distanceValue = pastMeetingInfo.getString("distance") + " " + "m";
+        String distanceValue = pastMeetingInfo.getString("distance") + " " + "m"; //TODO parse a km
         distance.setText(distanceValue);
         String stepsValue  = pastMeetingInfo.getString("steps");
         steps.setText(stepsValue);
@@ -104,13 +107,9 @@ public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallb
 
 
         setupRecyclerView();
-        setupScrollView();
 
         path = (ArrayList<LatLng>) pastMeetingInfo.get("path");
 
-        Log.e("ARRAY TRACKING", String.valueOf(path.get(0)));
-        Log.e("ARRAY TRACKING", String.valueOf(path.get(1)));
-        Log.e("ARRAY TRACKING", String.valueOf(path.get(2)));
 
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
         getFragmentManager()
@@ -171,33 +170,6 @@ public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallb
         super.onResume();
     }
 
-    private void setupScrollView() {
-        final ScrollView scroll = view.findViewById(R.id.meeting_info_scroll);
-        ImageView transparent = view.findViewById(R.id.meeting_info_imagetrans);
-        transparent.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                int action = event.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                        scroll.requestDisallowInterceptTouchEvent(true);
-                        return false;
-
-                    case MotionEvent.ACTION_UP:
-                        scroll.requestDisallowInterceptTouchEvent(false);
-                        return true;
-
-                    case MotionEvent.ACTION_MOVE:
-                        scroll.requestDisallowInterceptTouchEvent(true);
-                        return false;
-
-                    default:
-                        return true;
-                }
-            }
-        });
-    }
-
     private void getParticipantsList() {
         new PastMeetingInfoFragment.getParticipants().execute(meetingId);
         new PastMeetingInfoFragment.getFriends().execute(CurrentSession.getInstance().getCurrentUser().getId().toString());
@@ -247,12 +219,21 @@ public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
 
-        CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(path.get(0),15);
+        CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(path.get(0), 15);
+
+        if(path.size() > 1) {
+            camera = CameraUpdateFactory.newLatLngZoom(path.get((path.size()/2) + 1),13);
+        }
         map.moveCamera(camera);
 
-        for(int i = 0; i < path.size(); ++i) {
-            map.addPolyline(new PolylineOptions().geodesic(true)
-                    .add(path.get(i)));
-        }
+        marker = map.addMarker(new MarkerOptions().position(path.get(0)).title("Start"));
+        if(path.size() > 1) marker = map.addMarker(new MarkerOptions().position(path.get(path.size() - 1)).title("End"));
+
+        PolylineOptions options = new PolylineOptions();
+
+        options.addAll(path);
+
+        map.addPolyline(options);
+
     }
 }

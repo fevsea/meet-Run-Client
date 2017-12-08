@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,12 +131,6 @@ public class PastMeetingsProfileFragment extends Fragment {
 
                 String distance, steps, totalTime, avSpeed, calories;
                 path = new ArrayList<>();
-                path.add(new LatLng(-35.016, 143.321));
-                path.add(new LatLng(-34.747, 145.592));
-                path.add(new LatLng(-34.364, 147.891));
-                path.add(new LatLng(-33.501, 150.217));
-                path.add(new LatLng(-32.306, 149.248));
-                path.add(new LatLng(-32.491, 147.309));
 
                 if(tracking == null) {
                     distance = "0";
@@ -143,13 +138,14 @@ public class PastMeetingsProfileFragment extends Fragment {
                     totalTime = "0";
                     avSpeed = "0";
                     calories = "0";
+                    path.add(new LatLng(Double.valueOf(meeting.getLatitude()), Double.valueOf(meeting.getLongitude())));
                 } else {
                     distance = String.valueOf(tracking.getDistance()); //m
                     steps = String.valueOf(tracking.getSteps());
                     totalTime = String.valueOf(tracking.getTotalTimeMillis()); //ms
                     avSpeed = String.valueOf(tracking.getAverageSpeed()); // m/s
                     calories = String.valueOf(tracking.getCalories()); // kcal
-                    //path = tracking.getRoutePoints();
+                    path = tracking.getRoutePoints();
                 }
                 pastMeetingInfoIntent.putExtra("distance", distance);
                 pastMeetingInfoIntent.putExtra("steps", steps);
@@ -157,7 +153,7 @@ public class PastMeetingsProfileFragment extends Fragment {
                 pastMeetingInfoIntent.putExtra("avspeed", avSpeed);
                 pastMeetingInfoIntent.putExtra("calories", calories);
 
-                pastMeetingInfoIntent.putExtra("path", (Parcelable) path);
+                pastMeetingInfoIntent.putExtra("path", (Serializable) path);
 
                 startActivity(pastMeetingInfoIntent);
 
