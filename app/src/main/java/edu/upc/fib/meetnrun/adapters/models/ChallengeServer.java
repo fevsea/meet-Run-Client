@@ -43,8 +43,12 @@ public class ChallengeServer implements IServerModel {
     @Expose
     private Float challengedDistance;
 
+    @SerializedName("accepted")
+    @Expose
+    private Boolean accepted;
+
     public ChallengeServer(UserServer creator, UserServer challenged, Float distance, String dateDeadline, String creationDate,
-                           Float creatorDistance, Float challengedDistance) {
+                           Float creatorDistance, Float challengedDistance, Boolean accepted) {
         this.creator = creator;
         this.challenged = challenged;
         this.distance = distance;
@@ -52,6 +56,7 @@ public class ChallengeServer implements IServerModel {
         this.creationDate = creationDate;
         this.creatorDistance = creatorDistance;
         this.challengedDistance = challengedDistance;
+        this.accepted = accepted;
     }
 
     public ChallengeServer(Challenge c) {
@@ -62,11 +67,12 @@ public class ChallengeServer implements IServerModel {
         this.creationDate = c.getCreationDate();
         this.creatorDistance = c.getCreatorDistance();
         this.challengedDistance = c.getChallengedDistance();
+        this.accepted = c.isAccepted();
     }
 
     @Override
     public Challenge toGenericModel() {
-        Challenge c = new Challenge(this.id, creator.toGenericModel(), challenged.toGenericModel(), distance, dateDeadline, creationDate, creatorDistance, challengedDistance);
+        Challenge c = new Challenge(this.id, creator.toGenericModel(), challenged.toGenericModel(), distance, dateDeadline, creationDate, creatorDistance, challengedDistance,this.accepted);
         return c;
     }
 }

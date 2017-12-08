@@ -133,6 +133,9 @@ public interface SOServices {
     Call<ChallengeServer> getChallenge(@Path("id") int id);
 
     @DELETE("/challenges/{id}")
-    Call<Void> deleteChallenge(@Path("id") int id);
+    Call<Void> deleteRejectChallenge(@Path("id") int id);
+
+    @POST("/challenges/{id}")
+    Call<Void> acceptChallenge(@Path("id") int id);
 
 }

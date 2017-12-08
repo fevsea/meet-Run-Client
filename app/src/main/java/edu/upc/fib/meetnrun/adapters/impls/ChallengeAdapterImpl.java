@@ -76,10 +76,10 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
     }
 
     @Override
-    public boolean deleteChallenge(int challengeID) throws AutorizationException, NotFoundException {
+    public boolean deleteRejectChallenge(int challengeID) throws AutorizationException, NotFoundException {
         boolean ok = true;
         try {
-            Response<Void> ret = mServices.deleteChallenge(challengeID).execute();
+            Response<Void> ret = mServices.deleteRejectChallenge(challengeID).execute();
             if (!ret.isSuccessful()) {
                 ok = false;
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
@@ -95,6 +95,28 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
             }
         }
         return ok;
+    }
+
+    @Override
+    public boolean acceptChallenge(int challengeID) throws AutorizationException, NotFoundException {
+        boolean ok = true;
+                try {
+                    Response<Void> ret = mServices.acceptChallenge(challengeID).execute();
+                    if (!ret.isSuccessful()) {
+                        ok = false;
+                        checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (GenericException e) {
+                    e.printStackTrace();
+                    if (e instanceof NotFoundException) {
+                        throw (NotFoundException) e;
+                    } else if (e instanceof AutorizationException) {
+                        throw (AutorizationException) e;
+                    }
+                }
+                return ok;
     }
 
     @Override
