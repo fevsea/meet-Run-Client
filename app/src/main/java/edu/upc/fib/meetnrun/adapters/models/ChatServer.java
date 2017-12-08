@@ -91,7 +91,14 @@ public class ChatServer implements IServerModel {
         }
         Date d = UtilsGlobal.parseDate(this.lastMessageDateTime);
         Message m = new Message(this.lastMessage, participantUsers.get(lastMessageUsernamePosition).getUsername(), d);
-        Chat c = new Chat(this.id, this.chatName, lu, this.type, m, this.meetingToRelate.toGenericModel());
+        Chat c = null;
+        if (meetingToRelate == null) {
+            c = new Chat(this.id, this.chatName, lu, this.type, m, null);
+        }
+        else {
+            c = new Chat(this.id, this.chatName, lu, this.type, m, this.meetingToRelate.toGenericModel());
+        }
+
         return c;
     }
 

@@ -23,8 +23,10 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatGroupsActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
@@ -32,12 +34,13 @@ import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 
 
 public class ChatGroupInfoFragment extends Fragment {
 
     protected View view;
-    protected FriendsAdapter friendsAdapter;
+    protected UsersAdapter usersAdapter;
     protected IFriendsAdapter friendsDBAdapter;
     protected List<User> groupUsers;
     protected FloatingActionButton fab;
@@ -49,6 +52,7 @@ public class ChatGroupInfoFragment extends Fragment {
     private boolean isLastPage;
     private boolean isLoading;
     private int pageNumber;
+    private TextView groupNumberUsers;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,7 +68,6 @@ public class ChatGroupInfoFragment extends Fragment {
         String name = chat.getChatName();
         getActivity().setTitle(name);
         groupUsers = chat.getListUsersChat();
-        String numberOfUsersText = getString(R.string.number_of_users) + ":  " + groupUsers.size();
 
         TextView groupImage = view.findViewById(R.id.profileImage);
         groupImage.setBackground(getColoredCircularShape(name.charAt(0)));
@@ -72,8 +75,8 @@ public class ChatGroupInfoFragment extends Fragment {
         groupName = view.findViewById(R.id.group_name);
         progressBar = view.findViewById(R.id.pb_loading_friends);
         groupName.setText(name);
-        TextView groupNumberUsers = view.findViewById(R.id.group_num_users);
-        groupNumberUsers.setText(numberOfUsersText);
+        groupNumberUsers = view.findViewById(R.id.group_num_users);
+        updateNumberOfUsers();
         Button addUserButton = view.findViewById(R.id.group_adduser);
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +94,10 @@ public class ChatGroupInfoFragment extends Fragment {
         return this.view;
     }
 
-
+    private void updateNumberOfUsers() {
+        String numberOfUsersText = getString(R.string.number_of_users) + ":  " + groupUsers.size();
+        groupNumberUsers.setText(numberOfUsersText);
+    }
 
     private void setupRecyclerView() {
 
@@ -100,20 +106,20 @@ public class ChatGroupInfoFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
 
-        friendsAdapter = new FriendsAdapter(groupUsers, new RecyclerViewOnClickListener() {
+        usersAdapter = new UsersAdapter(groupUsers, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
             @Override
             public void onItemClicked(int position) {
 
-                User friend = friendsAdapter.getFriendAtPosition(position);
+                User friend = usersAdapter.getFriendAtPosition(position);
                 getIntent(friend);
 
             }
-        }, getContext(), false);
+        }, getContext());
 
-        recyclerView.setAdapter(friendsAdapter);
+        recyclerView.setAdapter(usersAdapter);
 
     }
 
@@ -164,16 +170,18 @@ public class ChatGroupInfoFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                List<User> friendsPage = new ArrayList<>();
+                List<Friend> friendsPage = new ArrayList<>();
                 while (!isLastPage) {
-                    friendsPage = friendsDBAdapter.getUserFriends(pageNumber);
+                    friendsPage = friendsDBAdapter.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(),pageNumber);
                     if (friendsPage.size() != 0) {
-                        friends.addAll(friendsPage);
+                        for (Friend f : friendsPage) friends.add(f.getUser());
                         ++pageNumber;
                     }
                     else isLastPage = true;
                 }
             } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (NotFoundException e) {
                 e.printStackTrace();
             }
             return null;
@@ -183,6 +191,7 @@ public class ChatGroupInfoFragment extends Fragment {
         protected void onPostExecute(String s) {
             isLoading = false;
             progressBar.setVisibility(View.INVISIBLE);
+            Log.e("Friends",friends.toString());
             super.onPostExecute(s);
         }
 
@@ -191,7 +200,8 @@ public class ChatGroupInfoFragment extends Fragment {
     @Override
     public void onResume() {
         groupUsers = chat.getListUsersChat();
-        friendsAdapter.updateFriendsList(groupUsers);
+        usersAdapter.updateFriendsList(groupUsers);
+        updateNumberOfUsers();
         super.onResume();
     }
 

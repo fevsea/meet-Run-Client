@@ -3,7 +3,9 @@ package edu.upc.fib.meetnrun.remote;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.models.ChatServer;
+import edu.upc.fib.meetnrun.adapters.models.ChallengeServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
+import edu.upc.fib.meetnrun.adapters.models.FriendServer;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
@@ -84,7 +86,6 @@ public interface SOServices {
     Call<Void> updateFirebaseToken(@Body Forms.Token token);
 
 
-
     //PARTICIPANTS
 
     @GET("/meetings/{id}/participants")
@@ -102,7 +103,7 @@ public interface SOServices {
 
     //FRIENDS
     @GET("/users/friends")
-    Call<PageServer<UserServer>> getCurrentUserFriends(@Query("limit") int limit, @Query("offset") int offset);
+    Call<PageServer<FriendServer>> getCurrentUserFriends(@Query("limit") int limit, @Query("offset") int offset);
 
     @POST("/users/friends/{id}")
     Call<Void> addFriend(@Path("id") int id);
@@ -111,7 +112,14 @@ public interface SOServices {
     Call<Void> removeFriend(@Path("id") int id);
 
     @GET("/users/{id}/friends")
-    Call<PageServer<UserServer>> getAllFriendsOfUser(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
+    Call<PageServer<FriendServer>> getAllFriendsOfUser(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
+
+    @GET("/users/friends/{id}?accepted=True")
+    Call<PageServer<FriendServer>> getUserAcceptedFriends(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
+
+    @GET("/users/friends/{id}?accepted=False")
+    Call<PageServer<FriendServer>> getUserPendingFriends(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
+
 
     //TRACKING
     @GET("/meetings/{idMeeting}/tracking/{idUser}")
@@ -139,4 +147,21 @@ public interface SOServices {
 
     @DELETE("/chats/{id}")
     Call<Void> deleteChat(@Path("id") int id);
+
+    @GET("/chats/p2p/{id}")
+    Call<ChatServer> getPrivateChat(@Path("id") int id);
+
+    //CHALLENGES
+    @GET("/challenges")
+    Call<List<ChallengeServer>> getAllCurrentUserChallenges();
+
+    @POST("/challenges")
+    Call<ChallengeServer> createNewChallenge(@Body Forms.ChallengeCreator cs);
+
+    @GET("/challenges/{id}")
+    Call<ChallengeServer> getChallenge(@Path("id") int id);
+
+    @DELETE("/challenges/{id}")
+    Call<Void> deleteChallenge(@Path("id") int id);
+
 }

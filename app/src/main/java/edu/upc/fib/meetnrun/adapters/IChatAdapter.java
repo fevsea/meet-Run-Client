@@ -48,4 +48,6 @@ public interface IChatAdapter {
 
     public Chat getChat(int id) throws AutorizationException, NotFoundException;
 
+    public Chat getPrivateChat(int targetUserID) throws AutorizationException, NotFoundException;
+
 }

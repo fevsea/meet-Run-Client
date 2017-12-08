@@ -35,11 +35,13 @@ public class UtilsGlobal {
     private static Map<String, String> ParseJsonToGetProblems(String json) {
         Map<String, String> m = new HashMap<>();
         JsonObject jObj = new Gson().fromJson(json, JsonObject.class);
-        for (Map.Entry<String, JsonElement> entry : jObj.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue().toString();
-            m.put(key, value);
-            Log.d(TAG, "Key: " + key + "\tValue: " + value);
+        if (jObj != null) {
+            for (Map.Entry<String, JsonElement> entry : jObj.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue().toString();
+                m.put(key, value);
+                Log.d(TAG, "Key: " + key + "\tValue: " + value);
+            }
         }
         return m;
     }
