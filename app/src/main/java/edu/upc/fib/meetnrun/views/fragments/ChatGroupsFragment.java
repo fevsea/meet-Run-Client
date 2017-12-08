@@ -185,14 +185,15 @@ public class ChatGroupsFragment extends Fragment {
 
                 if (friend.isSelected()) {
                     selectedFriends.remove(friend);
-                    numbFriends.setText(String.valueOf(selectedFriends.size()-1));
                     friend.setSelected(false);
                 }
                 else {
                     selectedFriends.add(friend);
-                    numbFriends.setText(String.valueOf(selectedFriends.size()-1));
                     friend.setSelected(true);
                 }
+                int size = selectedFriends.size();
+                if (!adduser) --size;
+                numbFriends.setText(String.valueOf(size));
                 friendsAdapter.updateFriendsList(l);
 
             }
