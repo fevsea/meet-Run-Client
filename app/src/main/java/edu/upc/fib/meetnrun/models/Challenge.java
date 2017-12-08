@@ -17,6 +17,9 @@ public class Challenge {
     private float creatorDistance;
     private float challengedDistance;
 
+    private boolean accepted;
+    private boolean completed;
+
     public Challenge() {
 
     }
@@ -111,4 +114,19 @@ public class Challenge {
         this.creationDate = creationDate;
     }
 
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 }

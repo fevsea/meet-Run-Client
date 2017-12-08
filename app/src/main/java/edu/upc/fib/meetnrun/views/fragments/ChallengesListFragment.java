@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,9 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChallengeActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChallengesAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChallengesRequestAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.TwoButtonsRecyclerViewOnClickListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,9 +38,12 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 public class ChallengesListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private RecyclerView recyclerView;
+    private RecyclerView recyclerViewRequest;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Challenge> challenges;
+    private List<Challenge> challengesRequest;
     private ChallengesAdapter challengesAdapter;
+    private ChallengesRequestAdapter challengesAdapterRequest;
 
     public ChallengesListFragment() {
         // Required empty public constructor
@@ -50,6 +56,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_challenges_list, container, false);
         recyclerView = view.findViewById(R.id.fragment_challenge_recycler);
+        recyclerViewRequest = view.findViewById(R.id.fragment_challenge_recycler_requests);
         swipeRefreshLayout = view.findViewById(R.id.fragment_challenge_swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
         setupRecyclerView();
@@ -76,10 +83,49 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             }
         });
         recyclerView.setAdapter(challengesAdapter);
+
+        recyclerViewRequest.setLayoutManager(new LinearLayoutManager(getActivity()));
+        challengesRequest = new ArrayList<>();
+        challengesAdapterRequest = new ChallengesRequestAdapter(challengesRequest, new TwoButtonsRecyclerViewOnClickListener() {
+            @Override
+            public void onButtonAcceptClicked(int position) {
+                Log.d("ChallengesList", "ACCEPTED REQUEST");
+            }
+
+            @Override
+            public void onButtonRejectClicked(int position) {
+                Log.d("ChallengesList", "REJECTED REQUEST");
+            }
+
+            @Override
+            public void onButtonClicked(int position) {}
+
+            @Override
+            public void onItemClicked(int position) {
+                Challenge challenge = challengesAdapterRequest.getChallengeAt(position);
+                Intent i = new Intent(getActivity(), ChallengeActivity.class);
+                i.putExtra("id", challenge.getId());
+                startActivity(i);
+            }
+        });
+        recyclerViewRequest.setAdapter(challengesAdapterRequest);
     }
 
     private void updateChallengesList() {
         new GetChallenges().execute();
+    }
+
+    private void updateChallengesAdapters() {
+        for (Challenge ch : challenges) {
+            if (!ch.isAccepted()) {
+                challenges.remove(ch);
+                if (ch.getChallenged().getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
+                    challengesRequest.add(ch);
+                }
+            }
+        }
+        challengesAdapter.updateChallengeList(challenges);
+        challengesAdapterRequest.updateChallengeList(challengesRequest);
     }
 
     @Override
@@ -92,6 +138,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
         super.onResume();
         updateChallengesList();
     }
+
 
     @Override
     public void onClick(View v) {
@@ -123,7 +170,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
         @Override
         protected void onPostExecute(Boolean s) {
             if (s && ex == null) {
-                challengesAdapter.updateChallengeList(challenges);
+                updateChallengesAdapters();
                 swipeRefreshLayout.setRefreshing(false);
             }
             else if (ex instanceof AutorizationException){

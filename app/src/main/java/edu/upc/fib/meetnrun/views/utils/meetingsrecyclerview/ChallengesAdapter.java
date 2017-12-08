@@ -18,14 +18,10 @@ import java.util.Locale;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Challenge;
 
-/**
- * Created by guillemcastro on 26/11/2017.
- */
-
 public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesViewHolder>  {
 
     private List<Challenge> challenges;
-    private RecyclerViewOnClickListener listener;
+    protected RecyclerViewOnClickListener listener;
 
     public ChallengesAdapter(List<Challenge> challenges, RecyclerViewOnClickListener listener) {
         this.challenges = challenges;
