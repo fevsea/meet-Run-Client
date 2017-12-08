@@ -234,8 +234,8 @@ public class UsersListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            super.onPostExecute(s);
             new getUsers().execute();
+            super.onPostExecute(s);
         }
     }
 
@@ -256,16 +256,14 @@ public class UsersListFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
 
-
+            l.remove(CurrentSession.getInstance().getCurrentUser());
             for (User user: l) {
-                if (user.getUsername().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) l.remove(user);
                 boolean equal = false;
                 for (Friend f: friends) {
                     User friend = f.getFriend();
                     if (currentUser.getUsername().equals(friend.getUsername())) friend = f.getUser();
                     if (user.getUsername().equals(friend.getUsername())) {
                         equal = true;
-                        friends.remove(friend);
                         break;
                     }
                 }
