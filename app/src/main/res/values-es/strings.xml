@@ -159,4 +159,5 @@
     <string name="tracking_distance">%1$.2f m</string>
     <string name="tracking_speed">%1$.2f m/s</string>
     <string name="tracking_calories">%1$.2f kcal</string>
+    <string name="english">English</string>
 </resources>
