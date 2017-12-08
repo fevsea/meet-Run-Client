@@ -366,7 +366,7 @@ public class Forms {
             }
             this.listUsersChat = lic;
             this.type = c.getType();
-            this.meetingToRelate = c.getMeeting().getId();
+            this.meetingToRelate = (c.getMeeting() != null) ? c.getMeeting().getId() : null;
             this.lastMessage = c.getMessage().getMessage();
             this.lastMessageDateTime = UtilsGlobal.formatDate(c.getMessage().getDateTime());
         }

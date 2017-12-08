@@ -126,8 +126,8 @@ public class ChatFragment extends Fragment {
         txtMessage = view.findViewById(R.id.txtMensaje);
         btnSend = view.findViewById(R.id.btnEnviar);
 
-        txtMessage.setEnabled(false);
-        btnSend.setEnabled(false);
+        //txtMessage.setEnabled(false);
+        //btnSend.setEnabled(false);
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference(String.valueOf(chat.getId())); //Chat name
@@ -215,9 +215,7 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        if (chat.getMessage().getMessage().equals("")) {
-            removeProgressChat();
-        }
+        if (chat.getMessage().getMessage().equals("")) removeProgressChat();
 
         /*final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_messages_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
