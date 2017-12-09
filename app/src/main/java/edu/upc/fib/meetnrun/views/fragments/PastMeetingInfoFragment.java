@@ -34,28 +34,32 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 
 public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallback
         {
     private View view;
     private ArrayList<LatLng> path;
     private GoogleMap map;
-    private Marker marker;
-    private FriendsAdapter participantsAdapter;
+    private UsersAdapter participantsAdapter;
     private IMeetingAdapter meetingController;
     private IFriendsAdapter friendsController;
-    private List<User> friends;
+    private List<Friend> friends;
     private int meetingId;
+    private Marker marker;
 
-    @Override
+
+            @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_past_meeting_info,container,false);
@@ -68,6 +72,7 @@ public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallb
         meetingController = CurrentSession.getInstance().getMeetingAdapter();
         friendsController = CurrentSession.getInstance().getFriendsAdapter();
         Bundle pastMeetingInfo = getActivity().getIntent().getExtras();
+
 
         TextView title = view.findViewById(R.id.meeting_info_title);
         TextView level = view.findViewById(R.id.meeting_info_level);
@@ -121,6 +126,7 @@ public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallb
         return view;
     }
 
+
     private void setupRecyclerView() {
 
         final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
@@ -129,92 +135,98 @@ public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallb
         List<User> users = new ArrayList<>();
         getParticipantsList();
 
-        participantsAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
+        participantsAdapter = new UsersAdapter(users, new RecyclerViewOnClickListener() {
+                    @Override
+                    public void onButtonClicked(int position) {}
+
+                    @Override
+                    public void onItemClicked(int position) {
+                        User participant = participantsAdapter.getFriendAtPosition(position);
+                        Intent profileIntent;
+                        if (participant.getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
+                            profileIntent = new Intent(getActivity(),ProfileViewPagerFragment.class);
+                        }
+                        else {
+                            boolean isFriend = false;
+                            for (Friend f : friends) {
+                                User friend = f.getFriend();
+                                if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
+                                if (participant.getId().equals(friend.getId())) isFriend = true;
+                            }
+                            if (isFriend) {
+                                profileIntent = new Intent(getActivity(), FriendProfileActivity.class);
+                            }
+                            else {
+                                profileIntent = new Intent(getActivity(), UserProfileActivity.class);
+                            }
+                            profileIntent.putExtra("id",participant.getId().toString());
+                            profileIntent.putExtra("userName", participant.getUsername());
+                            String name = participant.getFirstName() + " " + participant.getLastName();
+                            profileIntent.putExtra("name", name);
+                            profileIntent.putExtra("postCode", participant.getPostalCode());
+                        }
+                        startActivity(profileIntent);
+
+                    }
+                }, getContext());
+                friendsList.setAdapter(participantsAdapter);
+
+
+            }
+
             @Override
-            public void onButtonClicked(int position) {}
+            public void onResume() {
+                getParticipantsList();
+                super.onResume();
+            }
 
-            @Override
-            public void onItemClicked(int position) {
-                User participant = participantsAdapter.getFriendAtPosition(position);
-                Intent profileIntent;
-                if (participant.getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
-                    profileIntent = new Intent(getActivity(),ProfileViewPagerFragment.class);
+            private void getParticipantsList() {
+                new PastMeetingInfoFragment.getParticipants().execute(meetingId);
+                new PastMeetingInfoFragment.getFriends().execute(CurrentSession.getInstance().getCurrentUser().getId().toString());
+            }
+
+            private class getParticipants extends AsyncTask<Integer,String,String> {
+
+                private List<User> l = new ArrayList<>();
+
+                @Override
+                protected String doInBackground(Integer... integers) {
+                    //TODO handle exceptions
+                    try {
+                        l = meetingController.getParticipantsFromMeeting(integers[0],0);//TODO arreglar paginas
+                    } catch (AutorizationException | ParamsException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
                 }
-                else {
-                    boolean isFriend = false;
-                    for (User friend : friends) {
-                        if (participant.getId().equals(friend.getId())) isFriend = true;
-                    }
-                    if (isFriend) {
-                        profileIntent = new Intent(getActivity(), FriendProfileActivity.class);
-                    }
-                    else {
-                        profileIntent = new Intent(getActivity(), UserProfileActivity.class);
-                    }
-                    profileIntent.putExtra("id",participant.getId().toString());
-                    profileIntent.putExtra("userName", participant.getUsername());
-                    String name = participant.getFirstName() + " " + participant.getLastName();
-                    profileIntent.putExtra("name", name);
-                    profileIntent.putExtra("postCode", participant.getPostalCode());
+
+                @Override
+                protected void onPostExecute(String s) {
+                    participantsAdapter.updateFriendsList(l);
+                    super.onPostExecute(s);
                 }
-                startActivity(profileIntent);
-
             }
-        }, getContext(), false);
-        friendsList.setAdapter(participantsAdapter);
-    }
 
-    @Override
-    public void onResume() {
-        getParticipantsList();
-        super.onResume();
-    }
+            private class getFriends extends AsyncTask<String,String,String> {
 
-    private void getParticipantsList() {
-        new PastMeetingInfoFragment.getParticipants().execute(meetingId);
-        new PastMeetingInfoFragment.getFriends().execute(CurrentSession.getInstance().getCurrentUser().getId().toString());
-    }
+                @Override
+                protected String doInBackground(String... strings) {
 
-    private class getParticipants extends AsyncTask<Integer,String,String> {
+                    try {
+                        friends = friendsController.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(), 0);
+                    } catch (AutorizationException e) {
+                        e.printStackTrace();
+                    } catch (NotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
 
-        private List<User> l = new ArrayList<>();
-
-        @Override
-        protected String doInBackground(Integer... integers) {
-            //TODO handle exceptions
-            try {
-                l = meetingController.getParticipantsFromMeeting(integers[0],0);//TODO arreglar paginas
-            } catch (AutorizationException | ParamsException e) {
-                e.printStackTrace();
+                @Override
+                protected void onPostExecute(String s) {
+                    super.onPostExecute(s);
+                }
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            participantsAdapter.updateFriendsList(l);
-            super.onPostExecute(s);
-        }
-    }
-
-    private class getFriends extends AsyncTask<String,String,String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                friends = friendsController.getUserFriends(0); //TODO arreglar paginas
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;

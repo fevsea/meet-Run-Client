@@ -1,6 +1,7 @@
 package edu.upc.fib.meetnrun.models;
 
 import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
@@ -82,6 +83,10 @@ public class CurrentSession {
 
     public IUserAdapter getUserAdapter() {
         return adapterContainer.getUserAdapter();
+    }
+
+    public IChatAdapter getChatAdapter() {
+        return adapterContainer.getChatAdapter();
     }
 
     public IChallengeAdapter getChallengeAdapter() {
