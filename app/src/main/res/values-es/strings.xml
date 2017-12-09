@@ -101,6 +101,10 @@
     <string name="log_in">Conectarse</string>
     <string name="password">Contraseña</string>
 
+    <string name="profile_fragment_title">Tu perfil</string>
+    <string name="past_meetings_fragment_title">Tus quedadas pasadas</string>
+    <string name="statistics_fragment_title">Tus estadísticas</string>
+
     <string name="private_friends">¿Quiere correr con amigos, o solo?</string>
     <string name="private_no_friends">Quiero correr solo</string>
     <string name="private_yes_friends">Quiero añadir amigos</string>
@@ -129,6 +133,7 @@
     <string name="total_steps">Número de pasos total</string>
 
     <string name="delete_history">Eliminar historial</string>
+
     <string name="challenges">Desafíos</string>
     <string name="challenge">Desafío</string>
     <string name="create_challenge">Crear desafío</string>
@@ -149,12 +154,14 @@
     <string name="ended_in_days_hours_minutes">Terminó hace %1$d días %2$d horas %3$d minutos</string>
     <string name="ended_in_hours_minutes">Terminó hace %1$d horas %2$d minutos</string>
     <string name="params_error">Faltan parametros o tienen un formato inválido</string>
+
     <string name="chat_delete_chat_message">¿Está seguro que quiere borrar este chat?</string>
     <string name="chat_delete_chat_title">Borrar chat</string>
     <string name="chat_delete_historial_message">Está seguro que quiere borrar el historial?</string>
     <string name="chat_delete_historial_title">Eliminar historial</string>
     <string name="group_name">Nombre del grupo</string>
     <string name="total_time">Tiempo total corriendo</string>
+
     <string name="tracking_steps">%1$d pasos</string>
     <string name="tracking_distance">%1$.2f m</string>
     <string name="tracking_speed">%1$.2f m/s</string>

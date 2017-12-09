@@ -36,7 +36,6 @@
             </intent-filter>
         </activity>
 
-
         <activity
             android:name=".views.LoginActivity"
             android:label="@string/app_name"
@@ -106,7 +105,11 @@
         <activity
             android:name=".views.ChangePasswordActivity"
             android:label="@string/action_change_pass"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".views.PastMeetingInfoActivity"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".views.TrackingActivity"
             android:hardwareAccelerated="true"

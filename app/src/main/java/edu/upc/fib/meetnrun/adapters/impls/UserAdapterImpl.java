@@ -118,6 +118,7 @@ public class UserAdapterImpl implements IUserAdapter {
         return ok;
     }
 
+
     @Override
     public User registerUser(String userName, String firstName, String lastName, String postCode, String password, String question, String answer) throws ParamsException {
         Forms.UserRegistration ur = new Forms.UserRegistration(0, userName, firstName, lastName, postCode, question, answer, password, 1);
@@ -140,13 +141,22 @@ public class UserAdapterImpl implements IUserAdapter {
 
     }
 
+
+    /**
+     * Given a target UserID and a Filter, returns all the meeting who meet the conditions
+     *
+     * @param targetUserId Target user who most be in the meeting
+     * @param filterByTime Filter can be : past, future, all
+     * @return List of {@link List<Meeting>}
+     * @throws AutorizationException
+     * @throws ParamsException
+     */
     @Override
-    public List<Meeting> getUsersFutureMeetings(int userId) throws AutorizationException, ParamsException {
+    public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime) throws AutorizationException, ParamsException {
         List<Meeting> ul = new ArrayList<>();
-        //TODO Pending to TEST
         try {
             Response<List<MeetingServer>> ret =
-                    mServices.getAllFutureMeetings(userId).execute();
+                    mServices.getUserMeetingFilteredMeetings(targetUserId, filterByTime).execute();
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
 
@@ -170,6 +180,15 @@ public class UserAdapterImpl implements IUserAdapter {
     }
 
     @Override
+    public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException {
+        return getUserMeetingsFilteres(targetUserId, "future");
+    }
+
+    @Override
+    public List<Meeting> getUserPastMeetings(int targetUserId) throws AutorizationException, ParamsException {
+        return getUserMeetingsFilteres(targetUserId, "past");
+    }
+
     public Statistics getUserStatisticsByID(int id) throws AutorizationException {
 
         StatisticsServer ss = null;
@@ -189,6 +208,5 @@ public class UserAdapterImpl implements IUserAdapter {
         }
         return ss.toGenericModel();
     }
-
 
 }
