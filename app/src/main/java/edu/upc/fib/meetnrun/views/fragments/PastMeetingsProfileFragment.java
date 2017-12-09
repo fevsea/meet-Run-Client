@@ -78,7 +78,7 @@ public class PastMeetingsProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
+        View view = inflater.inflate(R.layout.fragment_meeting_list, container, false);
         this.view = view;
 
         User u = CurrentSession.getInstance().getCurrentUser();
@@ -117,22 +117,22 @@ public class PastMeetingsProfileFragment extends Fragment {
                 meetingId = meeting.getId();
                 getTrackingData();
 
-                Intent pastMeetingInfoIntent = new Intent(getActivity(),PastMeetingInfoActivity.class);
+                Intent pastMeetingInfoIntent = new Intent(getActivity(), PastMeetingInfoActivity.class);
 
-                pastMeetingInfoIntent.putExtra("id",meeting.getId());
-                pastMeetingInfoIntent.putExtra("title",meeting.getTitle());
-                pastMeetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
-                pastMeetingInfoIntent.putExtra("ownerId",meeting.getOwner().getId());
-                pastMeetingInfoIntent.putExtra("description",meeting.getDescription());
+                pastMeetingInfoIntent.putExtra("id", meeting.getId());
+                pastMeetingInfoIntent.putExtra("title", meeting.getTitle());
+                pastMeetingInfoIntent.putExtra("owner", meeting.getOwner().getUsername());
+                pastMeetingInfoIntent.putExtra("ownerId", meeting.getOwner().getId());
+                pastMeetingInfoIntent.putExtra("description", meeting.getDescription());
                 String datetime = meeting.getDate();
-                pastMeetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
-                pastMeetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
-                pastMeetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
+                pastMeetingInfoIntent.putExtra("date", datetime.substring(0, datetime.indexOf('T')));
+                pastMeetingInfoIntent.putExtra("time", datetime.substring(datetime.indexOf('T') + 1, datetime.indexOf('Z')));
+                pastMeetingInfoIntent.putExtra("level", String.valueOf(meeting.getLevel()));
 
                 String distance, steps, totalTime, avSpeed, calories;
                 path = new ArrayList<>();
 
-                if(tracking == null) {
+                if (tracking == null) {
                     distance = "0";
                     steps = "0";
                     totalTime = "0";
@@ -173,7 +173,7 @@ public class PastMeetingsProfileFragment extends Fragment {
     }
 
 
-    private class GetPastMeetings extends AsyncTask<Integer,Integer,String> {
+    private class GetPastMeetings extends AsyncTask<Integer, Integer, String> {
         List<Meeting> l = new ArrayList<>();
 
         @Override
@@ -198,26 +198,27 @@ public class PastMeetingsProfileFragment extends Fragment {
 
 
     private class getPastMeetingsTracking extends AsyncTask<Integer, Integer, String> {
-            @Override
-            protected String doInBackground(Integer... integers) {
-                try {
-                    tracking = meetingController.getTracking(integers[0], integers[1]);
-                } catch (AutorizationException e) {
-                    e.printStackTrace();
-                } catch (NotFoundException e) {
-                    e.printStackTrace();
-                }
-                return null;
+        @Override
+        protected String doInBackground(Integer... integers) {
+            try {
+                tracking = meetingController.getTracking(integers[0], integers[1]);
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (NotFoundException e) {
+                e.printStackTrace();
             }
-
-            @Override
-            protected void onPostExecute(String s) {
-                System.err.println("FINISHED");
-                super.onPostExecute(s);
-            }
+            return null;
         }
 
 
+        @Override
+        protected void onPostExecute(String s) {
+            System.err.println("FINISHED");
+            super.onPostExecute(s);
+        }
     }
+}
+
+
 
 

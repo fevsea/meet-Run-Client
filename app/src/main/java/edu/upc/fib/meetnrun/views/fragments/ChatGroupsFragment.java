@@ -91,6 +91,7 @@ public class ChatGroupsFragment extends Fragment {
 
         groupName = view.findViewById(R.id.groupName);
         if (adduser) {
+            getActivity().setTitle("Add Friend");
             Log.e("CGF","ADDUSER");
             groupName.setFocusable(false);
             groupName.setText(CurrentSession.getInstance().getChat().getChatName());
@@ -101,7 +102,6 @@ public class ChatGroupsFragment extends Fragment {
         fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        l = new ArrayList<>();
         selectedFriends = new ArrayList<>();
         if (!adduser) selectedFriends.add(CurrentSession.getInstance().getCurrentUser());
 
@@ -118,28 +118,29 @@ public class ChatGroupsFragment extends Fragment {
                 else {
                     groupName.setText("");
 
-                    Calendar rightNow = Calendar.getInstance();
-                    dateWithoutTime = rightNow.getTime();
-
-                    selectedFriendsID = new ArrayList<>();
-
-                    for (User user : selectedFriends) {
-                        selectedFriendsID.add(user.getId());
+                    for (User u : selectedFriends) {
+                        u.setSelected(false);
                     }
 
-                    Chat chat = null;
                     if (adduser) {
                         chat = CurrentSession.getInstance().getChat();
                         List<User> groupUsers = chat.getListUsersChat();
                         groupUsers.addAll(selectedFriends);
                         chat.setListUsersChat(groupUsers);
                         new UpdateChat().execute(chat);
+                        getActivity().finish();
                     }
                     else {
+                        Calendar rightNow = Calendar.getInstance();
+                        dateWithoutTime = rightNow.getTime();
+
+                        selectedFriendsID = new ArrayList<>();
+
+                        for (User user : selectedFriends) {
+                            selectedFriendsID.add(user.getId());
+                        }
                         new createChat().execute();
                     }
-
-                    getActivity().finish();
                 }
             }
         });
@@ -166,6 +167,8 @@ public class ChatGroupsFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         friendsList.setLayoutManager(layoutManager);
 
+        l = new ArrayList<>();
+
         friendsAdapter = new FriendsAdapter(l, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
@@ -187,7 +190,7 @@ public class ChatGroupsFragment extends Fragment {
                 int size = selectedFriends.size();
                 if (!adduser) --size;
                 numbFriends.setText(String.valueOf(size));
-                friendsAdapter.updateFriendsList(l);
+                friendsAdapter.notifyDataSetChanged();
 
             }
         }, getContext());
@@ -267,6 +270,7 @@ public class ChatGroupsFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             updateData();
+            if (friendsAdapter.getItemCount() == 0) numbFriends.setText("All your friends are already in this group.");
             super.onPostExecute(s);
         }
     }
@@ -341,10 +345,13 @@ public class ChatGroupsFragment extends Fragment {
     private void removeUsersInGroup(List<User> users) {
         List<Friend> friendsInGroup = new ArrayList<>();
         for (User user : users) {
-            for (Friend friend : l) {
-                if (user.getId().equals(friend.getUser().getId())) l.remove(friend);
+            for (Friend f : l) {
+                User friend = f.getFriend();
+                if (currentUser.getUsername().equals(friend.getUsername())) friend = f.getUser();
+                if (user.getId().equals(friend.getId())) friendsInGroup.add(f);
             }
         }
+        l.removeAll(friendsInGroup);
     }
 
 }

@@ -99,11 +99,11 @@ public interface SOServices {
     @GET("/meetings/{id}/participants")
     Call<PageServer<UserServer>> getAllParticipantsFromMeeting(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
 
-    @POST("/meetings/{id}/participants")
-    Call<Void> joinMeeting(@Path("id") int id);
+    @POST("/meetings/{meetingID}/participants/{userID}")
+    Call<Void> joinMeeting(@Path("meetingID") int meetingID,@Path("userID") int userID);
 
-    @DELETE("/meetings/{id}/participants")
-    Call<Void> leaveMeeting(@Path("id") int id);
+    @DELETE("/meetings/{meetingID}/participants/{userID}")
+    Call<Void> leaveMeeting(@Path("meetingID") int meetingID,@Path("userID") int userID);
 
 
     //FRIENDS

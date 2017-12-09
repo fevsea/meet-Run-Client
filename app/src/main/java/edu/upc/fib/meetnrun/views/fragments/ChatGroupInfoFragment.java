@@ -174,7 +174,11 @@ public class ChatGroupInfoFragment extends Fragment {
                 while (!isLastPage) {
                     friendsPage = friendsDBAdapter.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(),pageNumber);
                     if (friendsPage.size() != 0) {
-                        for (Friend f : friendsPage) friends.add(f.getUser());
+                        for (Friend f : friendsPage) {
+                            User friend = f.getFriend();
+                            if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
+                            friends.add(friend);
+                        }
                         ++pageNumber;
                     }
                     else isLastPage = true;

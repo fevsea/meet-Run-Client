@@ -85,6 +85,8 @@ public abstract class FriendListFragmentTemplate extends Fragment{
         return this.view;
     }
 
+    protected abstract RecyclerViewOnClickListener getRecyclerViewListener();
+
     protected abstract void initList();
 
     protected abstract void floatingbutton();
@@ -99,19 +101,7 @@ public abstract class FriendListFragmentTemplate extends Fragment{
 
         l = new ArrayList<>();
 
-        friendsAdapter = new FriendsAdapter(l, new RecyclerViewOnClickListener() {
-            @Override
-            public void onButtonClicked(int position) {}
-
-            @Override
-            public void onItemClicked(int position) {
-
-                User friend = friendsAdapter.getFriendAtPosition(position).getFriend();
-                if (currentUser.getUsername().equals(friend.getUsername())) friend = friendsAdapter.getFriendAtPosition(position).getUser();
-                getIntent(friend);
-
-            }
-        }, getContext());
+        friendsAdapter = new FriendsAdapter(l, getRecyclerViewListener(), getContext());
 
         friendsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -15,6 +16,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,7 +60,6 @@ import edu.upc.fib.meetnrun.models.Meeting;
 
 
 import edu.upc.fib.meetnrun.views.MeetingFriendsActivity;
-
 import static android.app.Activity.RESULT_OK;
 
 
@@ -71,6 +72,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     private GoogleMap maps;
     private LatLng myLocation;
     private Marker myMarker;
+    private final static String[] kind = {"@string/public_meeting","@string/private_meeting"};
     EditText name;
     EditText date;
     EditText hour;
@@ -87,8 +89,6 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     String Longitude;
     ScrollView sV;
     Switch publicMeeting;
-
-    private final static String[] kind = {"@string/public_meeting","@string/private_meeting"};
 
     private IMeetingAdapter meetingAdapter;
 
@@ -107,16 +107,18 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         View view = inflater.inflate(R.layout.fragment_create_meeting, container, false);
         this.view = view;
 
+
+
+        myLocation = new LatLng(41.388576, 2.112840);
+        friends=false;
         name = view.findViewById(R.id.name);
         date = view.findViewById(R.id.date);
         hour = view.findViewById(R.id.hour);
         level = view.findViewById(R.id.level);
+        location = view.findViewById(R.id.meetingLocation);
         description = view.findViewById(R.id.description);
         location = view.findViewById(R.id.meetingLocation);
         Button dateButton = view.findViewById(R.id.pickDate);
-
-        myLocation = new LatLng(41.388576, 2.112840);
-        friends=false;
 
         dateButton.setOnClickListener(new View.OnClickListener() {
 
@@ -157,7 +159,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
         publicMeeting = view.findViewById(R.id.switch_create);
         publicMeeting.setOnCheckedChangeListener(this);
-
+        publicMeeting.setText(R.string.private_meeting);
         Public=false;
 
         geocoder = new Geocoder(this.getContext(), Locale.getDefault());
@@ -230,7 +232,9 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         String Hour = hour.getText().toString();
         Description = description.getText().toString();
         Latitude= String.valueOf(myLocation.latitude);
+        Latitude = Latitude.substring(0,Math.min(Latitude.length(),10));
         Longitude=String.valueOf(myLocation.longitude);
+        Longitude= Longitude.substring(0,Math.min(Longitude.length(),10));
         String hourTxt,minuteTxt;
         String yearTxt,monthTxt,dayTxt;
         if (hour2 < 10) hourTxt = "0"+hour2;
@@ -243,16 +247,20 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         if (day < 10) dayTxt = "0"+day;
         else dayTxt = String.valueOf(day);
         Date=yearTxt+"-"+monthTxt+"-"+dayTxt+"T"+hourTxt+":"+minuteTxt+":00Z";
+        Level = Integer.parseInt(level.getText().toString());
 
 
         if (Name.isEmpty() || Date.isEmpty() || Hour.isEmpty() || Latitude.isEmpty() || Longitude.isEmpty() ||level.getText().toString().isEmpty()){
             Toast.makeText(this.getContext(), this.getString(R.string.empty_create_error), Toast.LENGTH_SHORT).show();
         }
+        else if (Level > CurrentSession.getInstance().getCurrentUser().getLevel()) Toast.makeText(this.getContext(),R.string.level_too_high, Toast.LENGTH_SHORT).show();
         else if(Name.length()>=100) Toast.makeText(this.getContext(),this.getString(R.string.big_name_error), Toast.LENGTH_SHORT).show();
         else if(Description.length()>=500) Toast.makeText(this.getContext(), this.getString(R.string.big_description_error), Toast.LENGTH_SHORT).show();
         else{
             //DB stuff
+
             Level = Integer.parseInt(level.getText().toString());
+
             if (Public)  onCreateDialog(getActivity(), this.getString(R.string.public_friends), this.getString(R.string.public_yes_friends), this.getString(R.string.public_no_friends));
             else onCreateDialog(getActivity(), this.getString(R.string.private_friends), this.getString(R.string.private_yes_friends), this.getString(R.string.private_no_friends));
             //Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description+", Kind of meeting: "+Public.toString(), Toast.LENGTH_SHORT).show();
@@ -265,17 +273,6 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         super.onCreateOptionsMenu(menu,inflater);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
-            if (resultCode == RESULT_OK) { //Retrieve the result from the PlacePicker
-                Place place = PlacePicker.getPlace(getActivity(), data);
-                LatLng location = place.getLatLng();
-                m.setLatitude(String.valueOf(location.latitude));
-                m.setLongitude(String.valueOf(location.longitude));
-                moveMapCameraAndMarker(location);
-            }
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -316,6 +313,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
             for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
                 strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
             }
+            Log.e("CREATE MEETING", strReturnedAddress.toString());
             location.setText(strReturnedAddress.toString());
         }
 
@@ -325,6 +323,16 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
                 sV.requestDisallowInterceptTouchEvent(true);
             }
         });
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) { //Retrieve the result from the PlacePicker
+                Place place = PlacePicker.getPlace(getActivity(), data);
+                myLocation = place.getLatLng();
+                moveMapCameraAndMarker(myLocation);
+            }
+        }
     }
 
     private void moveMapCameraAndMarker(LatLng location) {
@@ -365,14 +373,19 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         Public=b;
+        if (Public) publicMeeting.setText(R.string.public_meeting);
+        else publicMeeting.setText(R.string.private_meeting);
     }
 
     private class newMeeting extends AsyncTask<String,String,String> {
         @Override
         protected String doInBackground(String... strings){
             try {
-                 m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
-            } catch (ParamsException | AutorizationException e) {
+                m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
+            } catch (ParamsException  e) {
+                e.printStackTrace();
+            } catch (AutorizationException e) {
+
                 e.printStackTrace();
             }
             return null;
@@ -382,6 +395,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         protected void onPostExecute(String s){
             super.onPostExecute(s);
             if (friends){
+                Log.e("CREATE",String.valueOf(friends));
                 Intent i=new Intent(getActivity(), MeetingFriendsActivity.class);
                 Integer MeetingId=m.getId();
                 i.putExtra("level", Level);

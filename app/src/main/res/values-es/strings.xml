@@ -166,4 +166,17 @@
     <string name="tracking_distance">%1$.2f m</string>
     <string name="tracking_speed">%1$.2f m/s</string>
     <string name="tracking_calories">%1$.2f kcal</string>
+    <string name="english">English</string>
+    <string name="aaa">TEST</string>
+    <string name="action_reply">Responder</string>
+    <string name="action_share">Compartir</string>
+    <string name="add_user_to_group">+ Añadir otro usuario</string>
+    <string name="calories">Calories totales consumidas</string>
+    <string name="catalan">Catalán</string>
+    <string name="delete_my_account">Eliminar mi cuenta</string>
+    <string name="level_too_high">El nivel de la quedada es más alto que el suyo</string>
+    <string name="loading_list">La lista se está cargando</string>
+    <string name="new_message_notification_title_template">Nuevo mensaje: %1$s</string>
+    <string name="number_of_users">Numero de usuarios</string>
+    <string name="spanish">Castellano</string>
 </resources>
