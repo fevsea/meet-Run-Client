@@ -6,13 +6,16 @@ import android.view.View;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.UsersListActivity;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 
-public class FriendsFragment extends FriendUserListFragmentTemplate {
+public class FriendsFragment extends FriendListFragmentTemplate {
 
     @Override
     protected void initList() {}
@@ -48,6 +51,23 @@ public class FriendsFragment extends FriendUserListFragmentTemplate {
         startActivity(intent);
     }
 
+    @Override
+    protected RecyclerViewOnClickListener getRecyclerViewListener() {
+        return new RecyclerViewOnClickListener() {
+            @Override
+            public void onButtonClicked(int position) {}
+
+            @Override
+            public void onItemClicked(int position) {
+
+                User friend = friendsAdapter.getFriendAtPosition(position).getFriend();
+                if (currentUser.getUsername().equals(friend.getUsername())) friend = friendsAdapter.getFriendAtPosition(position).getUser();
+                getIntent(friend);
+
+            }
+        };
+    }
+
     private class getFriends extends AsyncTask<String,String,String> {
 
         @Override
@@ -58,11 +78,15 @@ public class FriendsFragment extends FriendUserListFragmentTemplate {
 
         @Override
         protected String doInBackground(String... strings) {
+
             try {
-                l = friendsDBAdapter.getUserFriends(pageNumber);
+                l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
             } catch (AutorizationException e) {
                 e.printStackTrace();
+            } catch (NotFoundException e) {
+                e.printStackTrace();
             }
+
             return null;
         }
 

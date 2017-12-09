@@ -50,11 +50,8 @@
     <string name="delete_account_message">Are you sure you want to delete your account?</string>
     <string name="delete_account_title">Delete account</string>
 
-    <string name="chat_delete_historial_message">Are you sure you want to delete the historial?</string>
-    <string name="chat_delete_historial_title">Delete historial</string>
     <string name="chat_delete_chat_message">Are you sure you want to delete this chat?</string>
     <string name="chat_delete_chat_title">Delete chat</string>
-
 
     <string name="chat_friend_dialog_message">Are you sure you want to send a message to</string>
     <string name="chat_friend_dialog_title">Chat with</string>
@@ -113,6 +110,7 @@
     <string name="repeat_new_password">Introduce again your new password:</string>
     <string name="error_change_pass">Sorry, there was an error while changing your password</string>
     <string name="action_change_pass">Change password</string>
+    <string name="level_too_high">The meeting level is higher than yours </string>
     <string name="log_out">Log out</string>
     <string name="communicate">Communicate</string>
     <string name="share">Share</string>
@@ -138,6 +136,22 @@
     <string name="total_time">Total run time</string>
     <string name="delete_history">Delete history</string>
     <string name="group_name">Group Name</string>
+    <string name="aaa">TEST</string>
+    <string name="add_user_to_group">+ Add another user</string>
+    <string name="number_of_users">Number of users</string>
+    <string name="loading_list">The list is loading, try again</string>
+    <string name="new_message_notification_title_template">New message: %1$s</string>
+    <!-- TODO: remove this placeholder text -->
+    <string name="new_message_notification_placeholder_text_template">You said %1$s and lorem ipsum
+        dolor sit amet, consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit vel
+        semper venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis.
+        Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper
+        ornare lacus. Duis ac mauris sed massa congue volutpat. Donec sed erat sit amet turpis
+        viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec
+        tortor.
+    </string>
+    <string name="action_share">Share</string>
+    <string name="action_reply">Reply</string>
     <string name="challenges">Challenges</string>
     <string name="challenge">Challenge</string>
     <string name="create_challenge">Create challenge</string>
@@ -170,3 +184,4 @@
     <string name="catalan">Catalan</string>
     <string name="delete_my_account">Delete my account.</string>
 </resources>
+

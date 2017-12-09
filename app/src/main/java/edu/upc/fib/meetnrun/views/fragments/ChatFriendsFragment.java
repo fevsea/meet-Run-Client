@@ -9,18 +9,29 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 /**
  * Created by eric on 22/11/17.
  */
 
-public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
+public class ChatFriendsFragment extends FriendListFragmentTemplate {
+
+    private IChatAdapter chatDBAdapter;
+    private Chat chat;
+    private String friendUserName;
+    private List<Integer> userList;
+    private Date dateWithoutTime;
+    private User friend;
 
     @Override
     protected void initList() {
@@ -33,39 +44,40 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
     }
 
     @Override
-    protected void adapter() {}
+    protected void adapter() {
+        chatDBAdapter = CurrentSession.getInstance().getChatAdapter();
+    }
 
     @Override
     protected void getIntent(User friend) {
 
-        String friendUserName = friend.getUsername();
-        User user = CurrentSession.getInstance().getCurrentUser();
-        String currentUsername = user.getUsername();
-        Chat chat = ChatListFragment.getChat(currentUsername, friendUserName);
-        if (chat == null) {
-            Calendar rightNow = Calendar.getInstance();
+        this.friend = friend;
+        new getChat().execute();
 
-            Date dateWithoutTime = rightNow.getTime();
-
-            Message m = new Message("", currentUsername, dateWithoutTime);
-
-            List<User> userList = new ArrayList<>();
-            userList.add(user);
-            userList.add(friend);
-
-            chat = new Chat(ChatListFragment.getCount(),friendUserName, userList, 0, m);
-            ChatListFragment.addChatFake(chat);
-        }
-        Intent i = new Intent(getContext(), ChatActivity.class);
-        CurrentSession.getInstance().setChat(chat);
-        getActivity().finish();
-        startActivity(i);
     }
 
     @Override
     protected void getMethod() {
         new getFriends().execute();
     }
+
+    @Override
+    protected RecyclerViewOnClickListener getRecyclerViewListener() {
+        return new RecyclerViewOnClickListener() {
+            @Override
+            public void onButtonClicked(int position) {}
+
+            @Override
+            public void onItemClicked(int position) {
+
+                User friend = friendsAdapter.getFriendAtPosition(position).getFriend();
+                if (currentUser.getUsername().equals(friend.getUsername())) friend = friendsAdapter.getFriendAtPosition(position).getUser();
+                getIntent(friend);
+
+            }
+        };
+    }
+
 
     private class getFriends extends AsyncTask<String,String,String> {
 
@@ -78,8 +90,10 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                l = friendsDBAdapter.getUserFriends(pageNumber);
+                l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
             } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (NotFoundException e) {
                 e.printStackTrace();
             }
             return null;
@@ -103,5 +117,82 @@ public class ChatFriendsFragment extends FriendUserListFragmentTemplate {
         }
 
     }
+
+    private class createChat extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... s) {
+            try {
+                chat = chatDBAdapter.createChat(friendUserName, userList, 0, null, "", 0, dateWithoutTime);
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+            if (chat != null) {
+                Intent i = new Intent(getContext(), ChatActivity.class);
+                CurrentSession.getInstance().setChat(chat);
+                getActivity().finish();
+                startActivity(i);
+            }
+            super.onPostExecute(s);
+        }
+    }
+
+    private class getChat extends AsyncTask<String,String,String> {
+
+        User user;
+
+        @Override
+        protected void onPreExecute() {
+            friendUserName = friend.getUsername();
+            user = CurrentSession.getInstance().getCurrentUser();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected String doInBackground(String... s) {
+            try {
+                chat = chatDBAdapter.getPrivateChat(friend.getId());
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+                chat = null;
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+                chat = null;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (chat == null) {
+                Calendar rightNow = Calendar.getInstance();
+
+                dateWithoutTime = rightNow.getTime();
+
+                userList = new ArrayList<>();
+                userList.add(user.getId());
+                userList.add(friend.getId());
+
+                new createChat().execute();
+            }
+            else {
+                Intent i = new Intent(getContext(), ChatActivity.class);
+                CurrentSession.getInstance().setChat(chat);
+                getActivity().finish();
+                startActivity(i);
+            }
+            super.onPostExecute(s);
+        }
+    }
+
+
 
 }

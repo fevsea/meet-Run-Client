@@ -1,182 +1,204 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SearchView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
+import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
-
-import static android.R.layout.simple_list_item_1;
-import static android.R.layout.simple_list_item_activated_2;
-import static android.R.layout.simple_list_item_checked;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 
 /**
  * Created by Javier on 08/11/2017.
  */
 
-public class MeetingFriendsFragment extends Fragment {
+public class MeetingFriendsFragment extends FriendListFragmentTemplate {
 
-    private View view;
-    private int level;
-    private int meetingId;
-    private FragmentActivity context;
 
-    private IFriendsAdapter friendsDBAdapter;
-    List<User> l;
-    List<User> _users;
-    List<Boolean> clickedFriends;
-    ListView lv;
+    private List<User> selectedFriends = new ArrayList<>();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+    protected void initList() {}
+
+    @Override
+    protected void floatingbutton() {
+        fab.setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_meeting_friends, container, false);
-        this.view = view;
-        context=this.getActivity();
+    protected void adapter() {}
 
-        lv = view.findViewById(R.id.myFriends);
 
-        Bundle meetingLevel= getActivity().getIntent().getExtras();
-        meetingId=meetingLevel.getInt("meetingId");
-        level=meetingLevel.getInt("level");
+    @Override
+    protected void getIntent(User friend) {
+    }
+
+    @Override
+    protected void getMethod() {
         new getFriends().execute();
-
-        return view;
     }
-    public class UsersArrayAdapter extends ArrayAdapter<User>{
-        LayoutInflater _li;
-        int _resource;
-        List<User> _users;
 
-        public UsersArrayAdapter(Context context, int resource, List<User> objects) {
-            super(context, resource, objects);
 
-            this._li = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            this._resource = resource;
-            this._users = objects;
-        }
+    @Override
+    protected RecyclerViewOnClickListener getRecyclerViewListener() {
+        return new RecyclerViewOnClickListener() {
+            @Override
+            public void onButtonClicked(int position) {}
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null){
-                convertView = this._li.inflate(this._resource, null);
+            @Override
+            public void onItemClicked(int position) {
+                User friend = friendsAdapter.getFriendAtPosition(position).getFriend();
+                if (currentUser.getId().equals(friend.getId())) friend = friendsAdapter.getFriendAtPosition(position).getUser();
+
+                if (friend.isSelected()) {
+                    selectedFriends.remove(friend);
+                    friend.setSelected(false);
+                }
+                else {
+                    selectedFriends.add(friend);
+                    friend.setSelected(true);
+                }
+                friendsAdapter.notifyDataSetChanged();
+
             }
-
-            User item = this._users.get(position);
-            TextView tvTitle = convertView.findViewById(android.R.id.text1);
-            TextView tvSubtitle = convertView.findViewById(android.R.id.text2);
-
-
-            tvTitle.setText(item.getFirstName()+" "+item.getLastName());
-            tvSubtitle.setText(item.getUsername()+" -> "+item.getPostalCode());
-
-            return convertView;
-        }
+        };
     }
+
+
     private class getFriends extends AsyncTask<String,String,String> {
 
         @Override
+        protected void onPreExecute() {
+            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+            isLoading = true;
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
-          /*  try {
-                friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
-                l = friendsDBAdapter.getUserFriends();
+
+            try {
+                l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
             } catch (AutorizationException e) {
                 e.printStackTrace();
-            }*/
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
+
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            ArrayAdapter<User> adapter = new ArrayAdapter<User>(context, simple_list_item_activated_2,l);
-            lv.setAdapter(
-                    new UsersArrayAdapter(
-                            context,
-                            android.R.layout.simple_list_item_activated_2,
-                            l
-                    )
-            );
-            lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            if (l != null) {
+                if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
+                else friendsAdapter.addFriends(l);
 
-                @Override
-                public void onItemClick(AdapterView<?> adapter, View v, int pos, long id) {
-                /* The code goes here */
-                    friendClicked(pos);
-
+                if (l.size() == 0) {
+                    isLastPage = true;
                 }
-            });
+                else pageNumber++;
+            }
+            swipeRefreshLayout.setRefreshing(false);
+            isLoading = false;
+            progressBar.setVisibility(View.INVISIBLE);
+            super.onPostExecute(s);
+        }
+
+    }
+
+    private class JoinMeeting extends AsyncTask<ArrayList<Integer>,String,String> {
+        private int meetingId;
+
+        @Override
+
+        protected void onPreExecute() {
+            meetingId = getActivity().getIntent().getExtras().getInt("meetingId");
+        }
+        @Override
+        protected String doInBackground(ArrayList<Integer>... ids) {
+            try {
+                IMeetingAdapter meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
+                for (int id : ids[0]) {
+                    //TODO handle exceptions
+                    try {
+                        meetingAdapter.joinMeeting(meetingId,id);
+                    } catch (ParamsException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            getActivity().finish();
             super.onPostExecute(s);
         }
     }
 
-    private void friendClicked(int pos) {
-        clickedFriends.set(pos,!clickedFriends.get(pos));
-    }
 
+    @Override
+    public void onResume() {
+        initializePagination();
+        getMethod();
+        super.onResume();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        inflater.inflate(R.menu.search_menu, menu);
-        MenuItem item = menu.findItem(R.id.search_menu);
-        SearchView searchView = (SearchView) item.getActionView();
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                newText = newText.toLowerCase();
-                ArrayList<User> newList = new ArrayList<User>();
-                for (User friend : l) {
-                    String userName = friend.getUsername().toLowerCase();
-                    String name = (friend.getFirstName()+" "+friend.getLastName()).toLowerCase();
-                    String postCode = friend.getPostalCode();
-                    if (userName != null && name != null && postCode != null) {
-                        if (name.contains(newText) || userName.contains(newText) || postCode.contains(newText)) newList.add(friend);
-                    }
-
-                }
-                //friendsAdapter.updateFriendsList(newList);
-                return true;
-            }
-        });
-
+        inflater.inflate(R.menu.edit_meeting_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.done_button) {
+            ArrayList<Integer> selectedFriendsID = new ArrayList<>();
+
+            for (User user : selectedFriends) {
+                selectedFriendsID.add(user.getId());
+            }
+            new JoinMeeting().execute(selectedFriendsID);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
-
-

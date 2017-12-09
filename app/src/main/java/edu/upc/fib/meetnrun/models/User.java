@@ -110,4 +110,13 @@ public class User {
                 ", level=" + level +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object anObject) {
+        if (!(anObject instanceof User)) {
+            return false;
+        }
+        User otherUser = (User)anObject;
+        return otherUser.getId().equals(getId());
+    }
 }

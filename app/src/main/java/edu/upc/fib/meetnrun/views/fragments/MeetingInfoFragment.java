@@ -8,11 +8,13 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -32,14 +34,17 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Friend;
+import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback {
@@ -48,11 +53,20 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     private LatLng location;
     private GoogleMap map;
     private Marker marker;
-    private FriendsAdapter participantsAdapter;
+    private UsersAdapter participantsAdapter;
     private IMeetingAdapter meetingController;
     private IFriendsAdapter friendsController;
-    private List<User> friends;
+    private List<User> meetingUsers;
+    private List<Friend> friends;
     private int meetingId;
+    private boolean isLoading;
+    private boolean isLastPage;
+    private int pageNumber;
+    private ProgressBar progressBar;
+    private LinearLayoutManager layoutManager;
+    private FloatingActionButton fab;
+    private Meeting meeting;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +86,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         TextView owner = view.findViewById(R.id.meeting_info_creator);
 
         meetingId = meetingInfo.getInt("id");
+        new getMeeting().execute();
         title.setText(meetingInfo.getString("title"));
         owner.setText(meetingInfo.getString("owner"));
         description.setText(meetingInfo.getString("description"));
@@ -81,8 +96,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         date.setText(meetingInfo.getString("date"));
         time.setText(meetingInfo.getString("time"));
 
-        FloatingActionButton fab =
-                getActivity().findViewById(R.id.activity_fab);
+        fab = getActivity().findViewById(R.id.activity_fab);
         if (CurrentSession.getInstance().getCurrentUser().getId() == meetingInfo.getInt("ownerId")) {
 
             fab.setImageResource(android.R.drawable.ic_menu_edit);
@@ -101,6 +115,8 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
             fab.setVisibility(View.INVISIBLE);
         }
 
+        progressBar = view.findViewById(R.id.pb_loading);
+        initializePagination();
 
         setupRecyclerView();
         setupScrollView();
@@ -119,12 +135,12 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     private void setupRecyclerView() {
 
         final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
-        friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        layoutManager = new LinearLayoutManager(getActivity());
+        friendsList.setLayoutManager(layoutManager);
 
-        List<User> users = new ArrayList<>();
-        getParticipantsList();
+        meetingUsers = new ArrayList<>();
 
-        participantsAdapter = new FriendsAdapter(users, new RecyclerViewOnClickListener() {
+        participantsAdapter = new UsersAdapter(meetingUsers, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
@@ -137,9 +153,12 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
                 }
                 else {
                     boolean isFriend = false;
-                    for (User friend : friends) {
+                    for (Friend f : friends) {
+                        User friend = f.getFriend();
+                        if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
                         if (participant.getId().equals(friend.getId())) isFriend = true;
                     }
+                    CurrentSession.getInstance().setFriend(participant);
                     if (isFriend) {
                         profileIntent = new Intent(getActivity(), FriendProfileActivity.class);
                     }
@@ -155,19 +174,43 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
                 startActivity(profileIntent);
 
             }
-        }, getContext(), false);
+        }, getContext());
+
+        friendsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                fab.setVisibility(View.VISIBLE);
+
+                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0) {
+                    if (!isLastPage) {
+                        getParticipantsList();
+                    }
+                    else {
+                        fab.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
+
+        getParticipantsList();
         friendsList.setAdapter(participantsAdapter);
-      /*  LinearLayoutManager layoutManager
-                = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        friends.setLayoutManager(layoutManager);*/
-
-
     }
 
-    @Override
-    public void onResume() {
-        getParticipantsList();
-        super.onResume();
+
+    private void initializePagination() {
+        pageNumber = 0;
+        isLoading = false;
+        isLastPage = false;
     }
 
     private void setupScrollView() {
@@ -202,15 +245,45 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         new getFriends().execute(CurrentSession.getInstance().getCurrentUser().getId().toString());
     }
 
+    private void setLoading() {
+        progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+    }
+
+    private void updateData() {
+        Log.e("MEETINGINFO","LIST = " + meetingUsers.toString());
+        if (meetingUsers != null && meetingUsers.size() != 0) {
+            if (pageNumber != 0) {
+                participantsAdapter.updateFriendsList(meetingUsers);
+            }
+            else {
+                participantsAdapter.addFriends(meetingUsers);
+            }
+
+            if (meetingUsers.size() == 0) {
+                isLastPage = true;
+            }
+            else pageNumber++;
+        }
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+
     private class getParticipants extends AsyncTask<Integer,String,String> {
 
-        private List<User> l = new ArrayList<>();
+
+        @Override
+        protected void onPreExecute() {
+            setLoading();
+            Log.e("MEETINGINFO","ID = " + meetingId);
+        }
 
         @Override
         protected String doInBackground(Integer... integers) {
             //TODO handle exceptions
             try {
-                l = meetingController.getParticipantsFromMeeting(integers[0],0);//TODO arreglar paginas
+                meetingUsers = meetingController.getParticipantsFromMeeting(integers[0],pageNumber);//TODO arreglar paginas
             } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
@@ -219,7 +292,8 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
 
         @Override
         protected void onPostExecute(String s) {
-            participantsAdapter.updateFriendsList(l);
+            Log.e("MEETINGUSERS",meetingUsers.toString());
+            updateData();
             super.onPostExecute(s);
         }
     }
@@ -228,9 +302,12 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
 
         @Override
         protected String doInBackground(String... strings) {
+
             try {
-                friends = friendsController.getUserFriends(0); //TODO arreglar paginas
+                friends = friendsController.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(), 0);
             } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (NotFoundException e) {
                 e.printStackTrace();
             }
             return null;
@@ -240,6 +317,28 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
         }
+    }
+
+    private class getMeeting extends AsyncTask<Void,Void,Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            try {
+                meeting = meetingController.getMeeting(meetingId);
+                }
+            catch (NotFoundException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void v) {
+            List<User> owner = new ArrayList<>();
+            owner.add(meeting.getOwner());
+            participantsAdapter.addFriends(owner);
+        }
+
     }
 
     @Override
