@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,19 +131,26 @@ public class ChallengeFragment extends Fragment {
                 progressTextResource, opponentProgress, challenge.getDistance(),
                 ((float)opponentProgress)/((float)challenge.getDistance())*100, "%");
         opponentProgressText.setText(opponentProgressString);
+        try {
+            endsIn.setText(getExpirationText(challenge.getDeadline()));
+        }
+        catch (ParseException e) {
+            endsIn.setText("");
+            Log.e("PARSEEXCEPTION", e.getMessage());
+        }
 
-        endsIn.setText(getExpirationText(challenge.getDeadline()));
 
     }
 
-    private String getExpirationText(String deadline) {
+    private String getExpirationText(String deadline) throws ParseException {
         DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.forLanguageTag("es"));
         Date dateTime;
         String expirationText;
         try {
             dateTime = inputFormat.parse(deadline);
         } catch (ParseException e) {
-            dateTime = new Date(deadline);
+            inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
+            dateTime = inputFormat.parse(deadline);
         }
         if (dateTime.getTime() > System.currentTimeMillis()) {
             final long millis = dateTime.getTime() - System.currentTimeMillis();

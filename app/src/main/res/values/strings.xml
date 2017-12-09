@@ -139,4 +139,15 @@
     <string name="tracking_distance">%1$.2f m</string>
     <string name="tracking_speed">%1$.2f m/s</string>
     <string name="tracking_calories">%1$.2f kcal</string>
+    <string name="new_challenge">New challenge</string>
+    <string name="new_challenge_text">%1$s has challenged you</string>
+    <string name="challenge_accepted">Challenge accepted</string>
+    <string name="challenge_accepted_text">%1$s has accepted your challenge</string>
+    <string name="challenge_won">Challenge won</string>
+    <string name="challenge_lost">Challenge lost</string>
+    <string name="challenge_lost_text">You have lost a challenge against %1$s</string>
+    <string name="challenge_expired">Expired challenge</string>
+    <string name="challenge_expired_text">Your challenge against %1$s has expired</string>
+    <string name="challenge_won_text">You have won a challenge against %1$s</string>
+    <string name="requests">Requests</string>
 </resources>

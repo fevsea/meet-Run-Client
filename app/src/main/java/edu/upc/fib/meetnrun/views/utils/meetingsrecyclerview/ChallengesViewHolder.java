@@ -72,7 +72,13 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         youBar.setMax((int)challenge.getDistance());
         youBar.setProgress((int)currentUserDistance);
 
-        expirationView.setText(getExpirationText(challenge.getDeadline()));
+        try {
+            expirationView.setText(getExpirationText(challenge.getDeadline()));
+        }
+        catch (ParseException ex) {
+            expirationView.setText("");
+            Log.e("PARSEEXCEPTION", ex.getMessage());
+        }
         view.setOnClickListener(this);
     }
 
@@ -81,14 +87,15 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         listener.get().onItemClicked(getAdapterPosition());
     }
 
-    protected String getExpirationText(String deadline) {
+    protected String getExpirationText(String deadline) throws ParseException {
         DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.forLanguageTag("es"));
         Date dateTime;
         String expirationText;
         try {
             dateTime = inputFormat.parse(deadline);
         } catch (ParseException e) {
-            dateTime = new Date(deadline);
+            inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
+            dateTime = inputFormat.parse(deadline);
         }
         if (dateTime.getTime() > System.currentTimeMillis()) {
             final long millis = dateTime.getTime() - System.currentTimeMillis();

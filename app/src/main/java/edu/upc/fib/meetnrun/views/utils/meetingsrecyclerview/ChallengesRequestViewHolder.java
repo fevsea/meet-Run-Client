@@ -1,9 +1,11 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
@@ -25,7 +27,7 @@ public class ChallengesRequestViewHolder extends ChallengesViewHolder {
         TextView opponentView = view.findViewById(R.id.opponent);
         ImageButton accept = view.findViewById(R.id.accept);
         ImageButton reject = view.findViewById(R.id.reject);
-        TextView expiresIn = view.findViewWithTag(R.id.expires_in);
+        TextView expiresIn = view.findViewById(R.id.expires_in);
 
         String totalText = String.format(Locale.forLanguageTag("es"), "%.0f km", challenge.getDistance());
         accept.setOnClickListener(new View.OnClickListener() {
@@ -43,7 +45,13 @@ public class ChallengesRequestViewHolder extends ChallengesViewHolder {
 
         totalView.setText(totalText);
         opponentView.setText(challenge.getCreator().getUsername());
-        expiresIn.setText(getExpirationText(challenge.getDeadline()));
+        try {
+            expiresIn.setText(getExpirationText(challenge.getDeadline()));
+        }
+        catch (ParseException e) {
+            expiresIn.setText("");
+            Log.e("PARSEEXCEPTION", e.getMessage());
+        }
 
         view.setOnClickListener(this);
     }
