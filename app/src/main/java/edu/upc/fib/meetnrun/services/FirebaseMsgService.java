@@ -18,6 +18,11 @@ import org.json.JSONObject;
 import java.util.Map;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.models.Challenge;
+import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.LoginActivity;
 
 public class FirebaseMsgService extends FirebaseMessagingService {
@@ -62,6 +67,56 @@ public class FirebaseMsgService extends FirebaseMessagingService {
         switch (type) {
             case "notification":
                 issueNotification(data.get("title"), data.get("text"));
+                break;
+            case "new_challenge":
+                String titleNewChallenge = getString(R.string.new_challenge);
+                String textNewChallenge = String.format(getString(R.string.new_challenge_text), data.get("challenger_username"));
+                issueNotification(titleNewChallenge, textNewChallenge);
+                break;
+            case "challenge_accepted":
+                String titleAccepted = getString(R.string.challenge_accepted);
+                String textAccepted = String.format(getString(R.string.challenge_accepted_text), data.get("challenged_username"));
+                issueNotification(titleAccepted, textAccepted);
+                break;
+            case "challenge_won":
+                String titleWon = getString(R.string.challenge_won);
+                String textWon;
+                try {
+                    Challenge ch = CurrentSession.getInstance().getChallengeAdapter().getChallenge(Integer.valueOf(data.get("challenge_id")));
+                    int currentUserId = CurrentSession.getInstance().getCurrentUser().getId();
+                    User opponent = (ch.getChallenged().getId()==currentUserId)?ch.getCreator():ch.getChallenged();
+                    textWon = String.format(getString(R.string.challenge_expired_text), opponent.getUsername());
+                }
+                catch (AutorizationException | NotFoundException e) {
+                    textWon = "";
+                }
+                issueNotification(titleWon, textWon);
+                break;
+            case "challenge_lost":
+                String titleLost = getString(R.string.challenge_lost);
+                String textLost;
+                try {
+                    User u = CurrentSession.getInstance().getUserAdapter().getUser(Integer.valueOf(data.get("winner_id")));
+                    textLost = String.format(getString(R.string.challenge_lost_text), u.getUsername());
+                }
+                catch (NotFoundException e) {
+                    textLost = "";
+                }
+                issueNotification(titleLost, textLost);
+                break;
+            case "challenge_finalized":
+                String titleFinalized = getString(R.string.challenge_expired);
+                String textFinalized;
+                try {
+                    Challenge ch = CurrentSession.getInstance().getChallengeAdapter().getChallenge(Integer.valueOf(data.get("challenge_id")));
+                    int currentUserId = CurrentSession.getInstance().getCurrentUser().getId();
+                    User opponent = (ch.getChallenged().getId()==currentUserId)?ch.getCreator():ch.getChallenged();
+                    textFinalized = String.format(getString(R.string.challenge_expired_text), opponent.getUsername());
+                }
+                catch (AutorizationException | NotFoundException e) {
+                    textFinalized = "";
+                }
+                issueNotification(titleFinalized, textFinalized);
                 break;
             default:
                 Log.w(TAG, "UNINPLEMENTED: " + type);

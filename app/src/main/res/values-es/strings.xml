@@ -166,6 +166,17 @@
     <string name="tracking_distance">%1$.2f m</string>
     <string name="tracking_speed">%1$.2f m/s</string>
     <string name="tracking_calories">%1$.2f kcal</string>
+    <string name="new_challenge">Nuevo desafío</string>
+    <string name="new_challenge_text">%1$s te ha desafiado</string>
+    <string name="challenge_accepted">Desafío aceptado</string>
+    <string name="challenge_accepted_text">%1$s ha aceptado tu desafío</string>
+    <string name="challenge_won">Desafío ganado</string>
+    <string name="challenge_lost">Desafío perdido</string>
+    <string name="challenge_lost_text">Has perdido un desafío contra %1$s</string>
+    <string name="challenge_expired">Desafío expirado</string>
+    <string name="challenge_expired_text">Tu desafío contra %1$s ha expirado</string>
+    <string name="challenge_won_text">Has ganado un desafío contra %1$s</string>
+    <string name="requests">Peticiones</string>
     <string name="english">English</string>
     <string name="aaa">TEST</string>
     <string name="action_reply">Responder</string>
@@ -179,4 +190,6 @@
     <string name="new_message_notification_title_template">Nuevo mensaje: %1$s</string>
     <string name="number_of_users">Numero de usuarios</string>
     <string name="spanish">Castellano</string>
+    <string name="accept">Aceptar</string>
+    <string name="reject">Rechazar</string>
 </resources>

@@ -169,5 +169,18 @@
     <string name="tracking_distance">%1$.2f m</string>
     <string name="tracking_speed">%1$.2f m/s</string>
     <string name="tracking_steps">%1$d passos</string>
+    <string name="challenge_accepted">Desafiament acceptat</string>
+    <string name="challenge_accepted_text">%1$s ha acceptat el teu desafiament</string>
+    <string name="challenge_expired">Desafiament expirat</string>
+    <string name="challenge_expired_text">El desafiament contra %1$s ha expirat</string>
+    <string name="challenge_lost">Desafiament perdut</string>
+    <string name="challenge_lost_text">Has perdut el desafiament contra %1$s</string>
+    <string name="challenge_won">Desafiament guanyat</string>
+    <string name="challenge_won_text">Has guanyat un desafiament contra %1$s</string>
+    <string name="accept">Acceptar</string>
+    <string name="new_challenge">Nou desafiament</string>
+    <string name="new_challenge_text">%1$s t\'ha desafiat</string>
+    <string name="requests">Peticions</string>
+    <string name="reject">Rebutjar</string>
 
 </resources>

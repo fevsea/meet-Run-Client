@@ -5,9 +5,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,13 +23,14 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 
-public class ChallengeFragment extends Fragment {
+public class ChallengeFragment extends Fragment implements View.OnClickListener {
 
     private Challenge challenge;
 
@@ -49,6 +52,9 @@ public class ChallengeFragment extends Fragment {
     private String expirationPastTextResourceDays;
     private String expirationPastTextResourceNoDays;
     private String progressTextResource;
+
+    private Button accept;
+    private Button reject;
 
     private TextView endsIn;
 
@@ -87,6 +93,9 @@ public class ChallengeFragment extends Fragment {
         expirationPastTextResourceNoDays = view.getResources().getString(R.string.ended_in_hours_minutes);
         progressTextResource = view.getResources().getString(R.string.challenge_progress_km);
 
+        accept = view.findViewById(R.id.accept);
+        reject = view.findViewById(R.id.reject);
+
         GetChallenge getChallenge = new GetChallenge();
         getChallenge.execute(challengeId);
         return view;
@@ -113,36 +122,66 @@ public class ChallengeFragment extends Fragment {
         userName.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
         userLevel.setText(String.valueOf(currentUser.getLevel()));
         userPhoto.setText(String.valueOf(currentUser.getUsername().charAt(0)));
-        userProgressBar.setMax((int)challenge.getDistance());
-        userProgressBar.setProgress((int)userProgress);
-        String userProgressString = String.format(Locale.forLanguageTag("es"),
-                progressTextResource, userProgress, challenge.getDistance(),
-                ((float)userProgress)/((float)challenge.getDistance())*100, "%");
-        userProgressText.setText(userProgressString);
+        if (challenge.isAccepted()) {
+            userProgressBar.setMax((int) challenge.getDistance());
+            userProgressBar.setProgress((int) userProgress);
+            String userProgressString = String.format(Locale.forLanguageTag("es"),
+                    progressTextResource, userProgress, challenge.getDistance(),
+                    ((float) userProgress) / ((float) challenge.getDistance()) * 100, "%");
+            userProgressText.setText(userProgressString);
+        }
+        else {
+            userProgressBar.setVisibility(View.GONE);
+            userProgressText.setVisibility(View.GONE);
+        }
 
         opponentUsername.setText(opponent.getUsername());
         opponentName.setText(opponent.getFirstName() + " " + opponent.getLastName());
         opponentLevel.setText(String.valueOf(opponent.getLevel()));
         opponentPhoto.setText(String.valueOf(opponent.getUsername().charAt(0)));
-        opponentProgressBar.setMax((int)challenge.getDistance());
-        opponentProgressBar.setProgress((int)opponentProgress);
-        String opponentProgressString = String.format(Locale.forLanguageTag("es"),
-                progressTextResource, opponentProgress, challenge.getDistance(),
-                ((float)opponentProgress)/((float)challenge.getDistance())*100, "%");
-        opponentProgressText.setText(opponentProgressString);
+        if (challenge.isAccepted()) {
+            opponentProgressBar.setMax((int) challenge.getDistance());
+            opponentProgressBar.setProgress((int) opponentProgress);
+            String opponentProgressString = String.format(Locale.forLanguageTag("es"),
+                    progressTextResource, opponentProgress, challenge.getDistance(),
+                    ((float) opponentProgress) / ((float) challenge.getDistance()) * 100, "%");
+            opponentProgressText.setText(opponentProgressString);
+        }
+        else {
+            opponentProgressBar.setVisibility(View.GONE);
+            opponentProgressText.setVisibility(View.GONE);
+        }
 
-        endsIn.setText(getExpirationText(challenge.getDeadline()));
+
+        try {
+            endsIn.setText(getExpirationText(challenge.getDeadline()));
+        }
+        catch (ParseException e) {
+            endsIn.setText("");
+            Log.e("PARSEEXCEPTION", e.getMessage());
+        }
+
+        if (challenge.isAccepted()) {
+            accept.setVisibility(View.GONE);
+            reject.setVisibility(View.GONE);
+        }
+        else {
+            accept.setOnClickListener(this);
+            reject.setOnClickListener(this);
+        }
+
 
     }
 
-    private String getExpirationText(String deadline) {
+    private String getExpirationText(String deadline) throws ParseException {
         DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.forLanguageTag("es"));
         Date dateTime;
         String expirationText;
         try {
             dateTime = inputFormat.parse(deadline);
         } catch (ParseException e) {
-            dateTime = new Date(deadline);
+            inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
+            dateTime = inputFormat.parse(deadline);
         }
         if (dateTime.getTime() > System.currentTimeMillis()) {
             final long millis = dateTime.getTime() - System.currentTimeMillis();
@@ -167,6 +206,21 @@ public class ChallengeFragment extends Fragment {
             }
         }
         return expirationText;
+    }
+
+    @Override
+    public void onClick(View v) {
+        boolean accept = false;
+        switch (v.getId()) {
+            case R.id.accept:
+                accept = true;
+                break;
+            case R.id.reject:
+                accept = false;
+                break;
+        }
+        AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge();
+        acceptOrRejectChallenge.execute(accept);
     }
 
     private class GetChallenge extends AsyncTask<Integer, String, Boolean> {
@@ -207,6 +261,45 @@ public class ChallengeFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
             }
             else if (ex instanceof NotFoundException) {
+                Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
+            }
+        }
+
+    }
+
+    private class AcceptOrRejectChallenge extends AsyncTask<Boolean, String, Boolean> {
+
+        Exception exception;
+
+        @Override
+        protected Boolean doInBackground(Boolean... params) {
+            IChallengeAdapter challengeAdapter = CurrentSession.getInstance().getChallengeAdapter();
+            try {
+                if (params[0]) {
+                    challengeAdapter.acceptChallenge(challenge.getId());
+                }
+                else {
+                    challengeAdapter.deleteRejectChallenge(challenge.getId());
+                }
+            }
+            catch (NotFoundException | AutorizationException e) {
+                exception = e;
+            }
+            return true;
+        }
+
+        protected void onPostExecute(Boolean s) {
+            super.onPostExecute(s);
+            if (s && exception == null) {
+                getActivity().finish();
+            }
+            else if (exception instanceof AutorizationException){
+                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            }
+            else if (exception instanceof NotFoundException) {
                 Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
             }
             else {
