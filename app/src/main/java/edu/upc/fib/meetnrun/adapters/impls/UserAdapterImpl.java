@@ -8,12 +8,14 @@ import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
+import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.remote.SOServices;
 import retrofit2.Response;
@@ -166,5 +168,27 @@ public class UserAdapterImpl implements IUserAdapter {
         }
         return ul;
     }
+
+    @Override
+    public Statistics getUserStatisticsByID(int id) throws AutorizationException {
+
+        StatisticsServer ss = null;
+        try {
+            Response<StatisticsServer> ret = mServices.getUserStatisticsByID(id).execute();
+            if (!ret.isSuccessful()) {
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            }
+            ss = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GenericException e) {
+            e.printStackTrace();
+            if (e instanceof AutorizationException) {
+                throw (AutorizationException) e;
+            }
+        }
+        return ss.toGenericModel();
+    }
+
 
 }

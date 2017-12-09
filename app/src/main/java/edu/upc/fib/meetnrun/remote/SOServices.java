@@ -8,6 +8,7 @@ import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.FriendServer;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
+import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import retrofit2.Call;
@@ -67,6 +68,9 @@ public interface SOServices {
     @POST("/users/changePassword")
     Call<Void> changePassword(@Body Forms.ChangePassword sp);
 
+    @GET("/users/{id}/statistics")
+    Call<StatisticsServer> getUserStatisticsByID(@Path("id") int id);
+
 
     //LOGIN
 
@@ -91,11 +95,11 @@ public interface SOServices {
     @GET("/meetings/{id}/participants")
     Call<PageServer<UserServer>> getAllParticipantsFromMeeting(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
 
-    @POST("/meetings/{id}/participants")
-    Call<Void> joinMeeting(@Path("id") int id);
+    @POST("/meetings/{meetingID}/participants/{userID}")
+    Call<Void> joinMeeting(@Path("meetingID") int meetingID,@Path("userID") int userID);
 
-    @DELETE("/meetings/{id}/participants")
-    Call<Void> leaveMeeting(@Path("id") int id);
+    @DELETE("/meetings/{meetingID}/participants/{userID}")
+    Call<Void> leaveMeeting(@Path("meetingID") int meetingID,@Path("userID") int userID);
 
     @GET("/users/{id}/meetings")
     Call<List<MeetingServer>> getAllFutureMeetings(@Path("id") int id);

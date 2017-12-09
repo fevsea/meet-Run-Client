@@ -7,7 +7,8 @@ import java.util.Map;
  */
 
 public class GenericException extends Exception {
-    GenericException(){};
+    GenericException(){}
+
     private Map<String, String> problems;
 
     GenericException(Map<String, String> problems) {

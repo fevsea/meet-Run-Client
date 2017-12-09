@@ -19,12 +19,13 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="search">Search</string>
     <string name="action_settings">Settings</string>
+    <string name="meeting_friends_label">Select friends</string>
 
     <string name="hour">Hour</string>
     <string name="meeting_name">Meeting name</string>
     <string name="minimum_level">Minimum level</string>
     <string name="meeting_description">Meeting description</string>
-    <string name="empty_create_error">You left some important fields empty. You MUST fill name, date, hour and meeting location.</string>
+    <string name="empty_create_error">You left some important fields empty. You MUST fill name, level, date, hour and meeting location.</string>
     <string name="big_name_error">Name of the meeting should be shorter than 100 characters.</string>
     <string name="big_description_error">Description of the meeting should be shorter than 500 characters.</string>
     <string name="location">Your last known location</string>
@@ -33,6 +34,12 @@
     <string name="public_meeting">Public</string>
     <string name="private_meeting">Private</string>
     <string name="location_button">Location</string>
+    <string name="public_friends">Do you want to add some friends in this meeting?</string>
+    <string name="private_friends">Do you want to run with friends, or alone?</string>
+    <string name="public_yes_friends">Yes, I want to add friends</string>
+    <string name="public_no_friends">No, just create it</string>
+    <string name="private_yes_friends">I want to add friends</string>
+    <string name="private_no_friends">I want to run alone</string>
 
     <string name="edit_meeting_close_dialog_message">Are you sure you want to close without saving?</string>
     <string name="edit_meeting_close_dialog_title">Closing without saving</string>
@@ -72,7 +79,7 @@
     <string name="friend_profile_label">Friend profile</string>
     <string name="chat_label">Chats</string>
     <string name="user_profile_label">User profile</string>
-    <string name="joined_meeting">Meeting joined succesfully!</string>
+    <string name="joined_meeting">Meeting joined successfully!</string>
 
 
     <string name="title_activity_fullscreen">FullscreenActivity</string>
@@ -89,7 +96,8 @@
     <string name="tracking_error_loading">There was an error loading the tracking!</string>
     <string name="error_connecting_google_reconnect">Error connecting with the Google API, trying to reconnect</string>
     <string name="error_connecting_google">Could not connect with Google</string>
-    <string name="vertical_ellipsis">&#8942;</string>
+
+    <string name="vertical_ellipsis" translatable="false">&#8942;</string>
     <string name="user_name">There was an error authorizing this request</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
@@ -102,6 +110,7 @@
     <string name="repeat_new_password">Introduce again your new password:</string>
     <string name="error_change_pass">Sorry, there was an error while changing your password</string>
     <string name="action_change_pass">Change password</string>
+    <string name="level_too_high">The meeting level is higher than yours </string>
     <string name="log_out">Log out</string>
     <string name="communicate">Communicate</string>
     <string name="share">Share</string>
@@ -112,15 +121,26 @@
     <string name="meetings">Meetings</string>
     <string name="log_in">Log in</string>
     <string name="password">Password</string>
-
-    <string name="delete_history">Delete history</string>
-    <string name="group_name">Group Name</string>
+    <string name="statistics_title">Statistics</string>
+    <string name="avg_speed">Average speed</string>
+    <string name="rhythm">Rhythm</string>
+    <string name="max_speed">Maximum speed</string>
+    <string name="min_speed">Minimum speed</string>
+    <string name="max_time">Maximum time</string>
+    <string name="min_time">Minimum time</string>
+    <string name="max_length">Maximum distance run</string>
+    <string name="min_length">Minimum distance run</string>
+    <string name="total_steps">Total number of steps</string>
+    <string name="total_meetings">Completed meetings</string>
+    <string name="total_km">Total distance (in Km)</string>
+    <string name="total_time">Total run time</string>
+    <string name="aaa">TEST</string>
     <string name="add_user_to_group">+ Add another user</string>
     <string name="number_of_users">Number of users</string>
     <string name="loading_list">The list is loading, try again</string>
     <string name="new_message_notification_title_template">New message: %1$s</string>
     <!-- TODO: remove this placeholder text -->
-    <string name="new_message_notification_placeholder_text_template">You said %1$s and lorem ipsum
+    <string name="new_message_notification_placeholder_text_template" translatable="false">You said %1$s and lorem ipsum
         dolor sit amet, consectetur adipiscing elit. Etiam non enim magna. Morbi dictum, velit vel
         semper venenatis, magna odio volutpat velit, at ullamcorper nulla lacus sed turpis.
         Pellentesque vitae metus elit, nec tincidunt tellus. Integer sed nisl sem, ullamcorper
@@ -130,7 +150,6 @@
     </string>
     <string name="action_share">Share</string>
     <string name="action_reply">Reply</string>
-
     <string name="challenges">Challenges</string>
     <string name="challenge">Challenge</string>
     <string name="create_challenge">Create challenge</string>
@@ -152,9 +171,19 @@
     <string name="ended_in_hours_minutes">Ended %1$d hours %2$d minutes ago</string>
     <string name="params_error">There are missing parameters or with incorrect format</string>
 
+    <string name="calories">Total consumed calories</string>
+
     <string name="tracking_steps">%1$d steps</string>
     <string name="tracking_distance">%1$.2f m</string>
     <string name="tracking_speed">%1$.2f m/s</string>
     <string name="tracking_calories">%1$.2f kcal</string>
+    <string name="english">English</string>
+    <string name="spanish">Spanish (Castillian)</string>
+    <string name="catalan">Catalan</string>
+    <string name="delete_my_account">Delete my account.</string>
+    <string name="chat_delete_historial_message">Are you sure you want to delete the historial?</string>
+    <string name="chat_delete_historial_title">Delete historial</string>
+    <string name="delete_history">Delete history</string>
+    <string name="group_name">Group name</string>
 </resources>
 

@@ -18,6 +18,7 @@ public interface ILoginAdapter {
 
     boolean changePassword(String oldPassword, String newPassword) throws AutorizationException, ForbiddenException;
 
+
     String getFirebaseToken() throws AutorizationException, NotFoundException;
 
     boolean uppdateFirebaseToken(String token) throws AutorizationException, NotFoundException;
