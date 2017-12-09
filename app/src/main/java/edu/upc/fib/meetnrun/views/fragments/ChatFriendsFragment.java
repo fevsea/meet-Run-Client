@@ -17,6 +17,8 @@ import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 /**
  * Created by eric on 22/11/17.
@@ -58,6 +60,24 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
     protected void getMethod() {
         new getFriends().execute();
     }
+
+    @Override
+    protected RecyclerViewOnClickListener getRecyclerViewListener() {
+        return new RecyclerViewOnClickListener() {
+            @Override
+            public void onButtonClicked(int position) {}
+
+            @Override
+            public void onItemClicked(int position) {
+
+                User friend = friendsAdapter.getFriendAtPosition(position).getFriend();
+                if (currentUser.getUsername().equals(friend.getUsername())) friend = friendsAdapter.getFriendAtPosition(position).getUser();
+                getIntent(friend);
+
+            }
+        };
+    }
+
 
     private class getFriends extends AsyncTask<String,String,String> {
 
@@ -172,6 +192,7 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
             super.onPostExecute(s);
         }
     }
+
 
 
 }
