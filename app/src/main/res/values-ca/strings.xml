@@ -148,4 +148,20 @@
     <string name="total_time">Temps total corrent</string>
     <string name="you">Tú</string>
     <string name="english">English</string>
+    <string name="aaa">TEST</string>
+    <string name="action_reply">Respondre</string>
+    <string name="action_share">Compartir</string>
+    <string name="add_user_to_group">+ Afegir un altre usuari</string>
+    <string name="calories">Calories totals consumides</string>
+    <string name="catalan">Català</string>
+    <string name="delete_my_account">Eliminar el meu compte</string>
+    <string name="level_too_high">El nivell de la trobada és més alt que el seu</string>
+    <string name="loading_list">La llista s\'està carregant</string>
+    <string name="new_message_notification_title_template">Nou missatge: %1$s</string>
+    <string name="number_of_users">Nombre d\'usuaris</string>
+    <string name="spanish">Castellà</string>
+    <string name="tracking_calories">%1$.2f kcal</string>
+    <string name="tracking_distance">%1$.2f m</string>
+    <string name="tracking_speed">%1$.2f m/s</string>
+    <string name="tracking_steps">%1$d passos</string>
 </resources>
