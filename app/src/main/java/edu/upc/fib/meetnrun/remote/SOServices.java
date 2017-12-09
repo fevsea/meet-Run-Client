@@ -8,6 +8,7 @@ import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.FriendServer;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
+import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import retrofit2.Call;
@@ -66,6 +67,9 @@ public interface SOServices {
 
     @POST("/users/changePassword")
     Call<Void> changePassword(@Body Forms.ChangePassword sp);
+
+    @GET("/users/{id}/statistics")
+    Call<StatisticsServer> getUserStatisticsByID(@Path("id") int id);
 
 
     //LOGIN
