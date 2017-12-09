@@ -121,6 +121,12 @@
     <string name="meetings">Meetings</string>
     <string name="log_in">Log in</string>
     <string name="password">Password</string>
+
+
+    <string name="profile_fragment_title">Your profile</string>
+    <string name="past_meetings_fragment_title">Your past meetings</string>
+    <string name="statistics_fragment_title">Your Statistics</string>
+
     <string name="statistics_title">Statistics</string>
     <string name="avg_speed">Average speed</string>
     <string name="rhythm">Rhythm</string>
@@ -134,7 +140,9 @@
     <string name="total_meetings">Completed meetings</string>
     <string name="total_km">Total distance (in Km)</string>
     <string name="total_time">Total run time</string>
+
     <string name="aaa">TEST</string>
+
     <string name="add_user_to_group">+ Add another user</string>
     <string name="number_of_users">Number of users</string>
     <string name="loading_list">The list is loading, try again</string>
@@ -150,6 +158,7 @@
     </string>
     <string name="action_share">Share</string>
     <string name="action_reply">Reply</string>
+
     <string name="challenges">Challenges</string>
     <string name="challenge">Challenge</string>
     <string name="create_challenge">Create challenge</string>

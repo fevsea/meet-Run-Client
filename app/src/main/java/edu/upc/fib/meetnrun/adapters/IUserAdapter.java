@@ -25,7 +25,11 @@ public interface IUserAdapter {
 
     boolean deleteUserByID(int targetUserId) throws NotFoundException, AutorizationException;
 
-    Statistics getUserStatisticsByID(int id) throws AutorizationException;
+    public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime)throws AutorizationException, ParamsException;
 
-    List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException;
+    public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException;
+
+    public List<Meeting> getUserPastMeetings(int targetUserId) throws AutorizationException, ParamsException;
+
+    Statistics getUserStatisticsByID(int id) throws AutorizationException;
 }

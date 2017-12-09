@@ -147,6 +147,11 @@
     <string name="to_challenge">Desafiar</string>
     <string name="total_time">Temps total corrent</string>
     <string name="you">Tú</string>
+
+    <string name="profile_fragment_title">El teu perfil</string>
+    <string name="past_meetings_fragment_title">Les teves trobades passades</string>
+    <string name="statistics_fragment_title">Les teves estadístiques</string>
+
     <string name="english">English</string>
     <string name="aaa">TEST</string>
     <string name="action_reply">Respondre</string>
@@ -164,4 +169,5 @@
     <string name="tracking_distance">%1$.2f m</string>
     <string name="tracking_speed">%1$.2f m/s</string>
     <string name="tracking_steps">%1$d passos</string>
+
 </resources>

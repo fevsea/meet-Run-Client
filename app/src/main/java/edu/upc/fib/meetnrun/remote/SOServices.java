@@ -68,8 +68,12 @@ public interface SOServices {
     @POST("/users/changePassword")
     Call<Void> changePassword(@Body Forms.ChangePassword sp);
 
+    @GET("/users/{id}/meetings")
+    Call<List<MeetingServer>> getUserMeetingFilteredMeetings(@Path("id") int id, @Query("filter") String filter);
+
     @GET("/users/{id}/statistics")
     Call<StatisticsServer> getUserStatisticsByID(@Path("id") int id);
+
 
 
     //LOGIN
@@ -100,9 +104,6 @@ public interface SOServices {
 
     @DELETE("/meetings/{meetingID}/participants/{userID}")
     Call<Void> leaveMeeting(@Path("meetingID") int meetingID,@Path("userID") int userID);
-
-    @GET("/users/{id}/meetings")
-    Call<List<MeetingServer>> getAllFutureMeetings(@Path("id") int id);
 
 
     //FRIENDS
