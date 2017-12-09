@@ -33,7 +33,8 @@ import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
-
+//TODO implementar crida a joinedMeetings per separat (ja no es dona aquesta info amb el meeting)
+//TODO pero ara no funciona be la crida
 public class MeetingListFragment extends Fragment {
 
     private MeetingsAdapter meetingsAdapter;

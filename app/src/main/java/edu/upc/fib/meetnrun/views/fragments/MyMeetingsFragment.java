@@ -165,7 +165,7 @@ public class MyMeetingsFragment extends Fragment {
         protected String doInBackground(Integer... integers) {
             //TODO handle exceptions
             try {
-                l = userController.getUsersFutureMeetings(integers[0]);//TODO arreglar paginas
+                l = userController.getUsersFutureMeetings(integers[0]);
             } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
