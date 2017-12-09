@@ -1,199 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="edu.upc.fib.meetnrun.views.RegisterActivity"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        tools:context="edu.upc.fib.meetnrun.views.RegisterActivity"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/activity_toolbar"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-        <!--    android:theme="@style/Toolbar"  -->
+            android:layout_height="wrap_content">
 
-    </android.support.design.widget.AppBarLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="15dp">
-
-            <android.support.design.widget.TextInputLayout
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/activity_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hintEnabled="true"
-                android:layout_marginBottom="10dp">
+                android:background="@color/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            <!--    android:theme="@style/Toolbar"  -->
 
-                <EditText
-                    android:id="@+id/editName"
+        </android.support.design.widget.AppBarLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp">
+
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="17dp"
-                    android:hint="Name"/>
+                    app:hintEnabled="true"
+                    android:layout_marginBottom="10dp">
+
+                    <EditText
+                        android:id="@+id/editName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textSize="17dp"
+                        android:hint="Name"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+                </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="true"
-                android:layout_marginBottom="10dp">
-
-                <EditText
-                    android:id="@+id/editSurname"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="17dp"
-                    android:hint="Surname"/>
+                    app:hintEnabled="true"
+                    android:layout_marginBottom="10dp">
+
+                    <EditText
+                        android:id="@+id/editSurname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textSize="17dp"
+                        android:hint="Surname"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+                </android.support.design.widget.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="true"
-                android:layout_marginBottom="10dp">
-
-                <EditText
-                    android:id="@+id/editUsernameR"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="17dp"
-                    android:hint="Username"/>
+                    app:hintEnabled="true"
+                    android:layout_marginBottom="10dp">
+
+                    <EditText
+                        android:id="@+id/editUsernameR"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textSize="17dp"
+                        android:hint="Username"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+                </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="true"
-                android:layout_marginBottom="10dp">
-
-                <EditText
-                    android:id="@+id/editPostalCode"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="number"
-                    android:textSize="17dp"
-                    android:hint="Postal code"/>
+                    app:hintEnabled="true"
+                    android:layout_marginBottom="10dp">
+
+                    <EditText
+                        android:id="@+id/editPostalCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:textSize="17dp"
+                        android:hint="Postal code"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+                </android.support.design.widget.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="true"
-                app:passwordToggleEnabled="true"
-                android:layout_marginBottom="10dp">
-
-                <EditText
-                    android:id="@+id/editPassword1"
-                    android:textSize="17dp"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPassword"
-                    android:hint="Password (min 5 char.)"/>
+                    app:hintEnabled="true"
+                    app:passwordToggleEnabled="true"
+                    android:layout_marginBottom="10dp">
+
+                    <EditText
+                        android:id="@+id/editPassword1"
+                        android:textSize="17dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPassword"
+                        android:hint="Password (min 5 char.)"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+                </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="true"
-                app:passwordToggleEnabled="true"
-                android:layout_marginBottom="10dp">
-
-                <EditText
-                    android:id="@+id/editPassword2"
-                    android:textSize="17dp"
+                <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPassword"
-                    android:hint="Repeat password"/>
+                    app:hintEnabled="true"
+                    app:passwordToggleEnabled="true"
+                    android:layout_marginBottom="10dp">
+
+                    <EditText
+                        android:id="@+id/editPassword2"
+                        android:textSize="17dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPassword"
+                        android:hint="Repeat password"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+                </android.support.design.widget.TextInputLayout>
 
-            <!--<TextView
-                android:id="@+id/question"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Security question"
-                android:textSize="17dp"
-                android:layout_marginTop="14dp"
-                android:layout_marginLeft="5dp"/>-->
+                <!--<TextView
+                    android:id="@+id/question"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Security question"
+                    android:textSize="17dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginLeft="5dp"/>-->
 
-            <Spinner
-                android:id="@+id/spinnerQuestion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="17dp"/>
-
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="true"
-                android:layout_marginBottom="10dp">
-
-                <EditText
-                    android:id="@+id/editAnswer"
+                <Spinner
+                    android:id="@+id/spinnerQuestion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="textPersonName"
-                    android:textSize="17dp"
-                    android:hint="Security answer"/>
+                    android:textSize="17dp"/>
 
 
-            </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintEnabled="true"
+                    android:layout_marginBottom="10dp">
 
-            <Button
-                android:id="@+id/register"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:onClick="register"
-                android:text="Register"
-                android:textSize="13dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:textColor="@color/white"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
+                    <EditText
+                        android:id="@+id/editAnswer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textSize="17dp"
+                        android:hint="Security answer"/>
 
 
-</LinearLayout>
+                </android.support.design.widget.TextInputLayout>
 
+                <Button
+                    android:id="@+id/register"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:onClick="register"
+                    android:text="Register"
+                    android:textSize="13dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

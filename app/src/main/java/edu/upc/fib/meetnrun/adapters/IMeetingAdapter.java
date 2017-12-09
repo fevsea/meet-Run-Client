@@ -29,9 +29,9 @@ public interface IMeetingAdapter {
 
     List<User> getParticipantsFromMeeting(int targetMeetingId, int page) throws AutorizationException, ParamsException;
 
-    boolean joinMeeting(int targetMeetingId) throws AutorizationException, ParamsException;
+    public boolean joinMeeting(int targetMeetingId, int targetUserId) throws AutorizationException, ParamsException;
 
-    boolean leaveMeeting(int targetMeetingId) throws AutorizationException, ParamsException;
+    public boolean leaveMeeting(int targetMeetingId, int targetUserId) throws AutorizationException, ParamsException;
 
     List<Meeting> getAllMeetingsFilteredByName(String query, int page);
 

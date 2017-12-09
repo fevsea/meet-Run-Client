@@ -29,6 +29,7 @@ import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChallengeActivity;
+import edu.upc.fib.meetnrun.views.FriendsListActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChallengesAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChallengesRequestAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -162,11 +163,8 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.activity_fab) {
-            Fragment friendsListFragment = new FriendsFragment();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.activity_contentFrame, friendsListFragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            Intent i = new Intent(getActivity(), FriendsListActivity.class);
+            startActivity(i);
         }
     }
 

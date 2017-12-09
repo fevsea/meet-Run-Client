@@ -17,10 +17,6 @@
                 android:clickable="true"
                 android:orientation="vertical">
             </android.support.v7.widget.RecyclerView>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorPrimary" />
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/fragment_challenge_recycler"
                 android:layout_width="match_parent"

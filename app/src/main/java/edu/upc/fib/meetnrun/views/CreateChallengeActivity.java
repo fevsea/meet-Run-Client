@@ -173,6 +173,7 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
                 CurrentSession.getInstance().getChallengeAdapter().createNewChallenge(current, challenged, (int)challenge.getDistance(), challenge.getDateDeadline());
             } catch (AutorizationException | ParamsException e) {
                 this.exception = e;
+                return false;
             }
             return true;
         }
@@ -180,14 +181,14 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         @Override
         protected void onPostExecute(Boolean result) {
             mProgressDialog.dismiss();
-            if (result && exception != null) {
+            if (result && exception == null) {
                 finish();
             }
             else if (exception instanceof AutorizationException) {
-                Toast.makeText(CreateChallengeActivity.this, R.string.authorization_error, Toast.LENGTH_LONG);
+                Toast.makeText(CreateChallengeActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
             }
             else if (exception instanceof ParamsException) {
-                Toast.makeText(CreateChallengeActivity.this, R.string.params_error, Toast.LENGTH_LONG);
+                Toast.makeText(CreateChallengeActivity.this, R.string.params_error, Toast.LENGTH_LONG).show();
             }
             else {
                 Toast.makeText(CreateChallengeActivity.this, getResources().getString(R.string.error_saving_challenge), Toast.LENGTH_SHORT).show();

@@ -33,7 +33,8 @@ import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
-
+//TODO implementar crida a joinedMeetings per separat (ja no es dona aquesta info amb el meeting)
+//TODO pero ara no funciona be la crida
 public class MeetingListFragment extends Fragment {
 
     private MeetingsAdapter meetingsAdapter;
@@ -112,6 +113,7 @@ public class MeetingListFragment extends Fragment {
             }
 
             @Override
+
             public void onItemClicked(int position) {
                 Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
@@ -297,7 +299,7 @@ public class MeetingListFragment extends Fragment {
             Log.e("MAIN","DOINGGGG");
             //TODO handle exceptions
             try {
-                meetingDBAdapter.joinMeeting(integers[0]);
+                meetingDBAdapter.joinMeeting(integers[0],CurrentSession.getInstance().getCurrentUser().getId());
             } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }

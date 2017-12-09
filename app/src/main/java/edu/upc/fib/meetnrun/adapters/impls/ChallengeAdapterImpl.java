@@ -16,7 +16,8 @@ import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.remote.SOServices;
 import retrofit2.Response;
 
-import static edu.upc.fib.meetnrun.adapters.utils.Utils.checkErrorCodeAndThowException;
+import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.checkErrorCodeAndThowException;
+
 
 /**
  * Created by Awais Iqbal on 01/12/2017.
