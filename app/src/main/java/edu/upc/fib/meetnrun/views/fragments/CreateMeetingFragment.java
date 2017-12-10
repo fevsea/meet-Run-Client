@@ -1,9 +1,11 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -58,6 +60,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -380,20 +383,23 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
     private class newMeeting extends AsyncTask<String,String,String> {
         Chat newChat;
+        ArrayList<Integer> owner;
+        Date date;
+        Activity context = getActivity();
+        @Override
+        protected  void onPreExecute() {
+            context = getActivity();
+            owner = new ArrayList<>();
+            owner.add(CurrentSession.getInstance().getCurrentUser().getId());
+            Calendar calendar = Calendar.getInstance();
+            date = calendar.getTime();
+        }
         @Override
         protected String doInBackground(String... strings){
             try {
-                m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude);
-                ArrayList<Integer> owner = new ArrayList<>();
-                owner.add(CurrentSession.getInstance().getCurrentUser().getId());
-                Calendar calendar = Calendar.getInstance();
-                Date date = calendar.getTime();
+                m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude,null);
                 newChat = chatAdapter.createChat(Name,owner,1,m.getId(),"",0,date);
-
-            } catch (ParamsException  e) {
-                e.printStackTrace();
-            } catch (AutorizationException e) {
-
+            } catch (ParamsException | AutorizationException e) {
                 e.printStackTrace();
             }
             return null;
@@ -401,17 +407,16 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
         @Override
         protected void onPostExecute(String s){
-            super.onPostExecute(s);
             CurrentSession.getInstance().setChat(newChat);
             if (friends){
-                Log.e("CREATE",String.valueOf(friends));
                 Intent i=new Intent(getActivity(), MeetingFriendsActivity.class);
                 Integer MeetingId=m.getId();
                 i.putExtra("level", Level);
                 i.putExtra("meetingId",MeetingId);
                 startActivity(i);
             }
-            getActivity().finish();
+            context.finish();
+            super.onPostExecute(s);
         }
     }
 
