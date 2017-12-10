@@ -157,7 +157,7 @@ public class MeetingListFragment extends Fragment {
                         updateMeetingList();
                     }
                     else {
-                        fab.setVisibility(View.INVISIBLE);
+                        if (!recyclerView.canScrollVertically(1)) fab.setVisibility(View.INVISIBLE);
                     }
                 }
             }
@@ -237,7 +237,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetings(pageNumber);//TODO arreglar paginas
+            meetings = meetingDBAdapter.getAllMeetings(pageNumber);
             return null;
         }
 
@@ -284,7 +284,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0],pageNumber);//TODO arreglar paginas
+            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0],pageNumber);
             return null;
         }
 
