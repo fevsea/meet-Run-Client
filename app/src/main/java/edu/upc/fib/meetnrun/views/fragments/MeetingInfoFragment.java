@@ -13,10 +13,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -31,15 +33,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.ChatActivity;
+import edu.upc.fib.meetnrun.views.ChatGroupsActivity;
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
@@ -56,6 +63,8 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     private UsersAdapter participantsAdapter;
     private IMeetingAdapter meetingController;
     private IFriendsAdapter friendsController;
+    private IUserAdapter userAdapter;
+    private IChatAdapter chatAdapter;
     private List<User> meetingUsers;
     private List<Friend> friends;
     private int meetingId;
@@ -66,6 +75,11 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     private LinearLayoutManager layoutManager;
     private FloatingActionButton fab;
     private Meeting meeting;
+    private int chatId;
+    private Chat chat;
+    private boolean isChatAvailable;
+    private List<Meeting> myMeetings;
+    private ImageButton chatButton;
 
 
     @Override
@@ -76,6 +90,8 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
 
         meetingController = CurrentSession.getInstance().getMeetingAdapter();
         friendsController = CurrentSession.getInstance().getFriendsAdapter();
+        userAdapter = CurrentSession.getInstance().getUserAdapter();
+        chatAdapter = CurrentSession.getInstance().getChatAdapter();
         Bundle meetingInfo = getActivity().getIntent().getExtras();
 
         TextView title = view.findViewById(R.id.meeting_info_title);
@@ -84,9 +100,20 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         TextView date = view.findViewById(R.id.meeting_info_date);
         TextView time = view.findViewById(R.id.meeting_info_time);
         TextView owner = view.findViewById(R.id.meeting_info_creator);
-
+        chatButton = view.findViewById(R.id.meeting_info_chat);
+        chatButton.setVisibility(View.INVISIBLE);
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openChatView();
+            }
+        });
         meetingId = meetingInfo.getInt("id");
+        chatId = meetingInfo.getInt("chat");
+        isChatAvailable = false;
         new getMeeting().execute();
+        new getChat().execute();
+        new GetMyMeetings().execute(CurrentSession.getInstance().getCurrentUser().getId());
         title.setText(meetingInfo.getString("title"));
         owner.setText(meetingInfo.getString("owner"));
         description.setText(meetingInfo.getString("description"));
@@ -206,6 +233,16 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         friendsList.setAdapter(participantsAdapter);
     }
 
+    private void openChatView() {
+        if (isChatAvailable){
+            Intent chatIntent = new Intent(getActivity(),ChatActivity.class);
+            CurrentSession.getInstance().setChat(chat);
+            startActivity(chatIntent);
+        }
+        else {
+            Toast.makeText(getActivity(),R.string.chat_not_available,Toast.LENGTH_LONG).show();
+        }
+    }
 
     private void initializePagination() {
         pageNumber = 0;
@@ -338,6 +375,51 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
             owner.add(meeting.getOwner());
             participantsAdapter.addFriends(owner);
         }
+
+    }
+
+    private class getChat extends AsyncTask<Void,Void,Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            try {
+                chat = chatAdapter.getChat(chatId);
+            }
+            catch (NotFoundException e) {
+                e.printStackTrace();
+            } catch (AutorizationException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void v) {
+            isChatAvailable = true;
+        }
+
+    }
+
+    private class GetMyMeetings extends AsyncTask<Integer,String,Void> {
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            //TODO handle exceptions
+            try {
+                myMeetings = userAdapter.getUsersFutureMeetings(integers[0]);
+            } catch (AutorizationException | ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            for (Meeting joinedMeeting: myMeetings) {
+                if (joinedMeeting.getId().equals(meetingId)) chatButton.setVisibility(View.VISIBLE);
+            }
+        }
+
 
     }
 

@@ -186,6 +186,8 @@
     <string name="tracking_distance">%1$.2f m</string>
     <string name="tracking_speed">%1$.2f m/s</string>
     <string name="tracking_calories">%1$.2f kcal</string>
+    <string name="max_level">Max. Level: </string>
+    <string name="chat_not_available">The chat is not available</string>
     <string name="new_challenge">New challenge</string>
     <string name="new_challenge_text">%1$s has challenged you</string>
     <string name="challenge_accepted">Challenge accepted</string>

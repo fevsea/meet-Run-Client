@@ -57,8 +57,8 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     }
 
     @Override
-    public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException, AutorizationException {
-        Forms.CreateMeeting ur = new Forms.CreateMeeting(title, description, _public, level, date, latitude, longitude);
+    public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID) throws ParamsException, AutorizationException {
+        Forms.CreateMeeting ur = new Forms.CreateMeeting(title, description, _public, level, date, latitude, longitude,chatID);
         UserServer u = null;
         MeetingServer m = null;
         try {

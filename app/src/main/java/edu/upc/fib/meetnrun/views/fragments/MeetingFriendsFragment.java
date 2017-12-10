@@ -30,11 +30,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
@@ -50,6 +52,7 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
 
 
     private List<User> selectedFriends = new ArrayList<>();
+    private IChatAdapter chatAdapter = CurrentSession.getInstance().getChatAdapter();
 
     @Override
     protected void initList() {}
@@ -140,7 +143,7 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
 
     }
 
-    private class JoinMeeting extends AsyncTask<ArrayList<Integer>,String,String> {
+    private class JoinMeeting extends AsyncTask<ArrayList<User>,String,String> {
         private int meetingId;
 
         @Override
@@ -149,18 +152,28 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
             meetingId = getActivity().getIntent().getExtras().getInt("meetingId");
         }
         @Override
-        protected String doInBackground(ArrayList<Integer>... ids) {
+        protected String doInBackground(ArrayList<User>... users) {
             try {
                 IMeetingAdapter meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
-                for (int id : ids[0]) {
+                for (User user : users[0]) {
                     //TODO handle exceptions
                     try {
-                        meetingAdapter.joinMeeting(meetingId,id);
+                        meetingAdapter.joinMeeting(meetingId,user.getId());
                     } catch (ParamsException e) {
                         e.printStackTrace();
                     }
                 }
+                Chat chat = CurrentSession.getInstance().getChat();
+                List<User> chatUsers = chat.getListUsersChat();
+                chatUsers.addAll(users[0]);
+                chat.setListUsersChat(chatUsers);
+                chatAdapter.updateChat(chat);
+
             } catch (AutorizationException e) {
+                e.printStackTrace();
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            } catch (ParamsException e) {
                 e.printStackTrace();
             }
             return null;
@@ -192,10 +205,10 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.done_button) {
-            ArrayList<Integer> selectedFriendsID = new ArrayList<>();
+            ArrayList<User> selectedFriendsID = new ArrayList<>();
 
             for (User user : selectedFriends) {
-                selectedFriendsID.add(user.getId());
+                selectedFriendsID.add(user);
             }
             new JoinMeeting().execute(selectedFriendsID);
         }
