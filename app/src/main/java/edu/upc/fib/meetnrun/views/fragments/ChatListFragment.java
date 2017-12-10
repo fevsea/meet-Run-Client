@@ -248,6 +248,7 @@ public class ChatListFragment extends Fragment {
 
         @Override
         protected String doInBackground(String... strings) {
+
             try {
                 l = chatDBAdapter.getChats(pageNumber);
             } catch (AutorizationException e) {

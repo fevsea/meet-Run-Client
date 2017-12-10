@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -256,8 +257,10 @@ public class UsersListFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
 
-            l.remove(CurrentSession.getInstance().getCurrentUser());
+            ArrayList<User> usersToRemove = new ArrayList<>();
+
             for (User user: l) {
+                if (user.getUsername().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) usersToRemove.add(user);
                 boolean equal = false;
                 for (Friend f: friends) {
                     User friend = f.getFriend();

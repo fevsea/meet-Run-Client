@@ -11,6 +11,8 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.UsersListActivity;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 
 public class FriendsFragment extends FriendListFragmentTemplate {
@@ -47,6 +49,23 @@ public class FriendsFragment extends FriendListFragmentTemplate {
     private void addNewFriend() {
         Intent intent = new Intent(getActivity(),UsersListActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected RecyclerViewOnClickListener getRecyclerViewListener() {
+        return new RecyclerViewOnClickListener() {
+            @Override
+            public void onButtonClicked(int position) {}
+
+            @Override
+            public void onItemClicked(int position) {
+
+                User friend = friendsAdapter.getFriendAtPosition(position).getFriend();
+                if (currentUser.getUsername().equals(friend.getUsername())) friend = friendsAdapter.getFriendAtPosition(position).getUser();
+                getIntent(friend);
+
+            }
+        };
     }
 
     private class getFriends extends AsyncTask<String,String,String> {

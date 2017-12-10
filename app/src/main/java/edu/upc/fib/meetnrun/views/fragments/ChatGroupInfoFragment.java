@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,9 +29,11 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
+import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatGroupsActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
+import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
@@ -53,6 +57,7 @@ public class ChatGroupInfoFragment extends Fragment {
     private boolean isLoading;
     private int pageNumber;
     private TextView groupNumberUsers;
+    private ImageButton meetingButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,6 +74,13 @@ public class ChatGroupInfoFragment extends Fragment {
         getActivity().setTitle(name);
         groupUsers = chat.getListUsersChat();
 
+        meetingButton = view.findViewById(R.id.group_meeting);
+        meetingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openMeetingView();
+            }
+        });
         TextView groupImage = view.findViewById(R.id.profileImage);
         groupImage.setBackground(getColoredCircularShape(name.charAt(0)));
         groupImage.setText(String.valueOf(name.charAt(0)));
@@ -209,5 +221,21 @@ public class ChatGroupInfoFragment extends Fragment {
         super.onResume();
     }
 
+    private void openMeetingView() {
+        Meeting meeting = chat.getMeeting();
+        Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
+        meetingInfoIntent.putExtra("id",meeting.getId());
+        meetingInfoIntent.putExtra("title",meeting.getTitle());
+        meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
+        meetingInfoIntent.putExtra("ownerId",meeting.getOwner().getId());
+        meetingInfoIntent.putExtra("description",meeting.getDescription());
+        String datetime = meeting.getDate();
+        meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
+        meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
+        meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
+        meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
+        meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
+        startActivity(meetingInfoIntent);
+    }
 
 }
