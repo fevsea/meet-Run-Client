@@ -25,6 +25,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -44,6 +45,7 @@ public class MeetingListFragment extends Fragment {
     private MeetingsAdapter meetingsAdapter;
     private IMeetingAdapter meetingDBAdapter;
     private IChatAdapter chatAdapter;
+    private IUserAdapter userAdapter;
     private View view;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetings;
@@ -53,6 +55,7 @@ public class MeetingListFragment extends Fragment {
     private LinearLayoutManager layoutManager;
     int pageSize;
     private boolean refresh;
+    private List<Meeting> myMeetings;
 
     //variables para paginacion
     private boolean isLoading;
@@ -78,6 +81,7 @@ public class MeetingListFragment extends Fragment {
 
         meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
         chatAdapter = CurrentSession.getInstance().getChatAdapter();
+        userAdapter = CurrentSession.getInstance().getUserAdapter();
         //iniciar paginacion y progressbar
         initializePagination();
         refresh = false;
@@ -229,6 +233,10 @@ public class MeetingListFragment extends Fragment {
         startActivity(intent);
     }
 
+    private void getMyMeetings() {
+        new GetMyMeetings().execute(CurrentSession.getInstance().getCurrentUser().getId());
+    }
+
     private void joinMeeting(Meeting meeting) {
         new JoinMeeting().execute(meeting.getId(),meeting.getChatID());
     }
@@ -330,11 +338,30 @@ public class MeetingListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
             Toast.makeText(getActivity(),getString(R.string.joined_meeting),Toast.LENGTH_SHORT).show();
-            updateMeetingList();
+            getMyMeetings();
             super.onPostExecute(s);
         }
+    }
+
+    private class GetMyMeetings extends AsyncTask<Integer,String,String> {
+
+        @Override
+        protected String doInBackground(Integer... integers) {
+            //TODO handle exceptions
+            try {
+                myMeetings = userAdapter.getUsersFutureMeetings(integers[0]);
+            } catch (AutorizationException | ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            meetingsAdapter.setMyMeetings(myMeetings);
+            super.onPostExecute(s);
+        }
+
     }
 
     @Override
@@ -344,6 +371,7 @@ public class MeetingListFragment extends Fragment {
             initializePagination();
             updateMeetingList();
         }
+        getMyMeetings();
         super.onResume();
     }
 
