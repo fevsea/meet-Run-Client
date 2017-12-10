@@ -45,10 +45,12 @@ public class UserAdapterImpl implements IUserAdapter {
         } catch (IOException | GenericException e) {
             e.printStackTrace();
         }
-        List<UserServer> lus = pus.getResults();
         List<User> lu = new ArrayList<>();
-        for (int i = 0; i < lus.size(); i++) {
-            lu.add(lus.get(i).toGenericModel());
+        if (pus != null) {
+            List<UserServer> lus = pus.getResults();
+            for (int i = 0; i < lus.size(); i++) {
+                lu.add(lus.get(i).toGenericModel());
+            }
         }
         return lu;
     }
@@ -67,7 +69,7 @@ public class UserAdapterImpl implements IUserAdapter {
             e.printStackTrace();
             if (e instanceof NotFoundException) throw (NotFoundException) e;
         }
-        return us.toGenericModel();
+        return us != null ? us.toGenericModel() : null;
     }
 
     @Override
@@ -137,7 +139,7 @@ public class UserAdapterImpl implements IUserAdapter {
                 throw (ParamsException) e;
             }
         }
-        return u.toGenericModel();
+        return u != null ? u.toGenericModel() : null;
 
     }
 
@@ -161,11 +163,11 @@ public class UserAdapterImpl implements IUserAdapter {
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
 
             List<MeetingServer> u = ret.body();
-
-            for (int i = 0; i < u.size(); i++) {
-                ul.add(u.get(i).toGenericModel());
+            if (u != null) {
+                for (int i = 0; i < u.size(); i++) {
+                    ul.add(u.get(i).toGenericModel());
+                }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (GenericException e) {
@@ -206,7 +208,7 @@ public class UserAdapterImpl implements IUserAdapter {
                 throw (AutorizationException) e;
             }
         }
-        return ss.toGenericModel();
+        return ss != null ? ss.toGenericModel() : null;
     }
 
 }

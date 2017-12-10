@@ -62,8 +62,10 @@ public class ChatAdapterImpl implements IChatAdapter {
             Response<PageServer<ChatServer>> res =
                     mServices.getChats(SOServices.PAGELIMIT, offset).execute();
             PageServer<ChatServer> psm = res.body();
-            for (int i = 0; i < psm.getResults().size(); i++) {
-                l.add(psm.getResults().get(i).toGenericModel());
+            if (psm != null) {
+                for (int i = 0; i < psm.getResults().size(); i++) {
+                    l.add(psm.getResults().get(i).toGenericModel());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -82,7 +84,6 @@ public class ChatAdapterImpl implements IChatAdapter {
             } else {
                 ok = true;
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (GenericException e) {
@@ -115,6 +116,8 @@ public class ChatAdapterImpl implements IChatAdapter {
                 throw (NotFoundException) e;
             } else if (e instanceof AutorizationException) {
                 throw (AutorizationException) e;
+            } else if (e instanceof ParamsException) {
+                throw (ParamsException) e;
             }
         }
         return ok;
@@ -132,8 +135,11 @@ public class ChatAdapterImpl implements IChatAdapter {
             e.printStackTrace();
         } catch (GenericException e) {
             e.printStackTrace();
-            if (e instanceof AutorizationException) throw (AutorizationException) e;
-            else if (e instanceof NotFoundException) throw (NotFoundException) e;
+            if (e instanceof AutorizationException) {
+                throw (AutorizationException) e;
+            } else if (e instanceof NotFoundException) {
+                throw (NotFoundException) e;
+            }
         }
         return cs != null ? cs.toGenericModel() : null;
     }

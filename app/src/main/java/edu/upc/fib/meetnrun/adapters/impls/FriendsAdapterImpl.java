@@ -61,13 +61,12 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
                     mServices.getCurrentUserFriends(SOServices.PAGELIMIT, offset).execute();
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
-
             PageServer<FriendServer> u = ret.body();
-
-            for (int i = 0; i < u.getResults().size(); i++) {
-                ul.add(u.getResults().get(i).toGenericModel());
+            if (u != null) {
+                for (int i = 0; i < u.getResults().size(); i++) {
+                    ul.add(u.getResults().get(i).toGenericModel());
+                }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (GenericException e) {
@@ -111,11 +110,11 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
 
             PageServer<FriendServer> u = ret.body();
-
-            for (int i = 0; i < u.getResults().size(); i++) {
-                ul.add(u.getResults().get(i).toGenericModel());
+            if (u != null) {
+                for (int i = 0; i < u.getResults().size(); i++) {
+                    ul.add(u.getResults().get(i).toGenericModel());
+                }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (GenericException e) {
@@ -135,8 +134,10 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
             PageServer<FriendServer> u = ret.body();
-            for (int i = 0; i < u.getResults().size(); i++) {
-                ul.add(u.getResults().get(i).toGenericModel());
+            if (u != null) {
+                for (int i = 0; i < u.getResults().size(); i++) {
+                    ul.add(u.getResults().get(i).toGenericModel());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -157,8 +158,10 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
             PageServer<FriendServer> u = ret.body();
-            for (int i = 0; i < u.getResults().size(); i++) {
-                ul.add(u.getResults().get(i).toGenericModel());
+            if (u != null) {
+                for (int i = 0; i < u.getResults().size(); i++) {
+                    ul.add(u.getResults().get(i).toGenericModel());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

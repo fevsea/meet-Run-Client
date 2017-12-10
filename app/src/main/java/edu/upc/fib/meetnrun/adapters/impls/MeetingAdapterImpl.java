@@ -45,8 +45,10 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
             Response<PageServer<MeetingServer>> res =
                     mServices.getAllMeetings(SOServices.PAGELIMIT, offset).execute();
             PageServer<MeetingServer> psm = res.body();
-            for (int i = 0; i < psm.getResults().size(); i++) {
-                l.add(psm.getResults().get(i).toGenericModel());
+            if (psm != null) {
+                for (int i = 0; i < psm.getResults().size(); i++) {
+                    l.add(psm.getResults().get(i).toGenericModel());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -75,7 +77,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
                 throw (AutorizationException) e;
             }
         }
-        return m.toGenericModel();
+        return m != null ? m.toGenericModel() : null;
     }
 
     @Override
@@ -92,7 +94,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
             e.printStackTrace();
             if (e instanceof NotFoundException) throw (NotFoundException) e;
         }
-        return m.toGenericModel();
+        return m != null ? m.toGenericModel() : null;
     }
 
     @Override
@@ -147,22 +149,21 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
 
     @Override
     public List<User> getParticipantsFromMeeting(int meetingId, int page) throws AutorizationException, ParamsException {
-        //TODO pending to TEST
         List<User> ul = new ArrayList<>();
         try {
             int offset = calculateOffset(SOServices.PAGELIMIT, page);
             Response<PageServer<UserServer>> ret =
-                    mServices.getAllParticipantsFromMeeting(meetingId,SOServices.PAGELIMIT,
+                    mServices.getAllParticipantsFromMeeting(meetingId, SOServices.PAGELIMIT,
                             offset).execute();
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
 
             PageServer<UserServer> u = ret.body();
-
-            for (int i = 0; i < u.getResults().size(); i++) {
-                ul.add(u.getResults().get(i).toGenericModel());
+            if (u != null) {
+                for (int i = 0; i < u.getResults().size(); i++) {
+                    ul.add(u.getResults().get(i).toGenericModel());
+                }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (GenericException e) {
@@ -180,7 +181,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     public boolean joinMeeting(int meetingId, int targetUserId) throws AutorizationException, ParamsException {
         boolean ok = false;
         try {
-            Response<Void> ret = mServices.joinMeeting(meetingId,targetUserId).execute();
+            Response<Void> ret = mServices.joinMeeting(meetingId, targetUserId).execute();
             if (ret.isSuccessful()) {
                 ok = true;
             } else {
@@ -200,7 +201,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     public boolean leaveMeeting(int meetingId, int targetUserId) throws AutorizationException, ParamsException {
         boolean ok = false;
         try {
-            Response<Void> ret = mServices.leaveMeeting(meetingId,targetUserId).execute();
+            Response<Void> ret = mServices.leaveMeeting(meetingId, targetUserId).execute();
             if (ret.isSuccessful()) {
                 ok = true;
             } else {
@@ -224,8 +225,10 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
             Response<PageServer<MeetingServer>> res =
                     mServices.getAllMeetingsFiltered(SOServices.PAGELIMIT, offset, query).execute();
             PageServer<MeetingServer> array = res.body();
-            for (int i = 0; i < array.getResults().size(); i++) {
-                l.add(array.getResults().get(i).toGenericModel());
+            if (array != null) {
+                for (int i = 0; i < array.getResults().size(); i++) {
+                    l.add(array.getResults().get(i).toGenericModel());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -275,7 +278,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
                 throw (AutorizationException) e;
             }
         }
-        return m.toGenericModel();
+        return m != null ? m.toGenericModel() : null;
     }
 
     @Override

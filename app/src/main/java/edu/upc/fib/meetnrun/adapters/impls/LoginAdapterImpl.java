@@ -36,7 +36,10 @@ public class LoginAdapterImpl implements ILoginAdapter {
             if (!ret.isSuccessful()) {
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
             }
-            token = ret.body().getToken();
+            Forms.Token tok = ret.body();
+            if (tok != null) {
+                token = tok.getToken();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (GenericException e) {
@@ -65,7 +68,7 @@ public class LoginAdapterImpl implements ILoginAdapter {
                 throw (AutorizationException) e;
             }
         }
-        return u.toGenericModel();
+        return u != null ? u.toGenericModel() : null;
     }
 
     @Override
@@ -120,7 +123,10 @@ public class LoginAdapterImpl implements ILoginAdapter {
             if (!ret.isSuccessful()) {
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
             }
-            token = ret.body().getToken();
+            Forms.Token tok = ret.body();
+            if (tok != null) {
+                token = tok.getToken();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (GenericException e) {
