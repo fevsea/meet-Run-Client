@@ -36,6 +36,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -62,6 +63,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     private UsersAdapter participantsAdapter;
     private IMeetingAdapter meetingController;
     private IFriendsAdapter friendsController;
+    private IUserAdapter userAdapter;
     private IChatAdapter chatAdapter;
     private List<User> meetingUsers;
     private List<Friend> friends;
@@ -76,6 +78,8 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
     private int chatId;
     private Chat chat;
     private boolean isChatAvailable;
+    private List<Meeting> myMeetings;
+    private ImageButton chatButton;
 
 
     @Override
@@ -86,6 +90,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
 
         meetingController = CurrentSession.getInstance().getMeetingAdapter();
         friendsController = CurrentSession.getInstance().getFriendsAdapter();
+        userAdapter = CurrentSession.getInstance().getUserAdapter();
         chatAdapter = CurrentSession.getInstance().getChatAdapter();
         Bundle meetingInfo = getActivity().getIntent().getExtras();
 
@@ -95,8 +100,8 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         TextView date = view.findViewById(R.id.meeting_info_date);
         TextView time = view.findViewById(R.id.meeting_info_time);
         TextView owner = view.findViewById(R.id.meeting_info_creator);
-        ImageButton chatButton = view.findViewById(R.id.meeting_info_chat);
-
+        chatButton = view.findViewById(R.id.meeting_info_chat);
+        chatButton.setVisibility(View.INVISIBLE);
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,6 +113,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         isChatAvailable = false;
         new getMeeting().execute();
         new getChat().execute();
+        new GetMyMeetings().execute(CurrentSession.getInstance().getCurrentUser().getId());
         title.setText(meetingInfo.getString("title"));
         owner.setText(meetingInfo.getString("owner"));
         description.setText(meetingInfo.getString("description"));
@@ -391,6 +397,29 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         protected void onPostExecute(Void v) {
             isChatAvailable = true;
         }
+
+    }
+
+    private class GetMyMeetings extends AsyncTask<Integer,String,Void> {
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            //TODO handle exceptions
+            try {
+                myMeetings = userAdapter.getUsersFutureMeetings(integers[0]);
+            } catch (AutorizationException | ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            for (Meeting joinedMeeting: myMeetings) {
+                if (joinedMeeting.getId().equals(meetingId)) chatButton.setVisibility(View.VISIBLE);
+            }
+        }
+
 
     }
 

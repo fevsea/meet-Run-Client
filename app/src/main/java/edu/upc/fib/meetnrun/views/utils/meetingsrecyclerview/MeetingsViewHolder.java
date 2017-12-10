@@ -50,7 +50,7 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
 
     }
 
-    public void bindMeeting(Meeting meeting) {
+    public void bindMeeting(Meeting meeting, boolean joined) {
         char letter = meeting.getOwner().getFirstName().charAt(0);
         String firstLetter = String.valueOf(letter);
         userIcon.setBackground(getColoredCircularShape((letter)));
@@ -72,7 +72,7 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
         if (isMeetingAvailable(meeting.getDate())) {
             addUserButton.setVisibility(View.VISIBLE);
             int userId = CurrentSession.getInstance().getCurrentUser().getId();
-            if (notParticipating(meeting.getParticipants(), meeting.getOwner(), userId)) {
+            if (!joined) {
                 addUserButton.setEnabled(true);
                 addUserButton.setImageAlpha(255);
                 addUserButton.setOnClickListener(this);
@@ -99,13 +99,6 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
 
         Date currentDate = Calendar.getInstance().getTime();
         return currentDate.before(date);
-    }
-
-    private boolean notParticipating(List<User> users, User owner, int id) {
-        for (User user : users) {
-            if (user.getId() == id) return false;
-        }
-        return owner.getId() != id;
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {
