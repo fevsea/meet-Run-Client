@@ -14,6 +14,7 @@ public class Meeting {
     private String longitude;
     private User owner;
     private List<User> participants;
+    private Integer chatID;
 
     /**
      * No args constructor for use in serialization
@@ -22,7 +23,7 @@ public class Meeting {
     public Meeting() {
     }
 
-    public Meeting(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) {
+    public Meeting(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude,Integer chatID) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -31,9 +32,10 @@ public class Meeting {
         this.date = date;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.chatID = chatID;
     }
 
-    public Meeting(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, User owner, List<User> participants) {
+    public Meeting(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID, User owner, List<User> participants) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -42,6 +44,7 @@ public class Meeting {
         this.date = date;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.chatID = chatID;
         this.owner = owner;
         this.participants = participants;
     }
@@ -140,6 +143,14 @@ public class Meeting {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public Integer getChatID() {
+        return chatID;
+    }
+
+    public void setChatID(Integer chatID) {
+        this.chatID = chatID;
     }
 
     @Override
