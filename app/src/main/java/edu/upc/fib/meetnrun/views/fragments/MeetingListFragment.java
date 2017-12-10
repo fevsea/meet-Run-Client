@@ -52,6 +52,7 @@ public class MeetingListFragment extends Fragment {
     String filteredQuery;
     private LinearLayoutManager layoutManager;
     int pageSize;
+    private boolean refresh;
 
     //variables para paginacion
     private boolean isLoading;
@@ -79,6 +80,7 @@ public class MeetingListFragment extends Fragment {
         chatAdapter = CurrentSession.getInstance().getChatAdapter();
         //iniciar paginacion y progressbar
         initializePagination();
+        refresh = false;
         filtered = false;
         filteredQuery = "";
         progressBar = view.findViewById(R.id.pb_loading);
@@ -163,7 +165,7 @@ public class MeetingListFragment extends Fragment {
                         updateMeetingList();
                     }
                     else {
-                        fab.setVisibility(View.INVISIBLE);
+                        if (!recyclerView.canScrollVertically(1)) fab.setVisibility(View.INVISIBLE);
                     }
                 }
             }
@@ -222,6 +224,7 @@ public class MeetingListFragment extends Fragment {
     }
 
     private void createNewMeeting() {
+        refresh = true;
         Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
         startActivity(intent);
     }
@@ -242,7 +245,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetings(pageNumber);//TODO arreglar paginas
+            meetings = meetingDBAdapter.getAllMeetings(pageNumber);
             return null;
         }
 
@@ -289,7 +292,7 @@ public class MeetingListFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0],pageNumber);//TODO arreglar paginas
+            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0],pageNumber);
             return null;
         }
 
@@ -332,6 +335,16 @@ public class MeetingListFragment extends Fragment {
             updateMeetingList();
             super.onPostExecute(s);
         }
+    }
+
+    @Override
+    public void onResume() {
+        if (refresh) {
+            refresh = false;
+            initializePagination();
+            updateMeetingList();
+        }
+        super.onResume();
     }
 
 }
