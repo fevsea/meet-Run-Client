@@ -1,5 +1,7 @@
 package edu.upc.fib.meetnrun.adapters.models;
 
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -89,6 +91,7 @@ public class ChatServer implements IServerModel {
         for (int i = 0; i < participantUsers.size(); i++) {
             lu.add(participantUsers.get(i).toGenericModel());
         }
+        Log.e("UTILS","lastMessageDateTime = " + lastMessageDateTime);
         Date d = UtilsGlobal.parseDate(this.lastMessageDateTime);
         Message m = new Message(this.lastMessage, participantUsers.get(lastMessageUsernamePosition).getUsername(), d);
         Chat c = null;

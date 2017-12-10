@@ -47,6 +47,7 @@ public class MeetingListFragment extends Fragment {
     String filteredQuery;
     private LinearLayoutManager layoutManager;
     int pageSize;
+    private boolean refresh;
 
     //variables para paginacion
     private boolean isLoading;
@@ -73,6 +74,7 @@ public class MeetingListFragment extends Fragment {
         meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
         //iniciar paginacion y progressbar
         initializePagination();
+        refresh = false;
         filtered = false;
         filteredQuery = "";
         progressBar = view.findViewById(R.id.pb_loading);
@@ -214,6 +216,7 @@ public class MeetingListFragment extends Fragment {
     }
 
     private void createNewMeeting() {
+        refresh = true;
         Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
         startActivity(intent);
     }
@@ -313,6 +316,16 @@ public class MeetingListFragment extends Fragment {
             updateMeetingList();
             super.onPostExecute(s);
         }
+    }
+
+    @Override
+    public void onResume() {
+        if (refresh) {
+            refresh = false;
+            initializePagination();
+            updateMeetingList();
+        }
+        super.onResume();
     }
 
 }
