@@ -270,7 +270,7 @@ public class ChatGroupsFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             updateData();
-            if (friendsAdapter.getItemCount() == 0) numbFriends.setText("All your friends are already in this group.");
+            if (friendsAdapter.getItemCount() == 0) numbFriends.setText("No friends available.");
             super.onPostExecute(s);
         }
     }

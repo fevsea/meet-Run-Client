@@ -105,8 +105,7 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
         for (User user : users) {
             if (user.getId() == id) return false;
         }
-        if (owner.getId() == id) return false;
-        return true;
+        return owner.getId() != id;
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {

@@ -17,8 +17,8 @@ import android.support.v4.app.Fragment;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -53,6 +53,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -118,6 +119,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         this.view = view;
 
 
+
         myLocation = new LatLng(41.388576, 2.112840);
         friends=false;
         name = view.findViewById(R.id.name);
@@ -126,7 +128,9 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         level = view.findViewById(R.id.level);
         location = view.findViewById(R.id.meetingLocation);
         description = view.findViewById(R.id.description);
+        location = view.findViewById(R.id.meetingLocation);
         Button dateButton = view.findViewById(R.id.pickDate);
+
         dateButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -265,6 +269,9 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         else if(Description.length()>=500) Toast.makeText(this.getContext(), this.getString(R.string.big_description_error), Toast.LENGTH_SHORT).show();
         else{
             //DB stuff
+
+            Level = Integer.parseInt(level.getText().toString());
+
             if (Public)  onCreateDialog(getActivity(), this.getString(R.string.public_friends), this.getString(R.string.public_yes_friends), this.getString(R.string.public_no_friends));
             else onCreateDialog(getActivity(), this.getString(R.string.private_friends), this.getString(R.string.private_yes_friends), this.getString(R.string.private_no_friends));
             //Toast.makeText(this.getContext(),"Meeting name: "+Name+", Date:"+Date+", Hour: "+Hour+", Level: "+Level+", Description: "+Description+", Kind of meeting: "+Public.toString(), Toast.LENGTH_SHORT).show();

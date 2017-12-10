@@ -50,6 +50,7 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 
 public class MeetingFriendsFragment extends FriendListFragmentTemplate {
 
+
     private List<User> selectedFriends = new ArrayList<>();
     private IChatAdapter chatAdapter = CurrentSession.getInstance().getChatAdapter();
 
@@ -63,6 +64,7 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
 
     @Override
     protected void adapter() {}
+
 
     @Override
     protected void getIntent(User friend) {
@@ -145,6 +147,7 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
         private int meetingId;
 
         @Override
+
         protected void onPreExecute() {
             meetingId = getActivity().getIntent().getExtras().getInt("meetingId");
         }
@@ -182,6 +185,7 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
             super.onPostExecute(s);
         }
     }
+
 
     @Override
     public void onResume() {

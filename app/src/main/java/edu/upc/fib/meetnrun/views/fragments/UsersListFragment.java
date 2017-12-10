@@ -257,10 +257,8 @@ public class UsersListFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
 
-            ArrayList<User> usersToRemove = new ArrayList<>();
-
+            l.remove(CurrentSession.getInstance().getCurrentUser());
             for (User user: l) {
-                if (user.getUsername().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) usersToRemove.add(user);
                 boolean equal = false;
                 for (Friend f: friends) {
                     User friend = f.getFriend();

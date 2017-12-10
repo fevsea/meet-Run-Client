@@ -8,6 +8,7 @@ import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.FriendServer;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
+import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import retrofit2.Call;
@@ -67,6 +68,13 @@ public interface SOServices {
     @POST("/users/changePassword")
     Call<Void> changePassword(@Body Forms.ChangePassword sp);
 
+    @GET("/users/{id}/meetings")
+    Call<List<MeetingServer>> getUserMeetingFilteredMeetings(@Path("id") int id, @Query("filter") String filter);
+
+    @GET("/users/{id}/statistics")
+    Call<StatisticsServer> getUserStatisticsByID(@Path("id") int id);
+
+
 
     //LOGIN
 
@@ -96,9 +104,6 @@ public interface SOServices {
 
     @DELETE("/meetings/{meetingID}/participants/{userID}")
     Call<Void> leaveMeeting(@Path("meetingID") int meetingID,@Path("userID") int userID);
-
-    @GET("/users/{id}/meetings")
-    Call<List<MeetingServer>> getAllFutureMeetings(@Path("id") int id);
 
 
     //FRIENDS
@@ -162,6 +167,9 @@ public interface SOServices {
     Call<ChallengeServer> getChallenge(@Path("id") int id);
 
     @DELETE("/challenges/{id}")
-    Call<Void> deleteChallenge(@Path("id") int id);
+    Call<Void> deleteRejectChallenge(@Path("id") int id);
+
+    @POST("/challenges/{id}")
+    Call<Void> acceptChallenge(@Path("id") int id);
 
 }

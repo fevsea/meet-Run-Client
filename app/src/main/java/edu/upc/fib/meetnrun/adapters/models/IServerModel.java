@@ -5,5 +5,5 @@ package edu.upc.fib.meetnrun.adapters.models;
  */
 
 interface IServerModel<T> {
-    public T toGenericModel();
+    T toGenericModel();
 }
