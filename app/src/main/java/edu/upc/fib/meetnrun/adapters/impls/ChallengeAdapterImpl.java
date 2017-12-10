@@ -41,8 +41,10 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
             if (!res.isSuccessful())
                 checkErrorCodeAndThowException(res.code(), res.errorBody().string());
             List<ChallengeServer> psm = res.body();
-            for (int i = 0; i < psm.size(); i++) {
-                l.add(psm.get(i).toGenericModel());
+            if (psm != null) {
+                for (int i = 0; i < psm.size(); i++) {
+                    l.add(psm.get(i).toGenericModel());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -73,7 +75,7 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
                 throw (AutorizationException) e;
             }
         }
-        return m.toGenericModel();
+        return m != null ? m.toGenericModel() : null;
     }
 
     @Override
@@ -101,23 +103,23 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
     @Override
     public boolean acceptChallenge(int challengeID) throws AutorizationException, NotFoundException {
         boolean ok = true;
-                try {
-                    Response<Void> ret = mServices.acceptChallenge(challengeID).execute();
-                    if (!ret.isSuccessful()) {
-                        ok = false;
-                        checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (GenericException e) {
-                    e.printStackTrace();
-                    if (e instanceof NotFoundException) {
-                        throw (NotFoundException) e;
-                    } else if (e instanceof AutorizationException) {
-                        throw (AutorizationException) e;
-                    }
-                }
-                return ok;
+        try {
+            Response<Void> ret = mServices.acceptChallenge(challengeID).execute();
+            if (!ret.isSuccessful()) {
+                ok = false;
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GenericException e) {
+            e.printStackTrace();
+            if (e instanceof NotFoundException) {
+                throw (NotFoundException) e;
+            } else if (e instanceof AutorizationException) {
+                throw (AutorizationException) e;
+            }
+        }
+        return ok;
     }
 
     @Override
@@ -141,6 +143,6 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
                 throw (AutorizationException) e;
             }
         }
-        return c.toGenericModel();
+        return c != null ? c.toGenericModel() : null;
     }
 }
