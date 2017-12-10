@@ -19,19 +19,34 @@
             android:layout_marginTop="5dp"
             style="@style/TextAppearance.AppCompat.Title"/>
 
+        <ImageButton
+            android:id="@+id/meeting_info_chat"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:background="@color/white"
+            android:layout_toStartOf="@id/meeting_info_title"
+            android:src="@drawable/chat"
+            android:layout_alignParentEnd="true"/>
         <LinearLayout
             android:id="@+id/meeting_info_creatorlevel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="5dp"
-            android:layout_below="@+id/meeting_info_title">
+            android:layout_below="@+id/meeting_info_chat">
 
             <TextView
                 android:id="@+id/meeting_info_creator"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                style="@style/TextAppearance.AppCompat.Body2"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/max_level"
+                android:layout_marginEnd="10dp"
                 style="@style/TextAppearance.AppCompat.Body2"/>
             <TextView
                 android:id="@+id/meeting_info_level"

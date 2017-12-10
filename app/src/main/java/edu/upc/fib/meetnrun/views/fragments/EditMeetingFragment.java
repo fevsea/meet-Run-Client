@@ -369,7 +369,7 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
         protected void onPostExecute(Meeting result) {
             meeting = result;
             if (meeting == null ) {
-                meeting = new Meeting(1, "HOLA", "Descr \n ipcion \n rand \n om", false, 5, new Date().toString(), "41", "2");
+                meeting = new Meeting(1, "HOLA", "Descr \n ipcion \n rand \n om", false, 5, new Date().toString(), "41", "2", null);
                 Toast.makeText(getActivity(), getResources().getString(R.string.error_loading_meeting), Toast.LENGTH_SHORT).show();
             }
             populateViews();

@@ -23,11 +23,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
@@ -39,6 +43,7 @@ public class MeetingListFragment extends Fragment {
 
     private MeetingsAdapter meetingsAdapter;
     private IMeetingAdapter meetingDBAdapter;
+    private IChatAdapter chatAdapter;
     private View view;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetings;
@@ -72,6 +77,7 @@ public class MeetingListFragment extends Fragment {
         this.view = view;
 
         meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
+        chatAdapter = CurrentSession.getInstance().getChatAdapter();
         //iniciar paginacion y progressbar
         initializePagination();
         refresh = false;
@@ -121,6 +127,8 @@ public class MeetingListFragment extends Fragment {
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
                 meetingInfoIntent.putExtra("id",meeting.getId());
+                //TODO 'if' temporal, fins que es borri la BD
+                if (meeting.getChatID() != null) meetingInfoIntent.putExtra("chat",meeting.getChatID());
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
                 meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
                 meetingInfoIntent.putExtra("ownerId",meeting.getOwner().getId());
@@ -222,7 +230,7 @@ public class MeetingListFragment extends Fragment {
     }
 
     private void joinMeeting(Meeting meeting) {
-        new JoinMeeting().execute(meeting.getId());
+        new JoinMeeting().execute(meeting.getId(),meeting.getChatID());
     }
 
     //en cada asynctask hay que hacer cambios, tomad esta como modelo
@@ -295,6 +303,9 @@ public class MeetingListFragment extends Fragment {
         }
     }
 
+    /*
+        new JoinMeeting.execute(meetingId,chatId)
+     */
     private class JoinMeeting extends AsyncTask<Integer,String,String> {
 
         @Override
@@ -302,8 +313,16 @@ public class MeetingListFragment extends Fragment {
             Log.e("MAIN","DOINGGGG");
             //TODO handle exceptions
             try {
+                //TODO possible millora: crida al servidor joinChat
                 meetingDBAdapter.joinMeeting(integers[0],CurrentSession.getInstance().getCurrentUser().getId());
+                Chat chat = chatAdapter.getChat(integers[1]);
+                List<User> chatUsers = chat.getListUsersChat();
+                chatUsers.add(CurrentSession.getInstance().getCurrentUser());
+                chat.setListUsersChat(chatUsers);
+                chatAdapter.updateChat(chat);
             } catch (AutorizationException | ParamsException e) {
+                e.printStackTrace();
+            } catch (NotFoundException e) {
                 e.printStackTrace();
             }
             return null;

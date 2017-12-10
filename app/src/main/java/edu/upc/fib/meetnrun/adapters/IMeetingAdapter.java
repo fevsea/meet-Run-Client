@@ -19,7 +19,7 @@ import edu.upc.fib.meetnrun.models.User;
 public interface IMeetingAdapter {
     List<Meeting> getAllMeetings(int page);
 
-    Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException, AutorizationException;
+    Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID) throws ParamsException, AutorizationException;
 
     Meeting getMeeting(int targetMeetingid) throws NotFoundException;
 

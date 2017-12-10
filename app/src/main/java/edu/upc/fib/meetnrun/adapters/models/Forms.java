@@ -245,8 +245,11 @@ public class Forms {
         @SerializedName("longitude")
         @Expose
         private String longitude;
+        @SerializedName("chat")
+        @Expose
+        private Integer chatID;
 
-        public CreateMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) {
+        public CreateMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID) {
             this.title = title;
             this.description = description;
             this._public = _public;
@@ -254,6 +257,7 @@ public class Forms {
             this.date = date;
             this.latitude = latitude;
             this.longitude = longitude;
+            this.chatID = chatID;
         }
 
         public String getTitle() {
@@ -310,6 +314,22 @@ public class Forms {
 
         public void setLongitude(String longitude) {
             this.longitude = longitude;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public Integer getChatID() {
+            return chatID;
+        }
+
+        public void setChatID(Integer chatID) {
+            this.chatID = chatID;
         }
     }
 
