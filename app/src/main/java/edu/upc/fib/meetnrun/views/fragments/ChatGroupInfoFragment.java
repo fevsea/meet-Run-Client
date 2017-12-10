@@ -225,6 +225,7 @@ public class ChatGroupInfoFragment extends Fragment {
         Meeting meeting = chat.getMeeting();
         Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
         meetingInfoIntent.putExtra("id",meeting.getId());
+        meetingInfoIntent.putExtra("chat",meeting.getChatID());
         meetingInfoIntent.putExtra("title",meeting.getTitle());
         meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
         meetingInfoIntent.putExtra("ownerId",meeting.getOwner().getId());
