@@ -22,8 +22,8 @@ import edu.upc.fib.meetnrun.models.User;
 
 public class ChallengesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    final private View view;
-    final private WeakReference<RecyclerViewOnClickListener> listener;
+    final protected View view;
+    final protected WeakReference<RecyclerViewOnClickListener> listener;
     private String expirationTextResourceDays;
     private String expirationTextResourceNoDays;
     private String expirationPastTextResourceDays;
@@ -39,7 +39,7 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         expirationPastTextResourceNoDays = view.getResources().getString(R.string.ended_in_hours_minutes);
     }
 
-    public void bindChallenge(Challenge challenge) {
+    protected void bindChallenge(Challenge challenge) {
         User currentUser = CurrentSession.getInstance().getCurrentUser();
         User opponent;
         float currentUserDistance;
@@ -72,7 +72,13 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         youBar.setMax((int)challenge.getDistance());
         youBar.setProgress((int)currentUserDistance);
 
-        expirationView.setText(getExpirationText(challenge.getDeadline()));
+        try {
+            expirationView.setText(getExpirationText(challenge.getDeadline()));
+        }
+        catch (ParseException ex) {
+            expirationView.setText("");
+            Log.e("PARSEEXCEPTION", ex.getMessage());
+        }
         view.setOnClickListener(this);
     }
 
@@ -81,14 +87,15 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         listener.get().onItemClicked(getAdapterPosition());
     }
 
-    private String getExpirationText(String deadline) {
+    protected String getExpirationText(String deadline) throws ParseException {
         DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.forLanguageTag("es"));
         Date dateTime;
         String expirationText;
         try {
             dateTime = inputFormat.parse(deadline);
         } catch (ParseException e) {
-            dateTime = new Date(deadline);
+            inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
+            dateTime = inputFormat.parse(deadline);
         }
         if (dateTime.getTime() > System.currentTimeMillis()) {
             final long millis = dateTime.getTime() - System.currentTimeMillis();

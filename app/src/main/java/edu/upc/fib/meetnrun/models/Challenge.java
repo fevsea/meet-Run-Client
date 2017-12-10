@@ -1,7 +1,5 @@
 package edu.upc.fib.meetnrun.models;
 
-import java.util.Date;
-
 /**
  * Created by guillemcastro on 24/11/2017.
  */
@@ -16,12 +14,13 @@ public class Challenge {
     private String creationDate;
     private float creatorDistance;
     private float challengedDistance;
+    private boolean accepted;
 
     public Challenge() {
 
     }
 
-    public Challenge(Integer id, User creator, User challenged, float distance, String dateDeadline, String creationDate, float creatorDistance, float challengedDistance) {
+    public Challenge(Integer id, User creator, User challenged, float distance, String dateDeadline, String creationDate, float creatorDistance, float challengedDistance, boolean accepted) {
         this.id = id;
         this.creator = creator;
         this.challenged = challenged;
@@ -30,6 +29,7 @@ public class Challenge {
         this.creationDate = creationDate;
         this.creatorDistance = creatorDistance;
         this.challengedDistance = challengedDistance;
+        this.accepted = accepted;
     }
 
     public Challenge(User creator, User challenged, float distance, String dateDeadline) {
@@ -111,4 +111,11 @@ public class Challenge {
         this.creationDate = creationDate;
     }
 
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
+    }
 }

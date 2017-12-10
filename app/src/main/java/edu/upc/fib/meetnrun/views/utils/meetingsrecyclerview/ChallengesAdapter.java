@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.os.SystemClock;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,14 +19,10 @@ import java.util.Locale;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Challenge;
 
-/**
- * Created by guillemcastro on 26/11/2017.
- */
-
 public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesViewHolder>  {
 
     private List<Challenge> challenges;
-    private RecyclerViewOnClickListener listener;
+    protected RecyclerViewOnClickListener listener;
 
     public ChallengesAdapter(List<Challenge> challenges, RecyclerViewOnClickListener listener) {
         this.challenges = challenges;
@@ -73,8 +70,8 @@ public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesViewHolder
                 o2Date = inputFormat.parse(o2.getDeadline());
             }
             catch (ParseException e) {
-                o1Date = new Date(o1.getDeadline());
-                o2Date = new Date(o2.getDeadline());
+                o1Date = new Date();
+                o2Date = new Date();
             }
             long currentdateMillis = new Date().getTime();
             long o1Millis = o1Date.getTime();

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/headerImage2"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:background="#BBCEDC" />
+
+        <TextView
+            android:id="@+id/profileImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_below="@+id/headerImage2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="-60dp"
+            android:background="@drawable/user_profile_circular_text_view"
+            android:textSize="45sp"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:scaleType="centerCrop"
+            android:textAllCaps="true"
+            android:elevation="5dp"/>
+
+        <RelativeLayout
+            android:id="@+id/profile_layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/headerImage2"
+            android:background="#ffff"
+            android:elevation="4dp"
+            android:paddingBottom="24dp">
+
+            <TextView
+                android:id="@+id/group_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="76dp"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="@string/group_name" />
+
+  
+            <TextView
+                android:id="@+id/group_num_users"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:layout_below="@+id/group_name"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:text="@string/number_of_users" />
+            
+            <Button
+                android:id="@+id/group_adduser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/semi_white"
+                android:text="@string/add_user_to_group"
+                android:layout_below="@id/group_num_users"
+                style="@style/TextAppearance.AppCompat.Title"/>
+
+
+            <ProgressBar
+                android:id="@+id/pb_loading_friends"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:visibility="invisible"/>
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/group_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_below="@id/profile_layout2">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+
+    </RelativeLayout>
+
+
+</ScrollView>
