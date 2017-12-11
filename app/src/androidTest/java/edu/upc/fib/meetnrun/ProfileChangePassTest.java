@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun;
+/*package edu.upc.fib.meetnrun;
 
 import android.support.test.espresso.intent.Intents;
 import android.support.test.filters.SmallTest;
@@ -71,6 +71,6 @@ public class ProfileChangePassTest {
         Intents.release();
 
     }
-}
+}*/
 
 

@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun;
+/*package edu.upc.fib.meetnrun;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,4 +57,4 @@ public class MockFriendsAdapter implements IFriendsAdapter {
     public List<User> listFriendsOfUser(int targetUserId) throws AutorizationException, ParamsException {
         return null;
     }
-}
+}*/

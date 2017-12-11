@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun;
+/*package edu.upc.fib.meetnrun;
 
 
 import com.google.android.gms.maps.model.LatLng;
@@ -133,4 +133,4 @@ public class MockMeetingAdapter implements IMeetingAdapter {
         }
     }
 
-}
+}*/
