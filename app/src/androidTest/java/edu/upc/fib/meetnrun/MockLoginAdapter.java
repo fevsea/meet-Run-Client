@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun;
+/*package edu.upc.fib.meetnrun;
 
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
@@ -26,4 +26,4 @@ public class MockLoginAdapter implements ILoginAdapter {
     public boolean changePassword(String oldPassword, String newPassword) throws AutorizationException, ForbiddenException {
         return false;
     }
-}
+}*/
