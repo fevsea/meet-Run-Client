@@ -19,7 +19,7 @@ public class EditMeetingActivity extends BaseReturnActivity {
     private GoogleMap map;
     private Marker marker;
     private Meeting meeting; //= new Meeting(1, "HOLA", "Descr \n ipcion \n rand \n om", false, 5, new Date().toString(), "41", "2");
-    private boolean thereWasAnAttemptToSave = false;
+    private final boolean thereWasAnAttemptToSave = false;
     EditText titleText;
     EditText descriptionText;
     EditText levelText;

@@ -9,6 +9,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
+import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
@@ -22,27 +23,32 @@ import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.remote.SOServices;
 import retrofit2.Response;
 
-import static edu.upc.fib.meetnrun.adapters.utils.Utils.checkErrorCodeAndThowException;
+import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.calculateOffset;
+import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.checkErrorCodeAndThowException;
 
 /**
  * Created by Awais Iqbal on 07/11/2017.
  */
 
 public class MeetingAdapterImpl implements IMeetingAdapter {
-    private SOServices mServices;
+    private final SOServices mServices;
 
     public MeetingAdapterImpl(SOServices soServices) {
         mServices = soServices;
     }
 
     @Override
-    public List<Meeting> getAllMeetings() {
+    public List<Meeting> getAllMeetings(int page) {
         List<Meeting> l = new ArrayList<>();
         try {
-            Response<MeetingServer[]> res = mServices.getMeetings().execute();
-            MeetingServer[] array = res.body();
-            for (int i = 0; i < array.length; i++) {
-                l.add(array[i].toGenericModel());
+            int offset = calculateOffset(SOServices.PAGELIMIT, page);
+            Response<PageServer<MeetingServer>> res =
+                    mServices.getAllMeetings(SOServices.PAGELIMIT, offset).execute();
+            PageServer<MeetingServer> psm = res.body();
+            if (psm != null) {
+                for (int i = 0; i < psm.getResults().size(); i++) {
+                    l.add(psm.getResults().get(i).toGenericModel());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,8 +57,8 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     }
 
     @Override
-    public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) throws ParamsException, AutorizationException {
-        Forms.CreateMeeting ur = new Forms.CreateMeeting(title, description, _public, level, date, latitude, longitude);
+    public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID) throws ParamsException, AutorizationException {
+        Forms.CreateMeeting ur = new Forms.CreateMeeting(title, description, _public, level, date, latitude, longitude,chatID);
         UserServer u = null;
         MeetingServer m = null;
         try {
@@ -71,7 +77,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
                 throw (AutorizationException) e;
             }
         }
-        return m.toGenericModel();
+        return m != null ? m.toGenericModel() : null;
     }
 
     @Override
@@ -88,7 +94,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
             e.printStackTrace();
             if (e instanceof NotFoundException) throw (NotFoundException) e;
         }
-        return m.toGenericModel();
+        return m != null ? m.toGenericModel() : null;
     }
 
     @Override
@@ -142,19 +148,22 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     }
 
     @Override
-    public List<User> getParticipantsFromMeeting(int meetingId) throws AutorizationException, ParamsException {
+    public List<User> getParticipantsFromMeeting(int meetingId, int page) throws AutorizationException, ParamsException {
         List<User> ul = new ArrayList<>();
         try {
-            Response<List<UserServer>> ret = mServices.getAllParticipantsFromMeeting(meetingId).execute();
+            int offset = calculateOffset(SOServices.PAGELIMIT, page);
+            Response<PageServer<UserServer>> ret =
+                    mServices.getAllParticipantsFromMeeting(meetingId, SOServices.PAGELIMIT,
+                            offset).execute();
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
 
-            List<UserServer> u = ret.body();
-
-            for (int i = 0; i < u.size(); i++) {
-                ul.add(u.get(i).toGenericModel());
+            PageServer<UserServer> u = ret.body();
+            if (u != null) {
+                for (int i = 0; i < u.getResults().size(); i++) {
+                    ul.add(u.getResults().get(i).toGenericModel());
+                }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (GenericException e) {
@@ -169,10 +178,10 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     }
 
     @Override
-    public boolean joinMeeting(int meetingId) throws AutorizationException, ParamsException {
+    public boolean joinMeeting(int meetingId, int targetUserId) throws AutorizationException, ParamsException {
         boolean ok = false;
         try {
-            Response<Void> ret = mServices.joinMeeting(meetingId).execute();
+            Response<Void> ret = mServices.joinMeeting(meetingId, targetUserId).execute();
             if (ret.isSuccessful()) {
                 ok = true;
             } else {
@@ -189,10 +198,10 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     }
 
     @Override
-    public boolean leaveMeeting(int meetingId) throws AutorizationException, ParamsException {
+    public boolean leaveMeeting(int meetingId, int targetUserId) throws AutorizationException, ParamsException {
         boolean ok = false;
         try {
-            Response<Void> ret = mServices.leaveMeeting(meetingId).execute();
+            Response<Void> ret = mServices.leaveMeeting(meetingId, targetUserId).execute();
             if (ret.isSuccessful()) {
                 ok = true;
             } else {
@@ -209,13 +218,17 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
     }
 
     @Override
-    public List<Meeting> getAllMeetingsFilteredByName(String query) {
+    public List<Meeting> getAllMeetingsFilteredByName(String query, int page) {
         List<Meeting> l = new ArrayList<>();
         try {
-            Response<MeetingServer[]> res = mServices.getAllMeetingsFiltered(query).execute();
-            MeetingServer[] array = res.body();
-            for (int i = 0; i < array.length; i++) {
-                l.add(array[i].toGenericModel());
+            int offset = calculateOffset(SOServices.PAGELIMIT, page);
+            Response<PageServer<MeetingServer>> res =
+                    mServices.getAllMeetingsFiltered(SOServices.PAGELIMIT, offset, query).execute();
+            PageServer<MeetingServer> array = res.body();
+            if (array != null) {
+                for (int i = 0; i < array.getResults().size(); i++) {
+                    l.add(array.getResults().get(i).toGenericModel());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -265,14 +278,14 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
                 throw (AutorizationException) e;
             }
         }
-        return m.toGenericModel();
+        return m != null ? m.toGenericModel() : null;
     }
 
     @Override
     public boolean deleteTrackingInMeeting(int userID, int meetingID) throws AutorizationException, NotFoundException {
         boolean ok = true;
         try {
-            Response<Void> ret = mServices.deleteTracking(userID,meetingID).execute();
+            Response<Void> ret = mServices.deleteTracking(userID, meetingID).execute();
             if (!ret.isSuccessful()) {
                 ok = false;
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());

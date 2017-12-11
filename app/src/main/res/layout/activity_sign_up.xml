@@ -1,210 +1,204 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="edu.upc.fib.meetnrun.views.RegisterActivity"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        tools:context="edu.upc.fib.meetnrun.views.RegisterActivity"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/activity_toolbar"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-        <!--    android:theme="@style/Toolbar"  -->
+            android:layout_height="wrap_content">
 
-    </android.support.design.widget.AppBarLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/name"
-                android:textSize="17dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Name:"
-                android:layout_marginTop="19dp"
-                android:layout_marginStart="20dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true" />
-
-            <EditText
-                android:id="@+id/editName"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/activity_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:textSize="17dp"
-                android:layout_below="@+id/name"
-                android:layout_alignStart="@+id/name" />
+                android:background="@color/colorPrimary"
+                android:minHeight="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            <!--    android:theme="@style/Toolbar"  -->
 
-            <TextView
-                android:id="@+id/surname"
-                android:textSize="17dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Surname:"
-                android:layout_marginTop="14dp"
-                android:layout_below="@+id/editName"
-                android:layout_alignStart="@+id/editSurname" />
+        </android.support.design.widget.AppBarLayout>
 
-            <EditText
-                android:id="@+id/editSurname"
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:textSize="17dp"
-                android:layout_below="@+id/surname"
-                android:layout_alignStart="@+id/editName" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="15dp">
 
-            <TextView
-                android:id="@+id/usernameR"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Username:"
-                android:textSize="17dp"
-                android:layout_marginTop="14dp"
-                android:layout_below="@+id/editSurname"
-                android:layout_alignStart="@+id/editSurname" />
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintEnabled="true"
+                    android:layout_marginBottom="10dp">
 
-            <EditText
-                android:id="@+id/editUsernameR"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:textSize="17dp"
-                android:layout_below="@+id/usernameR"
-                android:layout_alignStart="@+id/usernameR" />
+                    <EditText
+                        android:id="@+id/editName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textSize="17dp"
+                        android:hint="Name"/>
 
-            <TextView
-                android:id="@+id/postalCode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Postal Code:"
-                android:textSize="17dp"
-                android:layout_marginTop="14dp"
-                android:layout_below="@+id/editUsernameR"
-                android:layout_alignStart="@+id/editUsernameR" />
 
-            <EditText
-                android:id="@+id/editPostalCode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="number"
-                android:textSize="17dp"
-                android:layout_below="@+id/postalCode"
-                android:layout_alignStart="@+id/postalCode" />
+                </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                android:id="@+id/password1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/editPostalCode"
-                android:layout_below="@+id/editPostalCode"
-                android:layout_marginTop="14dp"
-                android:text="Password (min. 5 characters):"
-                android:textSize="17dp" />
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintEnabled="true"
+                    android:layout_marginBottom="10dp">
 
-            <EditText
-                android:id="@+id/editPassword1"
-                android:textSize="17dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPassword"
-                android:layout_below="@+id/password1"
-                android:layout_alignStart="@+id/password1" />
+                    <EditText
+                        android:id="@+id/editSurname"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textSize="17dp"
+                        android:hint="Surname"/>
 
-            <TextView
-                android:id="@+id/password2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Repeat password:"
-                android:textSize="17dp"
-                android:layout_marginTop="14dp"
-                android:layout_below="@+id/editPassword1"
-                android:layout_alignStart="@+id/editPassword1" />
 
-            <EditText
-                android:id="@+id/editPassword2"
-                android:textSize="17dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPassword"
-                android:layout_below="@+id/password2"
-                android:layout_alignStart="@+id/password2" />
+                </android.support.design.widget.TextInputLayout>
 
-            <Button
-                android:id="@+id/register"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:onClick="register"
-                android:text="Register"
-                android:textSize="13dp"
-                android:layout_marginTop="16dp"
-                android:layout_below="@+id/editAnswer"
-                android:layout_alignParentStart="true" />
 
-            <TextView
-                android:id="@+id/question"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/password2"
-                android:layout_below="@+id/editPassword2"
-                android:text="Security question:"
-                android:textSize="17dp"
-                android:layout_marginTop="14dp" />
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintEnabled="true"
+                    android:layout_marginBottom="10dp">
 
-            <Spinner
-                android:id="@+id/spinnerQuestion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/question"
-                android:layout_alignStart="@+id/editPassword2"
-                android:textSize="17dp" />
+                    <EditText
+                        android:id="@+id/editUsernameR"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textSize="17dp"
+                        android:hint="Username"/>
 
-            <TextView
-                android:id="@+id/answer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignStart="@+id/question"
-                android:layout_below="@+id/spinnerQuestion"
-                android:text="Answer:"
-                android:textSize="17dp"
-                android:layout_marginTop="14dp" />
 
-            <EditText
-                android:id="@+id/editAnswer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/answer"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:layout_alignStart="@+id/spinnerQuestion"
-                android:textSize="17dp" />
+                </android.support.design.widget.TextInputLayout>
 
-        </RelativeLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintEnabled="true"
+                    android:layout_marginBottom="10dp">
 
-    </ScrollView>
+                    <EditText
+                        android:id="@+id/editPostalCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:textSize="17dp"
+                        android:hint="Postal code"/>
 
-</LinearLayout>
 
+                </android.support.design.widget.TextInputLayout>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintEnabled="true"
+                    app:passwordToggleEnabled="true"
+                    android:layout_marginBottom="10dp">
+
+                    <EditText
+                        android:id="@+id/editPassword1"
+                        android:textSize="17dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPassword"
+                        android:hint="Password (min 5 char.)"/>
+
+
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintEnabled="true"
+                    app:passwordToggleEnabled="true"
+                    android:layout_marginBottom="10dp">
+
+                    <EditText
+                        android:id="@+id/editPassword2"
+                        android:textSize="17dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPassword"
+                        android:hint="Repeat password"/>
+
+
+                </android.support.design.widget.TextInputLayout>
+
+                <!--<TextView
+                    android:id="@+id/question"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Security question"
+                    android:textSize="17dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginLeft="5dp"/>-->
+
+                <Spinner
+                    android:id="@+id/spinnerQuestion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="17dp"/>
+
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hintEnabled="true"
+                    android:layout_marginBottom="10dp">
+
+                    <EditText
+                        android:id="@+id/editAnswer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:textSize="17dp"
+                        android:hint="Security answer"/>
+
+
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/register"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:onClick="register"
+                    android:text="Register"
+                    android:textSize="13dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"/>
+
+            </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,11 +1,8 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.support.v4.app.Fragment;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.views.fragments.UsersListFragment;
 
 /**

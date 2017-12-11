@@ -26,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity{
     private Spinner spinnerQuestion;
     private String name, surname, username, password1, quest, answ,pcInt;
     private IUserAdapter controller;
+    private boolean emptyField = false;
     private final static String[] questionsList = {"What is the first name of the person you first kissed?",
                                                                     "What was the name of your primary school?",
                                                                     "What time of the day were you born?",
@@ -41,21 +42,21 @@ public class RegisterActivity extends AppCompatActivity{
 
         controller = CurrentSession.getInstance().getUserAdapter();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_toolbar);
+        Toolbar toolbar = findViewById(R.id.activity_toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        editName = (EditText) findViewById(R.id.editName);
-        editSurname = (EditText) findViewById(R.id.editSurname);
-        editUsername = (EditText) findViewById(R.id.editUsernameR);
-        editPc = (EditText) findViewById(R.id.editPostalCode);
-        editPassword1 = (EditText) findViewById(R.id.editPassword1);
-        editPassword2 = (EditText) findViewById(R.id.editPassword2);
-        spinnerQuestion = (Spinner) findViewById(R.id.spinnerQuestion);
-        editAnswer = (EditText) findViewById(R.id.editAnswer);
+        editName = findViewById(R.id.editName);
+        editSurname = findViewById(R.id.editSurname);
+        editUsername = findViewById(R.id.editUsernameR);
+        editPc = findViewById(R.id.editPostalCode);
+        editPassword1 = findViewById(R.id.editPassword1);
+        editPassword2 = findViewById(R.id.editPassword2);
+        spinnerQuestion = findViewById(R.id.spinnerQuestion);
+        editAnswer = findViewById(R.id.editAnswer);
 
-        spinnerQuestion.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, questionsList));
+        spinnerQuestion.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, questionsList));
     }
 
     public void register(View v) {
@@ -69,22 +70,22 @@ public class RegisterActivity extends AppCompatActivity{
         answ = editAnswer.getText().toString();
 
         if (name.equals("")) {
-            Toast.makeText(getApplicationContext(), "Name field is empty", Toast.LENGTH_SHORT).show();
+            emptyField = true;
         }
         else if (surname.equals("")) {
-            Toast.makeText(getApplicationContext(), "Surname field is empty", Toast.LENGTH_SHORT).show();
+            emptyField = true;
         }
         else if (username.equals("")) {
-            Toast.makeText(getApplicationContext(), "Username field is empty", Toast.LENGTH_SHORT).show();
+            emptyField = true;
         }
         else if (pcInt.equals("")) {
-            Toast.makeText(getApplicationContext(), "Postal code field is empty", Toast.LENGTH_SHORT).show();
+            emptyField = true;
         }
         else if (password1.equals("")) {
-            Toast.makeText(getApplicationContext(), "Password field is empty", Toast.LENGTH_SHORT).show();
+            emptyField = true;
         }
         else if (password2.equals("")) {
-            Toast.makeText(getApplicationContext(), "Repeat password field is empty", Toast.LENGTH_SHORT).show();
+            emptyField = true;
         }
         else if (pcInt.length() != 5) {
             Toast.makeText(getApplicationContext(), "Postal code field is wrong", Toast.LENGTH_SHORT).show();
@@ -97,6 +98,11 @@ public class RegisterActivity extends AppCompatActivity{
         }
         else {
             registerUser();
+        }
+
+        if (emptyField) {
+            Toast.makeText(getApplicationContext(), "Some field is empty", Toast.LENGTH_SHORT).show();
+            emptyField = false;
         }
 
     }

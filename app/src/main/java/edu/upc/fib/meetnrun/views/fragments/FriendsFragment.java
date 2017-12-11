@@ -2,26 +2,11 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.SearchView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
@@ -30,7 +15,10 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 
-public class FriendsFragment extends FriendUserListFragmentTemplate {
+public class FriendsFragment extends FriendListFragmentTemplate {
+
+    @Override
+    protected void initList() {}
 
     @Override
     protected void floatingbutton() {
@@ -47,8 +35,10 @@ public class FriendsFragment extends FriendUserListFragmentTemplate {
     protected void adapter() {}
 
     @Override
-    protected Intent selectIntent() {
-        return new Intent(getActivity(),FriendProfileActivity.class);
+    protected void getIntent(User friend) {
+        Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
+        CurrentSession.getInstance().setFriend(friend);
+        startActivity(friendProfileIntent);
     }
 
     @Override
@@ -61,22 +51,68 @@ public class FriendsFragment extends FriendUserListFragmentTemplate {
         startActivity(intent);
     }
 
+    @Override
+    protected RecyclerViewOnClickListener getRecyclerViewListener() {
+        return new RecyclerViewOnClickListener() {
+            @Override
+            public void onButtonClicked(int position) {}
+
+            @Override
+            public void onItemClicked(int position) {
+
+                User friend = friendsAdapter.getFriendAtPosition(position).getFriend();
+                if (currentUser.getUsername().equals(friend.getUsername())) friend = friendsAdapter.getFriendAtPosition(position).getUser();
+                getIntent(friend);
+
+            }
+        };
+    }
+
     private class getFriends extends AsyncTask<String,String,String> {
 
         @Override
+        protected void onPreExecute() {
+            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+            isLoading = true;
+        }
+
+        @Override
         protected String doInBackground(String... strings) {
+
             try {
-                l = friendsDBAdapter.getUserFriends();
+                l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
             } catch (AutorizationException e) {
                 e.printStackTrace();
+            } catch (NotFoundException e) {
+                e.printStackTrace();
             }
+
             return null;
         }
 
         @Override
         protected void onPostExecute(String s) {
-            friendsAdapter.updateFriendsList(l);
+            if (l != null) {
+                if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
+                else friendsAdapter.addFriends(l);
+
+                if (l.size() == 0) {
+                    isLastPage = true;
+                }
+                else pageNumber++;
+            }
+            swipeRefreshLayout.setRefreshing(false);
+            isLoading = false;
+            progressBar.setVisibility(View.INVISIBLE);
             super.onPostExecute(s);
         }
+
+    }
+
+    @Override
+    public void onResume() {
+        initializePagination();
+        getMethod();
+        super.onResume();
     }
 }

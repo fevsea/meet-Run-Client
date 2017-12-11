@@ -4,24 +4,29 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
-import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.LoginActivity;
 
@@ -34,7 +39,9 @@ public class SettingsFragment extends Fragment {
     private View view;
     private IUserAdapter controller;
     private CurrentSession cs;
-    public static final String MY_PREFS_NAME = "TokenFile";
+    private static final String MY_PREFS_NAME = "TokenFile";
+    Spinner language;
+    Locale myLocale;
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
@@ -43,12 +50,38 @@ public class SettingsFragment extends Fragment {
 
         cs = CurrentSession.getInstance();
         controller = cs.getUserAdapter();
-
+        final Configuration config;
+        config=new Configuration();
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
         TextView text = view.findViewById(R.id.delete_account);
+
+
+        language = view.findViewById(R.id.spinnerLanguage);
+        setLanguanges();
+
+        language.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position==0){
+                    setLocale("en");
+                }
+                else if (position==1){
+                    setLocale("es");
+                }
+                else if (position==2){
+                    setLocale("ca");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {}
+        });
+
+
         text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -99,6 +132,26 @@ public class SettingsFragment extends Fragment {
         dialog.show();
     }
 
+    private void setLanguanges(){
+        String[] languages={
+                "English", "Spanish", "Catalan"
+        };
+        language.setAdapter(new ArrayAdapter<CharSequence>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, languages));
+
+    }
+
+    public void setLocale(String lang) {
+
+        myLocale = new Locale(lang);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+
+    }
+
+
     private class deleteAccount extends AsyncTask<String,String,String> {
 
         boolean ok = false;
@@ -106,11 +159,9 @@ public class SettingsFragment extends Fragment {
         @Override
         protected String doInBackground(String... s) {
             try {
-                controller.deleteUserByID(cs.getCurrentUser().getId().intValue());
+                controller.deleteUserByID(cs.getCurrentUser().getId());
                 ok = true;
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            } catch (AutorizationException e) {
+            } catch (NotFoundException | AutorizationException e) {
                 e.printStackTrace();
             }
             return null;

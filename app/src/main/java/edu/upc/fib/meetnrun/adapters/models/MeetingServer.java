@@ -10,7 +10,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 
-public class MeetingServer {
+public class MeetingServer implements IServerModel {
 
     @SerializedName("id")
     @Expose
@@ -42,6 +42,9 @@ public class MeetingServer {
     @SerializedName("participants")
     @Expose
     private List<UserServer> participants;
+    @SerializedName("chat")
+    @Expose
+    private Integer chatID;
 
     /**
      * No args constructor for use in serialization
@@ -49,7 +52,7 @@ public class MeetingServer {
     public MeetingServer() {
     }
 
-    public MeetingServer(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) {
+    public MeetingServer(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID) {
         this.title = title;
         this.description = description;
         this._public = _public;
@@ -57,9 +60,10 @@ public class MeetingServer {
         this.date = date;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.chatID = chatID;
     }
 
-    public MeetingServer(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, UserServer owner, List<UserServer> participants) {
+    public MeetingServer(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID, UserServer owner, List<UserServer> participants) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -68,6 +72,7 @@ public class MeetingServer {
         this.date = date;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.chatID = chatID;
         this.owner = owner;
         this.participants = participants;
     }
@@ -82,6 +87,7 @@ public class MeetingServer {
         this.date = m.getDate();
         this.latitude = m.getLatitude();
         this.longitude = m.getLongitude();
+        this.chatID = m.getChatID();
         this.owner = new UserServer(m.getOwner());
         List<UserServer> us = new ArrayList<>();
         List<User> u = m.getParticipants();
@@ -99,7 +105,7 @@ public class MeetingServer {
                 ul.add(sl.get(i).toGenericModel());
             }
         }
-        return new Meeting(id, title, description, _public, level, date, latitude, longitude, owner.toGenericModel(), ul);
+        return new Meeting(id, title, description, _public, level, date, latitude, longitude,chatID ,owner.toGenericModel(), ul);
     }
 
     public Integer getId() {
@@ -188,5 +194,21 @@ public class MeetingServer {
 
     public void setParticipants(List<UserServer> participants) {
         this.participants = participants;
+    }
+
+    public UserServer getOwner() {
+        return owner;
+    }
+
+    public void setOwner(UserServer owner) {
+        this.owner = owner;
+    }
+
+    public Integer getChatID() {
+        return chatID;
+    }
+
+    public void setChatID(Integer chatID) {
+        this.chatID = chatID;
     }
 }

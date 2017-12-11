@@ -1,40 +1,51 @@
 package edu.upc.fib.meetnrun.views;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.services.FirebaseInstanceService;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText editUsername, editPassword;
     private String username, password;
-    public static final String MY_PREFS_NAME = "TokenFile";
+    private static final String MY_PREFS_NAME = "TokenFile";
     private ILoginAdapter loginAdapter;
     private CurrentSession cs;
-    private ProgressBar progress;
+    private boolean see = false;
+
+    private static final String TAG = LoginActivity.class.getSimpleName();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        editUsername = (EditText) findViewById(R.id.editUsername);
-        editPassword = (EditText) findViewById(R.id.editPassword);
-        progress = (ProgressBar) findViewById(R.id.progressBar);
-        progress.setVisibility(View.INVISIBLE);
+        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG, "Actual token token: " + refreshedToken);
+
+        editUsername = findViewById(R.id.editUsername);
+        editPassword = findViewById(R.id.editPassword);
 
         cs = CurrentSession.getInstance();
         loginAdapter = cs.getLoginAdapter();
@@ -71,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void changeToMainActivity() {
-        Intent intent = new Intent(this, MeetingListActivity.class);
+        Intent intent = new Intent(this, DrawerActivity.class);
         finish();
         startActivity(intent);
     }
@@ -81,6 +92,11 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("token", cs.getToken());
         editor.commit();
+    }
+
+    private void updateFirebaseToken(){
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
+        new FirebaseInstanceService().onTokenRefresh();
     }
 
     private class login extends AsyncTask<String,String,String> {
@@ -100,6 +116,7 @@ public class LoginActivity extends AppCompatActivity {
             if(token != null && !token.equals("")){
                 cs.setToken(token);
                 saveToken();
+                updateFirebaseToken();
                 try {
                     u = loginAdapter.getCurrentUser();
                     //TODO Pending to catch correctly
@@ -127,10 +144,16 @@ public class LoginActivity extends AppCompatActivity {
 
         User user = null;
         boolean ok = false;
+        ProgressDialog mProgressDialog;
 
         @Override
         protected void onPreExecute() {
-            progress.setVisibility(View.VISIBLE);
+            mProgressDialog = new ProgressDialog(LoginActivity.this);
+            mProgressDialog.setTitle(R.string.login);
+            mProgressDialog.setMessage(getResources().getString(R.string.getting_current_session));
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.show();
             super.onPreExecute();
         }
 
@@ -149,11 +172,13 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            progress.setVisibility(View.INVISIBLE);
             if (ok) {
                 cs.setCurrentUser(user);
+                mProgressDialog.dismiss();
                 changeToMainActivity();
             }
+            else deleteToken();
+            mProgressDialog.dismiss();
             super.onPostExecute(s);
         }
     }

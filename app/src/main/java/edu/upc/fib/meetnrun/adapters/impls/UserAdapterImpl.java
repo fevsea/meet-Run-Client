@@ -7,27 +7,52 @@ import java.util.List;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
+import edu.upc.fib.meetnrun.adapters.models.PageServer;
+import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.remote.SOServices;
 import retrofit2.Response;
 
-import static edu.upc.fib.meetnrun.adapters.utils.Utils.checkErrorCodeAndThowException;
+import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.calculateOffset;
+import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.checkErrorCodeAndThowException;
 
 /**
  * Created by Awais Iqbal on 07/11/2017.
  */
 
 public class UserAdapterImpl implements IUserAdapter {
-    private SOServices mServices;
+    private final SOServices mServices;
 
     public UserAdapterImpl(SOServices soServices) {
         mServices = soServices;
+    }
+
+    public List<User> getAllUsers(int page) {
+        PageServer<UserServer> pus = null;
+        try {
+            int offset = calculateOffset(SOServices.PAGELIMIT, page);
+            Response<PageServer<UserServer>> ret = mServices.getAllUsers(SOServices.PAGELIMIT, offset).execute();
+            if (!ret.isSuccessful())
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            pus = ret.body();
+        } catch (IOException | GenericException e) {
+            e.printStackTrace();
+        }
+        List<User> lu = new ArrayList<>();
+        if (pus != null) {
+            List<UserServer> lus = pus.getResults();
+            for (int i = 0; i < lus.size(); i++) {
+                lu.add(lus.get(i).toGenericModel());
+            }
+        }
+        return lu;
     }
 
     @Override
@@ -44,7 +69,7 @@ public class UserAdapterImpl implements IUserAdapter {
             e.printStackTrace();
             if (e instanceof NotFoundException) throw (NotFoundException) e;
         }
-        return us.toGenericModel();
+        return us != null ? us.toGenericModel() : null;
     }
 
     @Override
@@ -95,20 +120,6 @@ public class UserAdapterImpl implements IUserAdapter {
         return ok;
     }
 
-    @Override
-    public List<User> getAllUsers() {
-        List<User> l = new ArrayList<>();
-        try {
-            Response<UserServer[]> res = mServices.getUsers().execute();
-            UserServer[] array = res.body();
-            for (int i = 0; i < array.length; i++) {
-                l.add(array[i].toGenericModel());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return l;
-    }
 
     @Override
     public User registerUser(String userName, String firstName, String lastName, String postCode, String password, String question, String answer) throws ParamsException {
@@ -128,35 +139,76 @@ public class UserAdapterImpl implements IUserAdapter {
                 throw (ParamsException) e;
             }
         }
-        return u.toGenericModel();
+        return u != null ? u.toGenericModel() : null;
 
     }
 
+
+    /**
+     * Given a target UserID and a Filter, returns all the meeting who meet the conditions
+     *
+     * @param targetUserId Target user who most be in the meeting
+     * @param filterByTime Filter can be : past, future, all
+     * @return List of {@link List<Meeting>}
+     * @throws AutorizationException
+     * @throws ParamsException
+     */
     @Override
-        public List<Meeting> getUsersFutureMeetings(int userId) throws AutorizationException, ParamsException {
-            List<Meeting> ul = new ArrayList<>();
-            try {
-                Response<List<MeetingServer>> ret = mServices.getAllFutureMeetings(userId).execute();
-                if (!ret.isSuccessful())
-                    checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+    public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime) throws AutorizationException, ParamsException {
+        List<Meeting> ul = new ArrayList<>();
+        try {
+            Response<List<MeetingServer>> ret =
+                    mServices.getUserMeetingFilteredMeetings(targetUserId, filterByTime).execute();
+            if (!ret.isSuccessful())
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
 
-                List<MeetingServer> u = ret.body();
-
+            List<MeetingServer> u = ret.body();
+            if (u != null) {
                 for (int i = 0; i < u.size(); i++) {
                     ul.add(u.get(i).toGenericModel());
                 }
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (GenericException e) {
-                e.printStackTrace();
-                if (e instanceof AutorizationException) {
-                    throw (AutorizationException) e;
-                } else if (e instanceof ParamsException) {
-                    throw (ParamsException) e;
-                }
             }
-            return ul;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GenericException e) {
+            e.printStackTrace();
+            if (e instanceof AutorizationException) {
+                throw (AutorizationException) e;
+            } else if (e instanceof ParamsException) {
+                throw (ParamsException) e;
+            }
         }
+        return ul;
+    }
+
+    @Override
+    public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException {
+        return getUserMeetingsFilteres(targetUserId, "future");
+    }
+
+    @Override
+    public List<Meeting> getUserPastMeetings(int targetUserId) throws AutorizationException, ParamsException {
+        return getUserMeetingsFilteres(targetUserId, "past");
+    }
+
+    public Statistics getUserStatisticsByID(int id) throws AutorizationException {
+
+        StatisticsServer ss = null;
+        try {
+            Response<StatisticsServer> ret = mServices.getUserStatisticsByID(id).execute();
+            if (!ret.isSuccessful()) {
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            }
+            ss = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GenericException e) {
+            e.printStackTrace();
+            if (e instanceof AutorizationException) {
+                throw (AutorizationException) e;
+            }
+        }
+        return ss != null ? ss.toGenericModel() : null;
+    }
 
 }

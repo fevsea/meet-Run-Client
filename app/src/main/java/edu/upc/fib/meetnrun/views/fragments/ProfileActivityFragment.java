@@ -1,10 +1,11 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,9 +30,40 @@ import java.util.Scanner;
 
 public class ProfileActivityFragment extends Fragment {
 
-    User u;
+    private User u;
     private View view;
-    TextView userPostCodeTextView;
+    private TextView userPostCodeTextView;
+
+    private String title;
+    private int page;
+
+
+    // newInstance constructor for creating fragment with arguments
+    public static ProfileActivityFragment newInstance(int page, String title) {
+        ProfileActivityFragment fragmentFirst = new ProfileActivityFragment();
+        Bundle args = new Bundle();
+        args.putInt("0", page);
+        args.putString("Info", title);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
+    }
+
+    // Store instance variables based on arguments passed
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        page = getArguments().getInt("0", 0);
+        title = getArguments().getString("Info");
+    }
+
+    private GradientDrawable getColoredCircularShape(char letter) {
+
+        int[] colors = view.getResources().getIntArray(R.array.colors);
+        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(view.getContext(),R.drawable.user_profile_circular_text_view);
+        int position = letter%colors.length;
+        circularShape.setColor(colors[position]);
+        return circularShape;
+    }
 
 
     @Override
@@ -46,9 +78,15 @@ public class ProfileActivityFragment extends Fragment {
         String postCode = u.getPostalCode();
 
 
-        TextView userNameTextView = (TextView) view.findViewById(R.id.userName);
-        TextView nameTextView = (TextView) view.findViewById(R.id.completeName);
-        userPostCodeTextView = (TextView) view.findViewById(R.id.userPostCode);
+        TextView userNameTextView = view.findViewById(R.id.userName);
+        TextView nameTextView = view.findViewById(R.id.completeName);
+        userPostCodeTextView = view.findViewById(R.id.userPostCode);
+
+        TextView userPhoto = view.findViewById(R.id.userProfileImage);
+        char letter = u.getUsername().charAt(0);
+        String firstLetter = String.valueOf(letter);
+        userPhoto.setBackground(getColoredCircularShape(letter));
+        userPhoto.setText(firstLetter);
 
 
         userNameTextView.setText(userName);
@@ -74,12 +112,6 @@ public class ProfileActivityFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
-        fab.setImageResource(android.R.drawable.ic_menu_edit);
-        fab.setVisibility(View.GONE);
-
 
         return view;
     }

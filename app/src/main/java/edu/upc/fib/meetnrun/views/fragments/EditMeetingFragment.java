@@ -65,10 +65,10 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
     private Meeting meeting; //= new Meeting(1, "HOLA", "Descr \n ipcion \n rand \n om", false, 5, new Date().toString(), "41", "2");
     private IMeetingAdapter controller;
     private boolean thereWasAnAttemptToSave = false;
-    EditText titleText;
-    EditText descriptionText;
-    EditText levelText;
-    ScrollView scrollView;
+    private EditText titleText;
+    private EditText descriptionText;
+    private EditText levelText;
+    private ScrollView scrollView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,14 +92,14 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
     private void populateViews(){
 
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        titleText = (EditText) view.findViewById(R.id.meeting_title);
+        titleText = view.findViewById(R.id.meeting_title);
         titleText.setText(meeting.getTitle());
-        descriptionText = (EditText) view.findViewById(R.id.meeting_description);
+        descriptionText = view.findViewById(R.id.meeting_description);
         descriptionText.setText(meeting.getDescription());
-        EditText dateText = (EditText) view.findViewById(R.id.meeting_date);
+        EditText dateText = view.findViewById(R.id.meeting_date);
         Calendar date = new GregorianCalendar();
         //date.setTime(meeting.getDateTime());
         Log.i("DATE", meeting.getDate());
@@ -116,21 +116,21 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
         int month = date.get(Calendar.MONTH);
         int day = date.get(Calendar.DAY_OF_MONTH);
         dateText.setText(((day<10)?"0"+day:day) + "/" + (((month+1)<10)?"0"+(month+1):(month+1)) + "/" + year);
-        EditText timeText = (EditText) view.findViewById(R.id.meeting_time);
+        EditText timeText = view.findViewById(R.id.meeting_time);
         int hour = date.get(Calendar.HOUR_OF_DAY);
         int minute = date.get(Calendar.MINUTE);
         timeText.setText(((hour<10)?"0"+hour:hour) + ":" + ((minute<10)?"0"+minute:minute));
-        Switch isPublic = (Switch) view.findViewById(R.id.isPublic);
+        Switch isPublic = view.findViewById(R.id.isPublic);
         isPublic.setChecked(meeting.getPublic());
-        levelText = (EditText) view.findViewById(R.id.meeting_level);
+        levelText = view.findViewById(R.id.meeting_level);
         levelText.setText(String.valueOf(meeting.getLevel()));
-        scrollView = (ScrollView) view.findViewById(R.id.scrollView);
+        scrollView = view.findViewById(R.id.scrollView);
 
-        Button changeDateButton = (Button) view.findViewById(R.id.change_date_button);
+        Button changeDateButton = view.findViewById(R.id.change_date_button);
         changeDateButton.setOnClickListener(this);
-        Button changeTimeButton = (Button) view.findViewById(R.id.change_time_button);
+        Button changeTimeButton = view.findViewById(R.id.change_time_button);
         changeTimeButton.setOnClickListener(this);
-        Button changeLocationButton = (Button) view.findViewById(R.id.change_location_button);
+        Button changeLocationButton = view.findViewById(R.id.change_location_button);
         changeLocationButton.setOnClickListener(this);
         isPublic.setOnCheckedChangeListener(this);
 
@@ -158,7 +158,7 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
     }
 
     private void showDatePickerDialog() {
-        final EditText dateText = (EditText) view.findViewById(R.id.meeting_date);
+        final EditText dateText = view.findViewById(R.id.meeting_date);
         DatePickerFragment datePickerFragment = new DatePickerFragment();
         datePickerFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -200,7 +200,7 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
     }
 
     private void showTimePickerDialog() {
-        final EditText timeText = (EditText) view.findViewById(R.id.meeting_time);
+        final EditText timeText = view.findViewById(R.id.meeting_time);
         TimePickerFragment timePickerFragment = new TimePickerFragment();
         timePickerFragment.setListener(new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -369,7 +369,7 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
         protected void onPostExecute(Meeting result) {
             meeting = result;
             if (meeting == null ) {
-                meeting = new Meeting(1, "HOLA", "Descr \n ipcion \n rand \n om", false, 5, new Date().toString(), "41", "2");
+                meeting = new Meeting(1, "HOLA", "Descr \n ipcion \n rand \n om", false, 5, new Date().toString(), "41", "2", null);
                 Toast.makeText(getActivity(), getResources().getString(R.string.error_loading_meeting), Toast.LENGTH_SHORT).show();
             }
             populateViews();

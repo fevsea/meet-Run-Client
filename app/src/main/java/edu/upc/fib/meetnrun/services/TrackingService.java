@@ -42,7 +42,7 @@ import edu.upc.fib.meetnrun.views.TrackingActivity;
 
 public class TrackingService extends Service {
 
-    private IBinder binder = new TrackingBinder();
+    private final IBinder binder = new TrackingBinder();
 
     private static final String TAG = "TrackingService";
     private GoogleApiClient mClient;
@@ -89,6 +89,9 @@ public class TrackingService extends Service {
     }
 
     public void onLogInDone() {
+        if (mClient != null)
+            mClient.disconnect();
+        mClient = null;
         buildFitnessClient();
     }
 
@@ -101,6 +104,7 @@ public class TrackingService extends Service {
                     .addApi(Fitness.HISTORY_API)
                     .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
                     .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ))
+                    .addScope(new Scope(Scopes.PROFILE))
                     .addConnectionCallbacks(
                             new GoogleApiClient.ConnectionCallbacks() {
                                 @Override
@@ -125,7 +129,7 @@ public class TrackingService extends Service {
                         public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
                             Log.e(TAG, "Google APIs unable to connect");
                             Log.e(TAG, "Reason: " + connectionResult);
-                            notifyUIError(connectionResult.getResolution());
+                            notifyUIError(connectionResult);
                         }
                     })
                     .build();
@@ -198,7 +202,7 @@ public class TrackingService extends Service {
                 });
     }
 
-    private OnDataPointListener locationListener =  new OnDataPointListener() {
+    private final OnDataPointListener locationListener =  new OnDataPointListener() {
         @Override
         public void onDataPoint(DataPoint dataPoint) {
             float latitude = 0f, longitude = 0f;
@@ -222,7 +226,7 @@ public class TrackingService extends Service {
         }
     };
 
-    private OnDataPointListener stepListener = new OnDataPointListener() {
+    private final OnDataPointListener stepListener = new OnDataPointListener() {
         @Override
         public void onDataPoint(DataPoint dataPoint) {
             int currentStep = 0;
@@ -241,10 +245,10 @@ public class TrackingService extends Service {
         }
     };
 
-    private OnDataPointListener distanceListener = new OnDataPointListener() {
+    private final OnDataPointListener distanceListener = new OnDataPointListener() {
         @Override
         public void onDataPoint(DataPoint dataPoint) {
-            float distance = trackingData.getDistance();;
+            float distance = trackingData.getDistance();
             float speed = 0f;
             for (Field field : dataPoint.getDataType().getFields()) {
                 Value val = dataPoint.getValue(field);
@@ -267,7 +271,7 @@ public class TrackingService extends Service {
         }
     };
 
-    private OnDataPointListener caloriesListener = new OnDataPointListener() {
+    private final OnDataPointListener caloriesListener = new OnDataPointListener() {
         @Override
         public void onDataPoint(DataPoint dataPoint) {
             float calories = 0f;
@@ -290,10 +294,10 @@ public class TrackingService extends Service {
         sendBroadcast(broadcastIntent);
     }
 
-    private void notifyUIError(PendingIntent pendingIntent) {
+    private void notifyUIError(ConnectionResult connectionResult/*PendingIntent pendingIntent*/) {
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(TrackingActivity.BROADCAST_TRACKING_ERROR);
-        broadcastIntent.putExtra("error", pendingIntent);
+        broadcastIntent.putExtra("error", connectionResult);
         sendBroadcast(broadcastIntent);
     }
 

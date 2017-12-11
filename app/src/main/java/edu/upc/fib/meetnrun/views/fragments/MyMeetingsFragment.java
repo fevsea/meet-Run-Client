@@ -19,11 +19,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.TrackingActivity;
@@ -38,6 +42,7 @@ public class MyMeetingsFragment extends Fragment {
     private MyMeetingsAdapter meetingsAdapter;
     private View view;
     private IMeetingAdapter meetingController;
+    private IChatAdapter chatAdapter;
     private IUserAdapter userController;
     public MyMeetingsFragment() {
 
@@ -49,11 +54,12 @@ public class MyMeetingsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
         meetingController = CurrentSession.getInstance().getMeetingAdapter();
+        chatAdapter = CurrentSession.getInstance().getChatAdapter();
         userController = CurrentSession.getInstance().getUserAdapter();
         setupRecyclerView();
 
         FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.activity_fab);
+                getActivity().findViewById(R.id.activity_fab);
         fab.setImageResource(R.drawable.add_group_512);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +68,7 @@ public class MyMeetingsFragment extends Fragment {
             }
         });
         final SwipeRefreshLayout swipeRefreshLayout =
-                (SwipeRefreshLayout) view.findViewById(R.id.fragment_meeting_swipe);
+                view.findViewById(R.id.fragment_meeting_swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -93,10 +99,11 @@ public class MyMeetingsFragment extends Fragment {
 
             @Override
             public void onMeetingClicked(int position) {
-                Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Showing selectedUsers meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
+                meetingInfoIntent.putExtra("chat",meeting.getChatID());
                 meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
                 meetingInfoIntent.putExtra("id",meeting.getId());
                 meetingInfoIntent.putExtra("description",meeting.getDescription());
@@ -121,7 +128,6 @@ public class MyMeetingsFragment extends Fragment {
 
     private void createNewMeeting() {
         Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
-        getActivity().finish();
         startActivity(intent);
     }
 
@@ -147,7 +153,7 @@ public class MyMeetingsFragment extends Fragment {
                     getString(R.string.ok), getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        new LeaveMeeting().execute(meeting.getId());
+                        new LeaveMeeting().execute(meeting.getId(),meeting.getChatID());
                     }
                 },
                 new DialogInterface.OnClickListener() {
@@ -167,9 +173,7 @@ public class MyMeetingsFragment extends Fragment {
             //TODO handle exceptions
             try {
                 l = userController.getUsersFutureMeetings(integers[0]);
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
+            } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;
@@ -183,16 +187,25 @@ public class MyMeetingsFragment extends Fragment {
         }
     }
 
+    /*
+        LeaveMeeting.execute(meetingId,chatId)
+     */
     private class LeaveMeeting extends AsyncTask<Integer,String,String> {
 
         @Override
         protected String doInBackground(Integer... integers) {
             //TODO handle exceptions
             try {
-                meetingController.leaveMeeting(integers[0]);
-            } catch (AutorizationException e) {
+                //TODO possible millora: crida al servidor leaveChat
+                meetingController.leaveMeeting(integers[0],CurrentSession.getInstance().getCurrentUser().getId());
+                Chat chat = chatAdapter.getChat(integers[1]);
+                List<User> chatUsers = chat.getListUsersChat();
+                chatUsers.remove(CurrentSession.getInstance().getCurrentUser());
+                chat.setListUsersChat(chatUsers);
+                chatAdapter.updateChat(chat);
+            } catch (AutorizationException | ParamsException e) {
                 e.printStackTrace();
-            } catch (ParamsException e) {
+            } catch (NotFoundException e) {
                 e.printStackTrace();
             }
             return null;

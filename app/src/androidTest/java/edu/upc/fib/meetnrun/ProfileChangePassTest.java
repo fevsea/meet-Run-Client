@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun;
+/*package edu.upc.fib.meetnrun;
 
 import android.support.test.espresso.intent.Intents;
 import android.support.test.filters.SmallTest;
@@ -13,7 +13,6 @@ import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.ChangePasswordActivity;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ProfileActivity;
 import edu.upc.fib.meetnrun.views.fragments.ChangePasswordFragment;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -32,7 +31,7 @@ public class ProfileChangePassTest {
     private User u;
 
     @Rule
-    public ActivityTestRule<ChangePasswordActivity> activityRule = new ActivityTestRule<ChangePasswordActivity>(
+    public final ActivityTestRule<ChangePasswordActivity> activityRule = new ActivityTestRule<ChangePasswordActivity>(
             ChangePasswordActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
@@ -72,6 +71,6 @@ public class ProfileChangePassTest {
         Intents.release();
 
     }
-}
+}*/
 
 

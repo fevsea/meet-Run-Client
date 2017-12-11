@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun;
+/*package edu.upc.fib.meetnrun;
 
 
 import com.google.android.gms.maps.model.LatLng;
@@ -15,7 +15,7 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.TrackingData;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.utils.JsonUtils;
+import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 
 public class MockMeetingAdapter implements IMeetingAdapter {
 
@@ -125,12 +125,12 @@ public class MockMeetingAdapter implements IMeetingAdapter {
     private void checkErrorCodeAndThowException(int code, String string) throws GenericException {
         switch (code) {
             case 400:
-                throw JsonUtils.CreateParamExceptionFromJson(string);
+                throw UtilsGlobal.CreateParamExceptionFromJson(string);
             case 401:
-                throw JsonUtils.CreateAutorizationExceptionFromJson(string);
+                throw UtilsGlobal.CreateAutorizationExceptionFromJson(string);
             case 404:
-                throw JsonUtils.CreateNotFoundExceptionFromJson(string);
+                throw UtilsGlobal.CreateNotFoundExceptionFromJson(string);
         }
     }
 
-}
+}*/

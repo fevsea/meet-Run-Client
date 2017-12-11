@@ -2,7 +2,6 @@ package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,7 +13,8 @@ import edu.upc.fib.meetnrun.models.Meeting;
 public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
 
     private List<Meeting> meetings;
-    private RecyclerViewOnClickListener listener;
+    private final RecyclerViewOnClickListener listener;
+    private List<Meeting> myMeetings;
 
     public MeetingsAdapter(List<Meeting> meetings, RecyclerViewOnClickListener listener) {
         this.meetings = meetings;
@@ -32,7 +32,13 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
     @Override
     public void onBindViewHolder(final MeetingsViewHolder holder, int position) {
         Meeting meeting = meetings.get(position);
-        holder.bindMeeting(meeting);
+        boolean joined = false;
+        if (myMeetings != null) {
+            for (Meeting joinedMeeting : myMeetings) {
+                if (joinedMeeting.getId().equals(meeting.getId())) joined = true;
+            }
+        }
+        holder.bindMeeting(meeting,joined);
     }
 
     @Override
@@ -41,8 +47,18 @@ public class MeetingsAdapter extends RecyclerView.Adapter<MeetingsViewHolder> {
     }
 
 
+    public void addMeetings(List<Meeting> meetings) {
+        this.meetings.addAll(meetings);
+        notifyDataSetChanged();
+    }
+
     public void updateMeetingsList(List<Meeting> meetings) {
         this.meetings = meetings;
+        notifyDataSetChanged();
+    }
+
+    public void setMyMeetings(List<Meeting> meetings) {
+        this.myMeetings = meetings;
         notifyDataSetChanged();
     }
 

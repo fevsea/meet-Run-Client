@@ -1,8 +1,6 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.Manifest;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -23,14 +21,15 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.FitnessOptions;
+import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -71,27 +70,36 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
     private static final int DEFAULT_ZOOM = 17;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-    private boolean mLocationPermissionGranted;
-    FusedLocationProviderClient mFusedLocationProviderClient;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
 
-    Chronometer chronometer;
-    TextView stepsCounter;
-    TextView speedCounter;
-    TextView distanceCounter;
-    TextView caloriesCounter;
-    FloatingActionButton pauseButton;
+    private Chronometer chronometer;
+    private TextView stepsCounter;
+    private TextView speedCounter;
+    private TextView distanceCounter;
+    private TextView caloriesCounter;
+    private FloatingActionButton pauseButton;
+    private LinearLayout contentMain;
+
+    private ProgressBar progressBar;
 
     private Integer meetingId;
 
     private TrackingService trackingService;
     private boolean mBound;
+    private final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 0533;
+
+    private String stepsText;
+    private String speedText;
+    private String caloriesText;
+    private String distanceText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracking);
 
-        Integer meetingId = getIntent().getIntExtra("id", -1);
+        meetingId = getIntent().getIntExtra("id", -1);
         if (meetingId == -1) {
             Toast.makeText(this, R.string.tracking_error_loading, Toast.LENGTH_LONG).show();
             finish();
@@ -109,18 +117,27 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
 
 
+        stepsText = getResources().getString(R.string.tracking_steps);
+        distanceText = getResources().getString(R.string.tracking_distance);
+        speedText = getResources().getString(R.string.tracking_speed);
+        caloriesText = getResources().getString(R.string.tracking_calories);
+
         chronometer = findViewById(R.id.chronometer);
         chronometer.start();
         stepsCounter = findViewById(R.id.steps);
-        stepsCounter.setText(String.valueOf(0) + " steps");
+        stepsCounter.setText(String.format(Locale.forLanguageTag("es"), stepsText, 0));
         speedCounter = findViewById(R.id.speed);
-        speedCounter.setText("0 m/s");
+        speedCounter.setText(String.format(Locale.forLanguageTag("es"), speedText, 0.0f));
         distanceCounter = findViewById(R.id.distance);
-        distanceCounter.setText("0 m");
+        distanceCounter.setText(String.format(Locale.forLanguageTag("es"), distanceText, 0.0f));
         caloriesCounter = findViewById(R.id.calories);
-        caloriesCounter.setText("0 kcal");
+        caloriesCounter.setText(String.format(Locale.forLanguageTag("es"), caloriesText, 0.0f));
 
         pauseButton = findViewById(R.id.pause_fab);
+
+        contentMain = findViewById(R.id.content_main);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setIndeterminate(true);
 
         pauseButton.setOnClickListener(this);
 
@@ -132,6 +149,25 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
         Intent serviceIntent = new Intent(this, TrackingService.class);
         startService(serviceIntent);
+
+        FitnessOptions fitnessOptions = FitnessOptions.builder()
+                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_LOCATION_SAMPLE, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_SPEED, FitnessOptions.ACCESS_READ)
+                .build();
+
+        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
+            GoogleSignIn.requestPermissions(
+                    this,
+                    GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
+                    GoogleSignIn.getLastSignedInAccount(this),
+                    fitnessOptions);
+        }
+        else if(trackingService != null) {
+            trackingService.onLogInDone();
+        }
     }
 
 
@@ -163,16 +199,6 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        mLocationPermissionGranted = false;
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    mLocationPermissionGranted = true;
-                }
-            }
-        }
         enableLocationButtonAndView();
     }
 
@@ -206,15 +232,15 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
      */
     try {
         if (checkPermissions()) {
-                Task locationResult = mFusedLocationProviderClient.getLastLocation();
-                locationResult.addOnCompleteListener(this, new OnCompleteListener() {
+                Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+                locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             Location location = (Location) task.getResult();
                             if (location != null) {
-                                ArrayList<LatLng> routePoints = new ArrayList<LatLng>();
+                                ArrayList<LatLng> routePoints = new ArrayList<>();
                                 routePoints.add(new LatLng(location.getLatitude(), location.getLongitude()));
                                 updateLocationViews(routePoints);
                             }
@@ -292,23 +318,17 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private void save() {
         SaveTrackingData saveTrackingData = new SaveTrackingData();
         saveTrackingData.execute(trackingData);
-        stopService(new Intent(this, TrackingService.class));
     }
 
     private class SaveTrackingData extends AsyncTask<TrackingData, String, Boolean> {
 
         Exception exception = null;
-        ProgressDialog mProgressDialog;
 
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressDialog = new ProgressDialog(TrackingActivity.this);
-            mProgressDialog.setTitle(R.string.saving);
-            mProgressDialog.setMessage(getResources().getString(R.string.saving_tracking_data));
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.show();
+            contentMain.setVisibility(View.GONE);
+            pauseButton.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -317,6 +337,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                 IMeetingAdapter meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
                 Integer userID = CurrentSession.getInstance().getCurrentUser().getId();
                 TrackingData td = params[0];
+                Log.i(TAG, "Saving for (user, meeting)" + userID + " " + meetingId);
                 Log.i(TAG, "Saving... " + params[0].toString());
                 meetingAdapter.addTracking(userID, meetingId, td.getAverageSpeed(), td.getDistance(), td.getSteps(), td.getTotalTimeMillis(), td.getCalories(), td.getRoutePoints());
             } catch (ForbiddenException | AutorizationException e) {
@@ -328,10 +349,10 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
         @Override
         protected void onPostExecute(Boolean result) {
-            mProgressDialog.dismiss();
             if (exception != null || !result) {
                 Toast.makeText(TrackingActivity.this, getResources().getString(R.string.tracking_error_toast_message), Toast.LENGTH_LONG).show();
             }
+            stopService(new Intent(TrackingActivity.this, TrackingService.class));
             finish();
         }
 
@@ -339,30 +360,28 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.e(TAG, "onActivityResult" + resultCode);
+        Log.e(TAG, "onActivityResult (requestCode+resultCode) " + requestCode+ " " + resultCode);
 
-        if (requestCode == ConnectionResult.SIGN_IN_REQUIRED) {
+        if (requestCode == ConnectionResult.SIGN_IN_REQUIRED || requestCode == GOOGLE_FIT_PERMISSIONS_REQUEST_CODE) {
 
             if (resultCode == ConnectionResult.SUCCESS) {
                 Log.i(TAG, "SIGN IN SUCCESS");
-                if (trackingService != null) {
-                    trackingService.onLogInDone();
-                }
             }
+            trackingService.onLogInDone();
 
         }
 
     }
 
     private void updateUI(TrackingData trackingData) {
-        distanceCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", trackingData.getDistance()) + " m");
-        speedCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", trackingData.getAverageSpeed()) + " m/s");
-        caloriesCounter.setText(String.format(Locale.forLanguageTag("ES"), "%.2f", trackingData.getCalories()) + " kcal");
-        stepsCounter.setText(String.valueOf(trackingData.getSteps()) + " steps");
+        distanceCounter.setText(String.format(Locale.forLanguageTag("ES"), distanceText, trackingData.getDistance()));
+        speedCounter.setText(String.format(Locale.forLanguageTag("ES"), speedText, trackingData.getAverageSpeed()));
+        caloriesCounter.setText(String.format(Locale.forLanguageTag("ES"), caloriesText, trackingData.getCalories()));
+        stepsCounter.setText(String.format(Locale.forLanguageTag("es"), stepsText ,trackingData.getSteps()));
         updateLocationViews(trackingData.getRoutePoints());
     }
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             trackingData = intent.getParcelableExtra("Data");
@@ -371,9 +390,9 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
             }
             else {
 
-                PendingIntent pendingIntent = intent.getParcelableExtra("error");
+                ConnectionResult connectionResult = intent.getParcelableExtra("error");
                 try {
-                    startIntentSenderForResult(pendingIntent.getIntentSender(), ConnectionResult.SIGN_IN_REQUIRED,null,0,0,0);
+                    connectionResult.startResolutionForResult(TrackingActivity.this, ConnectionResult.SIGN_IN_REQUIRED);
                 }
                 catch (IntentSender.SendIntentException ex) {
                     Log.e(TAG, ex.toString());
@@ -383,7 +402,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         }
     };
 
-    private ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {

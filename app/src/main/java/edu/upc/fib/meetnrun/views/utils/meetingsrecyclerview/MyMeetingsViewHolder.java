@@ -4,6 +4,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -30,32 +32,53 @@ import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 
 
-public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback{
+public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback, View.OnTouchListener{
 
-    private View view;
-    private WeakReference<MyMeetingsListener> listener;
+    private final View view;
+    private final WeakReference<MyMeetingsListener> listener;
     private ImageButton startMeetingButton;
     private ImageButton leaveMeetingButton;
     private LatLng location;
     private GoogleMap map;
     private Marker marker;
 
+    private TextView userIcon;
+    private TextView userIcon1;
+    private TextView userIcon2;
+    private TextView userIcon3;
+    private TextView moreUsers;
+    private TextView userName;
+    private TextView meetingDate;
+    private TextView meetingTime;
+    private TextView startMeetingLabel;
+    private MapView mapView;
+
     public MyMeetingsViewHolder(View itemView, MyMeetingsListener listener) {
         super(itemView);
         view = itemView;
         this.listener = new WeakReference<>(listener);
+
+        userIcon = view.findViewById(R.id.mymeeting_item_user_icon);
+        userIcon1 = view.findViewById(R.id.mymeeting_item_user_icon1);
+        userIcon2 = view.findViewById(R.id.mymeeting_item_user_icon2);
+        userIcon3 = view.findViewById(R.id.mymeeting_item_user_icon3);
+        moreUsers = view.findViewById(R.id.mymeeting_item_more_users);
+        userName = view.findViewById(R.id.mymeeting_item_title);
+        meetingDate = view.findViewById(R.id.mymeeting_item_date);
+        meetingTime = view.findViewById(R.id.mymeeting_item_time);
+        startMeetingButton = view.findViewById(R.id.mymeeting_item_start);
+        startMeetingLabel = view.findViewById(R.id.mymeeting_start_label);
+        leaveMeetingButton = view.findViewById(R.id.mymeeting_item_leave);
+        mapView = view.findViewById(R.id.mymeeting_info_map);
+
     }
 
     public void bindMeeting(Meeting meeting) {
 
-        TextView userIcon = view.findViewById(R.id.mymeeting_item_user_icon);
-        TextView userIcon1 = view.findViewById(R.id.mymeeting_item_user_icon1);
+
         userIcon1.setVisibility(View.GONE);
-        TextView userIcon2 = view.findViewById(R.id.mymeeting_item_user_icon2);
         userIcon2.setVisibility(View.GONE);
-        TextView userIcon3 = view.findViewById(R.id.mymeeting_item_user_icon3);
         userIcon3.setVisibility(View.GONE);
-        TextView moreUsers = view.findViewById(R.id.mymeeting_item_more_users);
         char letter = meeting.getOwner().getFirstName().charAt(0);
         String firstLetter = String.valueOf(letter);
         userIcon.setBackground(getColoredCircularShape((letter)));
@@ -87,31 +110,26 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
                 moreUsers.setText("+" + moreParticipants);
             }
         }
-        TextView userName = view.findViewById(R.id.mymeeting_item_title);
         userName.setText(meeting.getTitle());
 
-        TextView meetingDate = view.findViewById(R.id.mymeeting_item_date);
         String datetime = meeting.getDate();
         meetingDate.setText(datetime.substring(0,datetime.indexOf('T')));
-        TextView meetingTime = view.findViewById(R.id.mymeeting_item_time);
         meetingTime.setText(datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('T')+9));
 
         location = new LatLng(Double.parseDouble(meeting.getLatitude()),Double.parseDouble(meeting.getLongitude()));
 
-        startMeetingButton = view.findViewById(R.id.mymeeting_item_start);
-        TextView startMeetingLabel = view.findViewById(R.id.mymeeting_start_label);
 
-        leaveMeetingButton = view.findViewById(R.id.mymeeting_item_leave);
         leaveMeetingButton.setOnClickListener(this);
 
-        MapView mapView = view.findViewById(R.id.mymeeting_info_map);
         mapView.onCreate(new Bundle());
         mapView.setClickable(false);
         mapView.getMapAsync(this);
         mapView.onResume();
 
         if (isMeetingAvailable(meeting.getDate())) {
-            startMeetingButton.setOnClickListener(this);
+            startMeetingButton.setEnabled(true);
+            startMeetingButton.setImageAlpha(255);
+            startMeetingButton.setOnTouchListener(this);
             startMeetingLabel.setText(view.getResources().getString(R.string.start_meeting_label));
         }
         else {
@@ -132,9 +150,14 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
             e.printStackTrace();
             date = new Date();
         }
-
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MINUTE,-20);
+        int day = calendar.get(Calendar.DAY_OF_YEAR);
+        date = calendar.getTime();
         Date currentDate = Calendar.getInstance().getTime();
-        return currentDate.after(date);
+        int currentDay = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+        return currentDate.after(date) && (day == currentDay);
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {
@@ -155,9 +178,6 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == startMeetingButton.getId()) {
-            listener.get().onStartClicked(getAdapterPosition());
-        }
         if (view.getId() == leaveMeetingButton.getId()) {
             listener.get().onLeaveClicked(getAdapterPosition());
         }
@@ -177,4 +197,11 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
         marker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (v.getId() == startMeetingButton.getId() && event.getAction() == MotionEvent.ACTION_DOWN) {
+            listener.get().onStartClicked(getAdapterPosition());
+        }
+        return true;
+    }
 }

@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun;
+/*package edu.upc.fib.meetnrun;
 
 import android.support.test.espresso.intent.Intents;
 import android.support.test.filters.SmallTest;
@@ -9,17 +9,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
-import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.EditProfileActivity;
-import edu.upc.fib.meetnrun.views.ProfileActivity;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.fragments.EditProfileFragment;
-import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
-import edu.upc.fib.meetnrun.views.fragments.ProfileActivityFragment;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -28,7 +22,6 @@ import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -38,7 +31,7 @@ public class ProfileEditTest {
     private User u;
 
     @Rule
-    public ActivityTestRule<EditProfileActivity> activityRule = new ActivityTestRule<EditProfileActivity>(
+    public final ActivityTestRule<EditProfileActivity> activityRule = new ActivityTestRule<EditProfileActivity>(
             EditProfileActivity.class) {
         @Override
         protected void beforeActivityLaunched() {
@@ -78,4 +71,4 @@ public class ProfileEditTest {
         Intents.release();
 
     }
-}
+}*/

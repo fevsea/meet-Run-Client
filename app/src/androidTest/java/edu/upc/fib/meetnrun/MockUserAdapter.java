@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun;
+/*package edu.upc.fib.meetnrun;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,4 +77,4 @@ public class MockUserAdapter implements IUserAdapter {
         l.add(meeting3);
 
         return l;    }
-}
+}*/
