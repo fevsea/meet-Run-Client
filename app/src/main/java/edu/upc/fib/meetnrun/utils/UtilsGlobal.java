@@ -15,7 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -52,8 +52,8 @@ public class UtilsGlobal {
         return pe;
     }
 
-    public static AutorizationException CreateAutorizationExceptionFromJson(String jSON) {
-        AutorizationException pe = new AutorizationException(UtilsGlobal.ParseJsonToGetProblems(jSON));
+    public static AuthorizationException CreateAutorizationExceptionFromJson(String jSON) {
+        AuthorizationException pe = new AuthorizationException(UtilsGlobal.ParseJsonToGetProblems(jSON));
         return pe;
     }
 

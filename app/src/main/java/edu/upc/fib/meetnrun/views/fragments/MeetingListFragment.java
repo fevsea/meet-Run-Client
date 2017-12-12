@@ -26,7 +26,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -328,7 +328,7 @@ public class MeetingListFragment extends Fragment {
                 chatUsers.add(CurrentSession.getInstance().getCurrentUser());
                 chat.setListUsersChat(chatUsers);
                 chatAdapter.updateChat(chat);
-            } catch (AutorizationException | ParamsException e) {
+            } catch (AuthorizationException | ParamsException e) {
                 e.printStackTrace();
             } catch (NotFoundException e) {
                 e.printStackTrace();
@@ -351,7 +351,7 @@ public class MeetingListFragment extends Fragment {
             //TODO handle exceptions
             try {
                 myMeetings = userAdapter.getUsersFutureMeetings(integers[0]);
-            } catch (AutorizationException | ParamsException e) {
+            } catch (AuthorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;

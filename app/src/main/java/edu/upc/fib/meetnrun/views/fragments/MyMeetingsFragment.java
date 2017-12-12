@@ -22,7 +22,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -173,7 +173,7 @@ public class MyMeetingsFragment extends Fragment {
             //TODO handle exceptions
             try {
                 l = userController.getUsersFutureMeetings(integers[0]);
-            } catch (AutorizationException | ParamsException e) {
+            } catch (AuthorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;
@@ -203,7 +203,7 @@ public class MyMeetingsFragment extends Fragment {
                 chatUsers.remove(CurrentSession.getInstance().getCurrentUser());
                 chat.setListUsersChat(chatUsers);
                 chatAdapter.updateChat(chat);
-            } catch (AutorizationException | ParamsException e) {
+            } catch (AuthorizationException | ParamsException e) {
                 e.printStackTrace();
             } catch (NotFoundException e) {
                 e.printStackTrace();

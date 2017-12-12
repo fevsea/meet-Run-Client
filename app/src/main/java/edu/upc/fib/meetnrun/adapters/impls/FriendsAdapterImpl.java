@@ -7,7 +7,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.models.FriendServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Friend;
@@ -29,7 +29,7 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
   }
 
   @Override
-  public boolean addFriend(int targetUserId) throws AutorizationException, ParamsException {
+  public boolean addFriend(int targetUserId) throws AuthorizationException, ParamsException {
     boolean ok = false;
     try {
       Response<Void> ret = mServices.addFriend(targetUserId).execute();
@@ -45,7 +45,7 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
   }
 
   @Override
-  public List<Friend> getUserFriends(int page) throws AutorizationException {
+  public List<Friend> getUserFriends(int page) throws AuthorizationException {
     List<Friend> ul = new ArrayList<>();
     try {
       int offset = calculateOffset(SOServices.PAGELIMIT, page);
@@ -66,7 +66,7 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
   }
 
   @Override
-  public boolean removeFriend(int targetUserId) throws AutorizationException, ParamsException {
+  public boolean removeFriend(int targetUserId) throws AuthorizationException, ParamsException {
     boolean ok = false;
     try {
       Response<Void> ret = mServices.removeFriend(targetUserId).execute();
@@ -82,7 +82,7 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
   }
 
   @Override
-  public List<Friend> listFriendsOfUser(int targetUserId, int page) throws AutorizationException, ParamsException {
+  public List<Friend> listFriendsOfUser(int targetUserId, int page) throws AuthorizationException, ParamsException {
     List<Friend> ul = new ArrayList<>();
     try {
       int offset = calculateOffset(SOServices.PAGELIMIT, page);
@@ -103,7 +103,7 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
   }
 
   @Override
-  public List<Friend> listUserPendingFriends(int targetUserId, int page) throws AutorizationException, NotFoundException {
+  public List<Friend> listUserPendingFriends(int targetUserId, int page) throws AuthorizationException, NotFoundException {
     List<Friend> ul = new ArrayList<>();
     try {
       int offset = calculateOffset(SOServices.PAGELIMIT, page);
@@ -123,7 +123,7 @@ public class FriendsAdapterImpl implements IFriendsAdapter {
   }
 
   @Override
-  public List<Friend> listUserAcceptedFriends(int targetUserId, int page) throws AutorizationException, NotFoundException {
+  public List<Friend> listUserAcceptedFriends(int targetUserId, int page) throws AuthorizationException, NotFoundException {
     List<Friend> ul = new ArrayList<>();
     try {
       int offset = calculateOffset(SOServices.PAGELIMIT, page);

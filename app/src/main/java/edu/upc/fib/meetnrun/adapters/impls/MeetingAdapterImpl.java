@@ -12,7 +12,7 @@ import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -56,7 +56,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
   }
 
   @Override
-  public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID) throws ParamsException, AutorizationException {
+  public Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID) throws ParamsException, AuthorizationException {
     Forms.CreateMeeting ur = new Forms.CreateMeeting(title, description, _public, level, date, latitude, longitude, chatID);
     UserServer u = null;
     MeetingServer m = null;
@@ -87,7 +87,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
   }
 
   @Override
-  public boolean updateMeeting(Meeting obj) throws ParamsException, NotFoundException, AutorizationException {
+  public boolean updateMeeting(Meeting obj) throws ParamsException, NotFoundException, AuthorizationException {
     boolean ok = false;
     MeetingServer ms = new MeetingServer(obj);
     try {
@@ -106,7 +106,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
 
 
   @Override
-  public boolean deleteMeetingByID(int id) throws NotFoundException, AutorizationException {
+  public boolean deleteMeetingByID(int id) throws NotFoundException, AuthorizationException {
     boolean ok = true;
     try {
       Response<Void> ret = mServices.deletetMeeting(id).execute();
@@ -121,7 +121,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
   }
 
   @Override
-  public List<User> getParticipantsFromMeeting(int meetingId, int page) throws AutorizationException, ParamsException {
+  public List<User> getParticipantsFromMeeting(int meetingId, int page) throws AuthorizationException, ParamsException {
     List<User> ul = new ArrayList<>();
     try {
       int offset = calculateOffset(SOServices.PAGELIMIT, page);
@@ -144,7 +144,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
   }
 
   @Override
-  public boolean joinMeeting(int meetingId, int targetUserId) throws AutorizationException, ParamsException {
+  public boolean joinMeeting(int meetingId, int targetUserId) throws AuthorizationException, ParamsException {
     boolean ok = false;
     try {
       Response<Void> ret = mServices.joinMeeting(meetingId, targetUserId).execute();
@@ -160,7 +160,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
   }
 
   @Override
-  public boolean leaveMeeting(int meetingId, int targetUserId) throws AutorizationException, ParamsException {
+  public boolean leaveMeeting(int meetingId, int targetUserId) throws AuthorizationException, ParamsException {
     boolean ok = false;
     try {
       Response<Void> ret = mServices.leaveMeeting(meetingId, targetUserId).execute();
@@ -195,7 +195,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
   }
 
   @Override
-  public boolean addTracking(Integer userID, Integer meetingID, Float averageSpeed, Float distance, Integer steps, Long totalTimeMillis, Float calories, List<LatLng> routePoints) throws AutorizationException, ForbiddenException {
+  public boolean addTracking(Integer userID, Integer meetingID, Float averageSpeed, Float distance, Integer steps, Long totalTimeMillis, Float calories, List<LatLng> routePoints) throws AuthorizationException, ForbiddenException {
     boolean ok = true;
     TrackServer ts = new TrackServer(userID, meetingID, averageSpeed, distance, steps, totalTimeMillis, calories, routePoints);
 
@@ -212,7 +212,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
   }
 
   @Override
-  public TrackingData getTracking(int userID, int meetingID) throws AutorizationException, NotFoundException {
+  public TrackingData getTracking(int userID, int meetingID) throws AuthorizationException, NotFoundException {
     TrackServer m = null;
     try {
       Response<TrackServer> ret = mServices.getTracking(userID, meetingID).execute();
@@ -226,7 +226,7 @@ public class MeetingAdapterImpl implements IMeetingAdapter {
   }
 
   @Override
-  public boolean deleteTrackingInMeeting(int userID, int meetingID) throws AutorizationException, NotFoundException {
+  public boolean deleteTrackingInMeeting(int userID, int meetingID) throws AuthorizationException, NotFoundException {
     boolean ok = true;
     try {
       Response<Void> ret = mServices.deleteTracking(userID, meetingID).execute();

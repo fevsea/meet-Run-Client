@@ -5,7 +5,7 @@ import java.io.IOException;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.User;
@@ -27,7 +27,7 @@ public class LoginAdapterImpl implements ILoginAdapter {
 
 
   @Override
-  public String login(String username, String password) throws AutorizationException {
+  public String login(String username, String password) throws AuthorizationException {
     String token = "";
     Forms.LoginUser lu = new Forms.LoginUser(username, password);
     try {
@@ -46,7 +46,7 @@ public class LoginAdapterImpl implements ILoginAdapter {
   }
 
   @Override
-  public User getCurrentUser() throws AutorizationException {
+  public User getCurrentUser() throws AuthorizationException {
     UserServer u = null;
     try {
       Response<UserServer> ret = mServices.getCurrentUser().execute();
@@ -61,7 +61,7 @@ public class LoginAdapterImpl implements ILoginAdapter {
   }
 
   @Override
-  public boolean logout() throws AutorizationException {
+  public boolean logout() throws AuthorizationException {
     boolean ok = false;
     try {
       Response<Void> ret = mServices.logout().execute();
@@ -77,7 +77,7 @@ public class LoginAdapterImpl implements ILoginAdapter {
   }
 
   @Override
-  public boolean changePassword(String oldPassword, String newPassword) throws AutorizationException, ForbiddenException {
+  public boolean changePassword(String oldPassword, String newPassword) throws AuthorizationException, ForbiddenException {
     boolean ok = false;
     try {
       Response<Void> ret = mServices.changePassword(new Forms.ChangePassword(oldPassword, newPassword)).execute();
@@ -93,7 +93,7 @@ public class LoginAdapterImpl implements ILoginAdapter {
   }
 
   @Override
-  public String getFirebaseToken() throws AutorizationException, NotFoundException {
+  public String getFirebaseToken() throws AuthorizationException, NotFoundException {
     String token = "";
     try {
       Response<Forms.Token> ret = mServices.getFibaseToken().execute();
@@ -111,7 +111,7 @@ public class LoginAdapterImpl implements ILoginAdapter {
   }
 
   @Override
-  public boolean uppdateFirebaseToken(String token) throws AutorizationException, NotFoundException {
+  public boolean uppdateFirebaseToken(String token) throws AuthorizationException, NotFoundException {
     boolean ok = true;
     try {
       Forms.Token ownTokenModel = new Forms.Token(token);

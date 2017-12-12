@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -23,7 +22,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Challenge;
@@ -171,7 +170,7 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
             try {
                 User current = CurrentSession.getInstance().getCurrentUser();
                 CurrentSession.getInstance().getChallengeAdapter().createNewChallenge(current, challenged, (int)challenge.getDistance(), challenge.getDateDeadline());
-            } catch (AutorizationException | ParamsException e) {
+            } catch (AuthorizationException | ParamsException e) {
                 this.exception = e;
                 return false;
             }
@@ -184,7 +183,7 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
             if (result && exception == null) {
                 finish();
             }
-            else if (exception instanceof AutorizationException) {
+            else if (exception instanceof AuthorizationException) {
                 Toast.makeText(CreateChallengeActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
             }
             else if (exception instanceof ParamsException) {

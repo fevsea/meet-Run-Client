@@ -9,7 +9,7 @@ import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.models.ChatServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -32,7 +32,7 @@ public class ChatAdapterImpl implements IChatAdapter {
   }
 
   @Override
-  public Chat createChat(String chatName, List<Integer> listUsersChatIDs, int type, Integer meetingID, String lastMessage, int lastMessageUserNamePosition, Date lastDateTime) throws AutorizationException, ParamsException {
+  public Chat createChat(String chatName, List<Integer> listUsersChatIDs, int type, Integer meetingID, String lastMessage, int lastMessageUserNamePosition, Date lastDateTime) throws AuthorizationException, ParamsException {
     Forms.ChatCreateUpdate ur = new Forms.ChatCreateUpdate(chatName, listUsersChatIDs, type, meetingID, lastMessage, lastMessageUserNamePosition, lastDateTime);
     ChatServer u = null;
     try {
@@ -47,15 +47,15 @@ public class ChatAdapterImpl implements IChatAdapter {
       e.printStackTrace();
       if (e instanceof ParamsException) {
         throw (ParamsException) e;
-      } else if (e instanceof AutorizationException) {
-        throw (AutorizationException) e;
+      } else if (e instanceof AuthorizationException) {
+        throw (AuthorizationException) e;
       }
     }
     return u != null ? u.toGenericModel() : null;
   }
 
   @Override
-  public List<Chat> getChats(int page) throws AutorizationException {
+  public List<Chat> getChats(int page) throws AuthorizationException {
     List<Chat> l = new ArrayList<>();
     try {
       int offset = calculateOffset(SOServices.PAGELIMIT, page);
@@ -74,7 +74,7 @@ public class ChatAdapterImpl implements IChatAdapter {
   }
 
   @Override
-  public boolean updateChat(Chat c) throws AutorizationException, ParamsException, NotFoundException {
+  public boolean updateChat(Chat c) throws AuthorizationException, ParamsException, NotFoundException {
     boolean ok = false;
     Forms.ChatCreateUpdate ur = new Forms.ChatCreateUpdate(c);
     try {
@@ -92,15 +92,15 @@ public class ChatAdapterImpl implements IChatAdapter {
         throw (NotFoundException) e;
       } else if (e instanceof ParamsException) {
         throw (ParamsException) e;
-      } else if (e instanceof AutorizationException) {
-        throw (AutorizationException) e;
+      } else if (e instanceof AuthorizationException) {
+        throw (AuthorizationException) e;
       }
     }
     return ok;
   }
 
   @Override
-  public boolean deleteChat(int id) throws AutorizationException, ParamsException, NotFoundException {
+  public boolean deleteChat(int id) throws AuthorizationException, ParamsException, NotFoundException {
     boolean ok = true;
     try {
       Response<Void> ret = mServices.deleteChat(id).execute();
@@ -115,7 +115,7 @@ public class ChatAdapterImpl implements IChatAdapter {
   }
 
   @Override
-  public Chat getChat(int id) throws AutorizationException, NotFoundException {
+  public Chat getChat(int id) throws AuthorizationException, NotFoundException {
     ChatServer cs = null;
     try {
       Response<ChatServer> ret = mServices.getChat(id).execute();
@@ -129,7 +129,7 @@ public class ChatAdapterImpl implements IChatAdapter {
   }
 
   @Override
-  public Chat getPrivateChat(int targetUserID) throws AutorizationException, NotFoundException {
+  public Chat getPrivateChat(int targetUserID) throws AuthorizationException, NotFoundException {
     ChatServer cs = null;
     try {
       Response<ChatServer> ret = mServices.getPrivateChat(targetUserID).execute();

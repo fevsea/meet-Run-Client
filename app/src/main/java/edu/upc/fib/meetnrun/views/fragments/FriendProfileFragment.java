@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
@@ -16,13 +15,12 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.views.CreateChallengeActivity;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
 
@@ -106,12 +104,12 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
         protected String doInBackground(String... s) {
             try {
                 ok = friendsDBAdapter.removeFriend(Integer.parseInt(s[0]));
-            } catch (AutorizationException | ParamsException e) {
+            } catch (AuthorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             try {
                 chat = chatDBAdapter.getPrivateChat(currentFriend.getId());
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
                 chat = null;
             } catch (NotFoundException e) {
@@ -123,7 +121,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                 try {
                     FirebaseDatabase.getInstance().getReference(String.valueOf(chat.getId())).removeValue();
                     chatDBAdapter.deleteChat(chat.getId());
-                } catch (AutorizationException e) {
+                } catch (AuthorizationException e) {
                     e.printStackTrace();
                 } catch (ParamsException e) {
                     e.printStackTrace();
@@ -152,7 +150,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
         protected String doInBackground(String... s) {
             try {
                 chat = chatDBAdapter.createChat(friendUsername, userList, 0, null, "", 0, dateWithoutTime);
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
             } catch (ParamsException e) {
                 e.printStackTrace();
@@ -187,7 +185,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
         protected String doInBackground(String... s) {
             try {
                 chat = chatDBAdapter.getPrivateChat(currentFriend.getId());
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
                 chat = null;
             } catch (NotFoundException e) {

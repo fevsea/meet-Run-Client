@@ -3,7 +3,6 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,14 +16,13 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -244,7 +242,7 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
             try {
                 challenge = CurrentSession.getInstance().getChallengeAdapter().getChallenge(params[0]);
             }
-            catch(AutorizationException | NotFoundException e) {
+            catch(AuthorizationException | NotFoundException e) {
                 ex = e;
                 return false;
             }
@@ -257,7 +255,7 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
             if (result && ex == null) {
                 updateViews();
             }
-            else if (ex instanceof AutorizationException) {
+            else if (ex instanceof AuthorizationException) {
                 Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
             }
             else if (ex instanceof NotFoundException) {
@@ -285,7 +283,7 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
                     challengeAdapter.deleteRejectChallenge(challenge.getId());
                 }
             }
-            catch (NotFoundException | AutorizationException e) {
+            catch (NotFoundException | AuthorizationException e) {
                 exception = e;
             }
             return true;
@@ -296,7 +294,7 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
             if (s && exception == null) {
                 getActivity().finish();
             }
-            else if (exception instanceof AutorizationException){
+            else if (exception instanceof AuthorizationException){
                 Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
             }
             else if (exception instanceof NotFoundException) {

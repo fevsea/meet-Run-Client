@@ -10,14 +10,13 @@ import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 /**
@@ -91,7 +90,7 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
         protected String doInBackground(String... strings) {
             try {
                 l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
             } catch (NotFoundException e) {
                 e.printStackTrace();
@@ -124,7 +123,7 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
         protected String doInBackground(String... s) {
             try {
                 chat = chatDBAdapter.createChat(friendUserName, userList, 0, null, "", 0, dateWithoutTime);
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
             } catch (ParamsException e) {
                 e.printStackTrace();
@@ -160,7 +159,7 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
         protected String doInBackground(String... s) {
             try {
                 chat = chatDBAdapter.getPrivateChat(friend.getId());
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
                 chat = null;
             } catch (NotFoundException e) {

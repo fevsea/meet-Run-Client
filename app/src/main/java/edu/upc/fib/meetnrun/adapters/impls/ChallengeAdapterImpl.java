@@ -7,7 +7,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
 import edu.upc.fib.meetnrun.adapters.models.ChallengeServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Challenge;
@@ -31,7 +31,7 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
   }
 
   @Override
-  public List<Challenge> getCurrentUserChallenges() throws AutorizationException {
+  public List<Challenge> getCurrentUserChallenges() throws AuthorizationException {
     List<Challenge> l = new ArrayList<>();
     try {
 
@@ -52,7 +52,7 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
   }
 
   @Override
-  public Challenge getChallenge(int challengeID) throws AutorizationException, NotFoundException {
+  public Challenge getChallenge(int challengeID) throws AuthorizationException, NotFoundException {
     ChallengeServer m = null;
     try {
       Response<ChallengeServer> ret = mServices.getChallenge(challengeID).execute();
@@ -66,7 +66,7 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
   }
 
   @Override
-  public boolean deleteRejectChallenge(int challengeID) throws AutorizationException, NotFoundException {
+  public boolean deleteRejectChallenge(int challengeID) throws AuthorizationException, NotFoundException {
     boolean ok = true;
     try {
       Response<Void> ret = mServices.deleteRejectChallenge(challengeID).execute();
@@ -81,7 +81,7 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
   }
 
   @Override
-  public boolean acceptChallenge(int challengeID) throws AutorizationException, NotFoundException {
+  public boolean acceptChallenge(int challengeID) throws AuthorizationException, NotFoundException {
     boolean ok = true;
     try {
       Response<Void> ret = mServices.acceptChallenge(challengeID).execute();
@@ -97,7 +97,7 @@ public class ChallengeAdapterImpl implements IChallengeAdapter {
 
   @Override
   public Challenge createNewChallenge(User creator, User challenged, int distance, String deadlineDate)
-    throws AutorizationException, ParamsException {
+    throws AuthorizationException, ParamsException {
     Forms.ChallengeCreator cs = new Forms.ChallengeCreator(0, creator.getId(), challenged.getId(), distance, deadlineDate);
     ChallengeServer c = null;
     try {

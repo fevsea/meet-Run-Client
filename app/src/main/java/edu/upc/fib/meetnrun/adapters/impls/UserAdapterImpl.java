@@ -10,7 +10,7 @@ import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
@@ -69,7 +69,7 @@ public class UserAdapterImpl implements IUserAdapter {
   }
 
   @Override
-  public boolean updateUser(User obj) throws ParamsException, NotFoundException, AutorizationException {
+  public boolean updateUser(User obj) throws ParamsException, NotFoundException, AuthorizationException {
     boolean ok = false;
     UserServer us = new UserServer(obj);
     try {
@@ -86,7 +86,7 @@ public class UserAdapterImpl implements IUserAdapter {
   }
 
   @Override
-  public boolean deleteUserByID(int id) throws NotFoundException, AutorizationException {
+  public boolean deleteUserByID(int id) throws NotFoundException, AuthorizationException {
     boolean ok = true;
     try {
       Response<Void> ret = mServices.deleteUser(id).execute();
@@ -125,11 +125,11 @@ public class UserAdapterImpl implements IUserAdapter {
    * @param targetUserId Target user who most be in the meeting
    * @param filterByTime Filter can be : past, future, all
    * @return List of {@link List<Meeting>}
-   * @throws AutorizationException
+   * @throws AuthorizationException
    * @throws ParamsException
    */
   @Override
-  public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime) throws AutorizationException, ParamsException {
+  public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime) throws AuthorizationException, ParamsException {
     List<Meeting> ul = new ArrayList<>();
     try {
       Response<List<MeetingServer>> ret =
@@ -150,16 +150,16 @@ public class UserAdapterImpl implements IUserAdapter {
   }
 
   @Override
-  public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException {
+  public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AuthorizationException, ParamsException {
     return getUserMeetingsFilteres(targetUserId, "future");
   }
 
   @Override
-  public List<Meeting> getUserPastMeetings(int targetUserId) throws AutorizationException, ParamsException {
+  public List<Meeting> getUserPastMeetings(int targetUserId) throws AuthorizationException, ParamsException {
     return getUserMeetingsFilteres(targetUserId, "past");
   }
 
-  public Statistics getUserStatisticsByID(int id) throws AutorizationException {
+  public Statistics getUserStatisticsByID(int id) throws AuthorizationException {
 
     StatisticsServer ss = null;
     try {

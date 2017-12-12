@@ -2,7 +2,7 @@ package edu.upc.fib.meetnrun.adapters;
 
 import java.util.List;
 
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Friend;
@@ -12,15 +12,15 @@ import edu.upc.fib.meetnrun.models.Friend;
  */
 
 public interface IFriendsAdapter {
-    boolean addFriend(int targetUserId) throws AutorizationException, ParamsException;
+    boolean addFriend(int targetUserId) throws AuthorizationException, ParamsException;
 
-    List<Friend> getUserFriends(int page) throws AutorizationException;
+    List<Friend> getUserFriends(int page) throws AuthorizationException;
 
-    boolean removeFriend(int targetUserId) throws AutorizationException, ParamsException;
+    boolean removeFriend(int targetUserId) throws AuthorizationException, ParamsException;
 
-    List<Friend> listFriendsOfUser(int targetUserId, int page) throws AutorizationException, ParamsException;
+    List<Friend> listFriendsOfUser(int targetUserId, int page) throws AuthorizationException, ParamsException;
 
-    List<Friend> listUserPendingFriends(int targetUserId, int page) throws AutorizationException,NotFoundException;
+    List<Friend> listUserPendingFriends(int targetUserId, int page) throws AuthorizationException,NotFoundException;
 
-    List<Friend> listUserAcceptedFriends(int targetUserId, int page) throws AutorizationException,NotFoundException;
+    List<Friend> listUserAcceptedFriends(int targetUserId, int page) throws AuthorizationException,NotFoundException;
 }
