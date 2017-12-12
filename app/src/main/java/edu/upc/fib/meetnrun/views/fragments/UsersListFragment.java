@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,22 +17,19 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
-import edu.upc.fib.meetnrun.views.LoginActivity;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 
@@ -212,7 +208,7 @@ public class UsersListFragment extends Fragment {
 
             try {
                 aux = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), 0);
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
             } catch (NotFoundException e) {
                 e.printStackTrace();
@@ -223,7 +219,7 @@ public class UsersListFragment extends Fragment {
                 friends.addAll(aux);
                 try {
                     aux = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), count);
-                } catch (AutorizationException e) {
+                } catch (AuthorizationException e) {
                     e.printStackTrace();
                 } catch (NotFoundException e) {
                     e.printStackTrace();

@@ -37,7 +37,7 @@ import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -46,7 +46,6 @@ import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
-import edu.upc.fib.meetnrun.views.ChatGroupsActivity;
 import edu.upc.fib.meetnrun.views.EditMeetingActivity;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
@@ -321,7 +320,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
             //TODO handle exceptions
             try {
                 meetingUsers = meetingController.getParticipantsFromMeeting(integers[0],pageNumber);//TODO arreglar paginas
-            } catch (AutorizationException | ParamsException e) {
+            } catch (AuthorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;
@@ -342,7 +341,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
 
             try {
                 friends = friendsController.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(), 0);
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
             } catch (NotFoundException e) {
                 e.printStackTrace();
@@ -387,7 +386,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
             }
             catch (NotFoundException e) {
                 e.printStackTrace();
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
             }
 
@@ -407,7 +406,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
             //TODO handle exceptions
             try {
                 myMeetings = userAdapter.getUsersFutureMeetings(integers[0]);
-            } catch (AutorizationException | ParamsException e) {
+            } catch (AuthorizationException | ParamsException e) {
                 e.printStackTrace();
             }
             return null;

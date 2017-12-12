@@ -6,10 +6,10 @@ import java.util.Map;
  * Created by Awais Iqbal on 02/11/2017.
  */
 
-public class AutorizationException extends GenericException {
+public class AuthorizationException extends GenericException {
     public static final String TAG = "AUTORIZATIONEXCEPTION";
 
-    public AutorizationException(Map<String, String> problems) {
+    public AuthorizationException(Map<String, String> problems) {
         super(problems);
     }
 }

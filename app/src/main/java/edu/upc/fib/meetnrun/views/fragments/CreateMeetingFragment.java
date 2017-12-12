@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
@@ -60,8 +59,7 @@ import java.util.Locale;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
-import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -406,7 +404,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
             try {
                 m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude,null);
                 newChat = chatAdapter.createChat(Name,owner,1,m.getId(),"",0,date);
-            } catch (ParamsException | AutorizationException e) {
+            } catch (ParamsException | AuthorizationException e) {
                 e.printStackTrace();
             }
             return null;

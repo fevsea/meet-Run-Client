@@ -5,13 +5,12 @@ import android.os.AsyncTask;
 import android.view.View;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.UsersListActivity;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 
@@ -81,7 +80,7 @@ public class FriendsFragment extends FriendListFragmentTemplate {
 
             try {
                 l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
             } catch (NotFoundException e) {
                 e.printStackTrace();

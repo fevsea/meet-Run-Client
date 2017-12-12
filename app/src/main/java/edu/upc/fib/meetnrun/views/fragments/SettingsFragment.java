@@ -25,7 +25,7 @@ import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.LoginActivity;
@@ -161,7 +161,7 @@ public class SettingsFragment extends Fragment {
             try {
                 controller.deleteUserByID(cs.getCurrentUser().getId());
                 ok = true;
-            } catch (NotFoundException | AutorizationException e) {
+            } catch (NotFoundException | AuthorizationException e) {
                 e.printStackTrace();
             }
             return null;

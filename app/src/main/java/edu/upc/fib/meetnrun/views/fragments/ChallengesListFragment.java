@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,17 +16,14 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChallengeActivity;
 import edu.upc.fib.meetnrun.views.FriendsListActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChallengesAdapter;
@@ -177,7 +173,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             try {
                 challenges = CurrentSession.getInstance().getChallengeAdapter().getCurrentUserChallenges();
             }
-            catch (AutorizationException e) {
+            catch (AuthorizationException e) {
                 this.ex = e;
                 return false;
             }
@@ -191,7 +187,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
                 updateChallengesAdapters();
                 swipeRefreshLayout.setRefreshing(false);
             }
-            else if (ex instanceof AutorizationException){
+            else if (ex instanceof AuthorizationException){
                 Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
             }
             else {
@@ -215,7 +211,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
                     challengeAdapter.deleteRejectChallenge(params[0].getId());
                 }
             }
-            catch (NotFoundException | AutorizationException e) {
+            catch (NotFoundException | AuthorizationException e) {
                 exception = e;
             }
             return true;
@@ -226,7 +222,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             if (s && exception == null) {
                 updateChallengesList();
             }
-            else if (exception instanceof AutorizationException){
+            else if (exception instanceof AuthorizationException){
                 Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
             }
             else if (exception instanceof NotFoundException) {

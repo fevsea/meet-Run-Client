@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.User;
@@ -167,7 +167,7 @@ public class StatisticsProfileFragment extends Fragment {
                 setValues();
 
                         //u=iUserAdapter.getUser(userId);
-                    } catch (AutorizationException e) {
+                    } catch (AuthorizationException e) {
                         e.printStackTrace();
                     }
             return null;

@@ -6,9 +6,10 @@ package edu.upc.fib.meetnrun.remote;
 
 public class ApiUtils {
 
-    public static final String BASE_URL = "http://localhost:8000/";
 
-    public static SOServices getSOService() {
-        return RetrofitClient.getClient(BASE_URL).create(SOServices.class);
-    }
+  public static final String BASE_URL = "http://localhost:8000/";
+
+  public static SOServices getSOService() {
+    return RetrofitClient.getClient(BASE_URL).create(SOServices.class);
+  }
 }

@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -121,7 +121,7 @@ public class EditProfileFragment extends Fragment {
             try {
                 try {
                     actualitzat_correctament = controller.updateUser(params[0]);
-                } catch (AutorizationException e) {
+                } catch (AuthorizationException e) {
                     e.printStackTrace();
                 }
             } catch (NotFoundException e) {

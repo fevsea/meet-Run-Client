@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,14 +24,12 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.ChatActivity;
 import edu.upc.fib.meetnrun.views.ChatFriendsActivity;
 import edu.upc.fib.meetnrun.views.ChatGroupsActivity;
-import edu.upc.fib.meetnrun.views.Pagination;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChatAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
@@ -251,7 +248,7 @@ public class ChatListFragment extends Fragment {
 
             try {
                 l = chatDBAdapter.getChats(pageNumber);
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
             }
             return null;

@@ -2,7 +2,6 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -36,7 +35,6 @@ import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.UserProfileActivity;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 
@@ -195,7 +193,7 @@ public class ChatGroupInfoFragment extends Fragment {
                     }
                     else isLastPage = true;
                 }
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
             } catch (NotFoundException e) {
                 e.printStackTrace();

@@ -2,7 +2,7 @@ package edu.upc.fib.meetnrun.adapters;
 
 import java.util.List;
 
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
@@ -21,15 +21,15 @@ public interface IUserAdapter {
 
     User getUser(int targetUserId) throws NotFoundException;
 
-    boolean updateUser(User obj) throws ParamsException, NotFoundException, AutorizationException;
+    boolean updateUser(User obj) throws ParamsException, NotFoundException, AuthorizationException;
 
-    boolean deleteUserByID(int targetUserId) throws NotFoundException, AutorizationException;
+    boolean deleteUserByID(int targetUserId) throws NotFoundException, AuthorizationException;
 
-    public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime)throws AutorizationException, ParamsException;
+    public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime)throws AuthorizationException, ParamsException;
 
-    public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException;
+    public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AuthorizationException, ParamsException;
 
-    public List<Meeting> getUserPastMeetings(int targetUserId) throws AutorizationException, ParamsException;
+    public List<Meeting> getUserPastMeetings(int targetUserId) throws AuthorizationException, ParamsException;
 
-    Statistics getUserStatisticsByID(int id) throws AutorizationException;
+    Statistics getUserStatisticsByID(int id) throws AuthorizationException;
 }

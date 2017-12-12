@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -18,7 +17,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.services.FirebaseInstanceService;
@@ -109,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 token = loginAdapter.login(username, password);
                 //TODO Pending to catch correctly
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
             }
 
@@ -120,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     u = loginAdapter.getCurrentUser();
                     //TODO Pending to catch correctly
-                } catch (AutorizationException e) {
+                } catch (AuthorizationException e) {
                     e.printStackTrace();
                 }
             }
@@ -163,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
                 cs.setToken(s[0]);
                 user = loginAdapter.getCurrentUser();
                 if (user != null) ok = true;
-            } catch (AutorizationException e) {
+            } catch (AuthorizationException e) {
                 e.printStackTrace();
                 deleteToken();
             }
