@@ -76,7 +76,7 @@ public class UtilsGlobal {
     public static String formatDate(Date date) {
         //TimeZone tz = TimeZone.getTimeZone("Europe/Madrid"); //for spanish hours
         TimeZone tz = TimeZone.getDefault();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US); // Quoted "Z" to indicate UTC, no timezone offset
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZZZ", Locale.US); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
         return df.format(date);
     }

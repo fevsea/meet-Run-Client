@@ -11,7 +11,6 @@ import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import edu.upc.fib.meetnrun.exceptions.AutorizationException;
-import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
@@ -28,187 +27,151 @@ import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.checkErrorCodeAnd
  */
 
 public class UserAdapterImpl implements IUserAdapter {
-    private final SOServices mServices;
+  private final SOServices mServices;
 
-    public UserAdapterImpl(SOServices soServices) {
-        mServices = soServices;
+  public UserAdapterImpl(SOServices soServices) {
+    mServices = soServices;
+  }
+
+  public List<User> getAllUsers(int page) {
+    PageServer<UserServer> pus = null;
+    try {
+      int offset = calculateOffset(SOServices.PAGELIMIT, page);
+      Response<PageServer<UserServer>> ret = mServices.getAllUsers(SOServices.PAGELIMIT, offset).execute();
+      if (!ret.isSuccessful())
+        checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+      pus = ret.body();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+    List<User> lu = new ArrayList<>();
+    if (pus != null) {
+      List<UserServer> lus = pus.getResults();
+      for (int i = 0; i < lus.size(); i++) {
+        lu.add(lus.get(i).toGenericModel());
+      }
+    }
+    return lu;
+  }
 
-    public List<User> getAllUsers(int page) {
-        PageServer<UserServer> pus = null;
-        try {
-            int offset = calculateOffset(SOServices.PAGELIMIT, page);
-            Response<PageServer<UserServer>> ret = mServices.getAllUsers(SOServices.PAGELIMIT, offset).execute();
-            if (!ret.isSuccessful())
-                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
-            pus = ret.body();
-        } catch (IOException | GenericException e) {
-            e.printStackTrace();
+  @Override
+  public User getUser(int id) throws NotFoundException {
+    UserServer us = null;
+    try {
+      Response<UserServer> ret = mServices.getUser(id).execute();
+      if (!ret.isSuccessful())
+        checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+      us = ret.body();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return us != null ? us.toGenericModel() : null;
+  }
+
+  @Override
+  public boolean updateUser(User obj) throws ParamsException, NotFoundException, AutorizationException {
+    boolean ok = false;
+    UserServer us = new UserServer(obj);
+    try {
+      Response<Void> ret = mServices.updateUser(obj.getId(), us).execute();
+      if (!ret.isSuccessful()) {
+        checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+      } else {
+        ok = true;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return ok;
+  }
+
+  @Override
+  public boolean deleteUserByID(int id) throws NotFoundException, AutorizationException {
+    boolean ok = true;
+    try {
+      Response<Void> ret = mServices.deleteUser(id).execute();
+      if (!ret.isSuccessful()) {
+        ok = false;
+        checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return ok;
+  }
+
+
+  @Override
+  public User registerUser(String userName, String firstName, String lastName, String postCode, String password, String question, String answer) throws ParamsException {
+    Forms.UserRegistration ur = new Forms.UserRegistration(0, userName, firstName, lastName, postCode, question, answer, password, 1);
+    UserServer u = null;
+    try {
+      Response<UserServer> ret = mServices.registerUser(ur).execute();
+      if (!ret.isSuccessful()) {
+        checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+      }
+      u = ret.body();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return u != null ? u.toGenericModel() : null;
+
+  }
+
+
+  /**
+   * Given a target UserID and a Filter, returns all the meeting who meet the conditions
+   *
+   * @param targetUserId Target user who most be in the meeting
+   * @param filterByTime Filter can be : past, future, all
+   * @return List of {@link List<Meeting>}
+   * @throws AutorizationException
+   * @throws ParamsException
+   */
+  @Override
+  public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime) throws AutorizationException, ParamsException {
+    List<Meeting> ul = new ArrayList<>();
+    try {
+      Response<List<MeetingServer>> ret =
+        mServices.getUserMeetingFilteredMeetings(targetUserId, filterByTime).execute();
+      if (!ret.isSuccessful())
+        checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+
+      List<MeetingServer> u = ret.body();
+      if (u != null) {
+        for (int i = 0; i < u.size(); i++) {
+          ul.add(u.get(i).toGenericModel());
         }
-        List<User> lu = new ArrayList<>();
-        if (pus != null) {
-            List<UserServer> lus = pus.getResults();
-            for (int i = 0; i < lus.size(); i++) {
-                lu.add(lus.get(i).toGenericModel());
-            }
-        }
-        return lu;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
     }
+    return ul;
+  }
 
-    @Override
-    public User getUser(int id) throws NotFoundException {
-        UserServer us = null;
-        try {
-            Response<UserServer> ret = mServices.getUser(id).execute();
-            if (!ret.isSuccessful())
-                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
-            us = ret.body();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof NotFoundException) throw (NotFoundException) e;
-        }
-        return us != null ? us.toGenericModel() : null;
+  @Override
+  public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException {
+    return getUserMeetingsFilteres(targetUserId, "future");
+  }
+
+  @Override
+  public List<Meeting> getUserPastMeetings(int targetUserId) throws AutorizationException, ParamsException {
+    return getUserMeetingsFilteres(targetUserId, "past");
+  }
+
+  public Statistics getUserStatisticsByID(int id) throws AutorizationException {
+
+    StatisticsServer ss = null;
+    try {
+      Response<StatisticsServer> ret = mServices.getUserStatisticsByID(id).execute();
+      if (!ret.isSuccessful()) {
+        checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+      }
+      ss = ret.body();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-
-    @Override
-    public boolean updateUser(User obj) throws ParamsException, NotFoundException, AutorizationException {
-        boolean ok = false;
-        UserServer us = new UserServer(obj);
-        try {
-            Response<Void> ret = mServices.updateUser(obj.getId(), us).execute();
-            if (!ret.isSuccessful()) {
-                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
-            } else {
-                ok = true;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof NotFoundException) {
-                throw (NotFoundException) e;
-            } else if (e instanceof ParamsException) {
-                throw (ParamsException) e;
-            } else if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            }
-        }
-        return ok;
-    }
-
-    @Override
-    public boolean deleteUserByID(int id) throws NotFoundException, AutorizationException {
-        boolean ok = true;
-        try {
-            Response<Void> ret = mServices.deleteUser(id).execute();
-            if (!ret.isSuccessful()) {
-                ok = false;
-                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof NotFoundException) {
-                throw (NotFoundException) e;
-            } else if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            }
-        }
-        return ok;
-    }
-
-
-    @Override
-    public User registerUser(String userName, String firstName, String lastName, String postCode, String password, String question, String answer) throws ParamsException {
-        Forms.UserRegistration ur = new Forms.UserRegistration(0, userName, firstName, lastName, postCode, question, answer, password, 1);
-        UserServer u = null;
-        try {
-            Response<UserServer> ret = mServices.registerUser(ur).execute();
-            if (!ret.isSuccessful()) {
-                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
-            }
-            u = ret.body();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof ParamsException) {
-                throw (ParamsException) e;
-            }
-        }
-        return u != null ? u.toGenericModel() : null;
-
-    }
-
-
-    /**
-     * Given a target UserID and a Filter, returns all the meeting who meet the conditions
-     *
-     * @param targetUserId Target user who most be in the meeting
-     * @param filterByTime Filter can be : past, future, all
-     * @return List of {@link List<Meeting>}
-     * @throws AutorizationException
-     * @throws ParamsException
-     */
-    @Override
-    public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime) throws AutorizationException, ParamsException {
-        List<Meeting> ul = new ArrayList<>();
-        try {
-            Response<List<MeetingServer>> ret =
-                    mServices.getUserMeetingFilteredMeetings(targetUserId, filterByTime).execute();
-            if (!ret.isSuccessful())
-                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
-
-            List<MeetingServer> u = ret.body();
-            if (u != null) {
-                for (int i = 0; i < u.size(); i++) {
-                    ul.add(u.get(i).toGenericModel());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            } else if (e instanceof ParamsException) {
-                throw (ParamsException) e;
-            }
-        }
-        return ul;
-    }
-
-    @Override
-    public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException {
-        return getUserMeetingsFilteres(targetUserId, "future");
-    }
-
-    @Override
-    public List<Meeting> getUserPastMeetings(int targetUserId) throws AutorizationException, ParamsException {
-        return getUserMeetingsFilteres(targetUserId, "past");
-    }
-
-    public Statistics getUserStatisticsByID(int id) throws AutorizationException {
-
-        StatisticsServer ss = null;
-        try {
-            Response<StatisticsServer> ret = mServices.getUserStatisticsByID(id).execute();
-            if (!ret.isSuccessful()) {
-                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
-            }
-            ss = ret.body();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            }
-        }
-        return ss != null ? ss.toGenericModel() : null;
-    }
+    return ss != null ? ss.toGenericModel() : null;
+  }
 
 }

@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.models.Meeting;
@@ -106,109 +105,5 @@ public class MeetingServer implements IServerModel {
             }
         }
         return new Meeting(id, title, description, _public, level, date, latitude, longitude,chatID ,owner.toGenericModel(), ul);
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Boolean getPublic() {
-        return _public;
-    }
-
-    public void setPublic(Boolean _public) {
-        this._public = _public;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
-
-    public Date getDateTime() {
-        return new Date();
-    }
-
-    public void setDateTime(Date d) {
-
-    }
-
-    public Boolean get_public() {
-        return _public;
-    }
-
-    public void set_public(Boolean _public) {
-        this._public = _public;
-    }
-
-    public List<UserServer> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(List<UserServer> participants) {
-        this.participants = participants;
-    }
-
-    public UserServer getOwner() {
-        return owner;
-    }
-
-    public void setOwner(UserServer owner) {
-        this.owner = owner;
-    }
-
-    public Integer getChatID() {
-        return chatID;
-    }
-
-    public void setChatID(Integer chatID) {
-        this.chatID = chatID;
     }
 }

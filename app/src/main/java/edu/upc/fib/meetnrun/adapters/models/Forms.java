@@ -28,22 +28,6 @@ public class Forms {
             this.oldPasword = oldPasword;
             this.newPassword = newPassword;
         }
-
-        public String getOldPasword() {
-            return oldPasword;
-        }
-
-        public void setOldPasword(String oldPasword) {
-            this.oldPasword = oldPasword;
-        }
-
-        public String getNewPassword() {
-            return newPassword;
-        }
-
-        public void setNewPassword(String newPassword) {
-            this.newPassword = newPassword;
-        }
     }
 
     public static class LoginUser {
@@ -58,22 +42,6 @@ public class Forms {
             this.username = username;
             this.password = password;
         }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
     }
 
     public static class Token {
@@ -85,13 +53,9 @@ public class Forms {
             this.token = token;
         }
 
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
+      public String getToken() {
+        return token;
+      }
     }
 
     public static class UserRegistration {
@@ -146,78 +110,6 @@ public class Forms {
             this.answer = answer;
             this.password = password;
         }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public String getPostalCode() {
-            return postalCode;
-        }
-
-        public void setPostalCode(String postalCode) {
-            this.postalCode = postalCode;
-        }
-
-        public String getQuestion() {
-            return question;
-        }
-
-        public void setQuestion(String question) {
-            this.question = question;
-        }
-
-        public String getAnswer() {
-            return answer;
-        }
-
-        public void setAnswer(String answer) {
-            this.answer = answer;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public Integer getLevel() {
-            return level;
-        }
-
-        public void setLevel(Integer level) {
-            this.level = level;
-        }
     }
 
     public static class CreateMeeting {
@@ -257,78 +149,6 @@ public class Forms {
             this.date = date;
             this.latitude = latitude;
             this.longitude = longitude;
-            this.chatID = chatID;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public Boolean get_public() {
-            return _public;
-        }
-
-        public void set_public(Boolean _public) {
-            this._public = _public;
-        }
-
-        public Integer getLevel() {
-            return level;
-        }
-
-        public void setLevel(Integer level) {
-            this.level = level;
-        }
-
-        public String getDate() {
-            return date;
-        }
-
-        public void setDate(String date) {
-            this.date = date;
-        }
-
-        public String getLatitude() {
-            return latitude;
-        }
-
-        public void setLatitude(String latitude) {
-            this.latitude = latitude;
-        }
-
-        public String getLongitude() {
-            return longitude;
-        }
-
-        public void setLongitude(String longitude) {
-            this.longitude = longitude;
-        }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public Integer getChatID() {
-            return chatID;
-        }
-
-        public void setChatID(Integer chatID) {
             this.chatID = chatID;
         }
     }
