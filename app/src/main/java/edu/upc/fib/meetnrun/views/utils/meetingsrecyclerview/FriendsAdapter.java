@@ -20,9 +20,9 @@ import edu.upc.fib.meetnrun.models.User;
 public class FriendsAdapter extends RecyclerView.Adapter<UsersViewHolder> {
 
     private List<Friend> friends;
-    private final RecyclerViewOnClickListener listener;
-    private View v;
-    private Context context;
+    protected final RecyclerViewOnClickListener listener;
+    protected View v;
+    protected Context context;
 
     public FriendsAdapter(List<Friend> friends, RecyclerViewOnClickListener listener, Context context) {
         this.friends = friends;
