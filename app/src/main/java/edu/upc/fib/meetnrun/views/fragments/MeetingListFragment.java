@@ -139,7 +139,7 @@ public class MeetingListFragment extends Fragment {
                 meetingInfoIntent.putExtra("description",meeting.getDescription());
                 String datetime = meeting.getDate();
                 meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
-                meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
+                meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.length()));
                 meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
                 meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
                 meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
