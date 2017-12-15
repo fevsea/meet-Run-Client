@@ -10,7 +10,6 @@ import edu.upc.fib.meetnrun.adapters.models.ChatServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
-import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -43,13 +42,6 @@ public class ChatAdapterImpl implements IChatAdapter {
       u = ret.body();
     } catch (IOException e) {
       e.printStackTrace();
-    } catch (GenericException e) {
-      e.printStackTrace();
-      if (e instanceof ParamsException) {
-        throw (ParamsException) e;
-      } else if (e instanceof AuthorizationException) {
-        throw (AuthorizationException) e;
-      }
     }
     return u != null ? u.toGenericModel() : null;
   }
@@ -86,15 +78,6 @@ public class ChatAdapterImpl implements IChatAdapter {
       }
     } catch (IOException e) {
       e.printStackTrace();
-    } catch (GenericException e) {
-      e.printStackTrace();
-      if (e instanceof NotFoundException) {
-        throw (NotFoundException) e;
-      } else if (e instanceof ParamsException) {
-        throw (ParamsException) e;
-      } else if (e instanceof AuthorizationException) {
-        throw (AuthorizationException) e;
-      }
     }
     return ok;
   }
