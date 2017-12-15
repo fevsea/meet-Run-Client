@@ -4,26 +4,62 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
         <Button
+            style="?=android:attr/buttonBarButtonStyle"
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:text="@string/rankings_users" />
 
         <Button
+            style="?=android:attr/buttonBarButtonStyle"
             android:id="@+id/button3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            android:text="@string/rankings_zip" />
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/selectFilterTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/filter_ranking"
+        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
     <RadioGroup
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:checkedButton="@+id/rdbPostCode">
+        <RadioButton
+            android:id="@+id/rdbPostcode"
+            android:text="@string/ranking_postcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/rdbCity"
+            android:text="@string/ranking_city"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/rdbCountry"
+            android:text="@string/ranking_country"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/rdbGlobal"
+            android:text="@string/ranking_global"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RadioGroup>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </LinearLayout>

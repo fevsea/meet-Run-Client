@@ -209,5 +209,12 @@
     <string name="group_name">Group name</string>
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
+    <string name="ranking_postcode">Zip</string>
+    <string name="ranking_city">City</string>
+    <string name="ranking_country">Country</string>
+    <string name="ranking_global">Global</string>
+    <string name="filter_ranking">Filter by:</string>
+    <string name="rankings_zip">ZIP rankings</string>
+    <string name="rankings_users">User rankings</string>
 </resources>
 
