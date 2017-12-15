@@ -13,13 +13,9 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
@@ -28,6 +24,7 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 import edu.upc.fib.meetnrun.views.fragments.DatePickerFragment;
 
 public class CreateChallengeActivity extends AppCompatActivity implements View.OnClickListener{
@@ -106,40 +103,29 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         datePickerFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int yearSet, int monthSet, int daySet) {
-                DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
                 Date dateTime;
                 if(challenge.getDeadline() != null) {
-                    try {
-                        dateTime = inputFormat.parse(challenge.getDeadline());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                        dateTime = new Date(challenge.getDeadline());
-                    }
+                        dateTime = UtilsGlobal.parseDate(challenge.getDeadline());
+                } else {
+                  dateTime = new Date();
                 }
-                else
-                    dateTime = new Date();
                 Calendar date = new GregorianCalendar();
                 date.setTime(dateTime);
                 date.set(Calendar.YEAR, yearSet/* + 1900*/);
                 date.set(Calendar.MONTH, monthSet);
                 date.set(Calendar.DAY_OF_MONTH, daySet);
-                challenge.setDeadline(inputFormat.format(date.getTime()));
+                challenge.setDeadline(UtilsGlobal.formatDate(date.getTime()));
                 final String selectedDate = ((daySet<10)?"0"+daySet:daySet) + "/" + (((monthSet+1)<10)?"0"+(monthSet+1):(monthSet+1)) + "/" + yearSet;
                 deadlineText.setText(selectedDate);
             }
         });
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
         Date dateTime;
         if(challenge.getDeadline() != null) {
-            try {
-                dateTime = inputFormat.parse(challenge.getDeadline());
-            } catch (ParseException e) {
-                e.printStackTrace();
-                dateTime = new Date(challenge.getDeadline());
-            }
+              dateTime = UtilsGlobal.parseDate(challenge.getDeadline());
         }
-        else
-            dateTime = new Date();
+        else {
+          dateTime = new Date();
+        }
         if (dateTime != null) {
             Calendar date = new GregorianCalendar();
             date.setTime(dateTime);
