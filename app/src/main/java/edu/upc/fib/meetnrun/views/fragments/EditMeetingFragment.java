@@ -39,9 +39,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -53,6 +50,7 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -103,14 +101,8 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
         Calendar date = new GregorianCalendar();
         //date.setTime(meeting.getDateTime());
         Log.i("DATE", meeting.getDate());
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Date dateTime = null;
-        try {
-            dateTime = inputFormat.parse(meeting.getDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            dateTime = new Date();
-        }
+        dateTime = UtilsGlobal.parseDate(meeting.getDate());
         date.setTime(dateTime);
         int year = date.get(Calendar.YEAR);
         int month = date.get(Calendar.MONTH);
@@ -163,34 +155,22 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
         datePickerFragment.setListener(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int yearSet, int monthSet, int daySet) {
-                DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
                 Date dateTime = null;
-                try {
-                    dateTime = inputFormat.parse(meeting.getDate());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    dateTime = new Date(meeting.getDate());
-                }                //Date dateTime = meeting.getDateTime();
+                dateTime = UtilsGlobal.parseDate(meeting.getDate());
                 Calendar date = new GregorianCalendar();
                 date.setTime(dateTime);
                 date.set(Calendar.YEAR, yearSet/* + 1900*/);
                 date.set(Calendar.MONTH, monthSet);
                 date.set(Calendar.DAY_OF_MONTH, daySet);
-                meeting.setDate(inputFormat.format(date.getTime()));
+                meeting.setDate(UtilsGlobal.formatDate(date.getTime()));
                 //meeting.setDateTime(date.getTime());
                 final String selectedDate = ((daySet<10)?"0"+daySet:daySet) + "/" + (((monthSet+1)<10)?"0"+(monthSet+1):(monthSet+1)) + "/" + yearSet;
                 dateText.setText(selectedDate);
             }
         });
         //Date dateTime = meeting.getDateTime();
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Date dateTime = null;
-        try {
-            dateTime = inputFormat.parse(meeting.getDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            dateTime = new Date(meeting.getDate());
-        }
+        dateTime = UtilsGlobal.parseDate(meeting.getDate());
         if (dateTime != null) {
             Calendar date = new GregorianCalendar();
             date.setTime(dateTime);
@@ -205,33 +185,21 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
         timePickerFragment.setListener(new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int hourSet, int minuteSet) {
-                DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
                 Date dateTime = null;
-                try {
-                    dateTime = inputFormat.parse(meeting.getDate());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    dateTime = new Date(meeting.getDate());
-                }
+                dateTime = UtilsGlobal.parseDate(meeting.getDate());
                 Calendar date = new GregorianCalendar();
                 date.setTime(dateTime);
                 date.set(Calendar.HOUR_OF_DAY, hourSet);
                 date.set(Calendar.MINUTE, minuteSet);
                 //meeting.setDateTime(date.getTime());
-                meeting.setDate(inputFormat.format(date.getTime()));
+                meeting.setDate(UtilsGlobal.formatDate(date.getTime()));
                 final String selectedTime = ((hourSet<10)?"0"+hourSet:hourSet) + ":" + ((minuteSet<10)?"0"+minuteSet:minuteSet);
                 timeText.setText(selectedTime);
             }
         });
         //Date dateTime = meeting.getDateTime();
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Date dateTime = null;
-        try {
-            dateTime = inputFormat.parse(meeting.getDate());
-        } catch (ParseException e) {
-            e.printStackTrace();
-            dateTime = new Date(meeting.getDate());
-        }
+        dateTime = UtilsGlobal.parseDate(meeting.getDate());
         Calendar date = new GregorianCalendar();
         date.setTime(dateTime);
         timePickerFragment.setValues(date.get(Calendar.HOUR), date.get(Calendar.MINUTE));

@@ -13,9 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +25,7 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 
 public class ChallengeFragment extends Fragment implements View.OnClickListener {
 
@@ -172,15 +171,9 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
     }
 
     private String getExpirationText(String deadline) throws ParseException {
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.forLanguageTag("es"));
         Date dateTime;
         String expirationText;
-        try {
-            dateTime = inputFormat.parse(deadline);
-        } catch (ParseException e) {
-            inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
-            dateTime = inputFormat.parse(deadline);
-        }
+        dateTime = UtilsGlobal.parseDate(deadline);
         if (dateTime.getTime() > System.currentTimeMillis()) {
             final long millis = dateTime.getTime() - System.currentTimeMillis();
             long days = TimeUnit.MILLISECONDS.toDays(millis);
