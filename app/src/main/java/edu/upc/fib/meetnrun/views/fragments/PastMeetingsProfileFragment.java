@@ -123,7 +123,7 @@ public class PastMeetingsProfileFragment extends Fragment {
                 pastMeetingInfoIntent.putExtra("description", meeting.getDescription());
                 String datetime = meeting.getDate();
                 pastMeetingInfoIntent.putExtra("date", datetime.substring(0, datetime.indexOf('T')));
-                pastMeetingInfoIntent.putExtra("time", datetime.substring(datetime.indexOf('T') + 1, datetime.indexOf('Z')));
+                pastMeetingInfoIntent.putExtra("time", datetime.substring(datetime.indexOf('T') + 1, datetime.length()));
                 pastMeetingInfoIntent.putExtra("level", String.valueOf(meeting.getLevel()));
 
                 String distance, steps, totalTime, avSpeed, calories;
