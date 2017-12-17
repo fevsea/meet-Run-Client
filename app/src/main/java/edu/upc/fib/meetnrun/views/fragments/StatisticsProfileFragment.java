@@ -24,7 +24,7 @@ public class StatisticsProfileFragment extends Fragment {
     private String title;
     private int page;
     TextView level;
-    TextView username;
+    TextView error;
     TextView meetings;
     TextView totalKm;
     TextView steps;
@@ -107,7 +107,7 @@ public class StatisticsProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_statistics_profile, container, false);
         context=this.getActivity();
-        username  = view.findViewById (R.id.username);
+        error     = view.findViewById (R.id.error);
         level     = view.findViewById (R.id.level);
         meetings  = view.findViewById (R.id.nMeetings);
         steps     = view.findViewById (R.id.nSteps);
@@ -137,7 +137,6 @@ public class StatisticsProfileFragment extends Fragment {
     }
     private class userStats extends AsyncTask<String,String,String> {
         private void setValues(){
-            name=u.getUsername();
             userlevel=String.valueOf(u.getLevel());
             usercalories=String.valueOf(s.getTotalCalories());
             userrhythm=s.getRhythmInString();
@@ -175,7 +174,7 @@ public class StatisticsProfileFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result){
-            username.setText(name);
+            error.setText(" ");
             level.setText(userlevel);
             meetings.setText(usermeetings);
             steps.setText(usersteps);
