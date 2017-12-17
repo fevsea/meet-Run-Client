@@ -192,4 +192,15 @@
     <string name="spanish">Castellano</string>
     <string name="accept">Aceptar</string>
     <string name="reject">Rechazar</string>
+    <string name="rankings">Rankings</string>
+    <string name="chat_not_available">El chat no está disponible</string>
+    <string name="filter_ranking">Filtrar por:</string>
+    <string name="max_level">Nivel Máx.:</string>
+    <string name="ranking_city">Ciudad</string>
+    <string name="ranking_country">Pais</string>
+    <string name="ranking_global">Global</string>
+    <string name="ranking_postcode">Código postal</string>
+    <string name="rankings_users">Ránking de usuarios</string>
+    <string name="rankings_zip">Ránking de código postal</string>
+    <string name="settingsLanguage">Cambiar idioma:</string>
 </resources>

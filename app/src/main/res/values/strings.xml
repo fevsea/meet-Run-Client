@@ -216,5 +216,7 @@
     <string name="filter_ranking">Filter by:</string>
     <string name="rankings_zip">ZIP rankings</string>
     <string name="rankings_users">User rankings</string>
+    <string name="rankings">Rankings</string>
+    <string name="settingsLanguage">Change language:</string>
 </resources>
 
