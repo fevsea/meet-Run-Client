@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -30,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private ILoginAdapter loginAdapter;
     private CurrentSession cs;
     private boolean see = false;
+    private ProgressBar progressBar;
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -45,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
         editUsername = findViewById(R.id.editUsername);
         editPassword = findViewById(R.id.editPassword);
+        progressBar = findViewById(R.id.pb_loading);
 
         cs = CurrentSession.getInstance();
         loginAdapter = cs.getLoginAdapter();
@@ -143,16 +146,11 @@ public class LoginActivity extends AppCompatActivity {
 
         User user = null;
         boolean ok = false;
-        ProgressDialog mProgressDialog;
 
         @Override
         protected void onPreExecute() {
-            mProgressDialog = new ProgressDialog(LoginActivity.this);
-            mProgressDialog.setTitle(R.string.login);
-            mProgressDialog.setMessage(getResources().getString(R.string.getting_current_session));
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.show();
+
+            progressBar.setVisibility(View.VISIBLE);
             super.onPreExecute();
         }
 
@@ -173,11 +171,11 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             if (ok) {
                 cs.setCurrentUser(user);
-                mProgressDialog.dismiss();
+                progressBar.setVisibility(View.INVISIBLE);
                 changeToMainActivity();
             }
             else deleteToken();
-            mProgressDialog.dismiss();
+            progressBar.setVisibility(View.INVISIBLE);
             super.onPostExecute(s);
         }
     }
