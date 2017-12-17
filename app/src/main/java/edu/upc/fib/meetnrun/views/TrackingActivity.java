@@ -93,11 +93,15 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private String caloriesText;
     private String distanceText;
 
+    private boolean reentrantLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tracking);
+
+        reentrantLocation = false;
 
         meetingId = getIntent().getIntExtra("id", -1);
         if (meetingId == -1) {
@@ -206,7 +210,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         /*
         Enables the 'center to location' button and enables showing the current location with a blue dot.
          */
-        if (mMap == null) {
+        if (mMap == null || reentrantLocation) {
             return;
         }
         try {
@@ -219,6 +223,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
                 getLocationPermission();
+                reentrantLocation = true;
             }
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
