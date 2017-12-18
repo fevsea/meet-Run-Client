@@ -182,5 +182,7 @@
     <string name="new_challenge_text">%1$s t\'ha desafiat</string>
     <string name="requests">Peticions</string>
     <string name="reject">Rebutjar</string>
+    <string name="error_deleting_friend">Error al eliminar l\'amic</string>
+    <string name="error_adding_friend">Error al afegir l\'amic</string>
 
 </resources>

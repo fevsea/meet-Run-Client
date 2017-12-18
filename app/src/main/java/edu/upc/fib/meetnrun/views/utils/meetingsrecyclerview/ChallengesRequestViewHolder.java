@@ -11,6 +11,8 @@ import java.util.Locale;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Challenge;
 
+import static edu.upc.fib.meetnrun.utils.UtilsViews.getExpirationText;
+
 /**
  * Created by guillemcastro on 08/12/2017.
  */
@@ -46,7 +48,7 @@ public class ChallengesRequestViewHolder extends ChallengesViewHolder {
         totalView.setText(totalText);
         opponentView.setText(challenge.getCreator().getUsername());
         try {
-            expiresIn.setText(getExpirationText(challenge.getDeadline()));
+            expiresIn.setText(getExpirationText(challenge.getDeadline(), expirationTextResourceDays, expirationTextResourceNoDays, expirationPastTextResourceDays, expirationPastTextResourceNoDays));
         }
         catch (ParseException e) {
             expiresIn.setText("");
