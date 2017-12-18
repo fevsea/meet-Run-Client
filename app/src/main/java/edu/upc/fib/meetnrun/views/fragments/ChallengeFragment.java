@@ -27,6 +27,8 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 
+import static edu.upc.fib.meetnrun.utils.UtilsViews.getExpirationText;
+
 public class ChallengeFragment extends Fragment implements View.OnClickListener {
 
     private Challenge challenge;
@@ -151,7 +153,7 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
 
 
         try {
-            endsIn.setText(getExpirationText(challenge.getDeadline()));
+            endsIn.setText(getExpirationText(challenge.getDeadline(), expirationTextResourceDays, expirationTextResourceNoDays, expirationPastTextResourceDays, expirationPastTextResourceNoDays));
         }
         catch (ParseException e) {
             endsIn.setText("");
@@ -170,34 +172,7 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
 
     }
 
-    private String getExpirationText(String deadline) throws ParseException {
-        Date dateTime;
-        String expirationText;
-        dateTime = UtilsGlobal.parseDate(deadline);
-        if (dateTime.getTime() > System.currentTimeMillis()) {
-            final long millis = dateTime.getTime() - System.currentTimeMillis();
-            long days = TimeUnit.MILLISECONDS.toDays(millis);
-            long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(days);
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
-            if (days > 0) {
-                expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceDays, days, hours, minutes);
-            } else {
-                expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceNoDays, hours, minutes);
-            }
-        }
-        else {
-            final long millis = System.currentTimeMillis() - dateTime.getTime();
-            long days = TimeUnit.MILLISECONDS.toDays(millis);
-            long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(days);
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
-            if (days > 0) {
-                expirationText = String.format(Locale.forLanguageTag("es"), expirationPastTextResourceDays, days, hours, minutes);
-            } else {
-                expirationText = String.format(Locale.forLanguageTag("es"), expirationPastTextResourceNoDays, hours, minutes);
-            }
-        }
-        return expirationText;
-    }
+
 
     @Override
     public void onClick(View v) {
