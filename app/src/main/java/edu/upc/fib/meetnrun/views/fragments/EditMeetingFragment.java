@@ -39,17 +39,22 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetMeeting;
+import edu.upc.fib.meetnrun.asynctasks.UpdateMeeting;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 
 import static android.app.Activity.RESULT_OK;
@@ -67,6 +72,8 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
     private EditText descriptionText;
     private EditText levelText;
     private ScrollView scrollView;
+    private ProgressDialog mProgressDialog;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,8 +89,7 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
 
         this.controller = CurrentSession.getInstance().getMeetingAdapter();
         Log.i("GET Meeting with ID: ", String.valueOf(getActivity().getIntent().getIntExtra("id", -1)));
-        GetMeeting getMeeting = new GetMeeting();
-        getMeeting.execute(getActivity().getIntent().getIntExtra("id", -1));
+        callGetMeeting(getActivity().getIntent().getIntExtra("id",-1));
         return view;
     }
 
@@ -252,8 +258,7 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
             meeting.setTitle(titleText.getText().toString());
             meeting.setDescription(descriptionText.getText().toString());
             meeting.setLevel(Integer.valueOf(levelText.getText().toString()));
-            SaveMeeting saveMeeting = new SaveMeeting();
-            saveMeeting.execute(this.meeting);
+            callSaveMeeting(this.meeting);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -274,75 +279,40 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
         this.meeting.setPublic(isChecked);
     }
 
-    private class SaveMeeting extends AsyncTask<Meeting, String, Boolean> {
 
-        Exception exception = null;
-        ProgressDialog mProgressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setTitle(R.string.saving);
-            mProgressDialog.setMessage(getResources().getString(R.string.saving_meeting));
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.show();
-        }
-
-        @Override
-        protected Boolean doInBackground(Meeting... params) {
-            Boolean res = false;
-            try {
-                res = controller.updateMeeting(params[0]);
-                //TODO Pending to catch correctly
+    private void callSaveMeeting(Meeting meeting) {
+        mProgressDialog = new ProgressDialog(getActivity());
+        mProgressDialog.setTitle(R.string.saving);
+        mProgressDialog.setMessage(getResources().getString(R.string.saving_meeting));
+        mProgressDialog.setIndeterminate(true);
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+        new UpdateMeeting() {
+            @Override
+            public void onResponseReceived(boolean result) {
+                mProgressDialog.dismiss();
+                if (!result) {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    getActivity().finish();
+                }
             }
-            catch (NotFoundException | ParamsException e) {
-                exception = e;
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            }
-            return res;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            mProgressDialog.dismiss();
-            if (exception != null || !result) {
-                Toast.makeText(getActivity(), getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
-            }
-            else {
-                getActivity().finish();
-            }
-        }
-
+        }.execute(meeting);
     }
 
-    private class GetMeeting extends AsyncTask<Integer, String, Meeting> {
-
-        Exception exception = null;
-
-        @Override
-        protected Meeting doInBackground(Integer... params) {
-            Meeting res = null;
-            try {
-                res = controller.getMeeting(params[0]);
-            } catch (NotFoundException e) {
-                exception = e;
+    private void callGetMeeting(int meetingId) {
+        new edu.upc.fib.meetnrun.asynctasks.GetMeeting() {
+            @Override
+            public void onResponseReceived(Meeting result) {
+                meeting = result;
+                if (meeting == null ) {
+                    meeting = new Meeting(1, "HOLA", "Descr \n ipcion \n rand \n om", false, 5, new Date().toString(), "41", "2", null);
+                    Toast.makeText(getActivity(), getResources().getString(R.string.error_loading_meeting), Toast.LENGTH_SHORT).show();
+                }
+                populateViews();
             }
-            return res;
-        }
-
-        @Override
-        protected void onPostExecute(Meeting result) {
-            meeting = result;
-            if (meeting == null ) {
-                meeting = new Meeting(1, "HOLA", "Descr \n ipcion \n rand \n om", false, 5, new Date().toString(), "41", "2", null);
-                Toast.makeText(getActivity(), getResources().getString(R.string.error_loading_meeting), Toast.LENGTH_SHORT).show();
-            }
-            populateViews();
-        }
-
-
+        }.execute(meetingId);
     }
+
 }

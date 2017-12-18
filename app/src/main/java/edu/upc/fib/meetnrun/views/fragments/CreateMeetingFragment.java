@@ -59,6 +59,7 @@ import java.util.Locale;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.asynctasks.CreateMeeting;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -97,8 +98,6 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     ScrollView sV;
     Switch publicMeeting;
 
-    private IMeetingAdapter meetingAdapter;
-    private IChatAdapter chatAdapter;
 
     Geocoder geocoder;
 
@@ -106,8 +105,6 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
-        chatAdapter = CurrentSession.getInstance().getChatAdapter();
     }
 
     @Override
@@ -376,7 +373,7 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
 
 
     private void create_meeting(){
-        new newMeeting().execute();
+        callCreateMeeting();
     }
 
     @Override
@@ -386,43 +383,21 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         else publicMeeting.setText(R.string.private_meeting);
     }
 
-    private class newMeeting extends AsyncTask<String,String,String> {
-        Chat newChat;
-        ArrayList<Integer> owner;
-        Date date;
-        Activity context = getActivity();
-        @Override
-        protected  void onPreExecute() {
-            context = getActivity();
-            owner = new ArrayList<>();
-            owner.add(CurrentSession.getInstance().getCurrentUser().getId());
-            Calendar calendar = Calendar.getInstance();
-            date = calendar.getTime();
-        }
-        @Override
-        protected String doInBackground(String... strings){
-            try {
-                m= meetingAdapter.createMeeting(Name,Description,Public,Level,Date,Latitude,Longitude,null);
-                newChat = chatAdapter.createChat(Name,owner,1,m.getId(),"",0,date);
-            } catch (ParamsException | AuthorizationException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s){
-            CurrentSession.getInstance().setChat(newChat);
-            if (friends){
-                Intent i=new Intent(getActivity(), MeetingFriendsActivity.class);
-                Integer MeetingId=m.getId();
-                i.putExtra("level", Level);
-                i.putExtra("meetingId",MeetingId);
-                startActivity(i);
+    private void callCreateMeeting() {
+        new CreateMeeting(Name,Description,Public,Level,Date,Latitude,Longitude) {
+            @Override
+            public void onResponseReceived(Meeting meeting) {
+                if (friends){
+                    Intent i=new Intent(getActivity(), MeetingFriendsActivity.class);
+                    Integer MeetingId=m.getId();
+                    i.putExtra("level", Level);
+                    i.putExtra("meetingId",MeetingId);
+                    startActivity(i);
+                }
+                getActivity().finish();
             }
-            context.finish();
-            super.onPostExecute(s);
-        }
+        }.execute();
     }
 
 }

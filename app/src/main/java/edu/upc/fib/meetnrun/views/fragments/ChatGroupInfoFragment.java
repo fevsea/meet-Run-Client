@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -43,7 +44,6 @@ public class ChatGroupInfoFragment extends Fragment {
 
     protected View view;
     protected UsersAdapter usersAdapter;
-    protected IFriendsAdapter friendsDBAdapter;
     protected List<User> groupUsers;
     protected FloatingActionButton fab;
     private TextView groupName;
@@ -65,7 +65,6 @@ public class ChatGroupInfoFragment extends Fragment {
 
         this.view = inflater.inflate(R.layout.fragment_chat_group_info, container, false);
 
-        friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
         chat = CurrentSession.getInstance().getChat();
 
         String name = chat.getChatName();
@@ -100,7 +99,7 @@ public class ChatGroupInfoFragment extends Fragment {
         setupRecyclerView();
         fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.INVISIBLE);
-        new GetAllFriends().execute();
+        callGetAllFriends();
         return this.view;
     }
 
@@ -166,50 +165,36 @@ public class ChatGroupInfoFragment extends Fragment {
         return circularShape;
     }
 
-    private class GetAllFriends extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            friends = new ArrayList<>();
-            progressBar.setVisibility(View.VISIBLE);
-            isLoading = true;
-            pageNumber = 0;
-            isLastPage = false;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                List<Friend> friendsPage = new ArrayList<>();
-                while (!isLastPage) {
-                    friendsPage = friendsDBAdapter.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(),pageNumber);
-                    if (friendsPage.size() != 0) {
-                        for (Friend f : friendsPage) {
-                            User friend = f.getFriend();
-                            if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
-                            friends.add(friend);
-                        }
-                        ++pageNumber;
-                    }
-                    else isLastPage = true;
-                }
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            isLoading = false;
-            progressBar.setVisibility(View.INVISIBLE);
-            Log.e("Friends",friends.toString());
-            super.onPostExecute(s);
-        }
-
+    private void setLoading() {
+        friends = new ArrayList<>();
+        progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+        pageNumber = 0;
+        isLastPage = false;
     }
+
+    private void updateData() {
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
+        Log.e("Friends",friends.toString());
+    }
+
+    private void callGetAllFriends() {
+        setLoading();
+        new edu.upc.fib.meetnrun.asynctasks.GetAllFriends() {
+            @Override
+            public void onResponseReceived(List<Friend> allfriends) {
+                friends = new ArrayList<User>();
+                for (Friend f : allfriends) {
+                    User friend = f.getFriend();
+                    if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
+                    friends.add(friend);
+                }
+                updateData();
+            }
+        }.execute();
+    }
+
 
     @Override
     public void onResume() {

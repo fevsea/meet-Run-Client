@@ -5,27 +5,29 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
-import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackMeetings;
+import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackUsers;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 
+public abstract class GetParticipants extends AsyncTask<Integer,Void,List<User>> implements AsyncTaskCallbackUsers {
 
-public abstract class GetMeetingsFiltered extends AsyncTask<String,Void,List<Meeting> > implements AsyncTaskCallbackMeetings {
     private int page;
     private IMeetingAdapter meetingAdapter;
 
-    public GetMeetingsFiltered(int page) {
+    public GetParticipants (int page) {
         setPage(page);
         meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
     }
+
     @Override
-    protected List<Meeting> doInBackground(String... query) {
-        return meetingAdapter.getAllMeetingsFilteredByName(query[0],page);
+    protected List<User> doInBackground(Integer... integers) {
+        return meetingAdapter.getParticipantsFromMeeting(integers[0],page);
     }
 
     @Override
-    protected void onPostExecute(List<Meeting> meetings) {
-        onResponseReceived(meetings);
+    protected void onPostExecute(List<User> users) {
+        onResponseReceived(users);
+        super.onPostExecute(users);
     }
 
     private int getPage() {
@@ -35,5 +37,4 @@ public abstract class GetMeetingsFiltered extends AsyncTask<String,Void,List<Mee
     private void setPage(int page) {
         this.page = page;
     }
-
 }

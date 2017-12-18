@@ -24,6 +24,7 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetChats;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -137,7 +138,7 @@ public class ChatListFragment extends Fragment {
     }
 
     private void updateChats() {
-        new getChats().execute();
+        callGetChats();
     }
 
     private void addChat() {
@@ -235,30 +236,15 @@ public class ChatListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
-    private class getChats extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            setLoading();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            try {
-                l = chatDBAdapter.getChats(pageNumber);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
+    private void callGetChats() {
+        setLoading();
+        new GetChats(pageNumber) {
+            @Override
+            public void onResponseReceived(List<Chat> chats) {
+                l = chats;
+                updateData();
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            updateData();
-            super.onPostExecute(s);
-        }
+        }.execute();
     }
 
     private void updateData() {

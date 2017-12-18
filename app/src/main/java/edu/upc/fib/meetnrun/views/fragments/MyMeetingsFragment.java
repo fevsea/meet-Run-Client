@@ -22,6 +22,8 @@ import java.util.List;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetMyMeetings;
+import edu.upc.fib.meetnrun.asynctasks.LeaveMeeting;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -41,9 +43,6 @@ public class MyMeetingsFragment extends Fragment {
 
     private MyMeetingsAdapter meetingsAdapter;
     private View view;
-    private IMeetingAdapter meetingController;
-    private IChatAdapter chatAdapter;
-    private IUserAdapter userController;
     public MyMeetingsFragment() {
 
     }
@@ -53,9 +52,6 @@ public class MyMeetingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
-        meetingController = CurrentSession.getInstance().getMeetingAdapter();
-        chatAdapter = CurrentSession.getInstance().getChatAdapter();
-        userController = CurrentSession.getInstance().getUserAdapter();
         setupRecyclerView();
 
         FloatingActionButton fab =
@@ -123,7 +119,7 @@ public class MyMeetingsFragment extends Fragment {
     }
 
     private void updateMeetingList() {
-            new GetMyMeetings().execute(CurrentSession.getInstance().getCurrentUser().getId());
+            callGetMyMeetings(CurrentSession.getInstance().getCurrentUser().getId());
     }
 
     private void createNewMeeting() {
@@ -153,7 +149,7 @@ public class MyMeetingsFragment extends Fragment {
                     getString(R.string.ok), getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        new LeaveMeeting().execute(meeting.getId(),meeting.getChatID());
+                        callLeaveMeeting(meeting.getId(),meeting.getChatID());
                     }
                 },
                 new DialogInterface.OnClickListener() {
@@ -165,57 +161,23 @@ public class MyMeetingsFragment extends Fragment {
         );
     }
 
-    private class GetMyMeetings extends AsyncTask<Integer,String,String> {
-        List<Meeting> l = new ArrayList<>();
+    private void callGetMyMeetings(int userId) {
+        new edu.upc.fib.meetnrun.asynctasks.GetMyMeetings() {
 
-        @Override
-        protected String doInBackground(Integer... integers) {
-            //TODO handle exceptions
-            try {
-                l = userController.getUsersFutureMeetings(integers[0]);
-            } catch (AuthorizationException | ParamsException e) {
-                e.printStackTrace();
+            @Override
+            public void onResponseReceived(List<Meeting> myMeetings) {
+                meetingsAdapter.updateMeetingsList(myMeetings);
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            meetingsAdapter.updateMeetingsList(l);
-            super.onPostExecute(s);
-        }
+        }.execute(userId);
     }
 
-    /*
-        LeaveMeeting.execute(meetingId,chatId)
-     */
-    private class LeaveMeeting extends AsyncTask<Integer,String,String> {
 
-        @Override
-        protected String doInBackground(Integer... integers) {
-            //TODO handle exceptions
-            try {
-                //TODO possible millora: crida al servidor leaveChat
-                meetingController.leaveMeeting(integers[0],CurrentSession.getInstance().getCurrentUser().getId());
-                Chat chat = chatAdapter.getChat(integers[1]);
-                List<User> chatUsers = chat.getListUsersChat();
-                chatUsers.remove(CurrentSession.getInstance().getCurrentUser());
-                chat.setListUsersChat(chatUsers);
-                chatAdapter.updateChat(chat);
-            } catch (AuthorizationException | ParamsException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
+    private void callLeaveMeeting(int meetingId, int chatId) {
+        new LeaveMeeting() {
+            @Override
+            public void onResponseReceived() {
+                updateMeetingList();
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            updateMeetingList();
-            super.onPostExecute(s);
-        }
+        }.execute(meetingId,chatId);
     }
 }

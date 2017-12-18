@@ -1,7 +1,6 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -26,6 +25,9 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
+import edu.upc.fib.meetnrun.asynctasks.CreateChat;
+import edu.upc.fib.meetnrun.asynctasks.GetFriends;
+import edu.upc.fib.meetnrun.asynctasks.UpdateChat;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -45,8 +47,6 @@ public class ChatGroupsFragment extends Fragment {
 
     private View view;
     private FriendsAdapter friendsAdapter;
-    private IChatAdapter chatDBAdapter;
-    private IFriendsAdapter friendsDBAdapter;
     private FloatingActionButton fab;
     private List<Friend> l;
     private EditText groupName;
@@ -77,8 +77,6 @@ public class ChatGroupsFragment extends Fragment {
         this.view = inflater.inflate(R.layout.fragment_chat_groups, container, false);
 
         CurrentSession cs = CurrentSession.getInstance();
-        chatDBAdapter = cs.getChatAdapter();
-        friendsDBAdapter = cs.getFriendsAdapter();
         currentUser = cs.getCurrentUser();
 
         progressBar = view.findViewById(R.id.pb_loading_group_chat);
@@ -126,7 +124,7 @@ public class ChatGroupsFragment extends Fragment {
                         List<User> groupUsers = chat.getListUsersChat();
                         groupUsers.addAll(selectedFriends);
                         chat.setListUsersChat(groupUsers);
-                        new UpdateChat().execute(chat);
+                        callUpdateChat(chat);
                         getActivity().finish();
                     }
                     else {
@@ -138,7 +136,7 @@ public class ChatGroupsFragment extends Fragment {
                         for (User user : selectedFriends) {
                             selectedFriendsID.add(user.getId());
                         }
-                        new createChat().execute();
+                        callCreateChat();
                     }
                 }
             }
@@ -157,7 +155,7 @@ public class ChatGroupsFragment extends Fragment {
     }
 
     private void updateFriends() {
-        new getFriends().execute();
+        callGetFriends();
     }
 
     private void setupRecyclerView() {
@@ -245,88 +243,42 @@ public class ChatGroupsFragment extends Fragment {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
-    private class getFriends extends AsyncTask<String,String,String> {
+    private void callGetFriends() {
+        setLoading();
+        new GetFriends(pageNumber) {
 
-        @Override
-        protected void onPreExecute() {
-            setLoading();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            try {
-                l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
+            @Override
+            public void onResponseReceived(List<Friend> friends) {
+                l = friends;
+                updateData();
+                if (friendsAdapter.getItemCount() == 0) numbFriends.setText("No friends available.");
             }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            updateData();
-            if (friendsAdapter.getItemCount() == 0) numbFriends.setText("No friends available.");
-            super.onPostExecute(s);
-        }
+        }.execute();
     }
 
-    private class createChat extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            setLoading();
-        }
-
-
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                chat = chatDBAdapter.createChat(name, selectedFriendsID, 1, null, "", 0, dateWithoutTime);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
-                e.printStackTrace();
+    private void callCreateChat() {
+        setLoading();
+        new CreateChat(name,selectedFriendsID,1,null,"",0,dateWithoutTime) {
+            @Override
+            public void onResponseReceived(Chat chat) {
+                if (chat != null) {
+                    Intent i = new Intent(getContext(), ChatActivity.class);
+                    CurrentSession.getInstance().setChat(chat);
+                    getActivity().finish();
+                    startActivity(i);
+                }
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (chat != null) {
-                Intent i = new Intent(getContext(), ChatActivity.class);
-                CurrentSession.getInstance().setChat(chat);
-                getActivity().finish();
-                startActivity(i);
-            }
-            super.onPostExecute(s);
-        }
+        }.execute();
     }
 
-    private class UpdateChat extends AsyncTask<Chat,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            setLoading();
-        }
-
-
-        @Override
-        protected String doInBackground(Chat... chats) {
-            try {
-                chatDBAdapter.updateChat(chats[0]);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
+    private void callUpdateChat(Chat chat) {
+        setLoading();
+        new UpdateChat() {
+            @Override
+            public void onResponseReceived() {
+                Log.d("ChatGroupsFragment","Chat updated");
             }
-            return null;
-        }
+        }.execute(chat);
     }
 
     private void initializePagination() {

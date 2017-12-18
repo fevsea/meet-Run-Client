@@ -36,6 +36,8 @@ import java.util.Date;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
+import edu.upc.fib.meetnrun.asynctasks.DeleteChat;
+import edu.upc.fib.meetnrun.asynctasks.UpdateChat;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -194,7 +196,7 @@ public class ChatFragment extends Fragment {
                 //NUMB_MESSAGES_LOAD++;
                 txtMessage.setText("");
                 chat.setMessage(m);
-                new updateChat().execute();
+                callUpdateChat();
 
             }
         });
@@ -409,41 +411,24 @@ public class ChatFragment extends Fragment {
         super.onResume();
     }
 
-    private class updateChat extends AsyncTask<String,String,String> {
-
-        @Override
-        protected String doInBackground(String... s) {
-
-            try {
-                chatDBAdapter.updateChat(chat);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
+    private void callUpdateChat() {
+        new UpdateChat() {
+            @Override
+            public void onResponseReceived() {
+                Log.d("ChatFragment","Chat updated");
             }
-
-            return null;
-        }
+        }.execute(chat);
     }
 
-    private class deleteChat extends AsyncTask<String,String,String> {
 
-        @Override
-        protected String doInBackground(String... s) {
-
-            try {
-                chatDBAdapter.deleteChat(chat.getId());
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
+    private void callDeleteChat(int chatId) {
+        new DeleteChat() {
+            @Override
+            public void onResponseReceived() {
+                Log.d("ChatFragment","Chat deleted");
             }
-            return null;
-        }
+        }.execute(chatId);
     }
+
 
 }

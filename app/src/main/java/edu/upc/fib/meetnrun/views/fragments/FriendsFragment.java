@@ -4,10 +4,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
 
+import java.util.List;
+
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.asynctasks.GetFriends;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
 import edu.upc.fib.meetnrun.views.UsersListActivity;
@@ -42,7 +46,7 @@ public class FriendsFragment extends FriendListFragmentTemplate {
 
     @Override
     protected void getMethod() {
-        new getFriends().execute();
+        callGetFriends();
     }
 
     private void addNewFriend() {
@@ -67,46 +71,38 @@ public class FriendsFragment extends FriendListFragmentTemplate {
         };
     }
 
-    private class getFriends extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
-            isLoading = true;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            try {
-                l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (l != null) {
-                if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
-                else friendsAdapter.addFriends(l);
-
-                if (l.size() == 0) {
-                    isLastPage = true;
-                }
-                else pageNumber++;
-            }
-            swipeRefreshLayout.setRefreshing(false);
-            isLoading = false;
-            progressBar.setVisibility(View.INVISIBLE);
-            super.onPostExecute(s);
-        }
-
+    private void setLoading() {
+        if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
     }
+
+    private void updateData() {
+        if (l != null) {
+            if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
+            else friendsAdapter.addFriends(l);
+
+            if (l.size() == 0) {
+                isLastPage = true;
+            }
+            else pageNumber++;
+        }
+        swipeRefreshLayout.setRefreshing(false);
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    private void callGetFriends() {
+        setLoading();
+        new GetFriends(pageNumber) {
+
+            @Override
+            public void onResponseReceived(List<Friend> friends) {
+                l = friends;
+                updateData();
+            }
+        }.execute();
+    }
+
 
     @Override
     public void onResume() {
