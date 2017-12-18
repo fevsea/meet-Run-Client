@@ -192,4 +192,6 @@
     <string name="spanish">Castellano</string>
     <string name="accept">Aceptar</string>
     <string name="reject">Rechazar</string>
+    <string name="error_deleting_friend">Error al eliminar el amigo</string>
+    <string name="error_adding_friend">Error al añadir el amigo</string>
 </resources>
