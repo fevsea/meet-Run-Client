@@ -1,10 +1,13 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.List;
 
+import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.User;
 
 /**
@@ -23,5 +26,21 @@ public class RankingsUserAdapter {
         this.context = context;
     }
 
+    @Override
+    public UsersViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        v = layoutInflater.inflate(R.layout.user_item_rankings, parent, false);
+        return new UsersViewHolder(v,listener, context);
+    }
 
+    @Override
+    public void onBindViewHolder(final UsersViewHolder holder, int position) {
+        User user = neighbors.get(position);
+        holder.bindMeeting(user);
+    }
+
+    @Override
+    public int getItemCount() {
+        return neighbors.size();
+    }
 }
