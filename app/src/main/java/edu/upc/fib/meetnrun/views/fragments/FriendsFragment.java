@@ -18,6 +18,7 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.FriendProfileActivity;
+import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.UsersListActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.PendingFriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -154,9 +155,13 @@ public class FriendsFragment extends FriendListFragmentTemplate {
 
             @Override
             public void onItemClicked(int position) {
-                User friend = pendingFriendsAdapter.getFriendAtPosition(position).getFriend();
-                if (currentUser.getUsername().equals(friend.getUsername())) friend = pendingFriendsAdapter.getFriendAtPosition(position).getUser();
-                getIntent(friend);
+                Friend friendship = pendingFriendsAdapter.getFriendAtPosition(position);
+                User friend = friendship.getFriend();
+                if (currentUser.getUsername().equals(friend.getUsername())) friend = friendship.getUser();
+                Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
+                CurrentSession.getInstance().setFriend(friend);
+                friendProfileIntent.putExtra("accepted", friendship.isAccepted());
+                startActivity(friendProfileIntent);
             }
         };
     }
