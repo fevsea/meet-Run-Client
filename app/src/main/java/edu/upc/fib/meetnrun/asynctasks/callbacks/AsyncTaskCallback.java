@@ -7,6 +7,4 @@ import edu.upc.fib.meetnrun.models.Meeting;
 
 public interface AsyncTaskCallback {
     void onResponseReceived();
-
-    void onExceptionReceived();
 }

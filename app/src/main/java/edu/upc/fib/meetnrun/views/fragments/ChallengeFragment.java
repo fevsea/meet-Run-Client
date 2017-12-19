@@ -20,6 +20,8 @@ import java.util.concurrent.TimeUnit;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
+import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectChallenge;
+import edu.upc.fib.meetnrun.asynctasks.GetChallenge;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
@@ -49,6 +51,7 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
     private String expirationPastTextResourceDays;
     private String expirationPastTextResourceNoDays;
     private String progressTextResource;
+    private ProgressDialog progressDialog;
 
     private Button accept;
     private Button reject;
@@ -93,8 +96,7 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
         accept = view.findViewById(R.id.accept);
         reject = view.findViewById(R.id.reject);
 
-        GetChallenge getChallenge = new GetChallenge();
-        getChallenge.execute(challengeId);
+        callGetChallenge(challengeId);
         return view;
     }
 
@@ -210,94 +212,56 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
                 accept = false;
                 break;
         }
-        AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge();
-        acceptOrRejectChallenge.execute(accept);
+        callAcceptOrRejectChallenge(accept);
     }
 
-    private class GetChallenge extends AsyncTask<Integer, String, Boolean> {
+    private void setProgressDialog() {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle(getResources().getString(R.string.loading));
+        progressDialog.setMessage(getResources().getString(R.string.loading_challenge));
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+    }
 
-        private ProgressDialog progressDialog;
-        private Exception ex;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setTitle(getResources().getString(R.string.loading));
-            progressDialog.setMessage(getResources().getString(R.string.loading_challenge));
-            progressDialog.setIndeterminate(true);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected Boolean doInBackground(Integer... params) {
-            try {
-                challenge = CurrentSession.getInstance().getChallengeAdapter().getChallenge(params[0]);
-            }
-            catch(AuthorizationException | NotFoundException e) {
-                ex = e;
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            progressDialog.dismiss();
-            if (result && ex == null) {
+    private void callGetChallenge(final int challengeId) {
+        new GetChallenge() {
+            @Override
+            public void onResponseReceived(Challenge challengeResponse) {
+                challenge = challengeResponse;
+                progressDialog.dismiss();
                 updateViews();
-            }
-            else if (ex instanceof AuthorizationException) {
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else if (ex instanceof NotFoundException) {
-                Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-            }
-        }
-
-    }
-
-    private class AcceptOrRejectChallenge extends AsyncTask<Boolean, String, Boolean> {
-
-        Exception exception;
-
-        @Override
-        protected Boolean doInBackground(Boolean... params) {
-            IChallengeAdapter challengeAdapter = CurrentSession.getInstance().getChallengeAdapter();
-            try {
-                if (params[0]) {
-                    challengeAdapter.acceptChallenge(challenge.getId());
+                /* TODO handle exceptions
+                else if (ex instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (ex instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
                 }
                 else {
-                    challengeAdapter.deleteRejectChallenge(challenge.getId());
-                }
+                    Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
+                }*/
             }
-            catch (NotFoundException | AuthorizationException e) {
-                exception = e;
-            }
-            return true;
-        }
+        }.execute(challengeId);
+    }
 
-        protected void onPostExecute(Boolean s) {
-            super.onPostExecute(s);
-            if (s && exception == null) {
+    private void callAcceptOrRejectChallenge(Boolean accept) {
+        new AcceptOrRejectChallenge(challenge.getId()) {
+            @Override
+            public void onResponseReceived() {
                 getActivity().finish();
+                /* TODO handle exceptions
+                else if (exception instanceof AuthorizationException){
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (exception instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
+                }*/
             }
-            else if (exception instanceof AuthorizationException){
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else if (exception instanceof NotFoundException) {
-                Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-            }
-        }
-
+        }.execute(accept);
     }
 
 }

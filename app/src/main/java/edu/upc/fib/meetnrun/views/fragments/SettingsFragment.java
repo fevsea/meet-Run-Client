@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.DeleteAccount;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -93,7 +94,7 @@ public class SettingsFragment extends Fragment {
                 showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                new deleteAccount().execute();
+                                callDeleteAccount();
                                 Intent intent = new Intent(getContext(),LoginActivity.class);
                                 getActivity().finishAffinity();
                                 startActivity(intent);
@@ -152,32 +153,17 @@ public class SettingsFragment extends Fragment {
     }
 
 
-    private class deleteAccount extends AsyncTask<String,String,String> {
-
-        boolean ok = false;
-
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                controller.deleteUserByID(cs.getCurrentUser().getId());
-                ok = true;
-            } catch (NotFoundException | AuthorizationException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (ok) {
+    private void callDeleteAccount() {
+        new DeleteAccount() {
+            @Override
+            public void onResponseReceived() {
                 Toast.makeText(getContext(), "Account has been removed successfully", Toast.LENGTH_SHORT).show();
                 deleteToken();
+
+                //TODO handle exception  Toast.makeText(getContext(), "Delete account ERROR", Toast.LENGTH_SHORT).show();
+
             }
-            else {
-                Toast.makeText(getContext(), "Delete account ERROR", Toast.LENGTH_SHORT).show();
-            }
-            super.onPostExecute(s);
-        }
+        }.execute();
     }
 
 }

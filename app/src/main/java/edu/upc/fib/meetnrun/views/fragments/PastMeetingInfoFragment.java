@@ -29,6 +29,9 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
+import edu.upc.fib.meetnrun.asynctasks.GetAllParticipants;
+import edu.upc.fib.meetnrun.asynctasks.GetParticipants;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -167,61 +170,37 @@ public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallb
                 friendsList.setAdapter(participantsAdapter);
 
 
-            }
+    }
 
+    @Override
+    public void onResume() {
+        getParticipantsList();
+        super.onResume();
+    }
+
+    private void getParticipantsList() {
+        callGetAllParticipants(meetingId);
+        callGetAllFriends();
+    }
+
+    private void callGetAllFriends() {
+        new GetAllFriends() {
             @Override
-            public void onResume() {
-                getParticipantsList();
-                super.onResume();
+            public void onResponseReceived(List<Friend> allfriends) {
+                friends = allfriends;
             }
+        }.execute();
+    }
 
-            private void getParticipantsList() {
-                new PastMeetingInfoFragment.getParticipants().execute(meetingId);
-                new PastMeetingInfoFragment.getFriends().execute(CurrentSession.getInstance().getCurrentUser().getId().toString());
+    private void callGetAllParticipants(int meetingId) {
+        new GetAllParticipants() {
+            @Override
+            public void onResponseReceived(List<User> users) {
+                participantsAdapter.updateFriendsList(users);
             }
+        }.execute(meetingId);
+    }
 
-            private class getParticipants extends AsyncTask<Integer,String,String> {
-
-                private List<User> l = new ArrayList<>();
-
-                @Override
-                protected String doInBackground(Integer... integers) {
-                    //TODO handle exceptions
-                    try {
-                        l = meetingController.getParticipantsFromMeeting(integers[0],0);//TODO arreglar paginas
-                    } catch (AuthorizationException | ParamsException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(String s) {
-                    participantsAdapter.updateFriendsList(l);
-                    super.onPostExecute(s);
-                }
-            }
-
-            private class getFriends extends AsyncTask<String,String,String> {
-
-                @Override
-                protected String doInBackground(String... strings) {
-
-                    try {
-                        friends = friendsController.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(), 0);
-                    } catch (AuthorizationException e) {
-                        e.printStackTrace();
-                    } catch (NotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(String s) {
-                    super.onPostExecute(s);
-                }
-            }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
