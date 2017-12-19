@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.asynctasks.AddFriend;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 
@@ -37,31 +38,19 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
 
     @Override
     protected void getMethod(String s) {
-        new addFriend().execute(s);
+        callAddFriend(s);
     }
 
-    private class addFriend extends AsyncTask<String,String,String> {
-
-        boolean ok = false;
-
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                ok = friendsDBAdapter.addFriend(Integer.parseInt(s[0]));
-            } catch (AuthorizationException | ParamsException e) {
-                e.printStackTrace();
+    private void callAddFriend(String s) {
+        new AddFriend() {
+            @Override
+            public void onResponseReceived(boolean b) {
+                if (b) {
+                    Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                    //currentFriend.setFriend(true);
+                    getActivity().finish();
+                }
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (ok) {
-                Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
-                //currentFriend.setFriend(true);
-                getActivity().finish();
-            }
-            super.onPostExecute(s);
-        }
+        }.execute(s);
     }
 }

@@ -23,6 +23,9 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
+import edu.upc.fib.meetnrun.asynctasks.GetFriends;
+import edu.upc.fib.meetnrun.asynctasks.GetUsers;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -39,10 +42,8 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 
 public class UsersListFragment extends Fragment {
 
-    private IUserAdapter usersDBAdapter;
     private View view;
     private UsersAdapter usersAdapter;
-    private IFriendsAdapter friendsDBAdapter;
     private List<User> l;
     private List<Friend> friends;
     private FloatingActionButton fab;
@@ -63,8 +64,6 @@ public class UsersListFragment extends Fragment {
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
 
         CurrentSession cs = CurrentSession.getInstance();
-        usersDBAdapter = cs.getUserAdapter();
-        friendsDBAdapter = cs.getFriendsAdapter();
         currentUser = cs.getCurrentUser();
 
         friends = new ArrayList<>();
@@ -195,92 +194,58 @@ public class UsersListFragment extends Fragment {
     }
 
     private void getMethod() {
-        new getFriends().execute();
+        callGetFriends();
     }
 
-
-    private class getFriends extends AsyncTask<String,String,String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            List<Friend> aux = new ArrayList<>();
-
-            try {
-                aux = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), 0);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }
-
-            int count = 1;
-            while (aux.size() != 0) {
-                friends.addAll(aux);
-                try {
-                    aux = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), count);
-                } catch (AuthorizationException e) {
-                    e.printStackTrace();
-                } catch (NotFoundException e) {
-                    e.printStackTrace();
+    private void updateData(List<User> users) {
+        l = users;
+        l.remove(CurrentSession.getInstance().getCurrentUser());
+        for (User user: l) {
+            boolean equal = false;
+            for (Friend f: friends) {
+                User friend = f.getFriend();
+                if (currentUser.getUsername().equals(friend.getUsername())) friend = f.getUser();
+                if (user.getUsername().equals(friend.getUsername())) {
+                    equal = true;
+                    break;
                 }
-                count++;
             }
-            return null;
+            if (equal) user.setFriend(true);
         }
 
-        @Override
-        protected void onPostExecute(String s) {
-            new getUsers().execute();
-            super.onPostExecute(s);
+        if (l != null) {
+            if (pageNumber == 0) usersAdapter.updateFriendsList(l);
+            else usersAdapter.addFriends(l);
+
+            if (l.size() == 0) {
+                isLastPage = true;
+            }
+            else pageNumber++;
         }
+        swipeRefreshLayout.setRefreshing(false);
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
-    private class getUsers extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
-            isLoading = true;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            l = usersDBAdapter.getAllUsers(pageNumber);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-
-            l.remove(CurrentSession.getInstance().getCurrentUser());
-            for (User user: l) {
-                boolean equal = false;
-                for (Friend f: friends) {
-                    User friend = f.getFriend();
-                    if (currentUser.getUsername().equals(friend.getUsername())) friend = f.getUser();
-                    if (user.getUsername().equals(friend.getUsername())) {
-                        equal = true;
-                        break;
-                    }
-                }
-                if (equal) user.setFriend(true);
+    private void callGetFriends() {
+        new GetAllFriends() {
+            @Override
+            public void onResponseReceived(List<Friend> friendsResponse) {
+                friends = friendsResponse;
+                callGetUsers();
             }
+        }.execute();
+    }
 
-            if (l != null) {
-                if (pageNumber == 0) usersAdapter.updateFriendsList(l);
-                else usersAdapter.addFriends(l);
-
-                if (l.size() == 0) {
-                    isLastPage = true;
-                }
-                else pageNumber++;
+    private void callGetUsers() {
+        if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+        new GetUsers(pageNumber) {
+            @Override
+            public void onResponseReceived(List<User> users) {
+                updateData(users);
             }
-            swipeRefreshLayout.setRefreshing(false);
-            isLoading = false;
-            progressBar.setVisibility(View.INVISIBLE);
-            super.onPostExecute(s);
-        }
+        }.execute();
     }
 
 }

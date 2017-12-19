@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
+import edu.upc.fib.meetnrun.asynctasks.UpdatePassword;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -96,37 +97,20 @@ public class ChangePasswordFragment extends Fragment {
     }
 
     private void saveNewPass() {
-        new updatePass().execute(currentPass, newPass);
+        callUpdatePassword(currentPass, newPass);
     }
 
-
-    private class updatePass extends AsyncTask<String, String, Boolean> {
-
-        Exception exception = null;
-        Boolean actualitzat_correctament;
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-
-                try {
-                    actualitzat_correctament = controller.changePassword(params[0], params[1]);
-                } catch (AuthorizationException | ForbiddenException e) {
-                    e.printStackTrace();
+    private void callUpdatePassword(String currentPass, String newPass) {
+        new UpdatePassword() {
+            @Override
+            public void onResponseReceived(boolean b) {
+                if (b) {
+                    changeToUserProfile();
+                } else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.error_change_pass), Toast.LENGTH_SHORT).show();
                 }
-
-            return actualitzat_correctament;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean b) {
-
-            if(b) {
-                changeToUserProfile();
             }
-            else {
-                Toast.makeText(getActivity(), getResources().getString(R.string.error_change_pass), Toast.LENGTH_SHORT).show();
-            }
-            super.onPostExecute(b);
-        }
+        }.execute(currentPass,newPass);
     }
+
 }

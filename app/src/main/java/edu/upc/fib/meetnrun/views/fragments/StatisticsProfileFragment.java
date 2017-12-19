@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetUserStats;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Statistics;
@@ -133,63 +134,53 @@ public class StatisticsProfileFragment extends Fragment {
     }
 
     private void getStats(){
-        new userStats().execute();
+        callGetUserStats();
     }
-    private class userStats extends AsyncTask<String,String,String> {
-        private void setValues(){
-            userlevel=String.valueOf(u.getLevel());
-            usercalories=String.valueOf(s.getTotalCalories());
-            userrhythm=s.getRhythmInString();
-            usersteps=String.valueOf(s.getTotalSteps());
-            userspeed=s.getSpeedInString(s.getAvgSpeed());
-            usermaxspeed=s.getSpeedInString(s.getMaxSpeed());
-            userminspeed=s.getSpeedInString(s.getMinSpeed());
-            usermaxtime=s.getTimeInString(s.getMaxTime());
-            usermintime=s.getTimeInString(s.getMinTime());
-            usermaxlength=String.valueOf(s.getMaxLength())+" km";
-            userminlength=String.valueOf(s.getMinLength())+" km";
-            usertime=s.getTimeInString(s.getTotalTimeMillis());
-            int l=getActualLevel(s.getNumberMeetings(), s.getTotalKm(), (int) u.getLevel());
-            userlevel=String.valueOf(l);
-            if (u.getLevel()<l) u.setLevel(l);
-        }
 
-        @Override
-        protected String doInBackground(String... strings){
-            try {
-                //TODO: Que tot no sigui de current user
-                int id=u.getId();
-                iUserAdapter=CurrentSession.getInstance().getUserAdapter();
-                s = iUserAdapter.getUserStatisticsByID(id);
+    private void setValues(){
+        userlevel=String.valueOf(u.getLevel());
+        usercalories=String.valueOf(s.getTotalCalories());
+        userrhythm=s.getRhythmInString();
+        usersteps=String.valueOf(s.getTotalSteps());
+        userspeed=s.getSpeedInString(s.getAvgSpeed());
+        usermaxspeed=s.getSpeedInString(s.getMaxSpeed());
+        userminspeed=s.getSpeedInString(s.getMinSpeed());
+        usermaxtime=s.getTimeInString(s.getMaxTime());
+        usermintime=s.getTimeInString(s.getMinTime());
+        usermaxlength=String.valueOf(s.getMaxLength())+" km";
+        userminlength=String.valueOf(s.getMinLength())+" km";
+        usertime=s.getTimeInString(s.getTotalTimeMillis());
+        int l=getActualLevel(s.getNumberMeetings(), s.getTotalKm(), (int) u.getLevel());
+        userlevel=String.valueOf(l);
+        if (u.getLevel()<l) u.setLevel(l);
+    }
 
-                //TODO: Hacerlo bien, sin hardcoded
+    private void updateData() {
+        error.setText(" ");
+        level.setText(userlevel);
+        meetings.setText(usermeetings);
+        steps.setText(usersteps);
+        totalKm.setText(userkm);
+        totalTime.setText(usertime);
+        calories.setText(usercalories);
+        rhythm.setText(userrhythm);
+        avgSpeed.setText(userspeed);
+        maxSpeed.setText(usermaxspeed);
+        minSpeed.setText(userminspeed);
+        maxTime.setText(usermaxtime);
+        maxLength.setText(usermaxlength);
+        minLength.setText(userminlength);
+        minTime.setText(usermintime);
+    }
+
+    private void callGetUserStats() {
+        new GetUserStats(u) {
+            @Override
+            public void onResponseReceived(Statistics stats) {
+                s = stats;
                 setValues();
-
-                        //u=iUserAdapter.getUser(userId);
-                    } catch (AuthorizationException e) {
-                        e.printStackTrace();
-                    }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result){
-            error.setText(" ");
-            level.setText(userlevel);
-            meetings.setText(usermeetings);
-            steps.setText(usersteps);
-            totalKm.setText(userkm);
-            totalTime.setText(usertime);
-            calories.setText(usercalories);
-            rhythm.setText(userrhythm);
-            avgSpeed.setText(userspeed);
-            maxSpeed.setText(usermaxspeed);
-            minSpeed.setText(userminspeed);
-            maxTime.setText(usermaxtime);
-            maxLength.setText(usermaxlength);
-            minLength.setText(userminlength);
-            minTime.setText(usermintime);
-
-        }
+                updateData();
             }
+        }.execute();
+    }
 }
