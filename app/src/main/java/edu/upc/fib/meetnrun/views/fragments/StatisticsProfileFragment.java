@@ -47,7 +47,6 @@ public class StatisticsProfileFragment extends Fragment {
     User u;
     View view;
     String user;
-    private int userLevel;
     String name, userlevel, usermeetings, usersteps, userkm, usertime, usercalories, userrhythm, userspeed, usermaxspeed, userminspeed, usermaxtime, usermintime, usermaxlength, userminlength;
 
     // newInstance constructor for creating fragment with arguments

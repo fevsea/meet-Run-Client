@@ -192,7 +192,6 @@
     <string name="spanish">Castellano</string>
     <string name="accept">Aceptar</string>
     <string name="reject">Rechazar</string>
-<<<<<<< HEAD
     <string name="rankings">Rankings</string>
     <string name="chat_not_available">El chat no está disponible</string>
     <string name="filter_ranking">Filtrar por:</string>
@@ -204,8 +203,6 @@
     <string name="rankings_users">Ránking de usuarios</string>
     <string name="rankings_zip">Ránking de código postal</string>
     <string name="settingsLanguage">Cambiar idioma:</string>
-=======
     <string name="error_deleting_friend">Error al eliminar el amigo</string>
     <string name="error_adding_friend">Error al añadir el amigo</string>
->>>>>>> 3975cf5a3447aee48a10320dc806f98dd5d48224
 </resources>
