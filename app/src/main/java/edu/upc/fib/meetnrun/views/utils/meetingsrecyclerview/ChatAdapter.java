@@ -10,6 +10,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Meeting;
 
 /**
  * Created by eric on 21/11/17.
@@ -20,7 +21,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     private List<Chat> chats;
     private final RecyclerViewOnClickListener listener;
     private View v;
-    private boolean newChat = false;
 
     public ChatAdapter(List<Chat> chats, RecyclerViewOnClickListener listener) {
         this.chats = chats;
@@ -38,10 +38,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
     @Override
     public void onBindViewHolder(final ChatViewHolder holder, int position) {
         Chat chat = chats.get(position);
-        if (!chat.getMessage().getName().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) {
-            newChat = true;
-        }
-        holder.bindChat(chat, newChat);
+        holder.bindChat(chat);
     }
 
     @Override
@@ -49,6 +46,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatViewHolder> {
         return chats.size();
     }
 
+    public void addChats(List<Chat> chats) {
+        this.chats.addAll(chats);
+        notifyDataSetChanged();
+    }
 
     public void updateChatList(List<Chat> chats) {
         this.chats = chats;

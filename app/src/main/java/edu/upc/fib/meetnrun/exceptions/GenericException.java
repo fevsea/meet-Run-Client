@@ -6,19 +6,21 @@ import java.util.Map;
  * Created by Awais Iqbal on 03/11/2017.
  */
 
-public class GenericException extends Exception {
-    GenericException(){};
-    private Map<String, String> problems;
+public class GenericException extends RuntimeException {
+  GenericException() {
+  }
 
-    GenericException(Map<String, String> problems) {
-        this.problems = problems;
-    }
+  private Map<String, String> problems;
 
-    public Map<String, String> getProblems() {
-        return problems;
-    }
+  GenericException(Map<String, String> problems) {
+    this.problems = problems;
+  }
 
-    public void setProblems(Map<String, String> problems) {
-        this.problems = problems;
-    }
+  public Map<String, String> getProblems() {
+    return problems;
+  }
+
+  public void setProblems(Map<String, String> problems) {
+    this.problems = problems;
+  }
 }

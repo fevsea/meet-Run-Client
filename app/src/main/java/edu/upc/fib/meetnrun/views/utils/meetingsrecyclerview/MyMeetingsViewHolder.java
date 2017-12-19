@@ -4,6 +4,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -18,9 +19,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.lang.ref.WeakReference;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -28,9 +26,10 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 
 
-public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback{
+public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback, View.OnTouchListener{
 
     private final View view;
     private final WeakReference<MyMeetingsListener> listener;
@@ -127,7 +126,7 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
         if (isMeetingAvailable(meeting.getDate())) {
             startMeetingButton.setEnabled(true);
             startMeetingButton.setImageAlpha(255);
-            startMeetingButton.setOnClickListener(this);
+            startMeetingButton.setOnTouchListener(this);
             startMeetingLabel.setText(view.getResources().getString(R.string.start_meeting_label));
         }
         else {
@@ -140,14 +139,8 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
     }
 
     private boolean isMeetingAvailable(String dateText) {
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Date date = null;
-        try {
-            date = inputFormat.parse(dateText);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            date = new Date();
-        }
+        date = UtilsGlobal.parseDate(dateText);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.MINUTE,-20);
@@ -176,9 +169,6 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == startMeetingButton.getId()) {
-            listener.get().onStartClicked(getAdapterPosition());
-        }
         if (view.getId() == leaveMeetingButton.getId()) {
             listener.get().onLeaveClicked(getAdapterPosition());
         }
@@ -198,4 +188,11 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
         marker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        if (v.getId() == startMeetingButton.getId() && event.getAction() == MotionEvent.ACTION_DOWN) {
+            listener.get().onStartClicked(getAdapterPosition());
+        }
+        return true;
+    }
 }

@@ -21,31 +21,43 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetMeetings;
+import edu.upc.fib.meetnrun.asynctasks.GetMeetingsFiltered;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
 import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
-
+//TODO implementar crida a joinedMeetings per separat (ja no es dona aquesta info amb el meeting)
+//TODO pero ara no funciona be la crida
 public class MeetingListFragment extends Fragment {
 
     private MeetingsAdapter meetingsAdapter;
     private IMeetingAdapter meetingDBAdapter;
+    private IChatAdapter chatAdapter;
+    private IUserAdapter userAdapter;
     private View view;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private List<Meeting> meetings;
     private  FloatingActionButton fab;
     boolean filtered;
     String filteredQuery;
     private LinearLayoutManager layoutManager;
     int pageSize;
+    private boolean refresh;
+    private List<Meeting> myMeetings;
 
     //variables para paginacion
     private boolean isLoading;
@@ -70,8 +82,11 @@ public class MeetingListFragment extends Fragment {
         this.view = view;
 
         meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
+        chatAdapter = CurrentSession.getInstance().getChatAdapter();
+        userAdapter = CurrentSession.getInstance().getUserAdapter();
         //iniciar paginacion y progressbar
         initializePagination();
+        refresh = false;
         filtered = false;
         filteredQuery = "";
         progressBar = view.findViewById(R.id.pb_loading);
@@ -103,7 +118,7 @@ public class MeetingListFragment extends Fragment {
         final RecyclerView meetingsList = view.findViewById(R.id.fragment_meeting_container);
         layoutManager = new LinearLayoutManager(getActivity());
         meetingsList.setLayoutManager(layoutManager);
-        meetings = new ArrayList<>();
+        List<Meeting> meetings = new ArrayList<>();
         meetingsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {
@@ -112,18 +127,21 @@ public class MeetingListFragment extends Fragment {
             }
 
             @Override
+
             public void onItemClicked(int position) {
                 Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
                 meetingInfoIntent.putExtra("id",meeting.getId());
+                //TODO 'if' temporal, fins que es borri la BD
+                if (meeting.getChatID() != null) meetingInfoIntent.putExtra("chat",meeting.getChatID());
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
                 meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
                 meetingInfoIntent.putExtra("ownerId",meeting.getOwner().getId());
                 meetingInfoIntent.putExtra("description",meeting.getDescription());
                 String datetime = meeting.getDate();
                 meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
-                meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
+                meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.length()));
                 meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
                 meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
                 meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
@@ -153,7 +171,7 @@ public class MeetingListFragment extends Fragment {
                         updateMeetingList();
                     }
                     else {
-                        fab.setVisibility(View.INVISIBLE);
+                        if (!recyclerView.canScrollVertically(1)) fab.setVisibility(View.INVISIBLE);
                     }
                 }
             }
@@ -207,49 +225,30 @@ public class MeetingListFragment extends Fragment {
     }
 
     private void updateMeetingList() {
-        if (filtered) new GetMeetingsFiltered().execute(filteredQuery);
-        else new GetMeetings().execute();
+        if (filtered) callGetMeetingsFiltered(filteredQuery);
+        else callGetMeetings();
     }
 
     private void createNewMeeting() {
+        refresh = true;
         Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
         startActivity(intent);
     }
 
+    private void getMyMeetings() {
+        new GetMyMeetings().execute(CurrentSession.getInstance().getCurrentUser().getId());
+    }
+
     private void joinMeeting(Meeting meeting) {
-        new JoinMeeting().execute(meeting.getId());
+        new JoinMeeting().execute(meeting.getId(),meeting.getChatID());
     }
-
-    //en cada asynctask hay que hacer cambios, tomad esta como modelo
-    //si no usais swiperefreshlayout no lo pongais
-    private class GetMeetings extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            setLoading();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetings(pageNumber);//TODO arreglar paginas
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            updateData();
-            super.onPostExecute(s);
-        }
-    }
-
 
     private void setLoading() {
         if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
         isLoading = true;
     }
 
-    private void updateData() {
+    private void updateData(List<Meeting> meetings) {
         if (meetings != null) {
             if (pageNumber == 0) {
                 meetingsAdapter.updateMeetingsList(meetings);
@@ -269,27 +268,32 @@ public class MeetingListFragment extends Fragment {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
-    private class GetMeetingsFiltered extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            setLoading();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0],pageNumber);//TODO arreglar paginas
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            updateData();
-            super.onPostExecute(s);
-        }
+    //nueva forma de usar asynctasks
+    private void callGetMeetings() {
+        setLoading();
+        new GetMeetings(pageNumber) {
+            @Override
+            public void onResponseReceived(List<Meeting> meetings) {
+                updateData(meetings);
+            }
+        }.execute();
     }
 
+    private void callGetMeetingsFiltered(String query) {
+        setLoading();
+        new GetMeetingsFiltered(pageNumber) {
+
+            @Override
+            public void onResponseReceived(List<Meeting> meetings) {
+                updateData(meetings);
+            }
+        }.execute(query);
+    }
+
+
+    /*
+        new JoinMeeting.execute(meetingId,chatId)
+     */
     private class JoinMeeting extends AsyncTask<Integer,String,String> {
 
         @Override
@@ -297,8 +301,16 @@ public class MeetingListFragment extends Fragment {
             Log.e("MAIN","DOINGGGG");
             //TODO handle exceptions
             try {
-                meetingDBAdapter.joinMeeting(integers[0]);
-            } catch (AutorizationException | ParamsException e) {
+                //TODO possible millora: crida al servidor joinChat
+                meetingDBAdapter.joinMeeting(integers[0],CurrentSession.getInstance().getCurrentUser().getId());
+                Chat chat = chatAdapter.getChat(integers[1]);
+                List<User> chatUsers = chat.getListUsersChat();
+                chatUsers.add(CurrentSession.getInstance().getCurrentUser());
+                chat.setListUsersChat(chatUsers);
+                chatAdapter.updateChat(chat);
+            } catch (AuthorizationException | ParamsException e) {
+                e.printStackTrace();
+            } catch (NotFoundException e) {
                 e.printStackTrace();
             }
             return null;
@@ -306,11 +318,41 @@ public class MeetingListFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
             Toast.makeText(getActivity(),getString(R.string.joined_meeting),Toast.LENGTH_SHORT).show();
-            updateMeetingList();
+            getMyMeetings();
             super.onPostExecute(s);
         }
+    }
+
+    private class GetMyMeetings extends AsyncTask<Integer,String,String> {
+
+        @Override
+        protected String doInBackground(Integer... integers) {
+            //TODO handle exceptions
+            try {
+                myMeetings = userAdapter.getUsersFutureMeetings(integers[0]);
+            } catch (AuthorizationException | ParamsException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String s) {
+            meetingsAdapter.setMyMeetings(myMeetings);
+            super.onPostExecute(s);
+        }
+
+    }
+
+    @Override
+    public void onResume() {
+        if (refresh) {
+            refresh = false;
+            initializePagination();
+            updateMeetingList();
+        }
+        getMyMeetings();
+        super.onResume();
     }
 
 }

@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
@@ -110,7 +110,7 @@ public class ChangePasswordFragment extends Fragment {
 
                 try {
                     actualitzat_correctament = controller.changePassword(params[0], params[1]);
-                } catch (AutorizationException | ForbiddenException e) {
+                } catch (AuthorizationException | ForbiddenException e) {
                     e.printStackTrace();
                 }
 

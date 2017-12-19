@@ -3,6 +3,13 @@ package edu.upc.fib.meetnrun.adapters.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import edu.upc.fib.meetnrun.models.Chat;
+import edu.upc.fib.meetnrun.utils.UtilsGlobal;
+
 /**
  * Created by Awais Iqbal on 26/10/2017.
  */
@@ -21,22 +28,6 @@ public class Forms {
             this.oldPasword = oldPasword;
             this.newPassword = newPassword;
         }
-
-        public String getOldPasword() {
-            return oldPasword;
-        }
-
-        public void setOldPasword(String oldPasword) {
-            this.oldPasword = oldPasword;
-        }
-
-        public String getNewPassword() {
-            return newPassword;
-        }
-
-        public void setNewPassword(String newPassword) {
-            this.newPassword = newPassword;
-        }
     }
 
     public static class LoginUser {
@@ -51,22 +42,6 @@ public class Forms {
             this.username = username;
             this.password = password;
         }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
     }
 
     public static class Token {
@@ -78,13 +53,9 @@ public class Forms {
             this.token = token;
         }
 
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
+      public String getToken() {
+        return token;
+      }
     }
 
     public static class UserRegistration {
@@ -139,78 +110,6 @@ public class Forms {
             this.answer = answer;
             this.password = password;
         }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public String getPostalCode() {
-            return postalCode;
-        }
-
-        public void setPostalCode(String postalCode) {
-            this.postalCode = postalCode;
-        }
-
-        public String getQuestion() {
-            return question;
-        }
-
-        public void setQuestion(String question) {
-            this.question = question;
-        }
-
-        public String getAnswer() {
-            return answer;
-        }
-
-        public void setAnswer(String answer) {
-            this.answer = answer;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public Integer getLevel() {
-            return level;
-        }
-
-        public void setLevel(Integer level) {
-            this.level = level;
-        }
     }
 
     public static class CreateMeeting {
@@ -238,8 +137,11 @@ public class Forms {
         @SerializedName("longitude")
         @Expose
         private String longitude;
+        @SerializedName("chat")
+        @Expose
+        private Integer chatID;
 
-        public CreateMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) {
+        public CreateMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID) {
             this.title = title;
             this.description = description;
             this._public = _public;
@@ -247,64 +149,100 @@ public class Forms {
             this.date = date;
             this.latitude = latitude;
             this.longitude = longitude;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public Boolean get_public() {
-            return _public;
-        }
-
-        public void set_public(Boolean _public) {
-            this._public = _public;
-        }
-
-        public Integer getLevel() {
-            return level;
-        }
-
-        public void setLevel(Integer level) {
-            this.level = level;
-        }
-
-        public String getDate() {
-            return date;
-        }
-
-        public void setDate(String date) {
-            this.date = date;
-        }
-
-        public String getLatitude() {
-            return latitude;
-        }
-
-        public void setLatitude(String latitude) {
-            this.latitude = latitude;
-        }
-
-        public String getLongitude() {
-            return longitude;
-        }
-
-        public void setLongitude(String longitude) {
-            this.longitude = longitude;
+            this.chatID = chatID;
         }
     }
 
+    public static class ChatCreateUpdate {
+
+        @SerializedName("chatName")
+        @Expose
+        private String chatName;
+
+        @SerializedName("listUsersChat")
+        @Expose
+        private List<Integer> listUsersChat;
+
+        @SerializedName("type")
+        @Expose
+        private int type;
+
+        @SerializedName("meeting")
+        @Expose
+        private Integer meetingToRelate;
+
+        @SerializedName("lastMessage")
+        @Expose
+        private String lastMessage;
+
+        @SerializedName("lastMessageUserName")
+        @Expose
+        private int lastMessageUsernamePosition;
+
+        @SerializedName("lastDateTime")
+        @Expose
+        private String lastMessageDateTime;
+
+        public ChatCreateUpdate(String chatName, List<Integer> listUsersChat, int type,
+                                Integer meetingToRelate, String lastMessage, int lastMessageUsernamePosition,
+                                Date lastMessageDateTime) {
+            this.chatName = chatName;
+            this.listUsersChat = listUsersChat;
+            this.type = type;
+            this.meetingToRelate = meetingToRelate;
+            this.lastMessage = lastMessage;
+            this.lastMessageUsernamePosition = lastMessageUsernamePosition;
+            this.lastMessageDateTime = UtilsGlobal.formatDate(lastMessageDateTime);
+        }
+
+        public ChatCreateUpdate(Chat c) {
+            this.chatName = c.getChatName();
+            List<Integer> lic = new ArrayList<>();
+            for (int i = 0; i < c.getListUsersChat().size(); i++) {
+                lic.add(c.getListUsersChat().get(i).getId());
+                if (c.getMessage().getName().equals(c.getListUsersChat().get(i).getUsername())) {
+                    this.lastMessageUsernamePosition = i;
+                }
+            }
+            this.listUsersChat = lic;
+            this.type = c.getType();
+            this.meetingToRelate = (c.getMeeting() != null) ? c.getMeeting().getId() : null;
+            this.lastMessage = c.getMessage().getMessage();
+            this.lastMessageDateTime = UtilsGlobal.formatDate(c.getMessage().getDateTime());
+        }
+
+
+    }
+
+    public static class ChallengeCreator {
+        @SerializedName("id")
+        @Expose
+        private Integer id;
+
+        @SerializedName("creator")
+        @Expose
+        private Integer creator;
+
+        @SerializedName("challenged")
+        @Expose
+        private Integer challenged;
+
+        @SerializedName("distance")
+        @Expose
+        private Integer distance;
+
+        @SerializedName("deadline")
+        @Expose
+        private String dateDeadline;
+
+        public ChallengeCreator(Integer id, Integer creator, Integer challenged, Integer distance,
+                                String dateDeadline) {
+            this.id = id;
+            this.creator = creator;
+            this.challenged = challenged;
+            this.distance = distance;
+            this.dateDeadline = dateDeadline;
+        }
+    }
 }
 

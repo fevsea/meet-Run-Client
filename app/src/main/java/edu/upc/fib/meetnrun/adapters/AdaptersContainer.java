@@ -1,5 +1,8 @@
 package edu.upc.fib.meetnrun.adapters;
 
+
+import edu.upc.fib.meetnrun.adapters.impls.ChatAdapterImpl;
+import edu.upc.fib.meetnrun.adapters.impls.ChallengeAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.impls.FriendsAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.impls.LoginAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.impls.MeetingAdapterImpl;
@@ -16,6 +19,8 @@ public class AdaptersContainer {
     private IUserAdapter userAdapter;
     private IMeetingAdapter meetingAdapter;
     private ILoginAdapter loginAdapter;
+    private IChatAdapter chatAdapter;
+    private IChallengeAdapter challengesAdapter;
     private SOServices mServices;
     private static AdaptersContainer instance = null;
 
@@ -25,6 +30,8 @@ public class AdaptersContainer {
         friendsAdapter = new FriendsAdapterImpl(mServices);
         meetingAdapter = new MeetingAdapterImpl(mServices);
         loginAdapter = new LoginAdapterImpl(mServices);
+        chatAdapter = new ChatAdapterImpl(mServices);
+        challengesAdapter = new ChallengeAdapterImpl(mServices);
     }
 
     public static AdaptersContainer getInstance() {
@@ -75,7 +82,23 @@ public class AdaptersContainer {
         this.mServices = mServices;
     }
 
+    public IChallengeAdapter getChallengesAdapter() {
+        return challengesAdapter;
+    }
+
+    public void setChallengesAdapter(IChallengeAdapter challengesAdapter) {
+        this.challengesAdapter = challengesAdapter;
+    }
+
     public static void setInstance(AdaptersContainer instance) {
         AdaptersContainer.instance = instance;
+    }
+
+    public IChatAdapter getChatAdapter() {
+        return chatAdapter;
+    }
+
+    public void setChatAdapter(IChatAdapter chatAdapter) {
+        this.chatAdapter = chatAdapter;
     }
 }

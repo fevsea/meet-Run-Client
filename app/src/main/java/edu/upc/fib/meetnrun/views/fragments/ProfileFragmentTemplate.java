@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,8 +42,10 @@ public abstract class ProfileFragmentTemplate extends Fragment {
     protected TextView name;
     protected ImageView img;
     protected IFriendsAdapter friendsDBAdapter;
-    protected ImageView chat;
+    protected ImageView chatImage;
+    protected ImageView imgSecondary;
     protected User currentFriend;
+    protected Button challengeButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,8 +61,8 @@ public abstract class ProfileFragmentTemplate extends Fragment {
         this.postCode = view.findViewById(R.id.userPostCode2);
         this.profileImg = view.findViewById(R.id.profileImage);
         this.img = view.findViewById(R.id.action_friend);
-        this.chat = view.findViewById(R.id.chat_friend);
-        setImage();
+        this.chatImage = view.findViewById(R.id.chat_friend);
+        this.imgSecondary = view.findViewById(R.id.action_friend_secondary);
 
         char letter = currentFriend.getUsername().charAt(0);
         String firstLetter = String.valueOf(letter);
@@ -103,8 +106,13 @@ public abstract class ProfileFragmentTemplate extends Fragment {
 
         getCityFromPostcode(postcodeFriend);
 
+        challengeButton = view.findViewById(R.id.challenge_button);
+        configureChallengeButton();
+        setImage();
         return this.view;
     }
+
+    protected abstract void configureChallengeButton();
 
     protected abstract void setImage();
 

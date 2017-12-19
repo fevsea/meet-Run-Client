@@ -9,17 +9,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 
 public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
@@ -50,7 +46,7 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
 
     }
 
-    public void bindMeeting(Meeting meeting) {
+    public void bindMeeting(Meeting meeting, boolean joined) {
         char letter = meeting.getOwner().getFirstName().charAt(0);
         String firstLetter = String.valueOf(letter);
         userIcon.setBackground(getColoredCircularShape((letter)));
@@ -70,8 +66,11 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
         meetingDate.setText(datetime.substring(0,datetime.indexOf('T')));
         meetingTime.setText(datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('T')+9));
         if (isMeetingAvailable(meeting.getDate())) {
+            addUserButton.setVisibility(View.VISIBLE);
             int userId = CurrentSession.getInstance().getCurrentUser().getId();
-            if (notParticipating(meeting.getParticipants(), meeting.getOwner(), userId)) {
+            if (!joined) {
+                addUserButton.setEnabled(true);
+                addUserButton.setImageAlpha(255);
                 addUserButton.setOnClickListener(this);
             } else {
                 addUserButton.setEnabled(false);
@@ -85,25 +84,11 @@ public class MeetingsViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     private boolean isMeetingAvailable(String dateText) {
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Date date = null;
-        try {
-            date = inputFormat.parse(dateText);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            date = new Date();
-        }
+        date = UtilsGlobal.parseDate(dateText);
 
         Date currentDate = Calendar.getInstance().getTime();
         return currentDate.before(date);
-    }
-
-    private boolean notParticipating(List<User> users, User owner, int id) {
-        for (User user : users) {
-            if (user.getId() == id) return false;
-        }
-        if (owner.getId() == id) return false;
-        return true;
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {

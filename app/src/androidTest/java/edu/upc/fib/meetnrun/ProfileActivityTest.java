@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun;
+/*package edu.upc.fib.meetnrun;
 
 
 
@@ -96,4 +96,4 @@ public class ProfileActivityTest {
 
     }
 
-}
+}*/

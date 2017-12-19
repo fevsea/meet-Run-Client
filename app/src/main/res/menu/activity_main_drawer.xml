@@ -21,6 +21,11 @@
             android:title="@string/chat_label" />
 
         <item
+            android:id="@+id/challenges"
+            android:icon="@drawable/ic_challenge"
+            android:title="@string/challenges"
+            />
+        <item
             android:id="@+id/logout"
             android:icon="@drawable/exit"
             android:title="@string/log_out" />

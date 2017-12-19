@@ -78,21 +78,38 @@
 
             <ImageView
                 android:id="@+id/action_friend"
-                android:layout_width="160px"
-                android:layout_height="160px"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_alignParentEnd="true"
                 android:scaleType="centerCrop"
                 android:src="@android:drawable/ic_delete" />
 
             <ImageView
+                android:id="@+id/action_friend_secondary"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_toStartOf="@id/action_friend"
+                android:scaleType="centerCrop"
+                android:src="@android:drawable/ic_delete"
+                android:visibility="gone"/>
+
+            <ImageView
                 android:id="@+id/chat_friend"
-                android:layout_width="160px"
-                android:layout_height="160px"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/chat"
                 android:layout_alignParentStart="true" />
 
         </RelativeLayout>
+
+        <Button
+            android:id="@+id/challenge_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profile_layout2"
+            android:layout_centerHorizontal="true"
+            android:text="@string/to_challenge"/>
 
     </RelativeLayout>
 

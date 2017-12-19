@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.models.Meeting;
@@ -42,6 +41,9 @@ public class MeetingServer implements IServerModel {
     @SerializedName("participants")
     @Expose
     private List<UserServer> participants;
+    @SerializedName("chat")
+    @Expose
+    private Integer chatID;
 
     /**
      * No args constructor for use in serialization
@@ -49,7 +51,7 @@ public class MeetingServer implements IServerModel {
     public MeetingServer() {
     }
 
-    public MeetingServer(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude) {
+    public MeetingServer(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID) {
         this.title = title;
         this.description = description;
         this._public = _public;
@@ -57,9 +59,10 @@ public class MeetingServer implements IServerModel {
         this.date = date;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.chatID = chatID;
     }
 
-    public MeetingServer(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, UserServer owner, List<UserServer> participants) {
+    public MeetingServer(Integer id, String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID, UserServer owner, List<UserServer> participants) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -68,6 +71,7 @@ public class MeetingServer implements IServerModel {
         this.date = date;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.chatID = chatID;
         this.owner = owner;
         this.participants = participants;
     }
@@ -82,6 +86,7 @@ public class MeetingServer implements IServerModel {
         this.date = m.getDate();
         this.latitude = m.getLatitude();
         this.longitude = m.getLongitude();
+        this.chatID = m.getChatID();
         this.owner = new UserServer(m.getOwner());
         List<UserServer> us = new ArrayList<>();
         List<User> u = m.getParticipants();
@@ -99,94 +104,6 @@ public class MeetingServer implements IServerModel {
                 ul.add(sl.get(i).toGenericModel());
             }
         }
-        return new Meeting(id, title, description, _public, level, date, latitude, longitude, owner.toGenericModel(), ul);
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Boolean getPublic() {
-        return _public;
-    }
-
-    public void setPublic(Boolean _public) {
-        this._public = _public;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
-    }
-
-    public Date getDateTime() {
-        return new Date();
-    }
-
-    public void setDateTime(Date d) {
-
-    }
-
-    public Boolean get_public() {
-        return _public;
-    }
-
-    public void set_public(Boolean _public) {
-        this._public = _public;
-    }
-
-    public List<UserServer> getParticipants() {
-        return participants;
-    }
-
-    public void setParticipants(List<UserServer> participants) {
-        this.participants = participants;
+        return new Meeting(id, title, description, _public, level, date, latitude, longitude,chatID ,owner.toGenericModel(), ul);
     }
 }

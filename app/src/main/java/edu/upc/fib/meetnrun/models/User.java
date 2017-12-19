@@ -13,6 +13,7 @@ public class User {
     private String question;
     private Integer level;
     private boolean selected = false;
+    private boolean isFriend = false;
 
     public User(Integer id, String username, String firstName, String lastName, String postalCode, String question,Integer level) {
         this.id = id;
@@ -89,6 +90,14 @@ public class User {
         this.selected = selected;
     }
 
+    public boolean isFriend() {
+        return isFriend;
+    }
+
+    public void setFriend(boolean friend) {
+        isFriend = friend;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -100,5 +109,14 @@ public class User {
                 ", question='" + question + '\'' +
                 ", level=" + level +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object anObject) {
+        if (!(anObject instanceof User)) {
+            return false;
+        }
+        User otherUser = (User)anObject;
+        return otherUser.getId().equals(getId());
     }
 }
