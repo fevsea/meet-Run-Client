@@ -336,9 +336,8 @@ public class ChatFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 adapter.deleteMessages();
                                 rvMessages.setAdapter(adapter);
-                                //TODO eliminar chat
-                                //chat.getListUsersChat().remove(currentUser);
-                                //new updateChat().execute();
+                                database.getReference(String.valueOf(chat.getId())).removeValue();
+                                new deleteChat().execute();
                                 getActivity().finish();
                             }
                         },
@@ -356,7 +355,6 @@ public class ChatFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
 
     }
-
 
 
     private void openProfileView() {
