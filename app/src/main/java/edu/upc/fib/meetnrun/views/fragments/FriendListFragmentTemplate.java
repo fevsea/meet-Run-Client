@@ -74,7 +74,7 @@ public abstract class FriendListFragmentTemplate extends Fragment{
             @Override
             public void onRefresh() {
                 initializePagination();
-                getMethod();
+                refreshList();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -93,7 +93,9 @@ public abstract class FriendListFragmentTemplate extends Fragment{
 
     protected abstract void adapter();
 
-    private void setupRecyclerView() {
+    protected abstract void refreshList();
+
+    protected void setupRecyclerView() {
 
         final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -119,7 +121,7 @@ public abstract class FriendListFragmentTemplate extends Fragment{
                 if (!isLoading && !isLastPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0) {
-                        getMethod();
+                        getPaginationMethod();
                     }
                 }
             }
@@ -131,7 +133,9 @@ public abstract class FriendListFragmentTemplate extends Fragment{
 
     protected abstract void getIntent(User friend);
 
-    protected abstract void getMethod();
+    protected abstract void getPaginationMethod();
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

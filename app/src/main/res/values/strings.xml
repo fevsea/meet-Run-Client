@@ -209,6 +209,7 @@
     <string name="group_name">Group name</string>
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
+<<<<<<< HEAD
     <string name="ranking_postcode">Zip</string>
     <string name="ranking_city">City</string>
     <string name="ranking_country">Country</string>
@@ -218,5 +219,9 @@
     <string name="rankings_users">User rankings</string>
     <string name="rankings">Rankings</string>
     <string name="settingsLanguage">Change language:</string>
+=======
+    <string name="error_deleting_friend">Error deleting friend</string>
+    <string name="error_adding_friend">Error adding friend</string>
+>>>>>>> 3975cf5a3447aee48a10320dc806f98dd5d48224
 </resources>
 

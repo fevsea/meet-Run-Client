@@ -42,13 +42,18 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
     @Override
     protected void adapter() {}
 
+    @Override
+    protected void refreshList() {
+        getPaginationMethod();
+    }
+
 
     @Override
     protected void getIntent(User friend) {
     }
 
     @Override
-    protected void getMethod() {
+    protected void getPaginationMethod() {
         new getFriends().execute();
     }
 
@@ -167,7 +172,7 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
     @Override
     public void onResume() {
         initializePagination();
-        getMethod();
+        getPaginationMethod();
         super.onResume();
     }
 

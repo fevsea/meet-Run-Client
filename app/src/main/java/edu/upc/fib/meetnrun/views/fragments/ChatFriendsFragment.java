@@ -34,7 +34,7 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
 
     @Override
     protected void initList() {
-        getMethod();
+        getPaginationMethod();
     }
 
     @Override
@@ -48,6 +48,11 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
     }
 
     @Override
+    protected void refreshList() {
+        getPaginationMethod();
+    }
+
+    @Override
     protected void getIntent(User friend) {
 
         this.friend = friend;
@@ -56,7 +61,7 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
     }
 
     @Override
-    protected void getMethod() {
+    protected void getPaginationMethod() {
         new getFriends().execute();
     }
 

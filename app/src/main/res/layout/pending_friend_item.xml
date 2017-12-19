@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/meeting_item_padding_horizontal"
+    android:paddingRight="@dimen/meeting_item_padding_horizontal"
+    android:paddingBottom="@dimen/meeting_item_padding_vertical"
+    android:paddingTop="@dimen/meeting_item_padding_vertical">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/user_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/card_depth"
+        card_view:cardCornerRadius="@dimen/card_radius"
+        card_view:cardElevation="@dimen/card_depth"
+        android:background="?android:attr/activatedBackgroundIndicator">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/meeting_item_padding_vertical">
+            <TextView
+                android:id="@+id/user_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/meeting_item_margin"
+                android:background="@drawable/user_profile_circular_text_view"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text="e"
+                android:textAllCaps="true"/>
+
+            <TextView
+                android:id="@+id/user_level"
+                android:layout_toEndOf="@id/user_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="@dimen/meeting_item_margin"
+                android:background="@drawable/level_circular_text_view"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text="1"/>
+
+            <ImageButton
+                android:id="@+id/accept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_done"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"/>
+            <ImageButton
+                android:id="@+id/reject"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_cancel"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/accept"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/user_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ericR"/>
+
+                <TextView
+                    android:id="@+id/user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Eric Rodriguez"/>
+                <TextView
+                    android:id="@+id/user_postcode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="08830" />
+
+            </LinearLayout>
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
