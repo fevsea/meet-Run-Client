@@ -31,6 +31,7 @@
         android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
     <RadioGroup
+        android:id="@+id/rdGUser"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -60,4 +61,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+<ProgressBar
+     android:id="@+id/pb_loading_ranking_users"
+     android:layout_width="70dp"
+     android:layout_height="70dp"
+     android:layout_centerVertical="true"
+     android:layout_centerHorizontal="true"
+     android:visibility="invisible"/>
 </LinearLayout>
