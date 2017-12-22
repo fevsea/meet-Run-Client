@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -36,6 +37,8 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
 
     private int userID;
     private User challenged;
+    ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
             finish();
         }
 
+        progressBar = findViewById(R.id.pb_loading);
         distancePicker = findViewById(R.id.distance_picker);
         distancePicker.setMinValue(0);
         distancePicker.setMaxValue(1000);
@@ -138,17 +142,11 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
     private class CreateChallenge extends AsyncTask<Challenge, String ,Boolean> {
 
         Exception exception = null;
-        ProgressDialog mProgressDialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            mProgressDialog = new ProgressDialog(CreateChallengeActivity.this);
-            mProgressDialog.setTitle(R.string.saving);
-            mProgressDialog.setMessage(getResources().getString(R.string.saving_challenge));
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.show();
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -165,7 +163,7 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
 
         @Override
         protected void onPostExecute(Boolean result) {
-            mProgressDialog.dismiss();
+            progressBar.setVisibility(View.INVISIBLE);
             if (result && exception == null) {
                 finish();
             }

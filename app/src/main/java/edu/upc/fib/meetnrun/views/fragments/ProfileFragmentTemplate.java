@@ -44,6 +44,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
     protected ImageView img;
     protected IFriendsAdapter friendsDBAdapter;
     protected ImageView chatImage;
+    protected ImageView imgSecondary;
     protected User currentFriend;
     protected Button challengeButton;
 
@@ -62,7 +63,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
         this.profileImg = view.findViewById(R.id.profileImage);
         this.img = view.findViewById(R.id.action_friend);
         this.chatImage = view.findViewById(R.id.chat_friend);
-        setImage();
+        this.imgSecondary = view.findViewById(R.id.action_friend_secondary);
 
         char letter = currentFriend.getUsername().charAt(0);
         String firstLetter = String.valueOf(letter);
@@ -108,7 +109,7 @@ public abstract class ProfileFragmentTemplate extends Fragment {
 
         challengeButton = view.findViewById(R.id.challenge_button);
         configureChallengeButton();
-
+        setImage();
         return this.view;
     }
 
