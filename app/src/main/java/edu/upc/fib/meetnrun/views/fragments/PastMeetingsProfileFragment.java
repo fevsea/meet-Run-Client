@@ -29,11 +29,11 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.TrackingData;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.PastMeetingInfoActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
-public class PastMeetingsProfileFragment extends Fragment {
+public class PastMeetingsProfileFragment extends BaseFragment {
 
     private IUserAdapter userController;
     private IMeetingAdapter meetingController;
@@ -114,7 +114,7 @@ public class PastMeetingsProfileFragment extends Fragment {
                 meetingId = meeting.getId();
                 getTrackingData();
 
-                Intent pastMeetingInfoIntent = new Intent(getActivity(), PastMeetingInfoActivity.class);
+                Intent pastMeetingInfoIntent = new Intent();
 
                 pastMeetingInfoIntent.putExtra("id", meeting.getId());
                 pastMeetingInfoIntent.putExtra("title", meeting.getTitle());
@@ -152,7 +152,7 @@ public class PastMeetingsProfileFragment extends Fragment {
 
                 pastMeetingInfoIntent.putExtra("path", (Serializable) path);
 
-                startActivity(pastMeetingInfoIntent);
+                BaseActivity.startWithFragment(getActivity(), new PastMeetingInfoFragment(), pastMeetingInfoIntent);
 
             }
         });

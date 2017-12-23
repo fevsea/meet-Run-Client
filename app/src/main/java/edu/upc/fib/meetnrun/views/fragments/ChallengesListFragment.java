@@ -24,8 +24,7 @@ import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.views.ChallengeActivity;
-import edu.upc.fib.meetnrun.views.FriendsListActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChallengesAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChallengesRequestAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -34,7 +33,7 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.TwoButtonsRecyclerV
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChallengesListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+public class ChallengesListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private RecyclerView recyclerView;
     private RecyclerView recyclerViewRequest;
@@ -63,7 +62,6 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
 
         FloatingActionButton fab = getActivity().findViewById(R.id.activity_fab);
         fab.setOnClickListener(this);
-
         return view;
     }
 
@@ -78,9 +76,9 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             @Override
             public void onItemClicked(int position) {
                 Challenge challenge = challengesAdapter.getChallengeAt(position);
-                Intent i = new Intent(getActivity(), ChallengeActivity.class);
+                Intent i = new Intent();
                 i.putExtra("id", challenge.getId());
-                startActivity(i);
+                BaseActivity.startWithFragment(getActivity(), new ChallengeFragment(), i);
             }
         });
         recyclerView.setAdapter(challengesAdapter);
@@ -112,9 +110,9 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             @Override
             public void onItemClicked(int position) {
                 Challenge challenge = challengesAdapterRequest.getChallengeAt(position);
-                Intent i = new Intent(getActivity(), ChallengeActivity.class);
+                Intent i = new Intent();
                 i.putExtra("id", challenge.getId());
-                startActivity(i);
+                BaseActivity.startWithFragment(getActivity(), new ChallengeFragment(), i);
             }
         });
         recyclerViewRequest.setAdapter(challengesAdapterRequest);
@@ -159,8 +157,8 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.activity_fab) {
-            Intent i = new Intent(getActivity(), FriendsListActivity.class);
-            startActivity(i);
+            Intent i = new Intent();
+            BaseActivity.startWithFragment(getActivity(), new FriendsFragment());
         }
     }
 
@@ -233,6 +231,11 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             }
         }
 
+    }
+
+    @Override
+    public int getTitle() {
+        return R.string.challenges;
     }
 
 

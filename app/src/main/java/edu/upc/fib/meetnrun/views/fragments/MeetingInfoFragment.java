@@ -45,15 +45,12 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ChatActivity;
-import edu.upc.fib.meetnrun.views.EditMeetingActivity;
-import edu.upc.fib.meetnrun.views.FriendProfileActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
-import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
-public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback {
+public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallback {
 
     private View view;
     private LatLng location;
@@ -130,10 +127,10 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent editMeetingIntent = new Intent(getActivity(),EditMeetingActivity.class);
+                    Intent editMeetingIntent = new Intent();
                     editMeetingIntent.putExtra("id",meetingId);
+                    BaseActivity.startWithFragment(getActivity(), new EditMeetingFragment(), editMeetingIntent);
                     getActivity().finish();
-                    startActivity(editMeetingIntent);
                 }
             });
         }
@@ -176,8 +173,10 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
                 Intent profileIntent;
                 if (participant.getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
                     profileIntent = new Intent(getActivity(),ProfileViewPagerFragment.class);
+                    startActivity(profileIntent);
                 }
                 else {
+                    Fragment frag;
                     boolean isFriend = false;
                     for (Friend f : friends) {
                         User friend = f.getFriend();
@@ -186,19 +185,20 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
                     }
                     CurrentSession.getInstance().setFriend(participant);
                     if (isFriend) {
-                        profileIntent = new Intent(getActivity(), FriendProfileActivity.class);
+                        profileIntent = new Intent();
+                        frag = new FriendProfileFragment();
                     }
                     else {
-                        profileIntent = new Intent(getActivity(), UserProfileActivity.class);
+                        profileIntent = new Intent();
+                        frag = new UserProfileFragment();
                     }
                     profileIntent.putExtra("id",participant.getId().toString());
                     profileIntent.putExtra("userName", participant.getUsername());
                     String name = participant.getFirstName() + " " + participant.getLastName();
                     profileIntent.putExtra("name", name);
                     profileIntent.putExtra("postCode", participant.getPostalCode());
+                    BaseActivity.startWithFragment(getActivity(), frag, profileIntent);
                 }
-                startActivity(profileIntent);
-
             }
         }, getContext());
 
@@ -234,9 +234,9 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
 
     private void openChatView() {
         if (isChatAvailable){
-            Intent chatIntent = new Intent(getActivity(),ChatActivity.class);
+            Intent chatIntent = new Intent();
             CurrentSession.getInstance().setChat(chat);
-            startActivity(chatIntent);
+            BaseActivity.startWithFragment(getActivity(), new ChatFragment(), chatIntent);
         }
         else {
             Toast.makeText(getActivity(),R.string.chat_not_available,Toast.LENGTH_LONG).show();
@@ -424,6 +424,7 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.e("MeetingInfo", "onMapReady");
         this.map = googleMap;
         marker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
         CameraUpdate camera = CameraUpdateFactory.newLatLngZoom(location,15);
@@ -431,4 +432,9 @@ public class MeetingInfoFragment extends Fragment implements OnMapReadyCallback 
         marker.remove();
         marker = map.addMarker(new MarkerOptions().position(location).title("Meeting"));
     }
+
+    public int getTitle() {
+        return R.string.meeting;
+    }
+
 }

@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
@@ -16,7 +17,7 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ChatActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 /**
@@ -140,10 +141,10 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
         protected void onPostExecute(String s) {
 
             if (chat != null) {
-                Intent i = new Intent(getContext(), ChatActivity.class);
+                Intent i = new Intent();
                 CurrentSession.getInstance().setChat(chat);
+                BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
                 getActivity().finish();
-                startActivity(i);
             }
             super.onPostExecute(s);
         }
@@ -188,15 +189,17 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
                 new createChat().execute();
             }
             else {
-                Intent i = new Intent(getContext(), ChatActivity.class);
+                Intent i = new Intent();
                 CurrentSession.getInstance().setChat(chat);
+                BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
                 getActivity().finish();
-                startActivity(i);
             }
             super.onPostExecute(s);
         }
     }
 
-
+    public int getTitle() {
+        return R.string.friends_label;
+    }
 
 }

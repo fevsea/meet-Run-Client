@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +30,7 @@ import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 
 import static edu.upc.fib.meetnrun.utils.UtilsViews.getExpirationText;
 
-public class ChallengeFragment extends Fragment implements View.OnClickListener {
+public class ChallengeFragment extends BaseFragment implements View.OnClickListener {
 
     private Challenge challenge;
 
@@ -97,6 +98,13 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
 
         GetChallenge getChallenge = new GetChallenge();
         getChallenge.execute(challengeId);
+
+        FloatingActionButton fab = view.findViewById(R.id.activity_fab);
+
+        if (fab != null) {
+            fab.setVisibility(View.INVISIBLE);
+        }
+
         return view;
     }
 
@@ -273,6 +281,10 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
             }
         }
 
+    }
+
+    public int getTitle() {
+        return R.string.challenge;
     }
 
 }
