@@ -28,7 +28,7 @@ public class RankingPagerFragment extends AppCompatActivity {
 
         ViewPager pager = null;
 
-        private edu.upc.fib.meetnrun.views.ProfileViewPagerFragment.PagerAdapterFragment adapterViewPager;
+        private PagerAdapterFragment adapterViewPager;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class RankingPagerFragment extends AppCompatActivity {
             ViewPager pager = findViewById(R.id.viewpager);
             TabLayout tabs = findViewById(R.id.pager_tabs);
 
-            adapterViewPager = new edu.upc.fib.meetnrun.views.ProfileViewPagerFragment.PagerAdapterFragment(getSupportFragmentManager());
+            adapterViewPager = new PagerAdapterFragment(getSupportFragmentManager());
             pager.setAdapter(adapterViewPager);
             tabs.setupWithViewPager(pager);
 
@@ -85,9 +85,9 @@ public class RankingPagerFragment extends AppCompatActivity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0: // Fragment # 0 - This will show FirstFragment
-                        return RankingsUserFragment.newInstance(0, "user");
+                        //return RankingsUserFragment.newInstance(0, "user");
                     case 1:
-                        return RankingsZipFragment.newInstance(1, "zip");
+                        //return RankingsZipFragment.newInstance(1, "zip");
                     default:
                         return null;
                 }

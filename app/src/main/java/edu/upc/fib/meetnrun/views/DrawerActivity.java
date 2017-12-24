@@ -31,6 +31,7 @@ import edu.upc.fib.meetnrun.views.fragments.ChatListFragment;
 import edu.upc.fib.meetnrun.views.fragments.FriendsFragment;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
 import edu.upc.fib.meetnrun.views.fragments.MyMeetingsFragment;
+import edu.upc.fib.meetnrun.views.fragments.RankingsUserFragment;
 import edu.upc.fib.meetnrun.views.fragments.SettingsFragment;
 
 public class DrawerActivity extends AppCompatActivity{
@@ -117,6 +118,11 @@ public class DrawerActivity extends AppCompatActivity{
                                 case R.id.chat:
                                     fragment = new ChatListFragment();
                                     setTitle(R.string.chat_label);
+                                    replaceFragment(fragment);
+                                    break;
+                                case R.id.rankings:
+                                    fragment = new RankingsUserFragment();
+                                    setTitle(R.string.rankings);
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.settings:

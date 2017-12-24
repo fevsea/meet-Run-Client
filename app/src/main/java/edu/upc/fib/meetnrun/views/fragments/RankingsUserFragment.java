@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 
 import edu.upc.fib.meetnrun.R;
 
@@ -23,20 +24,24 @@ public class RankingsUserFragment extends Fragment {
     private String title;
     private int page;
     RadioGroup rdbFilter;
+    Spinner zipSpinner;
     View view;
     Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt("0", 0);
-        String title = getArguments().getString("User");
+//        page = getArguments().getInt("0", 0);
+//        String title = getArguments().getString("User");
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_ranking_users, container, false);
         context = this.getActivity();
+        initializePagination();
+        zipSpinner = view.findViewById(R.id.rankingSpinner);
+        setSpinner();
         rdbFilter = view.findViewById(R.id.rdGUser);
         rdbFilter.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 
@@ -54,6 +59,10 @@ public class RankingsUserFragment extends Fragment {
 
         });
         return view;
+    }
+
+    private void setSpinner() {
+        //TODO: catch stuff from server and put it on the spinner
     }
 
 
