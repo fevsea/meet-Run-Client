@@ -7,6 +7,8 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackFriends;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 
@@ -26,7 +28,7 @@ public abstract class GetAllFriends extends AsyncTask<Void,Void,Void> implements
 
 
     @Override
-    protected Void doInBackground(Void... v) {
+    protected Void doInBackground(Void... v) throws AuthorizationException,NotFoundException{
         List<Friend> friendsPage;
         while (!isLastPage) {
             friendsPage = friendsAdapter.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(), pageNumber);

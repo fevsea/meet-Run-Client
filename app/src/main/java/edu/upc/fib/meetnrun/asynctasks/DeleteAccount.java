@@ -8,6 +8,7 @@ import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallback;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
 public abstract class DeleteAccount extends AsyncTask<Void,Void,Void> implements AsyncTaskCallback{
@@ -15,7 +16,7 @@ public abstract class DeleteAccount extends AsyncTask<Void,Void,Void> implements
     private IUserAdapter userAdapter;
 
     @Override
-    protected Void doInBackground(Void... v) {
+    protected Void doInBackground(Void... v) throws NotFoundException, AuthorizationException,ParamsException{
         userAdapter.deleteUserByID(CurrentSession.getInstance().getCurrentUser().getId());
         return null;
     }

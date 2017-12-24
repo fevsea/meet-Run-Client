@@ -2,6 +2,8 @@ package edu.upc.fib.meetnrun.asynctasks;
 
 import android.os.AsyncTask;
 
+import com.google.android.gms.auth.api.Auth;
+
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallback;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
@@ -18,7 +20,7 @@ public abstract class DeleteChat extends AsyncTask<Integer,String,String> implem
     }
 
     @Override
-    protected String doInBackground(Integer... chatid) {
+    protected String doInBackground(Integer... chatid) throws AuthorizationException,NotFoundException{
         chatAdapter.deleteChat(chatid[0]);
         return null;
     }

@@ -21,7 +21,7 @@ public abstract class GetChats extends AsyncTask<Void,Void,List<Chat>> implement
     }
 
     @Override
-    protected List<Chat> doInBackground(Void... v) {
+    protected List<Chat> doInBackground(Void... v) throws AuthorizationException {
         return chatAdapter.getChats(page);
     }
 

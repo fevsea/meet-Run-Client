@@ -19,7 +19,7 @@ public abstract class UpdatePassword extends AsyncTask<String, Void, Boolean> im
     }
 
     @Override
-    protected Boolean doInBackground(String... params) {
+    protected Boolean doInBackground(String... params) throws AuthorizationException, ForbiddenException {
          return loginAdapter.changePassword(params[0], params[1]);
     }
 

@@ -22,7 +22,7 @@ public abstract class UpdateMeeting extends AsyncTask<Meeting, Void, Boolean> im
     }
 
     @Override
-    protected Boolean doInBackground(Meeting... params) {
+    protected Boolean doInBackground(Meeting... params) throws AuthorizationException,ParamsException,NotFoundException {
         return meetingAdapter.updateMeeting(params[0]);
     }
 

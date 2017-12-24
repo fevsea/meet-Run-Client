@@ -29,7 +29,7 @@ public abstract class RemoveFriend extends AsyncTask<String,Void,Void> implement
     }
 
     @Override
-    protected Void doInBackground(String... s) {
+    protected Void doInBackground(String... s) throws AuthorizationException,ParamsException,NotFoundException{
         ok = friendsAdapter.removeFriend(Integer.parseInt(s[0]));
         if (ok) {
             Chat chat;

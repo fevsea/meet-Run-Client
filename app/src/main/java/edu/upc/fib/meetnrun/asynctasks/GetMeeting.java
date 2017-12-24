@@ -4,6 +4,7 @@ package edu.upc.fib.meetnrun.asynctasks;
 import android.os.AsyncTask;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackMeeting;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 
@@ -16,7 +17,7 @@ public abstract class GetMeeting extends AsyncTask<Integer,Void,Meeting> impleme
     }
 
     @Override
-    protected Meeting doInBackground(Integer... integers) {
+    protected Meeting doInBackground(Integer... integers) throws NotFoundException {
          return meetingAdapter.getMeeting(integers[0]);
     }
 

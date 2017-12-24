@@ -9,6 +9,8 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackChat;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
@@ -37,7 +39,7 @@ public abstract class CreateChat extends AsyncTask<Void,Void,Chat> implements As
     }
 
     @Override
-    protected Chat doInBackground(Void... v) {
+    protected Chat doInBackground(Void... v) throws AuthorizationException,ParamsException{
         return chatAdapter.createChat(chatName, listUsersChatIDs, type,meetingId,
                 lastMessage, lastMessageUserNamePosition, lastDateTime);
     }

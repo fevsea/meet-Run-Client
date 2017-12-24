@@ -16,7 +16,7 @@ import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackString;
 public abstract class GetCity extends AsyncTask<String, String, String> implements AsyncTaskCallbackString {
 
     @Override
-    protected String doInBackground(String... params) {
+    protected String doInBackground(String... params)  {
 
         URL url = null;
         String result = null;

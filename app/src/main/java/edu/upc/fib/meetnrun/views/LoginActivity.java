@@ -18,6 +18,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetCurrentUser;
+import edu.upc.fib.meetnrun.asynctasks.Login;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
@@ -55,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         String token = prefs.getString("token",null);
         if (token != null) {
-            new GetCurrentUser().execute(token);
+            callGetCurrentUser(token);
         }
     }
 
@@ -80,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        new login().execute();
+        callLogin();
     }
 
     private void changeToMainActivity() {
@@ -101,82 +103,44 @@ public class LoginActivity extends AppCompatActivity {
         new FirebaseInstanceService().onTokenRefresh();
     }
 
-    private class login extends AsyncTask<String,String,String> {
-
-        String token = null;
-        User u = null;
-
-        @Override
-        protected String doInBackground(String... logUser) {
-            try {
-                token = loginAdapter.login(username, password);
-                //TODO Pending to catch correctly
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            }
-
-            if(token != null && !token.equals("")){
-                cs.setToken(token);
-                saveToken();
-                updateFirebaseToken();
-                try {
-                    u = loginAdapter.getCurrentUser();
-                    //TODO Pending to catch correctly
-                } catch (AuthorizationException e) {
-                    e.printStackTrace();
+    private void callLogin() {
+        Login login = new Login(username,password) {
+            @Override
+            public void onResponseReceived(String token) {
+                if(token != null && !token.equals("")){
+                    cs.setToken(token);
+                    saveToken();
+                    updateFirebaseToken();
+                    callGetCurrentUser(token);
                 }
             }
-            return null;
+        };
+        try {
+            login.execute();
         }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (token == null || token.equals("")) {
-                Toast.makeText(getApplicationContext(), "User not found", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                cs.setCurrentUser(u);
-                changeToMainActivity();
-            }
-            super.onPostExecute(s);
+        catch (AuthorizationException e) {
+            //TODO toast auth exception
         }
     }
 
-    private class GetCurrentUser extends AsyncTask<String,String,String> {
 
-        User user = null;
-        boolean ok = false;
-
-        @Override
-        protected void onPreExecute() {
-
-            progressBar.setVisibility(View.VISIBLE);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                cs.setToken(s[0]);
-                user = loginAdapter.getCurrentUser();
-                if (user != null) ok = true;
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-                deleteToken();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (ok) {
-                cs.setCurrentUser(user);
+    private void callGetCurrentUser(String token) {
+        progressBar.setVisibility(View.VISIBLE);
+        GetCurrentUser getCurrentUser = new GetCurrentUser() {
+            @Override
+            public void onResponseReceied(User u) {
+                cs.setCurrentUser(u);
                 progressBar.setVisibility(View.INVISIBLE);
                 changeToMainActivity();
             }
-            else deleteToken();
+        };
+        try {
+            getCurrentUser.execute(token);
+        }
+        catch (AuthorizationException e) {
+            //TODO toast auth exception
+            deleteToken();
             progressBar.setVisibility(View.INVISIBLE);
-            super.onPostExecute(s);
         }
     }
 

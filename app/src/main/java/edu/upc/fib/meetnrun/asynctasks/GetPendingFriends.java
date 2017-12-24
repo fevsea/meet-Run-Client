@@ -24,7 +24,7 @@ public abstract class GetPendingFriends extends AsyncTask<String, String, List<F
     }
 
     @Override
-    protected List<Friend> doInBackground(String... params) {
+    protected List<Friend> doInBackground(String... params) throws AuthorizationException, NotFoundException {
             return friendsAdapter.listUserPendingFriends(CurrentSession.getInstance().getCurrentUser().getId(), page);
     }
 

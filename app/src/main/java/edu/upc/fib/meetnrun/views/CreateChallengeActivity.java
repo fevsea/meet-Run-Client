@@ -14,11 +14,15 @@ import android.widget.NumberPicker;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.asynctasks.CreateChallenge;
+import edu.upc.fib.meetnrun.asynctasks.GetUser;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -88,10 +92,9 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         if (id == R.id.done_button) {
             challenge.setDistance(distancePicker.getValue()*1000);
             challenge.setCreator(CurrentSession.getInstance().getCurrentUser());
-            new GetUser().execute(userID);
+            callGetUser(userID);
             challenge.setChallenged(challenged);
-            CreateChallenge createChallenge= new CreateChallenge();
-            createChallenge.execute(this.challenge);
+            callCreateChallenge();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -138,69 +141,42 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         datePickerFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
-
-    private class CreateChallenge extends AsyncTask<Challenge, String ,Boolean> {
-
-        Exception exception = null;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Boolean doInBackground(Challenge[] params) {
-            try {
-                User current = CurrentSession.getInstance().getCurrentUser();
-                CurrentSession.getInstance().getChallengeAdapter().createNewChallenge(current, challenged, (int)challenge.getDistance(), challenge.getDateDeadline());
-            } catch (AuthorizationException | ParamsException e) {
-                this.exception = e;
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            progressBar.setVisibility(View.INVISIBLE);
-            if (result && exception == null) {
+    private void callCreateChallenge() {
+        progressBar.setVisibility(View.VISIBLE);
+        CreateChallenge createChallenge = new CreateChallenge(challenged,challenge) {
+            @Override
+            public void onResponseReceived() {
+                progressBar.setVisibility(View.INVISIBLE);
                 finish();
             }
-            else if (exception instanceof AuthorizationException) {
-                Toast.makeText(CreateChallengeActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else if (exception instanceof ParamsException) {
-                Toast.makeText(CreateChallengeActivity.this, R.string.params_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(CreateChallengeActivity.this, getResources().getString(R.string.error_saving_challenge), Toast.LENGTH_SHORT).show();
-            }
+        };
+        try {
+            createChallenge.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(CreateChallengeActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
+            finish();
 
+        }
+        catch (ParamsException e) {
+            Toast.makeText(CreateChallengeActivity.this, R.string.params_error, Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
-    private class GetUser extends AsyncTask<Integer,String,User> {
 
-        Exception exception = null;
-
-        @Override
-        protected User doInBackground(Integer[] params) {
-            User ret = null;
-            try {
-                ret = CurrentSession.getInstance().getUserAdapter().getUser(userID);
-            } catch (NotFoundException e) {
-                this.exception = e;
+    private void callGetUser(int userID) {
+        GetUser getUser = new GetUser(userID) {
+            @Override
+            public void onResponseReceied(User u) {
+                challenged = u;
             }
-            return ret;
+        };
+        try {
+            getUser.execute();
         }
-
-        @Override
-        protected void onPostExecute(User result) {
-            if (exception != null || result == null) {
-                Toast.makeText(CreateChallengeActivity.this, getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
-            }
-            challenged = result;
+        catch (NotFoundException e) {
+            Toast.makeText(CreateChallengeActivity.this, getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
         }
     }
 

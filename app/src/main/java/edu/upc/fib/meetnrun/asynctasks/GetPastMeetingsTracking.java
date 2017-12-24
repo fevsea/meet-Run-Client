@@ -18,7 +18,7 @@ public abstract class GetPastMeetingsTracking extends AsyncTask<Integer, Integer
     }
 
     @Override
-    protected TrackingData doInBackground(Integer... integers) {
+    protected TrackingData doInBackground(Integer... integers) throws AuthorizationException,NotFoundException{
         return meetingAdapter.getTracking(integers[0], integers[1]);
     }
 

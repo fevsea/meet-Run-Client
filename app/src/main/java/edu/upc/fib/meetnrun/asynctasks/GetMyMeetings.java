@@ -6,6 +6,8 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackMeetings;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 
@@ -21,7 +23,7 @@ public abstract class GetMyMeetings extends AsyncTask<Integer,Void,List<Meeting>
     }
 
     @Override
-    protected List<Meeting> doInBackground(Integer... integers) {
+    protected List<Meeting> doInBackground(Integer... integers) throws AuthorizationException,ParamsException{
         return userAdapter.getUsersFutureMeetings(integers[0]);
     }
 

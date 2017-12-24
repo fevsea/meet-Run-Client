@@ -22,8 +22,7 @@ public abstract class GetChallenge extends AsyncTask<Integer, String, Challenge>
     }
 
     @Override
-    protected Challenge doInBackground(Integer... params) {
-        //TODO try returns true, catch false?
+    protected Challenge doInBackground(Integer... params) throws AuthorizationException,NotFoundException{
         return challengeAdapter.getChallenge(params[0]);
     }
 

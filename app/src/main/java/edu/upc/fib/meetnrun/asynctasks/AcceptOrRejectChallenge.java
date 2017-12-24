@@ -22,7 +22,7 @@ public abstract class AcceptOrRejectChallenge extends AsyncTask<Boolean, String,
     }
 
     @Override
-    protected Void doInBackground(Boolean... params) {
+    protected Void doInBackground(Boolean... params) throws AuthorizationException, NotFoundException{
         if (params[0]) {
             challengeAdapter.acceptChallenge(challengeId);
         }

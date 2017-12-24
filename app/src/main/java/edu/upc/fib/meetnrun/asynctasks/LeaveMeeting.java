@@ -29,7 +29,7 @@ public abstract class LeaveMeeting extends AsyncTask<Integer,Void,Void> implemen
     }
 
     @Override
-    protected Void doInBackground(Integer... integers) {
+    protected Void doInBackground(Integer... integers) throws AuthorizationException,ParamsException,NotFoundException{
         //TODO possible millora: crida al servidor leaveChat
         meetingAdapter.leaveMeeting(integers[0], CurrentSession.getInstance().getCurrentUser().getId());
         Chat chat = chatAdapter.getChat(integers[1]);

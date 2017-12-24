@@ -3,11 +3,14 @@ package edu.upc.fib.meetnrun.asynctasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.auth.api.Auth;
+
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallback;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackBoolean;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 
@@ -20,7 +23,7 @@ public abstract class AcceptOrRejectFriend extends AsyncTask<Friend, String, Boo
     }
 
     @Override
-    protected Boolean doInBackground(Friend... params) {
+    protected Boolean doInBackground(Friend... params) throws AuthorizationException,ParamsException{
         Friend friend = params[0];
         if (friend.isAccepted()) {
             Log.d("AcceptFriend", friend.getUser().getUsername());

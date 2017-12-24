@@ -48,7 +48,7 @@ public abstract class CreateMeeting extends AsyncTask<String,Void,Meeting> imple
     }
 
     @Override
-    protected Meeting doInBackground(String... strings){
+    protected Meeting doInBackground(String... strings) throws AuthorizationException,ParamsException{
         Meeting meeting= meetingAdapter.createMeeting(name,description,publ,level,date,lat,lon,null);
         Chat chat = chatAdapter.createChat(name,owner,1,meeting.getId(),"",0,currentDate);
         CurrentSession.getInstance().setChat(chat);

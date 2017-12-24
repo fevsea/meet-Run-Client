@@ -9,6 +9,7 @@ import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallback;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackMeetings;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
@@ -21,7 +22,7 @@ public abstract class GetPastMeetings extends AsyncTask<Integer, Integer, List<M
         userAdapter = CurrentSession.getInstance().getUserAdapter();
     }
     @Override
-    protected List<Meeting> doInBackground(Integer... integers) {
+    protected List<Meeting> doInBackground(Integer... integers) throws AuthorizationException,ParamsException{
         return userAdapter.getUserPastMeetings(integers[0]);
     }
 

@@ -7,6 +7,8 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackUsers;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
@@ -26,7 +28,7 @@ public abstract class GetAllParticipants extends AsyncTask<Integer,Void,List<Use
     }
 
     @Override
-    protected List<User> doInBackground(Integer... integers) {
+    protected List<User> doInBackground(Integer... integers) throws AuthorizationException,ParamsException {
         List<User> participantsPage = new ArrayList<>();
         while (!isLastPage) {
             meetingAdapter.getParticipantsFromMeeting(integers[0],page);
