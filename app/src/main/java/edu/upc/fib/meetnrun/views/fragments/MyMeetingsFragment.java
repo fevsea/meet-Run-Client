@@ -30,8 +30,7 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
-import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.TrackingActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsAdapter;
 import edu.upc.fib.meetnrun.R;
@@ -39,7 +38,7 @@ import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsListener;
 
 
-public class MyMeetingsFragment extends Fragment {
+public class MyMeetingsFragment extends BaseFragment {
 
     private MyMeetingsAdapter meetingsAdapter;
     private View view;
@@ -97,7 +96,7 @@ public class MyMeetingsFragment extends Fragment {
             public void onMeetingClicked(int position) {
                 Toast.makeText(view.getContext(), "Showing selectedUsers meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
-                Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
+                Intent meetingInfoIntent = new Intent();
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
                 meetingInfoIntent.putExtra("chat",meeting.getChatID());
                 meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
@@ -109,7 +108,7 @@ public class MyMeetingsFragment extends Fragment {
                 meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
                 meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
                 meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
-                startActivity(meetingInfoIntent);
+                BaseActivity.startWithFragment(getActivity(), new MeetingInfoFragment(), meetingInfoIntent);
 
             }
         });
@@ -123,8 +122,7 @@ public class MyMeetingsFragment extends Fragment {
     }
 
     private void createNewMeeting() {
-        Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
-        startActivity(intent);
+        BaseActivity.startWithFragment(getActivity(), new CreateMeetingFragment());
     }
 
     private void startMeeting(Meeting meeting) {
@@ -180,4 +178,9 @@ public class MyMeetingsFragment extends Fragment {
             }
         }.execute(meetingId,chatId);
     }
+
+    public int getTitle() {
+        return R.string.mymeetings_label;
+    }
+
 }

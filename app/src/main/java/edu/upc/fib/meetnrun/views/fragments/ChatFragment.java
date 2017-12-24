@@ -45,8 +45,7 @@ import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ChatGroupInfoActivity;
-import edu.upc.fib.meetnrun.views.FriendProfileActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MessageAdapter;
 
 
@@ -54,7 +53,7 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MessageAdapter;
  * Created by eric on 21/11/17.
  */
 
-public class ChatFragment extends Fragment {
+public class ChatFragment extends BaseFragment {
 
     private View view;
     private FloatingActionButton fab;
@@ -363,12 +362,14 @@ public class ChatFragment extends Fragment {
 
     private void openProfileView() {
 
-        Intent chatIntent = null;
-        User user = null;
+        Intent chatIntent;
+        Fragment chatFragment;
+        User user;
         int type = chat.getType();
         Log.e("AAA","PASSA");
         if (type == 0) {
-            chatIntent = new Intent(getActivity(),FriendProfileActivity.class);
+            chatIntent = new Intent();
+            chatFragment = new FriendProfileFragment();
             if (!currentUser.getUsername().equals(chat.getUser1().getUsername()))
                 user = chat.getUser1();
             else user = chat.getUser2();
@@ -376,10 +377,11 @@ public class ChatFragment extends Fragment {
         }
         //else if (type == 1) {
         else {
-            chatIntent = new Intent(getActivity(),ChatGroupInfoActivity.class);
+            chatIntent = new Intent();
+            chatFragment = new ChatGroupInfoFragment();
             //chatIntent.putExtra("name",chat.getChatName());
         }
-        startActivity(chatIntent);
+        BaseActivity.startWithFragment(getActivity(), chatFragment,chatIntent);
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {
@@ -430,5 +432,8 @@ public class ChatFragment extends Fragment {
         }.execute(chatId);
     }
 
+    public int getTitle() {
+        return R.string.chat_label;
+    }
 
 }

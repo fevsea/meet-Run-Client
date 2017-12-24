@@ -53,4 +53,8 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
             }
         }.execute(s);
     }
+
+    public int getTitle() {
+        return R.string.user_profile_label;
+    }
 }

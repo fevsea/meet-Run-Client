@@ -38,14 +38,13 @@ import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
-import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 //TODO implementar crida a joinedMeetings per separat (ja no es dona aquesta info amb el meeting)
 //TODO pero ara no funciona be la crida
-public class MeetingListFragment extends Fragment {
+public class MeetingListFragment extends BaseFragment {
 
     private MeetingsAdapter meetingsAdapter;
     private View view;
@@ -124,7 +123,7 @@ public class MeetingListFragment extends Fragment {
             public void onItemClicked(int position) {
                 Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
-                Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
+                Intent meetingInfoIntent = new Intent();
                 meetingInfoIntent.putExtra("id",meeting.getId());
                 //TODO 'if' temporal, fins que es borri la BD
                 if (meeting.getChatID() != null) meetingInfoIntent.putExtra("chat",meeting.getChatID());
@@ -138,7 +137,7 @@ public class MeetingListFragment extends Fragment {
                 meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
                 meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
                 meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
-                startActivity(meetingInfoIntent);
+                BaseActivity.startWithFragment(getActivity(), new MeetingInfoFragment(), meetingInfoIntent);
 
             }
         });
@@ -224,8 +223,8 @@ public class MeetingListFragment extends Fragment {
 
     private void createNewMeeting() {
         refresh = true;
-        Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent();
+        BaseActivity.startWithFragment(getActivity(), new CreateMeetingFragment(), intent);
     }
 
     private void getMyMeetings() {
@@ -317,6 +316,11 @@ public class MeetingListFragment extends Fragment {
         }
         getMyMeetings();
         super.onResume();
+    }
+
+    @Override
+    public int getTitle() {
+        return R.string.meetings;
     }
 
 }

@@ -28,9 +28,7 @@ import edu.upc.fib.meetnrun.asynctasks.GetChats;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.views.ChatActivity;
-import edu.upc.fib.meetnrun.views.ChatFriendsActivity;
-import edu.upc.fib.meetnrun.views.ChatGroupsActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChatAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
@@ -38,7 +36,7 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
  * Created by eric on 21/11/17.
  */
 
-public class ChatListFragment extends Fragment {
+public class ChatListFragment extends BaseFragment {
 
     private View view;
     private FloatingActionButton fab, fab2, fab3;
@@ -142,16 +140,16 @@ public class ChatListFragment extends Fragment {
     }
 
     private void addChat() {
-        Intent intent = new Intent(getActivity(), ChatFriendsActivity.class);
+        Intent intent = new Intent();
         animFab();
-        startActivity(intent);
+        BaseActivity.startWithFragment(getActivity(), new ChatFriendsFragment(), intent);
     }
 
     private void addGroup() {
-        Intent intent = new Intent(getActivity(), ChatGroupsActivity.class);
+        Intent intent = new Intent();
         intent.putExtra("action","addgroup");
         animFab();
-        startActivity(intent);
+        BaseActivity.startWithFragment(getActivity(), new ChatGroupsFragment(), intent);
     }
 
     private void setupRecyclerView() {
@@ -170,9 +168,9 @@ public class ChatListFragment extends Fragment {
             public void onItemClicked(int position) {
 
                 Chat chat = chatAdapter.getChatAtPosition(position);
-                Intent chatIntent = new Intent(getActivity(),ChatActivity.class);
+                Intent chatIntent = new Intent();
                 CurrentSession.getInstance().setChat(chat);
-                startActivity(chatIntent);
+                BaseActivity.startWithFragment(getActivity(), new ChatFragment(), chatIntent);
             }
         });
 
@@ -280,5 +278,9 @@ public class ChatListFragment extends Fragment {
         initializePagination();
         updateChats();
         super.onResume();
+    }
+
+    public int getTitle() {
+        return R.string.chat_label;
     }
 }

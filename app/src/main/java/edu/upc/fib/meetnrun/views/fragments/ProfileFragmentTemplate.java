@@ -34,7 +34,7 @@ import edu.upc.fib.meetnrun.models.User;
  * Created by eric on 16/11/17.
  */
 
-public abstract class ProfileFragmentTemplate extends Fragment {
+public abstract class ProfileFragmentTemplate extends BaseFragment {
 
     protected View view;
     protected TextView profileImg;

@@ -31,16 +31,13 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ChatGroupsActivity;
-import edu.upc.fib.meetnrun.views.FriendProfileActivity;
-import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
-import edu.upc.fib.meetnrun.views.UserProfileActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 
 
-public class ChatGroupInfoFragment extends Fragment {
+public class ChatGroupInfoFragment extends BaseFragment {
 
     protected View view;
     protected UsersAdapter usersAdapter;
@@ -91,9 +88,9 @@ public class ChatGroupInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 CurrentSession.getInstance().setChat(chat);
-                Intent addUserIntent = new Intent(getContext(), ChatGroupsActivity.class);
+                Intent addUserIntent = new Intent();
                 addUserIntent.putExtra("action","adduser");
-                startActivity(addUserIntent);
+                BaseActivity.startWithFragment(getActivity(), new ChatGroupsFragment(), addUserIntent);
             }
         });
         setupRecyclerView();
@@ -137,16 +134,21 @@ public class ChatGroupInfoFragment extends Fragment {
         else {
             CurrentSession.getInstance().setFriend(friend);
             Intent userProfileIntent = null;
+            Fragment userProfileFragment;
             if (CurrentSession.getInstance().getCurrentUser().getId().equals(friend.getId())) {
                 userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
+                startActivity(userProfileIntent);
+                return;
             }
             else if (isFriend(friend)) {
-                userProfileIntent = new Intent(getActivity(), FriendProfileActivity.class);
+                userProfileIntent = new Intent();
+                userProfileFragment = new FriendProfileFragment();
             }
             else {
-                userProfileIntent = new Intent(getActivity(), UserProfileActivity.class);
+                userProfileIntent = new Intent();
+                userProfileFragment = new UserProfileFragment();
             }
-            startActivity(userProfileIntent);
+            BaseActivity.startWithFragment(getActivity(), userProfileFragment, userProfileIntent);
         }
     }
 
@@ -206,7 +208,7 @@ public class ChatGroupInfoFragment extends Fragment {
 
     private void openMeetingView() {
         Meeting meeting = chat.getMeeting();
-        Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
+        Intent meetingInfoIntent = new Intent();
         meetingInfoIntent.putExtra("id",meeting.getId());
         meetingInfoIntent.putExtra("chat",meeting.getChatID());
         meetingInfoIntent.putExtra("title",meeting.getTitle());
@@ -219,7 +221,7 @@ public class ChatGroupInfoFragment extends Fragment {
         meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
         meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
         meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
-        startActivity(meetingInfoIntent);
+        BaseActivity.startWithFragment(getActivity(), new MeetingInfoFragment(), meetingInfoIntent);
     }
 
 }

@@ -17,8 +17,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.asynctasks.GetCity;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ChangePasswordActivity;
-import edu.upc.fib.meetnrun.views.EditProfileActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +28,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 
-public class ProfileActivityFragment extends Fragment {
+public class ProfileActivityFragment extends BaseFragment {
 
     private User u;
     private View view;
@@ -99,18 +98,14 @@ public class ProfileActivityFragment extends Fragment {
         Button button = view.findViewById(R.id.editProfile_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent;
-                intent = new Intent(getActivity(), EditProfileActivity.class);
-                startActivity(intent);
+                BaseActivity.startWithFragment(getActivity(), new EditProfileFragment());
             }
         });
 
         Button button2 = view.findViewById(R.id.changePass_button);
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent;
-                intent = new Intent(getActivity(), ChangePasswordActivity.class);
-                startActivity(intent);
+                BaseActivity.startWithFragment(getActivity(), new ChangePasswordFragment());
             }
         });
 

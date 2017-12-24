@@ -22,7 +22,7 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 
 
-public class EditProfileFragment extends Fragment {
+public class EditProfileFragment extends BaseFragment {
 
     private User u;
     private View view;
@@ -124,4 +124,7 @@ public class EditProfileFragment extends Fragment {
         }.execute(user);
     }
 
+    public int getTitle() {
+        return R.string.title_edit_profile;
+    }
 }
