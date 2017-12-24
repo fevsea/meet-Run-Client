@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +23,10 @@ import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
-import edu.upc.fib.meetnrun.views.CreateChallengeActivity;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ChatActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 
 /**
  * Created by eric on 2/11/17.
@@ -120,9 +118,9 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
 
     @Override
     public void onClick(View v) {
-        Intent i = new Intent(getActivity(), CreateChallengeActivity.class);
+        Intent i = new Intent();
         i.putExtra("id",this.currentFriend.getId());
-        startActivity(i);
+        BaseActivity.startWithFragment(getActivity(), new CreateChallengeFragment(), i);
     }
 
     private class removeFriend extends AsyncTask<Integer,String,String> {
@@ -183,10 +181,10 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
             super.onPostExecute(s);
 
             if (chat != null) {
-                Intent i = new Intent(getContext(), ChatActivity.class);
+                Intent i = new Intent();
                 CurrentSession.getInstance().setChat(chat);
+                BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
                 getActivity().finish();
-                startActivity(i);
             }
         }
     }
@@ -227,10 +225,10 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
 
             }
             else {
-                Intent i = new Intent(getContext(), ChatActivity.class);
+                Intent i = new Intent();
                 CurrentSession.getInstance().setChat(chat);
+                BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
                 getActivity().finish();
-                startActivity(i);
             }
         }
     }
@@ -283,5 +281,9 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
             new removeFriend().execute(currentFriend.getId());
         }
     };
+
+    public int getTitle() {
+        return R.string.friend_profile_label;
+    }
 
 }
