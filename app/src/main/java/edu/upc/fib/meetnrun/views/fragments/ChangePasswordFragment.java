@@ -101,7 +101,7 @@ public class ChangePasswordFragment extends BaseFragment {
     }
 
     private void callUpdatePassword(String currentPass, String newPass) {
-        new UpdatePassword() {
+        UpdatePassword updatePassword = new UpdatePassword() {
             @Override
             public void onResponseReceived(boolean b) {
                 if (b) {
@@ -110,7 +110,16 @@ public class ChangePasswordFragment extends BaseFragment {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_change_pass), Toast.LENGTH_SHORT).show();
                 }
             }
-        }.execute(currentPass,newPass);
+        };
+        try {
+            updatePassword.execute(currentPass, newPass);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ForbiddenException e) {
+            Toast.makeText(getActivity(), R.string.forbidden_error, Toast.LENGTH_LONG).show();
+        }
     }
 
 

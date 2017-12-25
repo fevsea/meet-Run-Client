@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -187,21 +188,39 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
     }
 
     private void callGetAllFriends() {
-        new GetAllFriends() {
+        GetAllFriends getAllFriends = new GetAllFriends() {
             @Override
             public void onResponseReceived(List<Friend> allfriends) {
                 friends = allfriends;
             }
-        }.execute();
+        };
+        try {
+            getAllFriends.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void callGetAllParticipants(int meetingId) {
-        new GetAllParticipants() {
+        GetAllParticipants getAllParticipants = new GetAllParticipants() {
             @Override
             public void onResponseReceived(List<User> users) {
                 participantsAdapter.updateFriendsList(users);
             }
-        }.execute(meetingId);
+        };
+        try {
+            getAllParticipants.execute(meetingId);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

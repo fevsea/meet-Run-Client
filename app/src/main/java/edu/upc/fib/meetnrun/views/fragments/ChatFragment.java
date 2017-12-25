@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -414,22 +415,46 @@ public class ChatFragment extends BaseFragment {
     }
 
     private void callUpdateChat() {
-        new UpdateChat() {
+        UpdateChat updateChat =new UpdateChat() {
             @Override
             public void onResponseReceived() {
                 Log.d("ChatFragment","Chat updated");
             }
-        }.execute(chat);
+        };
+        try {
+            updateChat.execute(chat);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
 
     private void callDeleteChat(int chatId) {
-        new DeleteChat() {
+        DeleteChat deleteChat = new DeleteChat() {
             @Override
             public void onResponseReceived() {
                 Log.d("ChatFragment","Chat deleted");
             }
-        }.execute(chatId);
+        };
+        try {
+            deleteChat.execute(chatId);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     public int getTitle() {

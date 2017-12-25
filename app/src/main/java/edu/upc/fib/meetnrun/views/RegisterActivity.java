@@ -134,8 +134,7 @@ public class RegisterActivity extends AppCompatActivity{
             register.execute();
         }
         catch (ParamsException e) {
-
-            Toast.makeText(getApplicationContext(), "User already registered", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.params_error, Toast.LENGTH_LONG).show();
         }
     }
 

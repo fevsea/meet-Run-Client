@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -232,24 +233,34 @@ public class UsersListFragment extends BaseFragment {
     }
 
     private void callGetFriends() {
-        new GetAllFriends() {
+        GetAllFriends getAllFriends = new GetAllFriends() {
             @Override
             public void onResponseReceived(List<Friend> friendsResponse) {
                 friends = friendsResponse;
                 callGetUsers();
             }
-        }.execute();
+        };
+        try {
+            getAllFriends.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void callGetUsers() {
         if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
         isLoading = true;
-        new GetUsers(pageNumber) {
+        GetUsers getUsers = new GetUsers(pageNumber) {
             @Override
             public void onResponseReceived(List<User> users) {
                 updateData(users);
             }
-        }.execute();
+        };
+        getUsers.execute();
     }
 
     public int getTitle() {

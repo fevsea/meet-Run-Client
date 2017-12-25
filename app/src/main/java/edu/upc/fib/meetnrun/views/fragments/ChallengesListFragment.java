@@ -163,21 +163,19 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
     }
 
     private void callGetChallenges() {
-        new GetChallenges() {
+        GetChallenges getChallenges = new GetChallenges() {
             @Override
             public void onResponseReceived(List<Challenge> challenges) {
                     updateChallengesAdapters();
                     swipeRefreshLayout.setRefreshing(false);
-                /* TODO handle exceptions
-                else if (ex instanceof AuthorizationException){
-
-                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-                }*/
             }
-        }.execute();
+        };
+        try {
+            getChallenges.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -187,22 +185,21 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
             accept = true;
         }
 
-        new AcceptOrRejectChallenge(challenge.getId()) {
+        AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge(challenge.getId()) {
             @Override
             public void onResponseReceived() {
                 getActivity().finish();
-                /* TODO handle exceptions
-                else if (exception instanceof AuthorizationException){
-                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-                }
-                else if (exception instanceof NotFoundException) {
-                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-                }*/
             }
-        }.execute(accept);
+        };
+        try {
+            acceptOrRejectChallenge.execute(accept);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

@@ -11,7 +11,6 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.CreateChallengeActivity;
 
 public abstract class CreateChallenge extends AsyncTask<Challenge, String ,Void> implements AsyncTaskCallback {
 

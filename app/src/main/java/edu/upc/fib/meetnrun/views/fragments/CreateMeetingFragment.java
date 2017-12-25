@@ -386,7 +386,7 @@ public class CreateMeetingFragment extends BaseFragment implements OnMapReadyCal
 
 
     private void callCreateMeeting() {
-        new CreateMeeting(Name,Description,Public,Level,Date,Latitude,Longitude) {
+        CreateMeeting createMeeting = new CreateMeeting(Name,Description,Public,Level,Date,Latitude,Longitude) {
             @Override
             public void onResponseReceived(Meeting meeting) {
                 if (friends){
@@ -398,7 +398,16 @@ public class CreateMeetingFragment extends BaseFragment implements OnMapReadyCal
                 }
                 getActivity().finish();
             }
-        }.execute();
+        };
+        try {
+            createMeeting.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     public int getTitle() {

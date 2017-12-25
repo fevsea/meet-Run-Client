@@ -245,7 +245,7 @@ public class ChatGroupsFragment extends BaseFragment {
 
     private void callGetFriends() {
         setLoading();
-        new GetFriends(pageNumber) {
+        GetFriends getFriends = new GetFriends(pageNumber) {
 
             @Override
             public void onResponseReceived(List<Friend> friends) {
@@ -253,12 +253,21 @@ public class ChatGroupsFragment extends BaseFragment {
                 updateData();
                 if (friendsAdapter.getItemCount() == 0) numbFriends.setText("No friends available.");
             }
-        }.execute();
+        };
+        try {
+            getFriends.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void callCreateChat() {
         setLoading();
-        new CreateChat(name,selectedFriendsID,1,null,"",0,dateWithoutTime) {
+        CreateChat createChat = new CreateChat(name,selectedFriendsID,1,null,"",0,dateWithoutTime) {
             @Override
             public void onResponseReceived(Chat chat) {
                 if (chat != null) {
@@ -268,17 +277,38 @@ public class ChatGroupsFragment extends BaseFragment {
                     getActivity().finish();
                 }
             }
-        }.execute();
+        };
+        try {
+            createChat.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void callUpdateChat(Chat chat) {
         setLoading();
-        new UpdateChat() {
+        UpdateChat updateChat = new UpdateChat() {
             @Override
             public void onResponseReceived() {
                 Log.d("ChatGroupsFragment","Chat updated");
             }
-        }.execute(chat);
+        };
+        try {
+            updateChat.execute(chat);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void initializePagination() {

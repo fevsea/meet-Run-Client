@@ -10,11 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetUserStats;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.User;
@@ -174,13 +176,22 @@ public class StatisticsProfileFragment extends BaseFragment {
     }
 
     private void callGetUserStats() {
-        new GetUserStats(u) {
+        GetUserStats getUserStats = new GetUserStats(u) {
             @Override
             public void onResponseReceived(Statistics stats) {
                 s = stats;
                 setValues();
                 updateData();
             }
-        }.execute();
+        };
+        try {
+            getUserStats.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 }

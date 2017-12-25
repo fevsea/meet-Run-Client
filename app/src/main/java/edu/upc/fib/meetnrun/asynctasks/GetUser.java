@@ -8,7 +8,6 @@ import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackUser;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.CreateChallengeActivity;
 
 public abstract class GetUser extends AsyncTask<Void,String,User> implements AsyncTaskCallbackUser{
 

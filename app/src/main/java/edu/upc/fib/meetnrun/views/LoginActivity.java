@@ -119,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
             login.execute();
         }
         catch (AuthorizationException e) {
-            //TODO toast auth exception
+            Toast.makeText(this, R.string.authorization_error, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -138,15 +138,15 @@ public class LoginActivity extends AppCompatActivity {
             getCurrentUser.execute(token);
         }
         catch (AuthorizationException e) {
-            //TODO toast auth exception
+            Toast.makeText(this, R.string.authorization_error, Toast.LENGTH_LONG).show();
             deleteToken();
             progressBar.setVisibility(View.INVISIBLE);
         }
     }
 
     private void deleteToken() {
-        cs.setToken(null);
-        cs.setCurrentUser(null);
+        CurrentSession.getInstance().setToken(null);
+        CurrentSession.getInstance().setCurrentUser(null);
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("token", CurrentSession.getInstance().getToken());

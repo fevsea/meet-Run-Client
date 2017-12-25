@@ -172,21 +172,39 @@ public class PastMeetingsProfileFragment extends BaseFragment {
     }
 
     private void callGetPastMeetings(int userId) {
-        new GetPastMeetings() {
+        GetPastMeetings getPastMeetings = new GetPastMeetings() {
             @Override
             public void onResponseReceived(List<Meeting> meetings) {
                 meetingsAdapter.updateMeetingsList(meetings);
             }
-        }.execute(userId);
+        };
+        try {
+            getPastMeetings.execute(userId);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void callGetPastMeetingsTracking(int userId, int meetingId) {
-        new GetPastMeetingsTracking() {
+        GetPastMeetingsTracking getPastMeetingsTracking = new GetPastMeetingsTracking() {
             @Override
             public void onResponseReceived(TrackingData trackingResponse) {
                 tracking = trackingResponse;
             }
-        }.execute(userId,meetingId);
+        };
+        try {
+            getPastMeetingsTracking.execute(userId,meetingId);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
 }

@@ -127,7 +127,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
     }
 
     private void callAddFriend(String s) {
-        new AddFriend() {
+        AddFriend addFriend = new AddFriend() {
             @Override
             public void onResponseReceived(boolean b) {
                 if (b) {
@@ -136,11 +136,20 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                     getActivity().finish();
                 }
             }
-        }.execute(s);
+        };
+        try {
+            addFriend.execute(s);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void callRemoveFriend(String friendId) {
-        new RemoveFriend() {
+        RemoveFriend removeFriend = new RemoveFriend() {
             @Override
             public void onResponseReceived(boolean b) {
                 if (b) {
@@ -149,12 +158,21 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                     getActivity().finish();
                 }
             }
-        }.execute(friendId);
+        };
+        try {
+            removeFriend.execute(friendId);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
 
     private void callCreateChat() {
-        new CreateChat(friendUsername,userList,0,null,"",0,dateWithoutTime) {
+        CreateChat createChat = new CreateChat(friendUsername,userList,0,null,"",0,dateWithoutTime) {
             @Override
             public void onResponseReceived(Chat chat) {
                 if (chat != null) {
@@ -164,14 +182,23 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                     getActivity().finish();
                 }
             }
-        }.execute();
+        };
+        try {
+            createChat.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
 
     private void callGetPrivateChat(int chatId) {
         final User user;
         user = CurrentSession.getInstance().getCurrentUser();
-        new GetPrivateChat() {
+        GetPrivateChat getPrivateChat = new GetPrivateChat() {
             @Override
             public void onResponseReceived(Chat responseChat) {
                 if (chat == null) {
@@ -191,7 +218,16 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                     getActivity().finish();
                 }
             }
-        }.execute(chatId);
+        };
+        try {
+            getPrivateChat.execute(chatId);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
 

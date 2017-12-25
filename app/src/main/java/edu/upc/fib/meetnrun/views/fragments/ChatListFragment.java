@@ -18,6 +18,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -236,13 +237,19 @@ public class ChatListFragment extends BaseFragment {
 
     private void callGetChats() {
         setLoading();
-        new GetChats(pageNumber) {
+        GetChats getChats = new GetChats(pageNumber) {
             @Override
             public void onResponseReceived(List<Chat> chats) {
                 l = chats;
                 updateData();
             }
-        }.execute();
+        };
+        try {
+            getChats.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void updateData() {

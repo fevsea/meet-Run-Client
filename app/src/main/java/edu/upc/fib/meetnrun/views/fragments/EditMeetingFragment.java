@@ -289,7 +289,7 @@ public class EditMeetingFragment extends BaseFragment implements View.OnClickLis
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
-        new UpdateMeeting() {
+        UpdateMeeting updateMeeting = new UpdateMeeting() {
             @Override
             public void onResponseReceived(boolean result) {
                 mProgressDialog.dismiss();
@@ -300,11 +300,23 @@ public class EditMeetingFragment extends BaseFragment implements View.OnClickLis
                     getActivity().finish();
                 }
             }
-        }.execute(meeting);
+        };
+        try {
+            updateMeeting.execute(meeting);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void callGetMeeting(int meetingId) {
-        new edu.upc.fib.meetnrun.asynctasks.GetMeeting() {
+        GetMeeting getMeeting = new GetMeeting() {
             @Override
             public void onResponseReceived(Meeting result) {
                 meeting = result;
@@ -314,7 +326,13 @@ public class EditMeetingFragment extends BaseFragment implements View.OnClickLis
                 }
                 populateViews();
             }
-        }.execute(meetingId);
+        };
+        try {
+            getMeeting.execute(meetingId);
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
 

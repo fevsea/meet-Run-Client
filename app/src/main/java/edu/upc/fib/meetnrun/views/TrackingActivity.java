@@ -340,8 +340,8 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         try {
             saveTrackingData.execute(trackingData);
         }
-        catch(AuthorizationException e) {
-            //TODO auth exception
+        catch (AuthorizationException e) {
+            Toast.makeText(this, R.string.authorization_error, Toast.LENGTH_LONG).show();
         }
         catch (ForbiddenException e) {
             Toast.makeText(TrackingActivity.this, getResources().getString(R.string.tracking_error_toast_message), Toast.LENGTH_LONG).show();

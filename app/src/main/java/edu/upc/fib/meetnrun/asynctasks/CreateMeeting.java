@@ -16,7 +16,6 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.views.MeetingFriendsActivity;
 
 public abstract class CreateMeeting extends AsyncTask<String,Void,Meeting> implements AsyncTaskCallbackMeeting{
     private ArrayList<Integer> owner;

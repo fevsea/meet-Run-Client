@@ -110,7 +110,7 @@ public class EditProfileFragment extends BaseFragment {
     }
 
     private void callUpdateUser(User user) {
-        new UpdateUser() {
+        UpdateUser updateUser = new UpdateUser() {
             @Override
             public void onResponseReceived(boolean b) {
                 if(b) {
@@ -121,7 +121,19 @@ public class EditProfileFragment extends BaseFragment {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_edit_profile), Toast.LENGTH_SHORT).show();
                 }
             }
-        }.execute(user);
+        };
+        try {
+            updateUser.execute(user);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     public int getTitle() {

@@ -42,7 +42,7 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
     }
 
     private void callAddFriend(String s) {
-        new AddFriend() {
+        AddFriend addFriend = new AddFriend() {
             @Override
             public void onResponseReceived(boolean b) {
                 if (b) {
@@ -51,7 +51,16 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
                     getActivity().finish();
                 }
             }
-        }.execute(s);
+        };
+        try {
+            addFriend.execute(s);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     public int getTitle() {

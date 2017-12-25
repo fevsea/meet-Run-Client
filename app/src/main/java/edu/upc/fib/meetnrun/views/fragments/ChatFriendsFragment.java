@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -89,7 +90,7 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
     private void callGetFriends() {
         if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
         isLoading = true;
-        new GetFriends(pageNumber) {
+        GetFriends getFriends = new GetFriends(pageNumber) {
 
             @Override
             public void onResponseReceived(List<Friend> friends) {
@@ -107,11 +108,20 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
                 isLoading = false;
                 progressBar.setVisibility(View.INVISIBLE);
             }
-        }.execute();
+        };
+        try {
+            getFriends.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void callCreateChat() {
-        new CreateChat(friendUserName,userList,0,null,"",0,dateWithoutTime) {
+        CreateChat createChat = new CreateChat(friendUserName,userList,0,null,"",0,dateWithoutTime) {
             @Override
             public void onResponseReceived(Chat chat) {
                 if (chat != null) {
@@ -121,7 +131,16 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
                     getActivity().finish();
                 }
             }
-        }.execute();
+        };
+        try {
+            createChat.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void updateData(Chat chat) {
@@ -145,12 +164,21 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
     }
 
     private void callGetPrivateChat(int chatId) {
-        new GetPrivateChat() {
+        GetPrivateChat getPrivateChat = new GetPrivateChat() {
             @Override
             public void onResponseReceived(Chat responseChat) {
                 updateData(chat);
             }
-        }.execute(chatId);
+        };
+        try {
+            getPrivateChat.execute(chatId);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     public int getTitle() {

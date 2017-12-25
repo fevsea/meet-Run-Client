@@ -160,23 +160,41 @@ public class MyMeetingsFragment extends BaseFragment {
     }
 
     private void callGetMyMeetings(int userId) {
-        new edu.upc.fib.meetnrun.asynctasks.GetMyMeetings() {
+        GetMyMeetings getMyMeetings = new GetMyMeetings() {
 
             @Override
             public void onResponseReceived(List<Meeting> myMeetings) {
                 meetingsAdapter.updateMeetingsList(myMeetings);
             }
-        }.execute(userId);
+        };
+        try {
+            getMyMeetings.execute(userId);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
 
     private void callLeaveMeeting(int meetingId, int chatId) {
-        new LeaveMeeting() {
+        LeaveMeeting leaveMeeting = new LeaveMeeting() {
             @Override
             public void onResponseReceived() {
                 updateMeetingList();
             }
-        }.execute(meetingId,chatId);
+        };
+        try {
+            leaveMeeting.execute(meetingId,chatId);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     public int getTitle() {

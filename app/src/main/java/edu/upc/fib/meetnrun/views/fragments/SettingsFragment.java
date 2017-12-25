@@ -28,6 +28,7 @@ import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.DeleteAccount;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.LoginActivity;
 
@@ -154,7 +155,7 @@ public class SettingsFragment extends BaseFragment {
 
 
     private void callDeleteAccount() {
-        new DeleteAccount() {
+        DeleteAccount deleteAccount = new DeleteAccount() {
             @Override
             public void onResponseReceived() {
                 Toast.makeText(getContext(), "Account has been removed successfully", Toast.LENGTH_SHORT).show();
@@ -163,7 +164,19 @@ public class SettingsFragment extends BaseFragment {
                 //TODO handle exception  Toast.makeText(getContext(), "Delete account ERROR", Toast.LENGTH_SHORT).show();
 
             }
-        }.execute();
+        };
+        try {
+            deleteAccount.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     public int getTitle() {

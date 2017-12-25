@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import edu.upc.fib.meetnrun.asynctasks.GetFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetPendingFriends;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
@@ -189,14 +191,23 @@ public class FriendsFragment extends FriendListFragmentTemplate {
 
     private void callGetFriends() {
         setLoading();
-        new GetFriends(pageNumber) {
+        GetFriends getFriends = new GetFriends(pageNumber) {
 
             @Override
             public void onResponseReceived(List<Friend> friends) {
                 l = friends;
                 updateData();
             }
-        }.execute();
+        };
+        try {
+            getFriends.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void updatePendingFriendsData() {
@@ -228,23 +239,41 @@ public class FriendsFragment extends FriendListFragmentTemplate {
     private void callGetPendingFriends() {
         if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
         pendingIsLoading = true;
-        new GetPendingFriends(pendingPageNumber) {
+        GetPendingFriends getPendingFriends = new GetPendingFriends(pendingPageNumber) {
             @Override
             public void onResponseReceived(List<Friend> friends) {
                 l = friends;
                 updatePendingFriendsData();
             }
-        }.execute();
+        };
+        try {
+            getPendingFriends.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void callAcceptOrRejectFriend(Friend friend) {
-        new AcceptOrRejectFriend() {
+        AcceptOrRejectFriend acceptOrRejectFriend = new AcceptOrRejectFriend() {
             @Override
             public void onResponseReceived(boolean b) {
                 initializePagination();
                 refreshList();
             }
-        }.execute(friend);
+        };
+        try {
+            acceptOrRejectFriend.execute(friend);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

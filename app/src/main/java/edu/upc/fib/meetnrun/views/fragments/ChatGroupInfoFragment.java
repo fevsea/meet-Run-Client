@@ -183,7 +183,7 @@ public class ChatGroupInfoFragment extends BaseFragment {
 
     private void callGetAllFriends() {
         setLoading();
-        new edu.upc.fib.meetnrun.asynctasks.GetAllFriends() {
+        GetAllFriends getAllFriends = new GetAllFriends() {
             @Override
             public void onResponseReceived(List<Friend> allfriends) {
                 friends = new ArrayList<User>();
@@ -194,7 +194,16 @@ public class ChatGroupInfoFragment extends BaseFragment {
                 }
                 updateData();
             }
-        }.execute();
+        };
+        try {
+            getAllFriends.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
 

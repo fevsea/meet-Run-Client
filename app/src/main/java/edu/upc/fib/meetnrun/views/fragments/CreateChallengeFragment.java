@@ -179,7 +179,7 @@ public class CreateChallengeFragment extends BaseFragment implements View.OnClic
             getUser.execute();
         }
         catch (NotFoundException e) {
-            Toast.makeText(getContext(), getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getResources().getString(R.string.not_found_error), Toast.LENGTH_SHORT).show();
         }
     }
 

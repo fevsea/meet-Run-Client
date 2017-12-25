@@ -263,47 +263,66 @@ public class MeetingListFragment extends BaseFragment {
     //nueva forma de usar asynctasks
     private void callGetMeetings() {
         setLoading();
-        new GetMeetings(pageNumber) {
+        GetMeetings getMeetings = new GetMeetings(pageNumber) {
             @Override
             public void onResponseReceived(List<Meeting> meetings) {
                 updateData(meetings);
             }
-        }.execute();
+        };
+        getMeetings.execute();
     }
 
     private void callGetMeetingsFiltered(String query) {
         setLoading();
-        new GetMeetingsFiltered(pageNumber) {
+        GetMeetingsFiltered getMeetingsFiltered = new GetMeetingsFiltered(pageNumber) {
 
             @Override
             public void onResponseReceived(List<Meeting> meetings) {
                 updateData(meetings);
             }
-        }.execute(query);
+        };
+        getMeetingsFiltered.execute(query);
     }
 
 
 
     private void callJoinMeeting(int meetingId, int chatId) {
-        new JoinMeeting() {
+        JoinMeeting joinMeeting = new JoinMeeting() {
 
             @Override
             public void onResponseReceived() {
                 Toast.makeText(getActivity(),getString(R.string.joined_meeting),Toast.LENGTH_SHORT).show();
                 getMyMeetings();
             }
-        }.execute(meetingId,CurrentSession.getInstance().getCurrentUser().getId(),chatId);
+        };
+        try {
+            joinMeeting.execute(meetingId,CurrentSession.getInstance().getCurrentUser().getId(),chatId);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void callGetMyMeetings(int userId) {
-        new GetMyMeetings() {
+        GetMyMeetings getMyMeetings = new GetMyMeetings() {
 
             @Override
             public void onResponseReceived(List<Meeting> myMeetings) {
                 meetingsAdapter.setMyMeetings(myMeetings);
-                getMyMeetings();
             }
-        }.execute(userId);
+        };
+        try {
+            getMyMeetings.execute(userId);
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (ParamsException e) {
+            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+        }
     }
 
 

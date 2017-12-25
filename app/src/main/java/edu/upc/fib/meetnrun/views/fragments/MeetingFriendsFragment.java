@@ -112,25 +112,43 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
 
     private void callGetFriends() {
         setLoading();
-        new GetFriends(pageNumber) {
+        GetFriends getFriends = new GetFriends(pageNumber) {
 
             @Override
             public void onResponseReceived(List<Friend> friends) {
                 l = friends;
                 updateData();
             }
-        }.execute();
+        };
+        try {
+            getFriends.execute();
+        }
+        catch (AuthorizationException e) {
+            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+        }
+        catch (NotFoundException e) {
+            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+        }
     }
 
     private void callJoinMeeting(int meetingId, int chatId, List<User> users) {
         for (final User user : users) {
-            new edu.upc.fib.meetnrun.asynctasks.JoinMeeting() {
+            JoinMeeting joinMeeting = new JoinMeeting() {
 
                 @Override
                 public void onResponseReceived() {
                     Log.e("MeetingFriendsFragment", "User with id: " + user.getId() + "joined");
                 }
-            }.execute(meetingId, user.getId(), chatId);
+            };
+            try {
+                joinMeeting.execute(meetingId, user.getId(), chatId);
+            }
+            catch (AuthorizationException e) {
+                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            }
+            catch (ParamsException e) {
+                Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
