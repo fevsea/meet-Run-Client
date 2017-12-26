@@ -22,7 +22,7 @@
         android:id="@+id/img"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/mr"
+        android:src="@drawable/mr2"
         app:civ_border_width="6dp"
         app:civ_border_color="@color/white"
         android:layout_marginBottom="50dp"
