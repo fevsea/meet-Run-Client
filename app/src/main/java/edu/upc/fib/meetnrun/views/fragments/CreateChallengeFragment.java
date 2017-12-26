@@ -104,8 +104,6 @@ public class CreateChallengeFragment extends BaseFragment implements View.OnClic
             challenge.setDistance(distancePicker.getValue()*1000);
             challenge.setCreator(CurrentSession.getInstance().getCurrentUser());
             callGetUser(userID);
-            challenge.setChallenged(challenged);
-            callCreateChallenge();
         }
         return false;
     }
@@ -189,6 +187,8 @@ public class CreateChallengeFragment extends BaseFragment implements View.OnClic
             @Override
             public void onResponseReceied(User u) {
                 challenged = u;
+                challenge.setChallenged(challenged);
+                callCreateChallenge();
             }
         }.execute();
     }

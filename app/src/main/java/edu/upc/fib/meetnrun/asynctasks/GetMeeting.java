@@ -20,7 +20,7 @@ public abstract class GetMeeting extends AsyncTask<Integer,Void,Meeting> impleme
     }
 
     @Override
-    protected Meeting doInBackground(Integer... integers) throws NotFoundException {
+    protected Meeting doInBackground(Integer... integers) {
          try {
              return meetingAdapter.getMeeting(integers[0]);
          }

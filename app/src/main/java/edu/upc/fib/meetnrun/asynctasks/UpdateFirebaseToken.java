@@ -1,7 +1,10 @@
 package edu.upc.fib.meetnrun.asynctasks;
 
+
 import android.os.AsyncTask;
-import android.widget.Toast;
+import android.util.Log;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
@@ -10,18 +13,19 @@ import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskException;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
-import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.services.FirebaseInstanceService;
 
-public abstract class DeleteAccount extends AsyncTask<Void,Void,Void> implements AsyncTaskCallback,AsyncTaskException{
+
+public abstract class UpdateFirebaseToken extends AsyncTask<String,Void,Void> implements AsyncTaskCallback,AsyncTaskException {
 
     private GenericException exception;
-    private IUserAdapter userAdapter;
+
 
     @Override
-    protected Void doInBackground(Void... v){
+    protected Void doInBackground(String... token) {
         try {
-            userAdapter.deleteUserByID(CurrentSession.getInstance().getCurrentUser().getId());
+            new FirebaseInstanceService().onTokenRefresh();
         }
         catch (GenericException e) {
             exception = e;

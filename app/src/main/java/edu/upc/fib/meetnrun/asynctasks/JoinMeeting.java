@@ -35,7 +35,7 @@ public abstract class JoinMeeting extends AsyncTask<Integer,Void,Void> implement
     }
 
     @Override
-    protected Void doInBackground(Integer... integers) throws AuthorizationException,ParamsException,NotFoundException{
+    protected Void doInBackground(Integer... integers) {
         //TODO possible millora: crida al servidor joinChat
         try {
             meetingAdapter.joinMeeting(integers[0], integers[1]);

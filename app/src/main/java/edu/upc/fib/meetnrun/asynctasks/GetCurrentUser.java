@@ -21,7 +21,7 @@ public abstract class GetCurrentUser extends AsyncTask<String,String,User>  impl
     }
 
     @Override
-    protected User doInBackground(String... s) throws  AuthorizationException{
+    protected User doInBackground(String... s) {
         try {
             CurrentSession.getInstance().setToken(s[0]);
             return loginAdapter.getCurrentUser();

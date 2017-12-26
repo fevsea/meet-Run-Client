@@ -24,7 +24,7 @@ public abstract class GetUserStats extends AsyncTask<String,Void,Statistics> imp
     }
 
     @Override
-    protected Statistics doInBackground(String... strings) throws AuthorizationException,ParamsException{
+    protected Statistics doInBackground(String... strings) {
             //TODO: Que tot no sigui de current user
             try {
                 int id = u.getId();

@@ -25,7 +25,7 @@ public abstract class GetParticipants extends AsyncTask<Integer,Void,List<User>>
     }
 
     @Override
-    protected List<User> doInBackground(Integer... integers) throws AuthorizationException,ParamsException {
+    protected List<User> doInBackground(Integer... integers)  {
         try {
             return meetingAdapter.getParticipantsFromMeeting(integers[0],page);
         }

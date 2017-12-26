@@ -30,7 +30,7 @@ public abstract class Register extends AsyncTask<String,String,User> implements 
     }
 
     @Override
-    protected User doInBackground(String... registerUser) throws ParamsException {
+    protected User doInBackground(String... registerUser) {
         try {
             return userAdapter.registerUser(username, name, surname, pcInt, password1, quest, answ);
         }

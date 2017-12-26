@@ -26,7 +26,7 @@ public abstract class CreateChallenge extends AsyncTask<Challenge, String ,Void>
     }
 
     @Override
-    protected Void doInBackground(Challenge[] params) throws AuthorizationException, ParamsException {
+    protected Void doInBackground(Challenge[] params) {
         try {
             User current = CurrentSession.getInstance().getCurrentUser();
             CurrentSession.getInstance().getChallengeAdapter().createNewChallenge(current, challenged, (int) challenge.getDistance(), challenge.getDateDeadline());
@@ -41,6 +41,6 @@ public abstract class CreateChallenge extends AsyncTask<Challenge, String ,Void>
     protected void onPostExecute(Void result) {
         if (exception == null) onResponseReceived();
         else onExceptionReceived(exception);
-        onPostExecute(result);
+        super.onPostExecute(result);
     }
 }

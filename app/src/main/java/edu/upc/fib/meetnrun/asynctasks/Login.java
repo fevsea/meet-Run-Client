@@ -24,7 +24,7 @@ public abstract class Login extends AsyncTask<Void,String,String> implements Asy
     }
 
     @Override
-    protected String doInBackground(Void... v) throws AuthorizationException{
+    protected String doInBackground(Void... v) {
         try {
             return loginAdapter.login(username, password);
         }

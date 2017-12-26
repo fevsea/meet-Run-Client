@@ -27,7 +27,7 @@ public abstract class SaveTrackingData extends AsyncTask<TrackingData, String, V
     }
 
     @Override
-    protected Void doInBackground(TrackingData... params) throws AuthorizationException, ForbiddenException{
+    protected Void doInBackground(TrackingData... params) {
         try {
             IMeetingAdapter meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
             Integer userID = CurrentSession.getInstance().getCurrentUser().getId();

@@ -26,7 +26,7 @@ public abstract class AcceptOrRejectFriend extends AsyncTask<Friend, String, Boo
     }
 
     @Override
-    protected Boolean doInBackground(Friend... params) throws AuthorizationException,ParamsException{
+    protected Boolean doInBackground(Friend... params) {
         try {
             Friend friend = params[0];
             if (friend.isAccepted()) {

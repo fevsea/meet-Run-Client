@@ -23,7 +23,7 @@ public abstract class DeleteChat extends AsyncTask<Integer,String,String> implem
     }
 
     @Override
-    protected String doInBackground(Integer... chatid) throws AuthorizationException,NotFoundException{
+    protected String doInBackground(Integer... chatid) {
         try {
             chatAdapter.deleteChat(chatid[0]);
         }

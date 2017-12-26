@@ -21,7 +21,7 @@ public abstract class GetUser extends AsyncTask<Void,String,User> implements Asy
     }
 
     @Override
-    protected User doInBackground(Void... v) throws  NotFoundException{
+    protected User doInBackground(Void... v) {
         try {
             return CurrentSession.getInstance().getUserAdapter().getUser(userID);
         }

@@ -50,7 +50,7 @@ public abstract class CreateMeeting extends AsyncTask<String,Void,Meeting> imple
     }
 
     @Override
-    protected Meeting doInBackground(String... strings) throws AuthorizationException,ParamsException{
+    protected Meeting doInBackground(String... strings) {
         Meeting meeting = null;
         try {
             meeting = meetingAdapter.createMeeting(name, description, publ, level, date, lat, lon, null);

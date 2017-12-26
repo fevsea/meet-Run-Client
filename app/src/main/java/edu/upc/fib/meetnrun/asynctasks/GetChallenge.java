@@ -25,7 +25,7 @@ public abstract class GetChallenge extends AsyncTask<Integer, String, Challenge>
     }
 
     @Override
-    protected Challenge doInBackground(Integer... params) throws AuthorizationException,NotFoundException{
+    protected Challenge doInBackground(Integer... params) {
         try {
             return challengeAdapter.getChallenge(params[0]);
         }

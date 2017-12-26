@@ -1,6 +1,7 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.app.ProgressDialog;
+import android.arch.persistence.room.Update;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,8 +21,10 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetCurrentUser;
 import edu.upc.fib.meetnrun.asynctasks.Login;
+import edu.upc.fib.meetnrun.asynctasks.UpdateFirebaseToken;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.services.FirebaseInstanceService;
@@ -101,7 +104,22 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateFirebaseToken(){
         FirebaseMessaging.getInstance().subscribeToTopic("all");
-        new FirebaseInstanceService().onTokenRefresh();
+        new UpdateFirebaseToken() {
+            @Override
+            public void onResponseReceived() {
+                Log.d(TAG, "Refreshed token");
+            }
+
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(LoginActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(LoginActivity.this, R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+        }.execute();
     }
 
     private void callLogin() {

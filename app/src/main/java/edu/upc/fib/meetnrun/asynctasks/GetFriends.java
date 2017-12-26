@@ -26,7 +26,7 @@ public abstract class GetFriends extends AsyncTask<Integer,Void,List<Friend>> im
     }
 
     @Override
-    protected List<Friend> doInBackground(Integer... integers) throws AuthorizationException,NotFoundException {
+    protected List<Friend> doInBackground(Integer... integers) {
         try {
             return friendsAdapter.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(), page);
         }

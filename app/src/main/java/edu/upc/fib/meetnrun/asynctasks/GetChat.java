@@ -22,7 +22,7 @@ public abstract class GetChat extends AsyncTask<Integer,Void,Chat> implements As
     }
 
     @Override
-    protected Chat doInBackground(Integer... integers) throws AuthorizationException,NotFoundException {
+    protected Chat doInBackground(Integer... integers)  {
         try {
             return chatAdapter.getChat(integers[0]);
         }

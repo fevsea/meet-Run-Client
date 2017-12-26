@@ -20,7 +20,7 @@ public abstract class GetChallenges extends AsyncTask<String,String,List<Challen
     private GenericException exception;
 
     @Override
-    protected List<Challenge> doInBackground(String... params) throws AuthorizationException{
+    protected List<Challenge> doInBackground(String... params) {
         try {
             return CurrentSession.getInstance().getChallengeAdapter().getCurrentUserChallenges();
         }

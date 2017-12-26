@@ -31,7 +31,7 @@ public abstract class GetAllFriends extends AsyncTask<Void,Void,Void> implements
 
 
     @Override
-    protected Void doInBackground(Void... v) throws AuthorizationException,NotFoundException{
+    protected Void doInBackground(Void... v) {
         try {
             List<Friend> friendsPage;
             while (!isLastPage) {

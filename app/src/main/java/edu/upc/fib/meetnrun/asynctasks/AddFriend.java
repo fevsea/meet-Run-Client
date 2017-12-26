@@ -21,7 +21,7 @@ public abstract class AddFriend extends AsyncTask<String,String,Boolean> impleme
     }
 
     @Override
-    protected Boolean doInBackground(String... s) throws AuthorizationException,ParamsException{
+    protected Boolean doInBackground(String... s) {
         try {
             return friendsAdapter.addFriend(Integer.parseInt(s[0]));
         }

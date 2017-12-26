@@ -20,6 +20,7 @@ public abstract class UpdateChat extends AsyncTask<Chat,String,String> implement
     public UpdateChat() {
         chatAdapter = CurrentSession.getInstance().getChatAdapter();
     }
+
     @Override
     protected String doInBackground(Chat... chats) {
         try {

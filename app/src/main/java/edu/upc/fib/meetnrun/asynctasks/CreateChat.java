@@ -42,7 +42,7 @@ public abstract class CreateChat extends AsyncTask<Void,Void,Chat> implements As
     }
 
     @Override
-    protected Chat doInBackground(Void... v) throws AuthorizationException,ParamsException{
+    protected Chat doInBackground(Void... v) {
         try {
             return chatAdapter.createChat(chatName, listUsersChatIDs, type, meetingId,
                     lastMessage, lastMessageUserNamePosition, lastDateTime);

@@ -31,7 +31,7 @@ public abstract class GetAllParticipants extends AsyncTask<Integer,Void,List<Use
     }
 
     @Override
-    protected List<User> doInBackground(Integer... integers) throws AuthorizationException,ParamsException {
+    protected List<User> doInBackground(Integer... integers) {
         try {
             List<User> participantsPage = new ArrayList<>();
             while (!isLastPage) {

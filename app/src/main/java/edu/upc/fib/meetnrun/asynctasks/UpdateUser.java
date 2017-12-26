@@ -24,7 +24,7 @@ public abstract class UpdateUser extends AsyncTask<User, Void, Boolean> implemen
     }
 
     @Override
-    protected Boolean doInBackground(User... params) throws AuthorizationException,NotFoundException,ParamsException {
+    protected Boolean doInBackground(User... params) {
         try {
             return userAdapter.updateUser(params[0]);
         }
