@@ -19,7 +19,7 @@ import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.User;
 
 
-public class StatisticsProfileFragment extends Fragment {
+public class StatisticsProfileFragment extends BaseFragment {
 
     private String title;
     private int page;

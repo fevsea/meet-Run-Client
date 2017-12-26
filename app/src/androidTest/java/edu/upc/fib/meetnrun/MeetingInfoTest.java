@@ -21,7 +21,6 @@ import org.junit.runner.RunWith;
 import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsViewHolder;
 
 import static android.support.test.espresso.Espresso.onView;

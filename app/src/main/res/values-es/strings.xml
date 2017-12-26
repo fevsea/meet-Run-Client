@@ -205,4 +205,5 @@
     <string name="settingsLanguage">Cambiar idioma:</string>
     <string name="error_deleting_friend">Error al eliminar el amigo</string>
     <string name="error_adding_friend">Error al añadir el amigo</string>
+    <string name="meeting">Quedada</string>
 </resources>

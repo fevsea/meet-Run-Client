@@ -222,5 +222,7 @@
     <string name="error_adding_friend">Error adding friend</string>
     <string name="ranking_current">Your position:</string>
     <string name="rankings_choose_zip">ZIP:</string>
+    <string name="meeting">Meeting</string>
+
 </resources>
 

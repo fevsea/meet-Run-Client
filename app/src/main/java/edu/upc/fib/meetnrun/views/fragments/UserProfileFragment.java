@@ -64,4 +64,8 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
             super.onPostExecute(s);
         }
     }
+
+    public int getTitle() {
+        return R.string.user_profile_label;
+    }
 }

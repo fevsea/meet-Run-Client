@@ -1,13 +1,15 @@
-package edu.upc.fib.meetnrun.views;
+package edu.upc.fib.meetnrun.views.fragments;
 
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.FloatingActionButton;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -26,9 +28,12 @@ import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.utils.UtilsGlobal;
-import edu.upc.fib.meetnrun.views.fragments.DatePickerFragment;
 
-public class CreateChallengeActivity extends AppCompatActivity implements View.OnClickListener{
+/**
+ * Created by guillemcastro on 23/12/2017.
+ */
+
+public class CreateChallengeFragment extends BaseFragment implements View.OnClickListener {
 
     private NumberPicker distancePicker;
     private EditText deadlineText;
@@ -39,31 +44,37 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
     private User challenged;
     ProgressBar progressBar;
 
+    View view;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_createchallenge);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        this.view = inflater.inflate(R.layout.activity_createchallenge, container, false);
 
-        setTitle(R.string.create_challenge);
 
-        userID = getIntent().getIntExtra("id", -1);
+
+        userID = getActivity().getIntent().getIntExtra("id", -1);
         if (userID == -1) {
-            Toast.makeText(this, R.string.error_loading, Toast.LENGTH_LONG).show();
-            finish();
+            Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
+            getActivity().finish();
         }
 
-        progressBar = findViewById(R.id.pb_loading);
-        distancePicker = findViewById(R.id.distance_picker);
+        progressBar = view.findViewById(R.id.pb_loading);
+        distancePicker = view.findViewById(R.id.distance_picker);
         distancePicker.setMinValue(0);
         distancePicker.setMaxValue(1000);
         distancePicker.setWrapSelectorWheel(false);
-        deadlineText = findViewById(R.id.deadline_picker);
+        deadlineText = view.findViewById(R.id.deadline_picker);
         deadlineText.setFocusable(false);
         deadlineText.setClickable(true);
         deadlineText.setOnClickListener(this);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        FloatingActionButton fab =
+                getActivity().findViewById(R.id.activity_fab);
+        fab.setVisibility(View.GONE);
+
+        return this.view;
     }
 
     @Override
@@ -76,10 +87,9 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.edit_meeting_menu, menu);
-        return true;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.edit_meeting_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -93,13 +103,7 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
             CreateChallenge createChallenge= new CreateChallenge();
             createChallenge.execute(this.challenge);
         }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
+        return false;
     }
 
     private void showDatePickerDialog() {
@@ -109,9 +113,9 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
             public void onDateSet(DatePicker datePicker, int yearSet, int monthSet, int daySet) {
                 Date dateTime;
                 if(challenge.getDeadline() != null) {
-                        dateTime = UtilsGlobal.parseDate(challenge.getDeadline());
+                    dateTime = UtilsGlobal.parseDate(challenge.getDeadline());
                 } else {
-                  dateTime = new Date();
+                    dateTime = new Date();
                 }
                 Calendar date = new GregorianCalendar();
                 date.setTime(dateTime);
@@ -125,17 +129,17 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         });
         Date dateTime;
         if(challenge.getDeadline() != null) {
-              dateTime = UtilsGlobal.parseDate(challenge.getDeadline());
+            dateTime = UtilsGlobal.parseDate(challenge.getDeadline());
         }
         else {
-          dateTime = new Date();
+            dateTime = new Date();
         }
         if (dateTime != null) {
             Calendar date = new GregorianCalendar();
             date.setTime(dateTime);
             datePickerFragment.setValues(date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
         }
-        datePickerFragment.show(getSupportFragmentManager(), "datePicker");
+        datePickerFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
 
@@ -165,16 +169,16 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         protected void onPostExecute(Boolean result) {
             progressBar.setVisibility(View.INVISIBLE);
             if (result && exception == null) {
-                finish();
+                getActivity().finish();
             }
             else if (exception instanceof AuthorizationException) {
-                Toast.makeText(CreateChallengeActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
             }
             else if (exception instanceof ParamsException) {
-                Toast.makeText(CreateChallengeActivity.this, R.string.params_error, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
             }
             else {
-                Toast.makeText(CreateChallengeActivity.this, getResources().getString(R.string.error_saving_challenge), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.error_saving_challenge), Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -198,7 +202,7 @@ public class CreateChallengeActivity extends AppCompatActivity implements View.O
         @Override
         protected void onPostExecute(User result) {
             if (exception != null || result == null) {
-                Toast.makeText(CreateChallengeActivity.this, getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getResources().getString(R.string.edit_meeting_error_dialog_message), Toast.LENGTH_SHORT).show();
             }
             challenged = result;
         }

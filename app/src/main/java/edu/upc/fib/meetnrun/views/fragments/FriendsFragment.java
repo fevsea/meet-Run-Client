@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +16,7 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.FriendProfileActivity;
-import edu.upc.fib.meetnrun.views.UserProfileActivity;
-import edu.upc.fib.meetnrun.views.UsersListActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.PendingFriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.TwoButtonsRecyclerViewOnClickListener;
@@ -57,9 +54,9 @@ public class FriendsFragment extends FriendListFragmentTemplate {
 
     @Override
     protected void getIntent(User friend) {
-        Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
+        Intent friendProfileIntent = new Intent();
         CurrentSession.getInstance().setFriend(friend);
-        startActivity(friendProfileIntent);
+        BaseActivity.startWithFragment(getActivity(), new FriendProfileFragment(), friendProfileIntent);
     }
 
     @Override
@@ -73,8 +70,7 @@ public class FriendsFragment extends FriendListFragmentTemplate {
     }
 
     private void addNewFriend() {
-        Intent intent = new Intent(getActivity(),UsersListActivity.class);
-        startActivity(intent);
+        BaseActivity.startWithFragment(getActivity(), new UsersListFragment());
     }
 
     @Override
@@ -158,10 +154,10 @@ public class FriendsFragment extends FriendListFragmentTemplate {
                 Friend friendship = pendingFriendsAdapter.getFriendAtPosition(position);
                 User friend = friendship.getFriend();
                 if (currentUser.getUsername().equals(friend.getUsername())) friend = friendship.getUser();
-                Intent friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
+                Intent friendProfileIntent = new Intent();
                 CurrentSession.getInstance().setFriend(friend);
                 friendProfileIntent.putExtra("accepted", friendship.isAccepted());
-                startActivity(friendProfileIntent);
+                BaseActivity.startWithFragment(getActivity(), new FriendProfileFragment(), friendProfileIntent);
             }
         };
     }
@@ -300,5 +296,9 @@ public class FriendsFragment extends FriendListFragmentTemplate {
         initializePagination();
         refreshList();
         super.onResume();
+    }
+
+    public int getTitle() {
+        return R.string.friends_label;
     }
 }
