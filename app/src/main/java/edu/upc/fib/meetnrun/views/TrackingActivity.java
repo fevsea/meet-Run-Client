@@ -342,9 +342,11 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         }
         catch (AuthorizationException e) {
             Toast.makeText(this, R.string.authorization_error, Toast.LENGTH_LONG).show();
+            progressBar.setVisibility(View.INVISIBLE);
         }
         catch (ForbiddenException e) {
             Toast.makeText(TrackingActivity.this, getResources().getString(R.string.tracking_error_toast_message), Toast.LENGTH_LONG).show();
+            progressBar.setVisibility(View.INVISIBLE);
 
         }
     }

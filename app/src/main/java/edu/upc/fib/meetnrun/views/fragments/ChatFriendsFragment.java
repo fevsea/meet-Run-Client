@@ -114,9 +114,11 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
         catch (NotFoundException e) {
             Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
     }
 
@@ -137,9 +139,11 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
         catch (ParamsException e) {
             Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
     }
 
@@ -175,9 +179,11 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
         catch (NotFoundException e) {
             Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
     }
 

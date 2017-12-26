@@ -306,12 +306,15 @@ public class EditMeetingFragment extends BaseFragment implements View.OnClickLis
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            mProgressDialog.dismiss();
         }
         catch (NotFoundException e) {
             Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+            mProgressDialog.dismiss();
         }
         catch (ParamsException e) {
             Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+            mProgressDialog.dismiss();
         }
     }
 

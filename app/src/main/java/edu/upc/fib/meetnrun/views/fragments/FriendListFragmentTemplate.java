@@ -179,6 +179,10 @@ public abstract class  FriendListFragmentTemplate extends BaseFragment{
         isLastPage = false;
     }
 
+    protected void dismissProgressBarsOnError() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
     public int getTitle() {
         return R.string.friends_label;
     }

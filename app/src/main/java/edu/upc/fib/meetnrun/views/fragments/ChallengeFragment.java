@@ -55,7 +55,6 @@ public class ChallengeFragment extends BaseFragment implements View.OnClickListe
     private String expirationPastTextResourceDays;
     private String expirationPastTextResourceNoDays;
     private String progressTextResource;
-    private ProgressDialog progressDialog;
 
     private Button accept;
     private Button reject;
@@ -200,21 +199,12 @@ public class ChallengeFragment extends BaseFragment implements View.OnClickListe
         callAcceptOrRejectChallenge(accept);
     }
 
-    private void setProgressDialog() {
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setTitle(getResources().getString(R.string.loading));
-        progressDialog.setMessage(getResources().getString(R.string.loading_challenge));
-        progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-    }
 
     private void callGetChallenge(final int challengeId) {
         GetChallenge getChallenge = new GetChallenge() {
             @Override
             public void onResponseReceived(Challenge challengeResponse) {
                 challenge = challengeResponse;
-                progressDialog.dismiss();
                 updateViews();
             }
         };
@@ -223,10 +213,17 @@ public class ChallengeFragment extends BaseFragment implements View.OnClickListe
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
         catch (NotFoundException e) {
             Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
+    }
+
+    private void dismissProgressBarsOnError() {
+        userProgressBar.setVisibility(View.INVISIBLE);
+        opponentProgressBar.setVisibility(View.INVISIBLE);
     }
 
     private void callAcceptOrRejectChallenge(Boolean accept) {
@@ -241,9 +238,11 @@ public class ChallengeFragment extends BaseFragment implements View.OnClickListe
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
         catch (NotFoundException e) {
             Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
 
     }

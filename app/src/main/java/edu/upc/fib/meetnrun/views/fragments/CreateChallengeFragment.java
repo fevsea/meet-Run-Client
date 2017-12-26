@@ -145,6 +145,11 @@ public class CreateChallengeFragment extends BaseFragment implements View.OnClic
         datePickerFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
+    private void dismissProgressBarsOnError() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+
     private void callCreateChallenge() {
         progressBar.setVisibility(View.VISIBLE);
         CreateChallenge createChallenge = new CreateChallenge(challenged,challenge) {
@@ -159,10 +164,12 @@ public class CreateChallengeFragment extends BaseFragment implements View.OnClic
         }
         catch (AuthorizationException e) {
             Toast.makeText(getContext(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
             getActivity().finish();
         }
         catch (ParamsException e) {
             Toast.makeText(getContext(), R.string.params_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
             getActivity().finish();
         }
     }

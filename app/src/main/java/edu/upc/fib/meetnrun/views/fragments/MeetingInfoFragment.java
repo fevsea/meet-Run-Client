@@ -305,6 +305,11 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
         progressBar.setVisibility(View.INVISIBLE);
     }
 
+    private void dismissProgressBarsOnError() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+
     private void callGetParticipants(int meetingId) {
         setLoading();
         GetParticipants getParticipants = new GetParticipants(pageNumber) {
@@ -319,9 +324,11 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
         catch (ParamsException e) {
             Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
     }
 

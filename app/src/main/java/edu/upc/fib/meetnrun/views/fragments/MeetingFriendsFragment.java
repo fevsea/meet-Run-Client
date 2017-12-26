@@ -110,6 +110,8 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
+
+
     private void callGetFriends() {
         setLoading();
         GetFriends getFriends = new GetFriends(pageNumber) {
@@ -125,9 +127,11 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
         catch (NotFoundException e) {
             Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
     }
 

@@ -249,6 +249,8 @@ public class ChatListFragment extends BaseFragment {
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            progressBar.setVisibility(View.INVISIBLE);
+
         }
     }
 

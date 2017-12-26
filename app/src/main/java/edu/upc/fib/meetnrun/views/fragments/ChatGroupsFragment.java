@@ -222,6 +222,10 @@ public class ChatGroupsFragment extends BaseFragment {
         isLoading = true;
     }
 
+    private void dismissProgressBarsOnError() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
     private void updateData() {
         if (l != null) {
             int size = l.size();
@@ -259,9 +263,12 @@ public class ChatGroupsFragment extends BaseFragment {
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
+
         }
         catch (NotFoundException e) {
             Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
     }
 
@@ -283,9 +290,11 @@ public class ChatGroupsFragment extends BaseFragment {
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
         catch (ParamsException e) {
             Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
     }
 
@@ -302,12 +311,15 @@ public class ChatGroupsFragment extends BaseFragment {
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
         catch (NotFoundException e) {
             Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
         catch (ParamsException e) {
             Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
     }
 

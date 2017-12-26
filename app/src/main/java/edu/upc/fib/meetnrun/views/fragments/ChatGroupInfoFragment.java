@@ -200,9 +200,11 @@ public class ChatGroupInfoFragment extends BaseFragment {
         }
         catch (AuthorizationException e) {
             Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
         catch (NotFoundException e) {
             Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+            dismissProgressBarsOnError();
         }
     }
 
@@ -231,6 +233,10 @@ public class ChatGroupInfoFragment extends BaseFragment {
         meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
         meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
         BaseActivity.startWithFragment(getActivity(), new MeetingInfoFragment(), meetingInfoIntent);
+    }
+
+    private void dismissProgressBarsOnError() {
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 }
