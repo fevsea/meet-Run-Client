@@ -25,6 +25,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -183,7 +184,19 @@ public class ChatGroupInfoFragment extends BaseFragment {
 
     private void callGetAllFriends() {
         setLoading();
-        GetAllFriends getAllFriends = new GetAllFriends() {
+        new GetAllFriends() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+            }
+
             @Override
             public void onResponseReceived(List<Friend> allfriends) {
                 friends = new ArrayList<User>();
@@ -194,18 +207,7 @@ public class ChatGroupInfoFragment extends BaseFragment {
                 }
                 updateData();
             }
-        };
-        try {
-            getAllFriends.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
+        }.execute();
     }
 
 

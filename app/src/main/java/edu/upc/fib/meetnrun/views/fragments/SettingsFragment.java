@@ -27,6 +27,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.DeleteAccount;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -155,28 +156,26 @@ public class SettingsFragment extends BaseFragment {
 
 
     private void callDeleteAccount() {
-        DeleteAccount deleteAccount = new DeleteAccount() {
+        new DeleteAccount() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived() {
                 Toast.makeText(getContext(), "Account has been removed successfully", Toast.LENGTH_SHORT).show();
                 deleteToken();
-
-                //TODO handle exception  Toast.makeText(getContext(), "Delete account ERROR", Toast.LENGTH_SHORT).show();
-
             }
-        };
-        try {
-            deleteAccount.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute();
     }
 
     public int getTitle() {

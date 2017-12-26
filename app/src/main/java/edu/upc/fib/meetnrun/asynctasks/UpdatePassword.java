@@ -6,12 +6,15 @@ import android.widget.Toast;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackBoolean;
+import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskException;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
-public abstract class UpdatePassword extends AsyncTask<String, Void, Boolean> implements AsyncTaskCallbackBoolean{
+public abstract class UpdatePassword extends AsyncTask<String, Void, Boolean> implements AsyncTaskCallbackBoolean,AsyncTaskException{
 
+    private GenericException exception;
     private ILoginAdapter loginAdapter;
 
     public UpdatePassword() {
@@ -20,12 +23,19 @@ public abstract class UpdatePassword extends AsyncTask<String, Void, Boolean> im
 
     @Override
     protected Boolean doInBackground(String... params) throws AuthorizationException, ForbiddenException {
-         return loginAdapter.changePassword(params[0], params[1]);
+         try {
+             return loginAdapter.changePassword(params[0], params[1]);
+         }
+         catch (GenericException e) {
+             exception = e;
+             return null;
+         }
     }
 
     @Override
     protected void onPostExecute(Boolean b) {
-        onResponseReceived(b);
+        if (exception == null) onResponseReceived(b);
+        else onExceptionReceived(exception);
         super.onPostExecute(b);
     }
 }

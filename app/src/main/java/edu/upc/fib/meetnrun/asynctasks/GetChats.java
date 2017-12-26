@@ -6,12 +6,15 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackChats;
+import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskException;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
-public abstract class GetChats extends AsyncTask<Void,Void,List<Chat>> implements AsyncTaskCallbackChats {
+public abstract class GetChats extends AsyncTask<Void,Void,List<Chat>> implements AsyncTaskCallbackChats,AsyncTaskException {
 
+    private GenericException exception;
     private int page;
     private IChatAdapter chatAdapter;
 
@@ -22,12 +25,19 @@ public abstract class GetChats extends AsyncTask<Void,Void,List<Chat>> implement
 
     @Override
     protected List<Chat> doInBackground(Void... v) throws AuthorizationException {
-        return chatAdapter.getChats(page);
+        try {
+            return chatAdapter.getChats(page);
+        }
+        catch (GenericException e) {
+            exception = e;
+            return null;
+        }
     }
 
     @Override
     protected void onPostExecute(List<Chat> chats) {
-        onResponseReceived(chats);
+        if (exception == null) onResponseReceived(chats);
+        else onExceptionReceived(exception);
         super.onPostExecute(chats);
     }
 }

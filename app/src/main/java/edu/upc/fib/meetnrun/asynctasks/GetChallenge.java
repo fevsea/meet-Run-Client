@@ -8,13 +8,16 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackChallenge;
+import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskException;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
-public abstract class GetChallenge extends AsyncTask<Integer, String, Challenge> implements AsyncTaskCallbackChallenge {
+public abstract class GetChallenge extends AsyncTask<Integer, String, Challenge> implements AsyncTaskCallbackChallenge,AsyncTaskException {
 
+    private GenericException exception;
     private IChallengeAdapter challengeAdapter;
 
     public GetChallenge() {
@@ -23,12 +26,20 @@ public abstract class GetChallenge extends AsyncTask<Integer, String, Challenge>
 
     @Override
     protected Challenge doInBackground(Integer... params) throws AuthorizationException,NotFoundException{
-        return challengeAdapter.getChallenge(params[0]);
+        try {
+            return challengeAdapter.getChallenge(params[0]);
+        }
+        catch (GenericException e) {
+            exception = e;
+            return null;
+        }
     }
 
     @Override
     protected void onPostExecute(Challenge challenge) {
-        onResponseReceived(challenge);
+        if (exception == null) onResponseReceived(challenge);
+        else onExceptionReceived(exception);
+        super.onPostExecute(challenge);
     }
 
 }

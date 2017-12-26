@@ -26,6 +26,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.asynctasks.CreateChallenge;
 import edu.upc.fib.meetnrun.asynctasks.GetUser;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Challenge;
@@ -152,42 +153,44 @@ public class CreateChallengeFragment extends BaseFragment implements View.OnClic
 
     private void callCreateChallenge() {
         progressBar.setVisibility(View.VISIBLE);
-        CreateChallenge createChallenge = new CreateChallenge(challenged,challenge) {
+        new CreateChallenge(challenged,challenge) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getContext(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                    getActivity().finish();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getContext(), R.string.params_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                    getActivity().finish();
+                }
+            }
+
             @Override
             public void onResponseReceived() {
                 progressBar.setVisibility(View.INVISIBLE);
                 getActivity().finish();
             }
-        };
-        try {
-            createChallenge.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getContext(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-            getActivity().finish();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getContext(), R.string.params_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-            getActivity().finish();
-        }
+        }.execute();
     }
 
 
     private void callGetUser(int userID) {
-        GetUser getUser = new GetUser(userID) {
+        new GetUser(userID) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof NotFoundException) {
+                    Toast.makeText(getContext(), getResources().getString(R.string.not_found_error), Toast.LENGTH_SHORT).show();
+                }
+            }
+
             @Override
             public void onResponseReceied(User u) {
                 challenged = u;
             }
-        };
-        try {
-            getUser.execute();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getContext(), getResources().getString(R.string.not_found_error), Toast.LENGTH_SHORT).show();
-        }
+        }.execute();
     }
 
 }

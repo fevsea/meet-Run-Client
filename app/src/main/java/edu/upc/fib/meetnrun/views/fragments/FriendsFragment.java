@@ -18,6 +18,7 @@ import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectFriend;
 import edu.upc.fib.meetnrun.asynctasks.GetFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetPendingFriends;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -191,25 +192,26 @@ public class FriendsFragment extends FriendListFragmentTemplate {
 
     private void callGetFriends() {
         setLoading();
-        GetFriends getFriends = new GetFriends(pageNumber) {
+        new GetFriends(pageNumber) {
+
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+            }
 
             @Override
             public void onResponseReceived(List<Friend> friends) {
                 l = friends;
                 updateData();
             }
-        };
-        try {
-            getFriends.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
+        }.execute();
     }
 
     private void updatePendingFriendsData() {
@@ -241,43 +243,45 @@ public class FriendsFragment extends FriendListFragmentTemplate {
     private void callGetPendingFriends() {
         if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
         pendingIsLoading = true;
-        GetPendingFriends getPendingFriends = new GetPendingFriends(pendingPageNumber) {
+        new GetPendingFriends(pendingPageNumber) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+            }
+
             @Override
             public void onResponseReceived(List<Friend> friends) {
                 l = friends;
                 updatePendingFriendsData();
             }
-        };
-        try {
-            getPendingFriends.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
+        }.execute();
     }
 
     private void callAcceptOrRejectFriend(Friend friend) {
-        AcceptOrRejectFriend acceptOrRejectFriend = new AcceptOrRejectFriend() {
+        new AcceptOrRejectFriend() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(boolean b) {
                 initializePagination();
                 refreshList();
             }
-        };
-        try {
-            acceptOrRejectFriend.execute(friend);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(friend);
     }
 
     @Override

@@ -5,12 +5,15 @@ import android.view.View;
 
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackUser;
+import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskException;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 
-public abstract class GetCurrentUser extends AsyncTask<String,String,User>  implements AsyncTaskCallbackUser{
+public abstract class GetCurrentUser extends AsyncTask<String,String,User>  implements AsyncTaskCallbackUser,AsyncTaskException{
 
+    private GenericException exception;
     private ILoginAdapter loginAdapter;
 
     public GetCurrentUser() {
@@ -19,13 +22,20 @@ public abstract class GetCurrentUser extends AsyncTask<String,String,User>  impl
 
     @Override
     protected User doInBackground(String... s) throws  AuthorizationException{
-        CurrentSession.getInstance().setToken(s[0]);
-        return loginAdapter.getCurrentUser();
+        try {
+            CurrentSession.getInstance().setToken(s[0]);
+            return loginAdapter.getCurrentUser();
+        }
+        catch (GenericException e) {
+            exception = e;
+            return null;
+        }
     }
 
     @Override
     protected void onPostExecute(User u) {
-        onResponseReceied(u);
+        if (exception == null) onResponseReceied(u);
+        else onExceptionReceived(exception);
         super.onPostExecute(u);
     }
 }

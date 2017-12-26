@@ -25,6 +25,7 @@ import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetMyMeetings;
 import edu.upc.fib.meetnrun.asynctasks.LeaveMeeting;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -160,41 +161,43 @@ public class MyMeetingsFragment extends BaseFragment {
     }
 
     private void callGetMyMeetings(int userId) {
-        GetMyMeetings getMyMeetings = new GetMyMeetings() {
+        new GetMyMeetings() {
+
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
 
             @Override
             public void onResponseReceived(List<Meeting> myMeetings) {
                 meetingsAdapter.updateMeetingsList(myMeetings);
             }
-        };
-        try {
-            getMyMeetings.execute(userId);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(userId);
     }
 
 
     private void callLeaveMeeting(int meetingId, int chatId) {
-        LeaveMeeting leaveMeeting = new LeaveMeeting() {
+        new LeaveMeeting() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived() {
                 updateMeetingList();
             }
-        };
-        try {
-            leaveMeeting.execute(meetingId,chatId);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(meetingId,chatId);
     }
 
     public int getTitle() {

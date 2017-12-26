@@ -40,6 +40,7 @@ import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.asynctasks.DeleteChat;
 import edu.upc.fib.meetnrun.asynctasks.UpdateChat;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -415,46 +416,48 @@ public class ChatFragment extends BaseFragment {
     }
 
     private void callUpdateChat() {
-        UpdateChat updateChat =new UpdateChat() {
+        new UpdateChat() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived() {
                 Log.d("ChatFragment","Chat updated");
             }
-        };
-        try {
-            updateChat.execute(chat);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(chat);
     }
 
 
     private void callDeleteChat(int chatId) {
-        DeleteChat deleteChat = new DeleteChat() {
+        new DeleteChat() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived() {
                 Log.d("ChatFragment","Chat deleted");
             }
-        };
-        try {
-            deleteChat.execute(chatId);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(chatId);
     }
 
     public int getTitle() {

@@ -25,6 +25,7 @@ import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectChallenge;
 import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectFriend;
 import edu.upc.fib.meetnrun.asynctasks.GetChallenge;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -201,24 +202,25 @@ public class ChallengeFragment extends BaseFragment implements View.OnClickListe
 
 
     private void callGetChallenge(final int challengeId) {
-        GetChallenge getChallenge = new GetChallenge() {
+        new GetChallenge() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+            }
+
             @Override
             public void onResponseReceived(Challenge challengeResponse) {
                 challenge = challengeResponse;
                 updateViews();
             }
-        };
-        try {
-            getChallenge.execute(challengeId);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
+        }.execute(challengeId);
     }
 
     private void dismissProgressBarsOnError() {
@@ -227,24 +229,24 @@ public class ChallengeFragment extends BaseFragment implements View.OnClickListe
     }
 
     private void callAcceptOrRejectChallenge(Boolean accept) {
-        AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge(challenge.getId()) {
+        new AcceptOrRejectChallenge(challenge.getId()) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException ) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if ( e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+            }
+
             @Override
             public void onResponseReceived() {
                 getActivity().finish();
             }
-        };
-        try {
-            acceptOrRejectChallenge.execute(accept);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
-
+        }.execute(accept);
     }
 
     public int getTitle() {

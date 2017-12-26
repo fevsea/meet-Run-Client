@@ -28,6 +28,7 @@ import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetUsers;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
@@ -233,34 +234,34 @@ public class UsersListFragment extends BaseFragment {
     }
 
     private void callGetFriends() {
-        GetAllFriends getAllFriends = new GetAllFriends() {
+        new GetAllFriends() {
             @Override
-            public void onResponseReceived(List<Friend> friendsResponse) {
-                friends = friendsResponse;
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(List<Friend> allfriends) {
+                friends = allfriends;
                 callGetUsers();
             }
-        };
-        try {
-            getAllFriends.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute();
     }
 
     private void callGetUsers() {
         if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
         isLoading = true;
-        GetUsers getUsers = new GetUsers(pageNumber) {
+        new GetUsers(pageNumber) {
             @Override
             public void onResponseReceived(List<User> users) {
                 updateData(users);
             }
-        };
-        getUsers.execute();
+        }.execute();
     }
 
     public int getTitle() {

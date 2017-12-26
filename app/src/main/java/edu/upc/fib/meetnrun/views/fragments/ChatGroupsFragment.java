@@ -29,6 +29,7 @@ import edu.upc.fib.meetnrun.asynctasks.CreateChat;
 import edu.upc.fib.meetnrun.asynctasks.GetFriends;
 import edu.upc.fib.meetnrun.asynctasks.UpdateChat;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -249,7 +250,19 @@ public class ChatGroupsFragment extends BaseFragment {
 
     private void callGetFriends() {
         setLoading();
-        GetFriends getFriends = new GetFriends(pageNumber) {
+        new GetFriends(pageNumber) {
+
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+            }
 
             @Override
             public void onResponseReceived(List<Friend> friends) {
@@ -257,24 +270,24 @@ public class ChatGroupsFragment extends BaseFragment {
                 updateData();
                 if (friendsAdapter.getItemCount() == 0) numbFriends.setText("No friends available.");
             }
-        };
-        try {
-            getFriends.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
+        }.execute();
     }
 
     private void callCreateChat() {
         setLoading();
-        CreateChat createChat = new CreateChat(name,selectedFriendsID,1,null,"",0,dateWithoutTime) {
+        new CreateChat(name,selectedFriendsID,1,null,"",0,dateWithoutTime) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+            }
+
             @Override
             public void onResponseReceived(Chat chat) {
                 if (chat != null) {
@@ -284,43 +297,29 @@ public class ChatGroupsFragment extends BaseFragment {
                     getActivity().finish();
                 }
             }
-        };
-        try {
-            createChat.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
+        }.execute();
     }
 
     private void callUpdateChat(Chat chat) {
         setLoading();
-        UpdateChat updateChat = new UpdateChat() {
+        new UpdateChat() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
             @Override
             public void onResponseReceived() {
                 Log.d("ChatGroupsFragment","Chat updated");
             }
-        };
-        try {
-            updateChat.execute(chat);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
+        }.execute(chat);
     }
 
     private void initializePagination() {

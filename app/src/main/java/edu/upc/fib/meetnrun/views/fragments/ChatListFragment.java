@@ -27,6 +27,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetChats;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.BaseActivity;
@@ -237,21 +238,21 @@ public class ChatListFragment extends BaseFragment {
 
     private void callGetChats() {
         setLoading();
-        GetChats getChats = new GetChats(pageNumber) {
+        new GetChats(pageNumber) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+
             @Override
             public void onResponseReceived(List<Chat> chats) {
                 l = chats;
                 updateData();
             }
-        };
-        try {
-            getChats.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            progressBar.setVisibility(View.INVISIBLE);
-
-        }
+        }.execute();
     }
 
     private void updateData() {

@@ -7,6 +7,7 @@ import android.widget.Toast;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.asynctasks.AddFriend;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 
 /**
@@ -42,7 +43,17 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
     }
 
     private void callAddFriend(String s) {
-        AddFriend addFriend = new AddFriend() {
+        new AddFriend() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(boolean b) {
                 if (b) {
@@ -51,16 +62,7 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
                     getActivity().finish();
                 }
             }
-        };
-        try {
-            addFriend.execute(s);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(s);
     }
 
     public int getTitle() {

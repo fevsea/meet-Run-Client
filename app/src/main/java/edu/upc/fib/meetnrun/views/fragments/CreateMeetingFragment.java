@@ -61,6 +61,7 @@ import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.asynctasks.CreateMeeting;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -386,7 +387,17 @@ public class CreateMeetingFragment extends BaseFragment implements OnMapReadyCal
 
 
     private void callCreateMeeting() {
-        CreateMeeting createMeeting = new CreateMeeting(Name,Description,Public,Level,Date,Latitude,Longitude) {
+        new CreateMeeting(Name,Description,Public,Level,Date,Latitude,Longitude) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(Meeting meeting) {
                 if (friends){
@@ -398,16 +409,7 @@ public class CreateMeetingFragment extends BaseFragment implements OnMapReadyCal
                 }
                 getActivity().finish();
             }
-        };
-        try {
-            createMeeting.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute();
     }
 
     public int getTitle() {

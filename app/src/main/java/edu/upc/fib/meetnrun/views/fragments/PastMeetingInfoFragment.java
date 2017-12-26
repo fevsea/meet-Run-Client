@@ -34,6 +34,7 @@ import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetAllParticipants;
 import edu.upc.fib.meetnrun.asynctasks.GetParticipants;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -188,39 +189,41 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
     }
 
     private void callGetAllFriends() {
-        GetAllFriends getAllFriends = new GetAllFriends() {
+        new GetAllFriends() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(List<Friend> allfriends) {
                 friends = allfriends;
             }
-        };
-        try {
-            getAllFriends.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute();
     }
 
     private void callGetAllParticipants(int meetingId) {
-        GetAllParticipants getAllParticipants = new GetAllParticipants() {
+        new GetAllParticipants() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(List<User> users) {
                 participantsAdapter.updateFriendsList(users);
             }
-        };
-        try {
-            getAllParticipants.execute(meetingId);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(meetingId);
     }
 
     @Override

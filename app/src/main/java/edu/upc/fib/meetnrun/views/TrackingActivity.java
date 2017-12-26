@@ -52,6 +52,7 @@ import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.asynctasks.SaveTrackingData;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.TrackingData;
 import edu.upc.fib.meetnrun.services.TrackingService;
@@ -330,25 +331,26 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         contentMain.setVisibility(View.GONE);
         pauseButton.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-        SaveTrackingData saveTrackingData = new SaveTrackingData(meetingId) {
+        new SaveTrackingData(meetingId) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(TrackingActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+                else if (e instanceof ForbiddenException) {
+                    Toast.makeText(TrackingActivity.this, getResources().getString(R.string.tracking_error_toast_message), Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+
+                }
+            }
+
             @Override
             public void onResponseReceived() {
                 stopService(new Intent(TrackingActivity.this, TrackingService.class));
                 finish();
             }
-        };
-        try {
-            saveTrackingData.execute(trackingData);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(this, R.string.authorization_error, Toast.LENGTH_LONG).show();
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-        catch (ForbiddenException e) {
-            Toast.makeText(TrackingActivity.this, getResources().getString(R.string.tracking_error_toast_message), Toast.LENGTH_LONG).show();
-            progressBar.setVisibility(View.INVISIBLE);
-
-        }
+        }.execute(trackingData);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -26,6 +26,7 @@ import edu.upc.fib.meetnrun.asynctasks.RemoveFriend;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -127,7 +128,17 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
     }
 
     private void callAddFriend(String s) {
-        AddFriend addFriend = new AddFriend() {
+        new AddFriend() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(boolean b) {
                 if (b) {
@@ -136,20 +147,21 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                     getActivity().finish();
                 }
             }
-        };
-        try {
-            addFriend.execute(s);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(s);
     }
 
     private void callRemoveFriend(String friendId) {
-        RemoveFriend removeFriend = new RemoveFriend() {
+        new RemoveFriend() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(boolean b) {
                 if (b) {
@@ -158,21 +170,22 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                     getActivity().finish();
                 }
             }
-        };
-        try {
-            removeFriend.execute(friendId);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(friendId);
     }
 
 
     private void callCreateChat() {
-        CreateChat createChat = new CreateChat(friendUsername,userList,0,null,"",0,dateWithoutTime) {
+        new CreateChat(friendUsername,userList,0,null,"",0,dateWithoutTime) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(Chat chat) {
                 if (chat != null) {
@@ -182,23 +195,24 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                     getActivity().finish();
                 }
             }
-        };
-        try {
-            createChat.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute();
     }
 
 
     private void callGetPrivateChat(int chatId) {
         final User user;
         user = CurrentSession.getInstance().getCurrentUser();
-        GetPrivateChat getPrivateChat = new GetPrivateChat() {
+        new GetPrivateChat() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(Chat responseChat) {
                 if (chat == null) {
@@ -216,18 +230,8 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                     CurrentSession.getInstance().setChat(chat);
                     BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
                     getActivity().finish();
-                }
-            }
-        };
-        try {
-            getPrivateChat.execute(chatId);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-        }
+                }            }
+        }.execute(chatId);
     }
 
 

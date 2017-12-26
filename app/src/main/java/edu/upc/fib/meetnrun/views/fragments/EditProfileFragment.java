@@ -16,6 +16,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.UpdateUser;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -110,7 +111,20 @@ public class EditProfileFragment extends BaseFragment {
     }
 
     private void callUpdateUser(User user) {
-        UpdateUser updateUser = new UpdateUser() {
+        new UpdateUser() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(boolean b) {
                 if(b) {
@@ -121,19 +135,7 @@ public class EditProfileFragment extends BaseFragment {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_edit_profile), Toast.LENGTH_SHORT).show();
                 }
             }
-        };
-        try {
-            updateUser.execute(user);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(user);
     }
 
     public int getTitle() {

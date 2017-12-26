@@ -32,6 +32,7 @@ import edu.upc.fib.meetnrun.asynctasks.GetMeetingsFiltered;
 import edu.upc.fib.meetnrun.asynctasks.GetMyMeetings;
 import edu.upc.fib.meetnrun.asynctasks.JoinMeeting;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -121,7 +122,6 @@ public class MeetingListFragment extends BaseFragment {
             @Override
 
             public void onItemClicked(int position) {
-                Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 Intent meetingInfoIntent = new Intent();
                 meetingInfoIntent.putExtra("id",meeting.getId());
@@ -263,66 +263,64 @@ public class MeetingListFragment extends BaseFragment {
     //nueva forma de usar asynctasks
     private void callGetMeetings() {
         setLoading();
-        GetMeetings getMeetings = new GetMeetings(pageNumber) {
+        new GetMeetings(pageNumber) {
             @Override
             public void onResponseReceived(List<Meeting> meetings) {
                 updateData(meetings);
             }
-        };
-        getMeetings.execute();
+        }.execute();
     }
 
     private void callGetMeetingsFiltered(String query) {
         setLoading();
-        GetMeetingsFiltered getMeetingsFiltered = new GetMeetingsFiltered(pageNumber) {
+        new GetMeetingsFiltered(pageNumber) {
 
             @Override
             public void onResponseReceived(List<Meeting> meetings) {
                 updateData(meetings);
             }
-        };
-        getMeetingsFiltered.execute(query);
+        }.execute(query);
     }
 
 
 
     private void callJoinMeeting(int meetingId, int chatId) {
-        JoinMeeting joinMeeting = new JoinMeeting() {
+        new JoinMeeting() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
 
             @Override
             public void onResponseReceived() {
                 Toast.makeText(getActivity(),getString(R.string.joined_meeting),Toast.LENGTH_SHORT).show();
                 getMyMeetings();
             }
-        };
-        try {
-            joinMeeting.execute(meetingId,CurrentSession.getInstance().getCurrentUser().getId(),chatId);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(meetingId,CurrentSession.getInstance().getCurrentUser().getId(),chatId);
     }
 
     private void callGetMyMeetings(int userId) {
-        GetMyMeetings getMyMeetings = new GetMyMeetings() {
+        new GetMyMeetings() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
 
             @Override
             public void onResponseReceived(List<Meeting> myMeetings) {
                 meetingsAdapter.setMyMeetings(myMeetings);
             }
-        };
-        try {
-            getMyMeetings.execute(userId);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(userId);
     }
 
 

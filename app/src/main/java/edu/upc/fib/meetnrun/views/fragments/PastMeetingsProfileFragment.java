@@ -25,6 +25,7 @@ import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetPastMeetings;
 import edu.upc.fib.meetnrun.asynctasks.GetPastMeetingsTracking;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -172,39 +173,42 @@ public class PastMeetingsProfileFragment extends BaseFragment {
     }
 
     private void callGetPastMeetings(int userId) {
-        GetPastMeetings getPastMeetings = new GetPastMeetings() {
+        new GetPastMeetings() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(List<Meeting> meetings) {
                 meetingsAdapter.updateMeetingsList(meetings);
+                swipeRefreshLayout.setRefreshing(false);
             }
-        };
-        try {
-            getPastMeetings.execute(userId);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(userId);
     }
 
     private void callGetPastMeetingsTracking(int userId, int meetingId) {
-        GetPastMeetingsTracking getPastMeetingsTracking = new GetPastMeetingsTracking() {
+        new GetPastMeetingsTracking() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(TrackingData trackingResponse) {
                 tracking = trackingResponse;
             }
-        };
-        try {
-            getPastMeetingsTracking.execute(userId,meetingId);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(userId,meetingId);
     }
 
 }

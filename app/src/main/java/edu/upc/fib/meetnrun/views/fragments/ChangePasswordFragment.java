@@ -18,6 +18,7 @@ import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.asynctasks.UpdatePassword;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
 public class ChangePasswordFragment extends BaseFragment {
@@ -101,7 +102,17 @@ public class ChangePasswordFragment extends BaseFragment {
     }
 
     private void callUpdatePassword(String currentPass, String newPass) {
-        UpdatePassword updatePassword = new UpdatePassword() {
+        new UpdatePassword() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ForbiddenException) {
+                    Toast.makeText(getActivity(), R.string.forbidden_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(boolean b) {
                 if (b) {
@@ -110,16 +121,7 @@ public class ChangePasswordFragment extends BaseFragment {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_change_pass), Toast.LENGTH_SHORT).show();
                 }
             }
-        };
-        try {
-            updatePassword.execute(currentPass, newPass);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (ForbiddenException e) {
-            Toast.makeText(getActivity(), R.string.forbidden_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(currentPass, newPass);
     }
 
 

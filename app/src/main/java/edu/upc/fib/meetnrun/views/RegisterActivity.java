@@ -17,6 +17,7 @@ import android.widget.Toast;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.Register;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
@@ -117,7 +118,14 @@ public class RegisterActivity extends AppCompatActivity{
     }
 
     private void callRegister() {
-        Register register = new Register(name,surname,username,password1,quest,answ,pcInt) {
+        new Register(name,surname,username,password1,quest,answ,pcInt) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof ParamsException) {
+                    Toast.makeText(RegisterActivity.this, R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceied(User u) {
                 if (u == null) {
@@ -129,13 +137,7 @@ public class RegisterActivity extends AppCompatActivity{
                     changeToLoginActivity();
                 }
             }
-        };
-        try {
-            register.execute();
-        }
-        catch (ParamsException e) {
-            Toast.makeText(this, R.string.params_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute();
     }
 
     @Override

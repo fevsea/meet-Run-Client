@@ -26,6 +26,7 @@ public abstract class GetMeetings extends AsyncTask<Void,Void,List<Meeting>> imp
     @Override
     protected void onPostExecute(List<Meeting> meetings) {
         onResponseReceived(meetings);
+        super.onPostExecute(meetings);
     }
 
     private int getPage() {

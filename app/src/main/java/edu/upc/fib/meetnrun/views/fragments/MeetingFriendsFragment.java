@@ -18,6 +18,7 @@ import edu.upc.fib.meetnrun.asynctasks.GetFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetMeetingsFiltered;
 import edu.upc.fib.meetnrun.asynctasks.JoinMeeting;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -114,45 +115,47 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
 
     private void callGetFriends() {
         setLoading();
-        GetFriends getFriends = new GetFriends(pageNumber) {
+        new GetFriends(pageNumber) {
+
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+            }
 
             @Override
             public void onResponseReceived(List<Friend> friends) {
                 l = friends;
                 updateData();
             }
-        };
-        try {
-            getFriends.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            dismissProgressBarsOnError();
-        }
+        }.execute();
     }
 
     private void callJoinMeeting(int meetingId, int chatId, List<User> users) {
         for (final User user : users) {
-            JoinMeeting joinMeeting = new JoinMeeting() {
+            new JoinMeeting() {
+
+                @Override
+                public void onExceptionReceived(GenericException e) {
+                    if (e instanceof AuthorizationException) {
+                        Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    }
+                    else if (e instanceof ParamsException) {
+                        Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                    }
+                }
 
                 @Override
                 public void onResponseReceived() {
                     Log.e("MeetingFriendsFragment", "User with id: " + user.getId() + "joined");
                 }
-            };
-            try {
-                joinMeeting.execute(meetingId, user.getId(), chatId);
-            }
-            catch (AuthorizationException e) {
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            catch (ParamsException e) {
-                Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
-            }
+            }.execute(meetingId, user.getId(), chatId);
         }
     }
 

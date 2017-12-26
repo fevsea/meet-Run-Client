@@ -21,6 +21,7 @@ import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetCurrentUser;
 import edu.upc.fib.meetnrun.asynctasks.Login;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.services.FirebaseInstanceService;
@@ -104,7 +105,13 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void callLogin() {
-        Login login = new Login(username,password) {
+        new Login(username,password) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(LoginActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+            }
             @Override
             public void onResponseReceived(String token) {
                 if(token != null && !token.equals("")){
@@ -114,34 +121,29 @@ public class LoginActivity extends AppCompatActivity {
                     callGetCurrentUser(token);
                 }
             }
-        };
-        try {
-            login.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(this, R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute();
     }
 
 
     private void callGetCurrentUser(String token) {
         progressBar.setVisibility(View.VISIBLE);
-        GetCurrentUser getCurrentUser = new GetCurrentUser() {
+        new GetCurrentUser() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(LoginActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    deleteToken();
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+
             @Override
             public void onResponseReceied(User u) {
                 cs.setCurrentUser(u);
                 progressBar.setVisibility(View.INVISIBLE);
                 changeToMainActivity();
             }
-        };
-        try {
-            getCurrentUser.execute(token);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(this, R.string.authorization_error, Toast.LENGTH_LONG).show();
-            deleteToken();
-            progressBar.setVisibility(View.INVISIBLE);
-        }
+        }.execute(token);
     }
 
     private void deleteToken() {

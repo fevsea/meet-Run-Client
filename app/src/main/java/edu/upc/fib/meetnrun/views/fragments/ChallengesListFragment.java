@@ -23,6 +23,7 @@ import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
 import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectChallenge;
 import edu.upc.fib.meetnrun.asynctasks.GetChallenges;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -163,19 +164,20 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
     }
 
     private void callGetChallenges() {
-        GetChallenges getChallenges = new GetChallenges() {
+        new GetChallenges() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived(List<Challenge> challenges) {
                     updateChallengesAdapters();
                     swipeRefreshLayout.setRefreshing(false);
             }
-        };
-        try {
-            getChallenges.execute();
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute();
     }
 
 
@@ -185,21 +187,22 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
             accept = true;
         }
 
-        AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge(challenge.getId()) {
+        new AcceptOrRejectChallenge(challenge.getId()) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException ) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if ( e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
             @Override
             public void onResponseReceived() {
                 getActivity().finish();
             }
-        };
-        try {
-            acceptOrRejectChallenge.execute(accept);
-        }
-        catch (AuthorizationException e) {
-            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-        }
-        catch (NotFoundException e) {
-            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-        }
+        }.execute(accept);
     }
 
     @Override
