@@ -33,7 +33,7 @@ import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ChatActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
@@ -41,7 +41,7 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
  * Created by eric on 25/11/17.
  */
 
-public class ChatGroupsFragment extends Fragment {
+public class ChatGroupsFragment extends BaseFragment {
 
     private View view;
     private FriendsAdapter friendsAdapter;
@@ -297,10 +297,10 @@ public class ChatGroupsFragment extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             if (chat != null) {
-                Intent i = new Intent(getContext(), ChatActivity.class);
+                Intent i = new Intent();
                 CurrentSession.getInstance().setChat(chat);
+                BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
                 getActivity().finish();
-                startActivity(i);
             }
             super.onPostExecute(s);
         }
@@ -351,6 +351,10 @@ public class ChatGroupsFragment extends Fragment {
             }
         }
         l.removeAll(friendsInGroup);
+    }
+
+    public int getTitle() {
+        return R.string.new_group_label;
     }
 
 }

@@ -4,11 +4,13 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,7 +56,7 @@ import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 
 import static android.app.Activity.RESULT_OK;
 
-public class EditMeetingFragment extends Fragment implements View.OnClickListener, OnMapReadyCallback, CompoundButton.OnCheckedChangeListener{
+public class EditMeetingFragment extends BaseFragment implements View.OnClickListener, OnMapReadyCallback, CompoundButton.OnCheckedChangeListener{
 
     private View view;
 
@@ -344,5 +346,43 @@ public class EditMeetingFragment extends Fragment implements View.OnClickListene
         }
 
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!thereWasAnAttemptToSave) {
+            String title = getResources().getString(R.string.edit_meeting_close_dialog_title);
+            String message = getResources().getString(R.string.edit_meeting_close_dialog_message);
+            String ok = getResources().getString(R.string.ok);
+            String cancel = getResources().getString(R.string.cancel);
+            showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            getActivity().onBackPressed();
+                        }
+                    },
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }
+            );
+        }
+    }
+
+    private void showDialog(String title, String message, String okButtonText, String negativeButtonText, DialogInterface.OnClickListener ok, DialogInterface.OnClickListener cancel) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton(okButtonText, ok);
+        if (negativeButtonText != null && cancel != null)
+            builder.setNegativeButton(negativeButtonText, cancel);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public int getTitle() {
+        return R.string.edit_meeting_label;
     }
 }

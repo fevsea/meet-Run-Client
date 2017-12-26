@@ -35,13 +35,12 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.FriendProfileActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
-import edu.upc.fib.meetnrun.views.UserProfileActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 
-public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallback
+public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyCallback
         {
     private View view;
     private ArrayList<LatLng> path;
@@ -140,27 +139,31 @@ public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallb
                         Intent profileIntent;
                         if (participant.getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
                             profileIntent = new Intent(getActivity(),ProfileViewPagerFragment.class);
+                            startActivity(profileIntent);
                         }
                         else {
                             boolean isFriend = false;
+                            Fragment frag;
                             for (Friend f : friends) {
                                 User friend = f.getFriend();
                                 if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
                                 if (participant.getId().equals(friend.getId())) isFriend = true;
                             }
                             if (isFriend) {
-                                profileIntent = new Intent(getActivity(), FriendProfileActivity.class);
+                                profileIntent = new Intent();
+                                frag = new FriendProfileFragment();
                             }
                             else {
-                                profileIntent = new Intent(getActivity(), UserProfileActivity.class);
+                                profileIntent = new Intent();
+                                frag = new UserProfileFragment();
                             }
                             profileIntent.putExtra("id",participant.getId().toString());
                             profileIntent.putExtra("userName", participant.getUsername());
                             String name = participant.getFirstName() + " " + participant.getLastName();
                             profileIntent.putExtra("name", name);
                             profileIntent.putExtra("postCode", participant.getPostalCode());
+                            BaseActivity.startWithFragment(getActivity(), frag, profileIntent);
                         }
-                        startActivity(profileIntent);
 
                     }
                 }, getContext());
@@ -242,5 +245,9 @@ public class PastMeetingInfoFragment extends Fragment implements OnMapReadyCallb
 
         map.addPolyline(options);
 
+    }
+
+    public int getTitle() {
+        return R.string.meeting;
     }
 }

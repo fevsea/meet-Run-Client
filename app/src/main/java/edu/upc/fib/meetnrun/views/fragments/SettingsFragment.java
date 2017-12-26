@@ -34,7 +34,7 @@ import edu.upc.fib.meetnrun.views.LoginActivity;
  * Created by eric on 9/11/17.
  */
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends BaseFragment {
 
     private View view;
     private IUserAdapter controller;
@@ -178,6 +178,10 @@ public class SettingsFragment extends Fragment {
             }
             super.onPostExecute(s);
         }
+    }
+
+    public int getTitle() {
+        return R.string.action_settings;
     }
 
 }

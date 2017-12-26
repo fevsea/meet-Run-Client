@@ -66,11 +66,12 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 
 
-import edu.upc.fib.meetnrun.views.MeetingFriendsActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
+
 import static android.app.Activity.RESULT_OK;
 
 
-public class CreateMeetingFragment extends Fragment implements OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
+public class CreateMeetingFragment extends BaseFragment implements OnMapReadyCallback, CompoundButton.OnCheckedChangeListener {
     private Integer year, month, day, hour2, minute;
 
     Meeting m;
@@ -414,15 +415,20 @@ public class CreateMeetingFragment extends Fragment implements OnMapReadyCallbac
         protected void onPostExecute(String s){
             CurrentSession.getInstance().setChat(newChat);
             if (friends){
-                Intent i=new Intent(getActivity(), MeetingFriendsActivity.class);
+                Intent i=new Intent();
                 Integer MeetingId=m.getId();
                 i.putExtra("level", Level);
                 i.putExtra("meetingId",MeetingId);
-                startActivity(i);
+                BaseActivity.startWithFragment(getActivity(), new MeetingFriendsFragment(), i);
             }
             context.finish();
             super.onPostExecute(s);
         }
+
+    }
+
+    public int getTitle() {
+        return R.string.create_meeting_label;
     }
 
 }

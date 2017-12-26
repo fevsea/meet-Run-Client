@@ -213,5 +213,6 @@
     <string name="reject">Reject</string>
     <string name="error_deleting_friend">Error deleting friend</string>
     <string name="error_adding_friend">Error adding friend</string>
+    <string name="meeting">Meeting</string>
 </resources>
 

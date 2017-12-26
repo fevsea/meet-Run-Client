@@ -28,8 +28,7 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.FriendProfileActivity;
-import edu.upc.fib.meetnrun.views.UserProfileActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 
@@ -37,7 +36,7 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
  * Created by eric on 2/11/17.
  */
 
-public class UsersListFragment extends Fragment {
+public class UsersListFragment extends BaseFragment {
 
     private IUserAdapter usersDBAdapter;
     private View view;
@@ -187,11 +186,16 @@ public class UsersListFragment extends Fragment {
     }
 
     private void getIntent(User friend) {
-        Intent friendProfileIntent;
-        if (friend.isFriend()) friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
-        else friendProfileIntent = new Intent(getActivity(),UserProfileActivity.class);
+        Intent friendProfileIntent = new Intent();
+        Fragment frag;
+        if (friend.isFriend()) {
+            frag = new FriendProfileFragment();
+        }
+        else {
+            frag = new UserProfileFragment();
+        }
         CurrentSession.getInstance().setFriend(friend);
-        startActivity(friendProfileIntent);
+        BaseActivity.startWithFragment(getActivity(), frag, friendProfileIntent);
     }
 
     private void getMethod() {
@@ -281,6 +285,10 @@ public class UsersListFragment extends Fragment {
             progressBar.setVisibility(View.INVISIBLE);
             super.onPostExecute(s);
         }
+    }
+
+    public int getTitle() {
+        return R.string.users_label;
     }
 
 }

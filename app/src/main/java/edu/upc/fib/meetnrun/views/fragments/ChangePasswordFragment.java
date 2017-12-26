@@ -19,7 +19,7 @@ import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
-public class ChangePasswordFragment extends Fragment {
+public class ChangePasswordFragment extends BaseFragment {
 
     private final ILoginAdapter controller = CurrentSession.getInstance().getLoginAdapter();
     private EditText currentPassText;
@@ -128,5 +128,9 @@ public class ChangePasswordFragment extends Fragment {
             }
             super.onPostExecute(b);
         }
+    }
+
+    public int getTitle() {
+        return R.string.action_change_pass;
     }
 }
