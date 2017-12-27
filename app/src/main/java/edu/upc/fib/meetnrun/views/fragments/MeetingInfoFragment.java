@@ -37,7 +37,14 @@ import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
+import edu.upc.fib.meetnrun.asynctasks.GetChat;
+import edu.upc.fib.meetnrun.asynctasks.GetMeeting;
+import edu.upc.fib.meetnrun.asynctasks.GetMeetings;
+import edu.upc.fib.meetnrun.asynctasks.GetMyMeetings;
+import edu.upc.fib.meetnrun.asynctasks.GetParticipants;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -57,10 +64,7 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
     private GoogleMap map;
     private Marker marker;
     private UsersAdapter participantsAdapter;
-    private IMeetingAdapter meetingController;
-    private IFriendsAdapter friendsController;
-    private IUserAdapter userAdapter;
-    private IChatAdapter chatAdapter;
+
     private List<User> meetingUsers;
     private List<Friend> friends;
     private int meetingId;
@@ -84,10 +88,8 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
         View view = inflater.inflate(R.layout.fragment_meeting_info,container,false);
         this.view = view;
 
-        meetingController = CurrentSession.getInstance().getMeetingAdapter();
-        friendsController = CurrentSession.getInstance().getFriendsAdapter();
-        userAdapter = CurrentSession.getInstance().getUserAdapter();
-        chatAdapter = CurrentSession.getInstance().getChatAdapter();
+        friends = new ArrayList<>();
+        callGetAllFriends();
         Bundle meetingInfo = getActivity().getIntent().getExtras();
 
         TextView title = view.findViewById(R.id.meeting_info_title);
@@ -107,9 +109,9 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
         meetingId = meetingInfo.getInt("id");
         chatId = meetingInfo.getInt("chat");
         isChatAvailable = false;
-        new getMeeting().execute();
-        new getChat().execute();
-        new GetMyMeetings().execute(CurrentSession.getInstance().getCurrentUser().getId());
+        callGetMeeting(meetingId);
+        callGetChat(chatId);
+        callGetMyMeetings(CurrentSession.getInstance().getCurrentUser().getId());
         title.setText(meetingInfo.getString("title"));
         owner.setText(meetingInfo.getString("owner"));
         description.setText(meetingInfo.getString("description"));
@@ -277,8 +279,7 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
     }
 
     private void getParticipantsList() {
-        new getParticipants().execute(meetingId);
-        new getFriends().execute(CurrentSession.getInstance().getCurrentUser().getId().toString());
+        callGetParticipants(meetingId);
     }
 
     private void setLoading() {
@@ -305,122 +306,119 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
         progressBar.setVisibility(View.INVISIBLE);
     }
 
-
-    private class getParticipants extends AsyncTask<Integer,String,String> {
-
-
-        @Override
-        protected void onPreExecute() {
-            setLoading();
-            Log.e("MEETINGINFO","ID = " + meetingId);
-        }
-
-        @Override
-        protected String doInBackground(Integer... integers) {
-            //TODO handle exceptions
-            try {
-                meetingUsers = meetingController.getParticipantsFromMeeting(integers[0],pageNumber);//TODO arreglar paginas
-            } catch (AuthorizationException | ParamsException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            Log.e("MEETINGUSERS",meetingUsers.toString());
-            updateData();
-            super.onPostExecute(s);
-        }
+    private void dismissProgressBarsOnError() {
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
-    private class getFriends extends AsyncTask<String,String,String> {
 
-        @Override
-        protected String doInBackground(String... strings) {
-
-            try {
-                friends = friendsController.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(), 0);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
-    }
-
-    private class getMeeting extends AsyncTask<Void,Void,Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            try {
-                meeting = meetingController.getMeeting(meetingId);
+    private void callGetParticipants(int meetingId) {
+        setLoading();
+        new GetParticipants(pageNumber) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
                 }
-            catch (NotFoundException e) {
-                e.printStackTrace();
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
             }
 
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void v) {
-            List<User> owner = new ArrayList<>();
-            owner.add(meeting.getOwner());
-            participantsAdapter.addFriends(owner);
-        }
-
+            @Override
+            public void onResponseReceived(List<User> users) {
+                meetingUsers = users;
+                updateData();
+            }
+        }.execute(meetingId);
     }
 
-    private class getChat extends AsyncTask<Void,Void,Void> {
-        @Override
-        protected Void doInBackground(Void... voids) {
+    private void callGetAllFriends() {
 
-            try {
-                chat = chatAdapter.getChat(chatId);
+        new GetAllFriends() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
             }
-            catch (NotFoundException e) {
-                e.printStackTrace();
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
+
+            @Override
+            public void onResponseReceived(List<Friend> allfriends) {
+                friends = allfriends;
             }
-
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void v) {
-            isChatAvailable = true;
-        }
-
+        }.execute();
     }
 
-    private class GetMyMeetings extends AsyncTask<Integer,String,Void> {
-
-        @Override
-        protected Void doInBackground(Integer... integers) {
-            //TODO handle exceptions
-            try {
-                myMeetings = userAdapter.getUsersFutureMeetings(integers[0]);
-            } catch (AuthorizationException | ParamsException e) {
-                e.printStackTrace();
+    private void callGetMeeting(int meetingId) {
+        new GetMeeting() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    getActivity().finish();
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(Void v) {
-            for (Meeting joinedMeeting: myMeetings) {
-                if (joinedMeeting.getId().equals(meetingId)) chatButton.setVisibility(View.VISIBLE);
+            @Override
+            public void onResponseReceived(Meeting meeting) {
+                List<User> owner = new ArrayList<>();
+                owner.add(meeting.getOwner());
+                participantsAdapter.addFriends(owner);
             }
-        }
-
-
+        }.execute(meetingId);
     }
+
+    private void callGetChat(int chatId) {
+        new GetChat() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    getActivity().finish();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(Chat responseChat) {
+                chat = responseChat;
+                isChatAvailable = true;
+            }
+        }.execute(chatId);
+    }
+
+
+    private void callGetMyMeetings(int userId) {
+        new GetMyMeetings() {
+
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(List<Meeting> myMeetings) {
+                for (Meeting joinedMeeting: myMeetings) {
+                    if (joinedMeeting.getId().equals(meetingId)) chatButton.setVisibility(View.VISIBLE);
+                }
+            }
+        }.execute(userId);
+    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

@@ -22,7 +22,10 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetPastMeetings;
+import edu.upc.fib.meetnrun.asynctasks.GetPastMeetingsTracking;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -162,58 +165,52 @@ public class PastMeetingsProfileFragment extends BaseFragment {
     }
 
     private void getTrackingData() {
-        new getPastMeetingsTracking().execute(userId, meetingId);
+        callGetPastMeetingsTracking(userId,meetingId);
     }
 
     private void updateMeetingList() {
-        new PastMeetingsProfileFragment.GetPastMeetings().execute(userId);
+        callGetPastMeetings(userId);
     }
 
-
-    private class GetPastMeetings extends AsyncTask<Integer, Integer, String> {
-        List<Meeting> l = new ArrayList<>();
-
-        @Override
-        protected String doInBackground(Integer... integers) {
-            try {
-                l = userController.getUserPastMeetings(integers[0]);//TODO arreglar paginas
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
-                e.printStackTrace();
+    private void callGetPastMeetings(int userId) {
+        new GetPastMeetings() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            meetingsAdapter.updateMeetingsList(l);
-            super.onPostExecute(s);
-        }
-    }
-
-
-    private class getPastMeetingsTracking extends AsyncTask<Integer, Integer, String> {
-        @Override
-        protected String doInBackground(Integer... integers) {
-            try {
-                tracking = meetingController.getTracking(integers[0], integers[1]);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
+            @Override
+            public void onResponseReceived(List<Meeting> meetings) {
+                meetingsAdapter.updateMeetingsList(meetings);
+                swipeRefreshLayout.setRefreshing(false);
             }
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            super.onPostExecute(s);
-        }
+        }.execute(userId);
     }
+
+    private void callGetPastMeetingsTracking(int userId, int meetingId) {
+        new GetPastMeetingsTracking() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(TrackingData trackingResponse) {
+                tracking = trackingResponse;
+            }
+        }.execute(userId,meetingId);
+    }
+
 }
 
 

@@ -10,10 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetUserStats;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.User;
@@ -133,63 +137,63 @@ public class StatisticsProfileFragment extends BaseFragment {
     }
 
     private void getStats(){
-        new userStats().execute();
+        callGetUserStats();
     }
-    private class userStats extends AsyncTask<String,String,String> {
-        private void setValues(){
-            userlevel=String.valueOf(u.getLevel());
-            usercalories=String.valueOf(s.getTotalCalories());
-            userrhythm=s.getRhythmInString();
-            usersteps=String.valueOf(s.getTotalSteps());
-            userspeed=s.getSpeedInString(s.getAvgSpeed());
-            usermaxspeed=s.getSpeedInString(s.getMaxSpeed());
-            userminspeed=s.getSpeedInString(s.getMinSpeed());
-            usermaxtime=s.getTimeInString(s.getMaxTime());
-            usermintime=s.getTimeInString(s.getMinTime());
-            usermaxlength=String.valueOf(s.getMaxLength())+" km";
-            userminlength=String.valueOf(s.getMinLength())+" km";
-            usertime=s.getTimeInString(s.getTotalTimeMillis());
-            int l=getActualLevel(s.getNumberMeetings(), s.getTotalKm(), (int) u.getLevel());
-            userlevel=String.valueOf(l);
-            if (u.getLevel()<l) u.setLevel(l);
-        }
 
-        @Override
-        protected String doInBackground(String... strings){
-            try {
-                //TODO: Que tot no sigui de current user
-                int id=u.getId();
-                iUserAdapter=CurrentSession.getInstance().getUserAdapter();
-                s = iUserAdapter.getUserStatisticsByID(id);
+    private void setValues(){
+        userlevel=String.valueOf(u.getLevel());
+        usercalories=String.valueOf(s.getTotalCalories());
+        userrhythm=s.getRhythmInString();
+        usersteps=String.valueOf(s.getTotalSteps());
+        userspeed=s.getSpeedInString(s.getAvgSpeed());
+        usermaxspeed=s.getSpeedInString(s.getMaxSpeed());
+        userminspeed=s.getSpeedInString(s.getMinSpeed());
+        usermaxtime=s.getTimeInString(s.getMaxTime());
+        usermintime=s.getTimeInString(s.getMinTime());
+        usermaxlength=String.valueOf(s.getMaxLength())+" km";
+        userminlength=String.valueOf(s.getMinLength())+" km";
+        usertime=s.getTimeInString(s.getTotalTimeMillis());
+        int l=getActualLevel(s.getNumberMeetings(), s.getTotalKm(), (int) u.getLevel());
+        userlevel=String.valueOf(l);
+        if (u.getLevel()<l) u.setLevel(l);
+    }
 
-                //TODO: Hacerlo bien, sin hardcoded
-                setValues();
+    private void updateData() {
+        error.setText(" ");
+        level.setText(userlevel);
+        meetings.setText(usermeetings);
+        steps.setText(usersteps);
+        totalKm.setText(userkm);
+        totalTime.setText(usertime);
+        calories.setText(usercalories);
+        rhythm.setText(userrhythm);
+        avgSpeed.setText(userspeed);
+        maxSpeed.setText(usermaxspeed);
+        minSpeed.setText(userminspeed);
+        maxTime.setText(usermaxtime);
+        maxLength.setText(usermaxlength);
+        minLength.setText(userminlength);
+        minTime.setText(usermintime);
+    }
 
-                        //u=iUserAdapter.getUser(userId);
-                    } catch (AuthorizationException e) {
-                        e.printStackTrace();
-                    }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String result){
-            error.setText(" ");
-            level.setText(userlevel);
-            meetings.setText(usermeetings);
-            steps.setText(usersteps);
-            totalKm.setText(userkm);
-            totalTime.setText(usertime);
-            calories.setText(usercalories);
-            rhythm.setText(userrhythm);
-            avgSpeed.setText(userspeed);
-            maxSpeed.setText(usermaxspeed);
-            minSpeed.setText(userminspeed);
-            maxTime.setText(usermaxtime);
-            maxLength.setText(usermaxlength);
-            minLength.setText(userminlength);
-            minTime.setText(usermintime);
-
-        }
+    private void callGetUserStats() {
+        new GetUserStats(u) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
+
+            @Override
+            public void onResponseReceived(Statistics stats) {
+                s = stats;
+                setValues();
+                updateData();
+            }
+        }.execute();
+    }
 }

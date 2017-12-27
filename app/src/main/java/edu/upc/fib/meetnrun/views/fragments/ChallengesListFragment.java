@@ -20,7 +20,10 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
+import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectChallenge;
+import edu.upc.fib.meetnrun.asynctasks.GetChallenges;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -91,8 +94,7 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
                 Log.d("ChallengesList", "ACCEPTED REQUEST");
                 Challenge challenge = challengesAdapterRequest.getChallengeAt(position);
                 challenge.setAccepted(true);
-                AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge();
-                acceptOrRejectChallenge.execute(challenge);
+                callAcceptOrRejectChallenge(challenge);
             }
 
             @Override
@@ -100,8 +102,7 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
                 Log.d("ChallengesList", "REJECTED REQUEST");
                 Challenge challenge = challengesAdapterRequest.getChallengeAt(position);
                 challenge.setAccepted(false);
-                AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge();
-                acceptOrRejectChallenge.execute(challenge);
+                callAcceptOrRejectChallenge(challenge);
             }
 
             @Override
@@ -119,7 +120,7 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
     }
 
     private void updateChallengesList() {
-        new GetChallenges().execute();
+        callGetChallenges();
     }
 
     private void updateChallengesAdapters() {
@@ -162,81 +163,53 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
         }
     }
 
-    private class GetChallenges extends AsyncTask<String,String,Boolean> {
+    private void callGetChallenges() {
+        new GetChallenges() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+            }
 
-        private Exception ex;
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-            try {
-                challenges = CurrentSession.getInstance().getChallengeAdapter().getCurrentUserChallenges();
+            @Override
+            public void onResponseReceived(List<Challenge> challenges) {
+                    updateChallengesAdapters();
+                    swipeRefreshLayout.setRefreshing(false);
             }
-            catch (AuthorizationException e) {
-                this.ex = e;
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean s) {
-            super.onPostExecute(s);
-            if (s && ex == null) {
-                updateChallengesAdapters();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-            else if (ex instanceof AuthorizationException){
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-            }
-        }
+        }.execute();
     }
 
-    private class AcceptOrRejectChallenge extends AsyncTask<Challenge, String, Boolean> {
 
-        Exception exception;
-
-        @Override
-        protected Boolean doInBackground(Challenge... params) {
-            IChallengeAdapter challengeAdapter = CurrentSession.getInstance().getChallengeAdapter();
-            try {
-                if (params[0].isAccepted()) {
-                    challengeAdapter.acceptChallenge(params[0].getId());
-                }
-                else {
-                    challengeAdapter.deleteRejectChallenge(params[0].getId());
-                }
-            }
-            catch (NotFoundException | AuthorizationException e) {
-                exception = e;
-            }
-            return true;
+    private void callAcceptOrRejectChallenge(Challenge challenge) {
+        boolean accept = false;
+        if (challenge.isAccepted()) {
+            accept = true;
         }
 
-        protected void onPostExecute(Boolean s) {
-            super.onPostExecute(s);
-            if (s && exception == null) {
-                updateChallengesList();
+        new AcceptOrRejectChallenge(challenge.getId()) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException ) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if ( e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
             }
-            else if (exception instanceof AuthorizationException){
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else if (exception instanceof NotFoundException) {
-                Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-            }
-        }
 
+            @Override
+            public void onResponseReceived() {
+                getActivity().finish();
+            }
+        }.execute(accept);
     }
 
     @Override
     public int getTitle() {
         return R.string.challenges;
     }
+
 
 
 }

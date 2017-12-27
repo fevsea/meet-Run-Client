@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,7 +30,11 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
+import edu.upc.fib.meetnrun.asynctasks.GetAllParticipants;
+import edu.upc.fib.meetnrun.asynctasks.GetParticipants;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -170,61 +175,57 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
                 friendsList.setAdapter(participantsAdapter);
 
 
+    }
+
+    @Override
+    public void onResume() {
+        getParticipantsList();
+        super.onResume();
+    }
+
+    private void getParticipantsList() {
+        callGetAllParticipants(meetingId);
+        callGetAllFriends();
+    }
+
+    private void callGetAllFriends() {
+        new GetAllFriends() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
-            public void onResume() {
-                getParticipantsList();
-                super.onResume();
+            public void onResponseReceived(List<Friend> allfriends) {
+                friends = allfriends;
             }
+        }.execute();
+    }
 
-            private void getParticipantsList() {
-                new PastMeetingInfoFragment.getParticipants().execute(meetingId);
-                new PastMeetingInfoFragment.getFriends().execute(CurrentSession.getInstance().getCurrentUser().getId().toString());
-            }
-
-            private class getParticipants extends AsyncTask<Integer,String,String> {
-
-                private List<User> l = new ArrayList<>();
-
-                @Override
-                protected String doInBackground(Integer... integers) {
-                    //TODO handle exceptions
-                    try {
-                        l = meetingController.getParticipantsFromMeeting(integers[0],0);//TODO arreglar paginas
-                    } catch (AuthorizationException | ParamsException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
+    private void callGetAllParticipants(int meetingId) {
+        new GetAllParticipants() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
                 }
-
-                @Override
-                protected void onPostExecute(String s) {
-                    participantsAdapter.updateFriendsList(l);
-                    super.onPostExecute(s);
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
                 }
             }
 
-            private class getFriends extends AsyncTask<String,String,String> {
-
-                @Override
-                protected String doInBackground(String... strings) {
-
-                    try {
-                        friends = friendsController.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(), 0);
-                    } catch (AuthorizationException e) {
-                        e.printStackTrace();
-                    } catch (NotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(String s) {
-                    super.onPostExecute(s);
-                }
+            @Override
+            public void onResponseReceived(List<User> users) {
+                participantsAdapter.updateFriendsList(users);
             }
+        }.execute(meetingId);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
