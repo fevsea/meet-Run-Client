@@ -63,7 +63,7 @@ public class RankingsUserFragment extends Fragment {
 
         });
         zips=view.findViewById(R.id.button3);
-        users.setOnClickListener(new View.OnClickListener() {
+        zips.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), RankingsUserFragment.class);
