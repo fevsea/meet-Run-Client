@@ -400,6 +400,7 @@ public class CreateMeetingFragment extends BaseFragment implements OnMapReadyCal
 
             @Override
             public void onResponseReceived(Meeting meeting) {
+                m = meeting;
                 if (friends){
                     Intent i=new Intent();
                     Integer MeetingId=m.getId();

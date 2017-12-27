@@ -138,8 +138,7 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
     }
 
     private void callJoinMeeting(int meetingId, int chatId, List<User> users) {
-        for (final User user : users) {
-            new JoinMeeting() {
+            new JoinMeeting(meetingId,chatId,users) {
 
                 @Override
                 public void onExceptionReceived(GenericException e) {
@@ -153,10 +152,10 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
 
                 @Override
                 public void onResponseReceived() {
-                    Log.e("MeetingFriendsFragment", "User with id: " + user.getId() + "joined");
+                    Log.e("MeetingFriendsFragment", "Users joined meeting succesfully");
+                    getActivity().finish();
                 }
-            }.execute(meetingId, user.getId(), chatId);
-        }
+            }.execute();
     }
 
     @Override

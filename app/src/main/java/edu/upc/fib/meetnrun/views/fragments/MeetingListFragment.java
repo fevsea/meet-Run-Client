@@ -285,7 +285,9 @@ public class MeetingListFragment extends BaseFragment {
 
 
     private void callJoinMeeting(int meetingId, int chatId) {
-        new JoinMeeting() {
+        List<User> current = new ArrayList<>();
+        current.add(CurrentSession.getInstance().getCurrentUser());
+        new JoinMeeting(meetingId,chatId,current) {
             @Override
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {
@@ -301,7 +303,7 @@ public class MeetingListFragment extends BaseFragment {
                 Toast.makeText(getActivity(),getString(R.string.joined_meeting),Toast.LENGTH_SHORT).show();
                 getMyMeetings();
             }
-        }.execute(meetingId,CurrentSession.getInstance().getCurrentUser().getId(),chatId);
+        }.execute();
     }
 
     private void callGetMyMeetings(int userId) {

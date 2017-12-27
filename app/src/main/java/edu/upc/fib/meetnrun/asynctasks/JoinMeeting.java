@@ -18,7 +18,7 @@ import edu.upc.fib.meetnrun.models.User;
 
 
 /*
-    new JoinMeeting.execute(meetingId,userId,chatId)
+    new JoinMeeting(meetingId,chatId,userId[]).execute()
  */
 public abstract class JoinMeeting extends AsyncTask<Integer,Void,Void> implements AsyncTaskCallback,AsyncTaskException {
 
@@ -26,24 +26,32 @@ public abstract class JoinMeeting extends AsyncTask<Integer,Void,Void> implement
     private Chat chat;
     private IChatAdapter chatAdapter;
     private IMeetingAdapter meetingAdapter;
+    private int meetingId;
+    private int chatId;
+    private List<User> users;
 
 
 
-    public JoinMeeting() {
+    public JoinMeeting(int meetingId, int chatId , List<User> users) {
         chatAdapter = CurrentSession.getInstance().getChatAdapter();
         meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
+        this.meetingId = meetingId;
+        this.chatId = chatId;
+        this.users = users;
     }
 
     @Override
-    protected Void doInBackground(Integer... integers) {
+    protected Void doInBackground(Integer[] integers) {
         //TODO possible millora: crida al servidor joinChat
         try {
-            meetingAdapter.joinMeeting(integers[0], integers[1]);
-            Chat chat = chatAdapter.getChat(integers[2]);
-            List<User> chatUsers = chat.getListUsersChat();
-            chatUsers.add(CurrentSession.getInstance().getCurrentUser());
-            chat.setListUsersChat(chatUsers);
-            chatAdapter.updateChat(chat);
+            for (User user : users) {
+                meetingAdapter.joinMeeting(meetingId, user.getId());
+                Chat chat = chatAdapter.getChat(chatId);
+                List<User> chatUsers = chat.getListUsersChat();
+                chatUsers.add(user);
+                chat.setListUsersChat(chatUsers);
+                chatAdapter.updateChat(chat);
+            }
         }
         catch (GenericException e) {
             exception = e;
