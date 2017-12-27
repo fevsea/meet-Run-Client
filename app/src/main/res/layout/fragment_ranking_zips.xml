@@ -2,7 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
 
+        <Button
+            android:id="@+id/button4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/rankings_users" />
+
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/rankings_zip" />
+
+    </LinearLayout>
     <TextView
         android:id="@+id/rankings_zip_filter_TV"
         android:layout_width="match_parent"
@@ -14,6 +32,7 @@
         android:orientation="horizontal">
 
         <RadioGroup
+            android:id="@+id/rdGZip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -39,4 +58,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <ProgressBar
+        android:id="@+id/pb_loading_ranking_users"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:visibility="invisible"/>
 </LinearLayout>

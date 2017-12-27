@@ -1,11 +1,13 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -27,6 +29,8 @@ public class RankingsUserFragment extends Fragment {
     Spinner zipSpinner;
     View view;
     Context context;
+    Button users;
+    Button zips;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -58,6 +62,16 @@ public class RankingsUserFragment extends Fragment {
             }
 
         });
+        zips=view.findViewById(R.id.button3);
+        users.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), RankingsUserFragment.class);
+                startActivity(intent);
+            }
+        });
+        zips=view.findViewById(R.id.button2);
+        zips.setClickable(false);
         return view;
     }
 
