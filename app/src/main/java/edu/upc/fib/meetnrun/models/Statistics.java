@@ -1,5 +1,7 @@
 package edu.upc.fib.meetnrun.models;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by Javier on 26/11/2017.
  */
@@ -103,7 +105,8 @@ public class Statistics {
     }
 
     public String getSpeedInString(float speed){
-        return String.valueOf(speed) + " km/h";
+        DecimalFormat df=new DecimalFormat("###.###");
+        return String.valueOf(df.format(speed)) + " km/h";
     }
 
     public float getMaxSpeed() {
