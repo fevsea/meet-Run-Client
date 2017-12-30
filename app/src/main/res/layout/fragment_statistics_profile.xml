@@ -96,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30px"
                     android:textStyle="bold"
-                    android:textSize="50px"
+                    android:textSize="40px"
                     android:text="@string/total_km"/>
 
                 <TextView

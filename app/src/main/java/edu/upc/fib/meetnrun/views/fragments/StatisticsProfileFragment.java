@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
@@ -72,6 +74,7 @@ public class StatisticsProfileFragment extends BaseFragment {
     public int getActualLevel (int meetings, float km, int level){
         float  resMeetings;
         float resUser;
+        km=km/1000;
         if (level==0){
             resMeetings=(float) meetings;
         }
@@ -136,6 +139,9 @@ public class StatisticsProfileFragment extends BaseFragment {
     }
     private class userStats extends AsyncTask<String,String,String> {
         private void setValues(){
+            DecimalFormat df= new DecimalFormat("###.###");
+            userkm=String.valueOf(df.format(s.getTotalKm()/1000.000));
+            usermeetings=String.valueOf(s.getNumberMeetings());
             userlevel=String.valueOf(u.getLevel());
             usercalories=String.valueOf(s.getTotalCalories());
             userrhythm=s.getRhythmInString();
@@ -145,8 +151,8 @@ public class StatisticsProfileFragment extends BaseFragment {
             userminspeed=s.getSpeedInString(s.getMinSpeed());
             usermaxtime=s.getTimeInString(s.getMaxTime());
             usermintime=s.getTimeInString(s.getMinTime());
-            usermaxlength=String.valueOf(s.getMaxLength())+" km";
-            userminlength=String.valueOf(s.getMinLength())+" km";
+            usermaxlength=String.valueOf(df.format(s.getMaxLength()/1000.000))+" km";
+            userminlength=String.valueOf(df.format(s.getMinLength()/1000.000))+" km";
             usertime=s.getTimeInString(s.getTotalTimeMillis());
             int l=getActualLevel(s.getNumberMeetings(), s.getTotalKm(), (int) u.getLevel());
             userlevel=String.valueOf(l);
@@ -188,6 +194,7 @@ public class StatisticsProfileFragment extends BaseFragment {
             maxLength.setText(usermaxlength);
             minLength.setText(userminlength);
             minTime.setText(usermintime);
+            meetings.setText(usermeetings);
 
         }
             }
