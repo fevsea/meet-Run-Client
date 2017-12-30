@@ -212,5 +212,7 @@
     <string name="error_deleting_friend">Error deleting friend</string>
     <string name="error_adding_friend">Error adding friend</string>
     <string name="meeting">Meeting</string>
+    <string name="share_via">Share via</string>
+    <string name="share_text">Hey! I have done this route with Meet&amp;run!!</string>
 </resources>
 
