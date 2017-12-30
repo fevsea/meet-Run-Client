@@ -29,8 +29,17 @@ public class RankingsUserFragment extends Fragment {
     Spinner zipSpinner;
     View view;
     Context context;
-    Button users;
-    Button zips;
+    /*Button users;
+    Button zips;*/
+
+    public static RankingsUserFragment newInstance(int page, String title) {
+        RankingsUserFragment fragmentFirst = new RankingsUserFragment();
+        Bundle args = new Bundle();
+        args.putInt("0", page);
+        args.putString("User", title);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -62,7 +71,7 @@ public class RankingsUserFragment extends Fragment {
             }
 
         });
-        zips=view.findViewById(R.id.button3);
+        /*zips=view.findViewById(R.id.button3);
         zips.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +80,7 @@ public class RankingsUserFragment extends Fragment {
             }
         });
         zips=view.findViewById(R.id.button2);
-        zips.setClickable(false);
+        zips.setClickable(false); */
         return view;
     }
 

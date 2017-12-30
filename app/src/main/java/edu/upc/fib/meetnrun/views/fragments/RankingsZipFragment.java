@@ -32,6 +32,15 @@ public class RankingsZipFragment extends Fragment {
     Button users;
     Button zips;
 
+    public static RankingsZipFragment newInstance(int page, String title) {
+        RankingsZipFragment fragmentFirst = new RankingsZipFragment();
+        Bundle args = new Bundle();
+        args.putInt("1", page);
+        args.putString("Zip", title);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -83,5 +92,4 @@ public class RankingsZipFragment extends Fragment {
         isLoading = false;
         isLastPage = false;
     }
-
 }
