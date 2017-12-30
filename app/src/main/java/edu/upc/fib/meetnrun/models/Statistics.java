@@ -59,11 +59,14 @@ public class Statistics {
     }
 
     public float getAvgTimePerKm(){
-        return totalTimeMillis/totalKm;
+        return (float) (totalTimeMillis/totalKm);
     }
 
     public String getAvgTimePerKmInString(){
-        return String.format("%sh %sm %ss", this.totalTimeMillis/(this.totalKm*1000));
+        float time=getAvgTimePerKm();
+        int mins= (int) (time/60);
+        int secs= (int) (time%60);
+        return String.format("%sm %ss", mins, secs);
     }
 
     public int getTotalSteps() {
@@ -106,7 +109,7 @@ public class Statistics {
 
     public String getSpeedInString(float speed){
         DecimalFormat df=new DecimalFormat("###.###");
-        return String.valueOf(df.format(speed)) + " km/h";
+        return String.valueOf(df.format(speed)) + " m/s";
     }
 
     public float getMaxSpeed() {
