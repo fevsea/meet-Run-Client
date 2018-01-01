@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="api_geo_key" translatable="false">AIzaSyCdEoI3P4WWI3fuUO8GptU_U4C1E48xmCw</string>
+    <string name="api_static_maps_key" translatable="false">AIzaSyAQ1PLdk_fBP4pIaT4mnu1OS9d0FR4_fnA</string>
 </resources>
