@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,17 +36,20 @@ public class RankingsUserFragment extends Fragment {
     public static RankingsUserFragment newInstance(int page, String title) {
         RankingsUserFragment fragmentFirst = new RankingsUserFragment();
         Bundle args = new Bundle();
+        Log.d("User rankings","===========================================================");
         args.putInt("0", page);
-        args.putString("User", title);
+        args.putString("Info", title);
         fragmentFirst.setArguments(args);
         return fragmentFirst;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
+        Log.d("User rankings","!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         super.onCreate(savedInstanceState);
+        title = getArguments().getString("Info");
         page = getArguments().getInt("0", 0);
-        title = getArguments().getString("User");
+
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
