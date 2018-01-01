@@ -206,4 +206,8 @@
     <string name="error_deleting_friend">Error al eliminar el amigo</string>
     <string name="error_adding_friend">Error al añadir el amigo</string>
     <string name="meeting">Quedada</string>
+    <string name="ranking_current">Tu posición:</string>
+    <string name="rankings_choose_zip">Código Postal:</string>
+    <string name="share_text">¡Mira qué ruta he hecho con Meet&amp;Run!</string>
+    <string name="share_via">Compartir via</string>
 </resources>

@@ -44,8 +44,8 @@ public class RankingsUserFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-//        page = getArguments().getInt("0", 0);
-//        String title = getArguments().getString("User");
+        page = getArguments().getInt("0", 0);
+        title = getArguments().getString("User");
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -144,7 +144,7 @@ public class StatisticsProfileFragment extends BaseFragment {
             usermeetings=String.valueOf(s.getNumberMeetings());
             userlevel=String.valueOf(u.getLevel());
             usercalories=String.valueOf(s.getTotalCalories());
-            userrhythm=s.getRhythmInString();
+            userrhythm=s.getAvgTimePerKmInString();
             usersteps=String.valueOf(s.getTotalSteps());
             userspeed=s.getSpeedInString(s.getAvgSpeed());
             usermaxspeed=s.getSpeedInString(s.getMaxSpeed());

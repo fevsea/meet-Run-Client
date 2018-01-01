@@ -224,5 +224,7 @@
     <string name="rankings_choose_zip">ZIP:</string>
     <string name="meeting">Meeting</string>
 
+    <string name="share_via">Share via</string>
+    <string name="share_text">Hey! I have done this route with Meet&amp;Run!!</string>
 </resources>
 

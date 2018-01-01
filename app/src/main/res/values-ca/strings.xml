@@ -196,5 +196,9 @@
     <string name="error_deleting_friend">Error al eliminar l\'amic</string>
     <string name="error_adding_friend">Error al afegir l\'amic</string>
     <string name="meeting">Trobada</string>
+    <string name="ranking_current">La teva posició:</string>
+    <string name="rankings_choose_zip">Codi Postal:</string>
+    <string name="share_text">Ei! He fet aquesta ruta amb Meet&amp;Run!</string>
+    <string name="share_via">Compartir via</string>
 
 </resources>
