@@ -30,7 +30,7 @@ import edu.upc.fib.meetnrun.views.fragments.ProfileFragmentTemplate;
 
 public class UtilsViews {
 
-    public GradientDrawable getColoredCircularShape(char letter, View view) {
+    public static GradientDrawable getColoredCircularShape(char letter, View view) {
 
         int[] colors = view.getResources().getIntArray(R.array.colors);
         GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(view.getContext(),R.drawable.user_profile_circular_text_view);

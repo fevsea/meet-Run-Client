@@ -212,5 +212,13 @@
     <string name="error_deleting_friend">Error deleting friend</string>
     <string name="error_adding_friend">Error adding friend</string>
     <string name="meeting">Meeting</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="feed">Feed</string>
+    <string name="feed_meeting_near">This meeting is near your location</string>
+    <string name="feed_meeting_past">completed this meeting</string>
+    <string name="feed_meeting_joined">joined this meeting</string>
+    <string name="feed_meeting_created">created this meeting</string>
 </resources>
 

@@ -28,6 +28,7 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.fragments.ChallengesListFragment;
 import edu.upc.fib.meetnrun.views.fragments.ChatListFragment;
+import edu.upc.fib.meetnrun.views.fragments.FeedFragment;
 import edu.upc.fib.meetnrun.views.fragments.FriendsFragment;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
 import edu.upc.fib.meetnrun.views.fragments.MyMeetingsFragment;
@@ -97,6 +98,11 @@ public class DrawerActivity extends AppCompatActivity{
                                     i = new Intent(getApplicationContext(),LoginActivity.class);
                                     startActivity(i);
                                     finishAffinity();
+                                    break;
+                                case R.id.feed:
+                                    fragment = new FeedFragment();
+                                    setTitle(R.string.feed);
+                                    replaceFragment(fragment);
                                     break;
 
                                 case R.id.meetings:

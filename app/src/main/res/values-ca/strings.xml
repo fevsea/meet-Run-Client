@@ -185,5 +185,10 @@
     <string name="error_deleting_friend">Error al eliminar l\'amic</string>
     <string name="error_adding_friend">Error al afegir l\'amic</string>
     <string name="meeting">Trobada</string>
+    <string name="feed">Mur</string>
+    <string name="feed_meeting_near">Aquesta trobada és a prop de la teva localització</string>
+    <string name="feed_meeting_past">ha completat aquesta trobada</string>
+    <string name="feed_meeting_joined">s\'ha apuntat a aquesta trobada</string>
+    <string name="feed_meeting_created">ha creat aquesta trobada</string>
 
 </resources>
