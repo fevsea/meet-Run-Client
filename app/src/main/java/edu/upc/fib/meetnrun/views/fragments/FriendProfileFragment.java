@@ -215,6 +215,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
 
             @Override
             public void onResponseReceived(Chat responseChat) {
+                chat = responseChat;
                 if (chat == null) {
                     Calendar rightNow = Calendar.getInstance();
                     dateWithoutTime = rightNow.getTime();

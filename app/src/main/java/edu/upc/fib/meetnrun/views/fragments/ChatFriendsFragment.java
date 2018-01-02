@@ -151,26 +151,14 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
     }
 
     private void updateData(Chat chat) {
-        if (chat == null) {
-            Calendar rightNow = Calendar.getInstance();
-
-            dateWithoutTime = rightNow.getTime();
-
-            userList = new ArrayList<>();
-            userList.add(CurrentSession.getInstance().getCurrentUser().getId());
-            userList.add(friend.getId());
-
-            callCreateChat();
-        }
-        else {
             Intent i = new Intent();
             CurrentSession.getInstance().setChat(chat);
             BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
             getActivity().finish();
-        }
     }
 
     private void callGetPrivateChat(int chatId) {
+        friendUserName = friend.getUsername();
         new GetPrivateChat() {
             @Override
             public void onExceptionReceived(GenericException e) {
@@ -179,13 +167,21 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
                     dismissProgressBarsOnError();
                 }
                 else if (e instanceof NotFoundException) {
-                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-                    dismissProgressBarsOnError();
+                    Calendar rightNow = Calendar.getInstance();
+
+                    dateWithoutTime = rightNow.getTime();
+
+                    userList = new ArrayList<>();
+                    userList.add(CurrentSession.getInstance().getCurrentUser().getId());
+                    userList.add(friend.getId());
+
+                    callCreateChat();
                 }
             }
 
             @Override
             public void onResponseReceived(Chat responseChat) {
+                chat = responseChat;
                 updateData(chat);
             }
         }.execute(chatId);

@@ -23,7 +23,7 @@ public abstract class CreateChat extends AsyncTask<Void,Void,Chat> implements As
     private String chatName;
     private List<Integer> listUsersChatIDs;
     private int type;
-    private int meetingId;
+    private Integer meetingId;
     private String lastMessage;
     private int lastMessageUserNamePosition;
     private Date lastDateTime;
