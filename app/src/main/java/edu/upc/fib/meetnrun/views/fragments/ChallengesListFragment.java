@@ -173,7 +173,8 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
             }
 
             @Override
-            public void onResponseReceived(List<Challenge> challenges) {
+            public void onResponseReceived(List<Challenge> challengesResponse) {
+                    challenges = challengesResponse;
                     updateChallengesAdapters();
                     swipeRefreshLayout.setRefreshing(false);
             }
@@ -200,7 +201,7 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
 
             @Override
             public void onResponseReceived() {
-                getActivity().finish();
+                updateChallengesList();
             }
         }.execute(accept);
     }

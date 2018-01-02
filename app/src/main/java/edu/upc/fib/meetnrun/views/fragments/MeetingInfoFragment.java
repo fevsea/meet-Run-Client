@@ -384,7 +384,7 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
                 }
                 else if (e instanceof NotFoundException) {
                     Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-                    getActivity().finish();
+                    isChatAvailable = false;
                 }
             }
 
