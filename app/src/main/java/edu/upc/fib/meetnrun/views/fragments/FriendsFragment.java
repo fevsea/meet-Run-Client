@@ -48,6 +48,7 @@ public class FriendsFragment extends FriendListFragmentTemplate {
 
     @Override
     protected void floatingbutton() {
+        fab.setVisibility(View.VISIBLE);
         fab.setImageResource(R.drawable.add_user_512);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
