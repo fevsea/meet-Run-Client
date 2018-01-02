@@ -180,6 +180,7 @@ public class FeedFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         @Override
         protected void onPostExecute(Boolean s) {
             updateAdapter();
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 

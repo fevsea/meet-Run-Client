@@ -2,16 +2,23 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,17 +30,23 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetStaticMap;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
+import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
@@ -51,6 +64,14 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
     private List<Friend> friends;
     private int meetingId;
     private Marker marker;
+    private ImageButton shareTracking;
+    private boolean staticMapAvailable;
+    private Bitmap staticMap;
+    private File cachedFile;
+    private String distanceValue;
+    private String timeValue;
+    private String avSpeedValue;
+
 
 
             @Override
@@ -81,6 +102,7 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
         TextView avSpeed = view.findViewById(R.id.meeting_info_avspeed);
         TextView calories = view.findViewById(R.id.meeting_info_calories);
 
+        shareTracking = view.findViewById(R.id.meeting_info_share);
 
         meetingId = pastMeetingInfo.getInt("id");
 
@@ -93,21 +115,34 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
         date.setText(pastMeetingInfo.getString("date"));
         time.setText(pastMeetingInfo.getString("time"));
 
-        String distanceValue = pastMeetingInfo.getString("distance") + " " + "m"; //TODO parse a km
+        distanceValue = pastMeetingInfo.getString("distance") + " " + "m"; //TODO parse a km
         distance.setText(distanceValue);
         String stepsValue  = pastMeetingInfo.getString("steps");
         steps.setText(stepsValue);
-        String timeValue = pastMeetingInfo.getString("totaltime") + " " + "ms";
+        timeValue = pastMeetingInfo.getString("totaltime") + " " + "ms";
         totalTime.setText(timeValue);
-        String avSpeedValue = pastMeetingInfo.getString("avspeed") + " " + "m/s";
+        avSpeedValue = pastMeetingInfo.getString("avspeed") + " " + "m/s";
         avSpeed.setText(avSpeedValue);
         String caloriesValue = pastMeetingInfo.getString("calories") + " " + "kcal";
         calories.setText(caloriesValue);
 
-
-        setupRecyclerView();
+        shareTracking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareTracking();
+            }
+        });
 
         path = (ArrayList<LatLng>) pastMeetingInfo.get("path");
+        if (path != null) {
+            staticMapAvailable = false;
+            if (path.size() > 1) {
+                Log.d("STATIC MAP", path.toString());
+                callGetStaticMap();
+            }
+        }
+
+        setupRecyclerView();
 
 
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
@@ -250,4 +285,60 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
     public int getTitle() {
         return R.string.meeting;
     }
+
+    private void callGetStaticMap() {
+        new GetStaticMap(path, getString(R.string.api_static_maps_key)) {
+            @Override
+            public void onResponseReceived(Bitmap bitmap) {
+                staticMap = bitmap;
+                saveImageToCache();
+                staticMapAvailable = true;
+            }
+        }.execute();
+    }
+
+    private void saveImageToCache() {
+        cachedFile = new File(getContext().getExternalCacheDir(), "trackingmap.png");
+        FileOutputStream fOut = null;
+        try {
+            fOut = new FileOutputStream(cachedFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        staticMap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+        try {
+            fOut.flush();
+            fOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        cachedFile.setReadable(true, false);
+    }
+
+    private void shareTracking() {
+        String trackingStats = formatTrackingStats();
+
+        final Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, trackingStats);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if (staticMapAvailable) {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(cachedFile));
+            intent.setType("image/png");
+            Log.e("AAAAAAA",Uri.fromFile(cachedFile).toString());
+        }
+        else {
+            intent.setType("text/plain");
+            Log.e("AAAAAA","BB");
+        }
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.share_via)),1);
+    }
+
+    private String formatTrackingStats() {
+        return  getString(R.string.share_text) + "\n" +
+                getString(R.string.distance)+ ": " + distanceValue + "\n" +
+                getString(R.string.time) + ": " + timeValue + "\n" +
+                getString(R.string.avg_speed) + ": " + avSpeedValue + "\n";
+    }
+
 }
