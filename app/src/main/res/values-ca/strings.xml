@@ -200,5 +200,6 @@
     <string name="rankings_choose_zip">Codi Postal:</string>
     <string name="share_text">Ei! He fet aquesta ruta amb Meet&amp;Run!</string>
     <string name="share_via">Compartir via</string>
+    <string name="rankings_label">Rankings</string>
 
 </resources>

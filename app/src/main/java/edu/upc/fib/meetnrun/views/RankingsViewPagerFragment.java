@@ -27,27 +27,17 @@ import edu.upc.fib.meetnrun.views.fragments.StatisticsProfileFragment;
 public class RankingsViewPagerFragment extends AppCompatActivity {
 
     private PagerAdapterFragment adapterViewPager;
-/*
-FragmentPagerAdapter adapterViewPager;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_home);
-		ViewPager vpPager = (ViewPager) findViewById(R.id.vpPager);
-		adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
-		vpPager.setAdapter(adapterViewPager);
-	}
- */
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_ranking_users);
+        setContentView(R.layout.fragment_rankings_viewpager);
 
         Toolbar toolbar = findViewById(R.id.activity_toolbar_rankings);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         ViewPager pager = findViewById(R.id.viewpager_rankings);
         TabLayout tabs = findViewById(R.id.pager_tabs_rankings);

@@ -210,4 +210,5 @@
     <string name="rankings_choose_zip">Código Postal:</string>
     <string name="share_text">¡Mira qué ruta he hecho con Meet&amp;Run!</string>
     <string name="share_via">Compartir via</string>
+    <string name="rankings_label">Rankings</string>
 </resources>
