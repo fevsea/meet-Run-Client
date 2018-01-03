@@ -42,14 +42,17 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.asynctasks.SaveTrackingData;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.TrackingData;
 import edu.upc.fib.meetnrun.services.TrackingService;
@@ -321,46 +324,33 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     private void save() {
-        SaveTrackingData saveTrackingData = new SaveTrackingData();
-        saveTrackingData.execute(trackingData);
+        callSaveTrackingData(meetingId,trackingData);
     }
 
-    private class SaveTrackingData extends AsyncTask<TrackingData, String, Boolean> {
+    private void callSaveTrackingData(int meetingId, TrackingData trackingData) {
+        contentMain.setVisibility(View.GONE);
+        pauseButton.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+        new SaveTrackingData(meetingId) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(TrackingActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+                else if (e instanceof ForbiddenException) {
+                    Toast.makeText(TrackingActivity.this, getResources().getString(R.string.tracking_error_toast_message), Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.INVISIBLE);
 
-        Exception exception = null;
-
-        @Override
-        protected void onPreExecute() {
-            contentMain.setVisibility(View.GONE);
-            pauseButton.setVisibility(View.GONE);
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Boolean doInBackground(TrackingData... params) {
-            try {
-                IMeetingAdapter meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
-                Integer userID = CurrentSession.getInstance().getCurrentUser().getId();
-                TrackingData td = params[0];
-                Log.i(TAG, "Saving for (user, meeting)" + userID + " " + meetingId);
-                Log.i(TAG, "Saving... " + params[0].toString());
-                meetingAdapter.addTracking(userID, meetingId, td.getAverageSpeed(), td.getDistance(), td.getSteps(), td.getTotalTimeMillis(), td.getCalories(), td.getRoutePoints());
-            } catch (ForbiddenException | AuthorizationException e) {
-                exception = e;
-                return false;
+                }
             }
-            return true;
-        }
 
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (exception != null || !result) {
-                Toast.makeText(TrackingActivity.this, getResources().getString(R.string.tracking_error_toast_message), Toast.LENGTH_LONG).show();
+            @Override
+            public void onResponseReceived() {
+                stopService(new Intent(TrackingActivity.this, TrackingService.class));
+                finish();
             }
-            stopService(new Intent(TrackingActivity.this, TrackingService.class));
-            finish();
-        }
-
+        }.execute(trackingData);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -18,13 +18,16 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetChats;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.BaseActivity;
@@ -135,7 +138,7 @@ public class ChatListFragment extends BaseFragment {
     }
 
     private void updateChats() {
-        new getChats().execute();
+        callGetChats();
     }
 
     private void addChat() {
@@ -233,30 +236,23 @@ public class ChatListFragment extends BaseFragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-
-    private class getChats extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            setLoading();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            try {
-                l = chatDBAdapter.getChats(pageNumber);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
+    private void callGetChats() {
+        setLoading();
+        new GetChats(pageNumber) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            updateData();
-            super.onPostExecute(s);
-        }
+            @Override
+            public void onResponseReceived(List<Chat> chats) {
+                l = chats;
+                updateData();
+            }
+        }.execute();
     }
 
     private void updateData() {
