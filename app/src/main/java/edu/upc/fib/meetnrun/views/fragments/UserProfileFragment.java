@@ -1,6 +1,11 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -67,5 +72,42 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
 
     public int getTitle() {
         return R.string.user_profile_label;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_report, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.home:
+                getActivity().finish();
+                break;
+            case R.id.report_button:
+                showDialog(getString(R.string.report),getString(R.string.ok),getString(R.string.cancel));
+                break;
+        }
+        return false;
+    }
+
+    public void showDialog(String title, String okButtonText, String negativeButtonText) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(title);
+        builder.setPositiveButton(okButtonText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //TODO crida al servidor per a reportar
+            }
+        });
+        builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

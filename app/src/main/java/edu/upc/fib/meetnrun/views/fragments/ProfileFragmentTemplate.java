@@ -109,6 +109,7 @@ public abstract class ProfileFragmentTemplate extends BaseFragment {
         challengeButton = view.findViewById(R.id.challenge_button);
         configureChallengeButton();
         setImage();
+        setHasOptionsMenu(true);
         return this.view;
     }
 
