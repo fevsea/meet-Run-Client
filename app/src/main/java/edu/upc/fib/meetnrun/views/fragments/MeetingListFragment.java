@@ -126,7 +126,6 @@ public class MeetingListFragment extends BaseFragment {
             }
 
             @Override
-
             public void onItemClicked(int position) {
                 Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
