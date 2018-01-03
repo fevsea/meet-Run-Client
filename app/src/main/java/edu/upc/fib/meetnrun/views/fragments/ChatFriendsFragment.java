@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,11 +12,17 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
+import edu.upc.fib.meetnrun.asynctasks.CreateChat;
+import edu.upc.fib.meetnrun.asynctasks.GetChat;
+import edu.upc.fib.meetnrun.asynctasks.GetFriends;
+import edu.upc.fib.meetnrun.asynctasks.GetPrivateChat;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -26,7 +33,6 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
 
 public class ChatFriendsFragment extends FriendListFragmentTemplate {
 
-    private IChatAdapter chatDBAdapter;
     private Chat chat;
     private String friendUserName;
     private List<Integer> userList;
@@ -45,7 +51,6 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
 
     @Override
     protected void adapter() {
-        chatDBAdapter = CurrentSession.getInstance().getChatAdapter();
     }
 
     @Override
@@ -57,13 +62,13 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
     protected void getIntent(User friend) {
 
         this.friend = friend;
-        new getChat().execute();
+        callGetPrivateChat(friend.getId());
 
     }
 
     @Override
     protected void getPaginationMethod() {
-        new getFriends().execute();
+        callGetFriends();
     }
 
     @Override
@@ -83,123 +88,108 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
         };
     }
 
+    private void callGetFriends() {
+        if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+        new GetFriends(pageNumber) {
 
-    private class getFriends extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
-            isLoading = true;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (l != null) {
-                if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
-                else friendsAdapter.addFriends(l);
-
-                if (l.size() == 0) {
-                    isLastPage = true;
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
                 }
-                else pageNumber++;
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
             }
-            swipeRefreshLayout.setRefreshing(false);
-            isLoading = false;
-            progressBar.setVisibility(View.INVISIBLE);
-            super.onPostExecute(s);
-        }
 
+            @Override
+            public void onResponseReceived(List<Friend> friends) {
+                l = friends;
+                if (l != null) {
+                    if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
+                    else friendsAdapter.addFriends(l);
+
+                    if (l.size() == 0) {
+                        isLastPage = true;
+                    }
+                    else pageNumber++;
+                }
+                swipeRefreshLayout.setRefreshing(false);
+                isLoading = false;
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        }.execute();
     }
 
-    private class createChat extends AsyncTask<String,String,String> {
-
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                chat = chatDBAdapter.createChat(friendUserName, userList, 0, null, "", 0, dateWithoutTime);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
-                e.printStackTrace();
+    private void callCreateChat() {
+        new CreateChat(friendUserName,userList,0,null,"",0,dateWithoutTime) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-
-            if (chat != null) {
-                Intent i = new Intent();
-                CurrentSession.getInstance().setChat(chat);
-                BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
-                getActivity().finish();
+            @Override
+            public void onResponseReceived(Chat chat) {
+                if (chat != null) {
+                    Intent i = new Intent();
+                    CurrentSession.getInstance().setChat(chat);
+                    BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
+                    getActivity().finish();
+                }
             }
-            super.onPostExecute(s);
-        }
+        }.execute();
     }
 
-    private class getChat extends AsyncTask<String,String,String> {
+    private void updateData(Chat chat) {
+            Intent i = new Intent();
+            CurrentSession.getInstance().setChat(chat);
+            BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
+            getActivity().finish();
+    }
 
-        User user;
+    private void callGetPrivateChat(int chatId) {
+        friendUserName = friend.getUsername();
+        new GetPrivateChat() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Calendar rightNow = Calendar.getInstance();
 
-        @Override
-        protected void onPreExecute() {
-            friendUserName = friend.getUsername();
-            user = CurrentSession.getInstance().getCurrentUser();
-            super.onPreExecute();
-        }
+                    dateWithoutTime = rightNow.getTime();
 
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                chat = chatDBAdapter.getPrivateChat(friend.getId());
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-                chat = null;
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-                chat = null;
+                    userList = new ArrayList<>();
+                    userList.add(CurrentSession.getInstance().getCurrentUser().getId());
+                    userList.add(friend.getId());
+
+                    callCreateChat();
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            if (chat == null) {
-                Calendar rightNow = Calendar.getInstance();
-
-                dateWithoutTime = rightNow.getTime();
-
-                userList = new ArrayList<>();
-                userList.add(user.getId());
-                userList.add(friend.getId());
-
-                new createChat().execute();
+            @Override
+            public void onResponseReceived(Chat responseChat) {
+                chat = responseChat;
+                updateData(chat);
             }
-            else {
-                Intent i = new Intent();
-                CurrentSession.getInstance().setChat(chat);
-                BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
-                getActivity().finish();
-            }
-            super.onPostExecute(s);
-        }
+        }.execute(chatId);
     }
 
     public int getTitle() {
         return R.string.friends_label;
     }
+
 
 }

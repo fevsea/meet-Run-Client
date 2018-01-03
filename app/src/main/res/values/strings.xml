@@ -179,6 +179,7 @@
     <string name="ended_in_days_hours_minutes">Ended %1$d days %2$d hours %3$d minutes ago</string>
     <string name="ended_in_hours_minutes">Ended %1$d hours %2$d minutes ago</string>
     <string name="params_error">There are missing parameters or with incorrect format</string>
+    <string name="forbidden_error">This action is forbidden</string>
 
     <string name="calories">Total consumed calories</string>
 

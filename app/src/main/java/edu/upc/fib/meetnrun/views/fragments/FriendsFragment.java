@@ -6,13 +6,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.List;
+
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectFriend;
+import edu.upc.fib.meetnrun.asynctasks.GetFriends;
+import edu.upc.fib.meetnrun.asynctasks.GetPendingFriends;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
@@ -40,6 +48,7 @@ public class FriendsFragment extends FriendListFragmentTemplate {
 
     @Override
     protected void floatingbutton() {
+        fab.setVisibility(View.VISIBLE);
         fab.setImageResource(R.drawable.add_user_512);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,12 +70,12 @@ public class FriendsFragment extends FriendListFragmentTemplate {
 
     @Override
     protected void getPaginationMethod() {
-        new getFriends().execute();
+        callGetFriends();
     }
 
     protected void refreshList() {
         getPaginationMethod();
-        new getPendingFriends().execute();
+        callGetPendingFriends();
     }
 
     private void addNewFriend() {
@@ -101,7 +110,7 @@ public class FriendsFragment extends FriendListFragmentTemplate {
                 if (!pendingIsLoading && !pendingIsLastPage &&
                         (visibleItemCount + firstVisibleItemPosition) >= totalItemCount &&
                          firstVisibleItemPosition >= 0) {
-                    new getPendingFriends().execute();
+                    callGetPendingFriends();
                 }
 
             }
@@ -127,6 +136,11 @@ public class FriendsFragment extends FriendListFragmentTemplate {
         };
     }
 
+    private void setLoading() {
+        if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+    }
+
     protected TwoButtonsRecyclerViewOnClickListener getTwoButtonsRecyclerViewListener() {
         return new TwoButtonsRecyclerViewOnClickListener() {
 
@@ -135,7 +149,7 @@ public class FriendsFragment extends FriendListFragmentTemplate {
                 Friend friend = pendingFriendsAdapter.getFriendAtPosition(position);
                 friend.setAccepted(true);
                 Log.d("PreAcceptFriend", friend.getUser().getUsername());
-                new AcceptRejectFriend().execute(friend);
+                callAcceptOrRejectFriend(friend);
             }
 
             @Override
@@ -143,7 +157,7 @@ public class FriendsFragment extends FriendListFragmentTemplate {
                 Friend friend = pendingFriendsAdapter.getFriendAtPosition(position);
                 friend.setAccepted(false);
                 Log.d("PreRejectFriend", friend.getUser().getUsername());
-                new AcceptRejectFriend().execute(friend);
+                callAcceptOrRejectFriend(friend);
             }
 
             @Override
@@ -162,128 +176,117 @@ public class FriendsFragment extends FriendListFragmentTemplate {
         };
     }
 
-    private class getFriends extends AsyncTask<String,String,String> {
+    private void updateData() {
+        if (l != null) {
+            if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
+            else friendsAdapter.addFriends(l);
 
-        @Override
-        protected void onPreExecute() {
-            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
-            isLoading = true;
+            if (l.size() == 0) {
+                isLastPage = true;
+            }
+            else pageNumber++;
         }
+        swipeRefreshLayout.setRefreshing(false);
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
+    }
 
-        @Override
-        protected String doInBackground(String... strings) {
+    private void callGetFriends() {
+        setLoading();
+        new GetFriends(pageNumber) {
 
-            try {
-                l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
             }
 
-            return null;
-        }
+            @Override
+            public void onResponseReceived(List<Friend> friends) {
+                l = friends;
+                updateData();
+            }
+        }.execute();
+    }
 
-        @Override
-        protected void onPostExecute(String s) {
-            if (l != null) {
-                if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
-                else friendsAdapter.addFriends(l);
-
-                if (l.size() == 0) {
-                    isLastPage = true;
+    private void updatePendingFriendsData() {
+        if (l != null) {
+            pendingFriends = new ArrayList<>();
+            for (int i = 0; i < l.size(); ++i) {
+                if (!l.get(i).getUser().getId().equals(currentUser.getId())) {
+                    pendingFriends.add(l.get(i));
                 }
-                else pageNumber++;
+            }
+            if (pendingPageNumber == 0) {
+                pendingFriendsAdapter.updateFriendsList(pendingFriends);
+            }
+            else {
+                pendingFriendsAdapter.addFriends(pendingFriends);
+            }
+            if (pendingFriends.size() == 0) {
+                pendingIsLastPage = true;
+            }
+            else {
+                pageNumber++;
             }
             swipeRefreshLayout.setRefreshing(false);
-            isLoading = false;
+            pendingIsLoading = false;
             progressBar.setVisibility(View.INVISIBLE);
-            super.onPostExecute(s);
-        }
-
-    }
-
-    private class getPendingFriends extends AsyncTask<String, String, List<Friend>> {
-
-        @Override
-        protected void onPreExecute() {
-            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
-            pendingIsLoading = true;
-        }
-
-        @Override
-        protected List<Friend> doInBackground(String... params) {
-            try {
-                return friendsDBAdapter.listUserPendingFriends(currentUser.getId(), pendingPageNumber);
-            }
-            catch (AuthorizationException | NotFoundException e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<Friend> l) {
-            if (l != null) {
-                pendingFriends = new ArrayList<>();
-                for (int i = 0; i < l.size(); ++i) {
-                    if (!l.get(i).getUser().getId().equals(currentUser.getId())) {
-                        pendingFriends.add(l.get(i));
-                    }
-                }
-                if (pendingPageNumber == 0) {
-                    pendingFriendsAdapter.updateFriendsList(pendingFriends);
-                }
-                else {
-                    pendingFriendsAdapter.addFriends(pendingFriends);
-                }
-                if (pendingFriends.size() == 0) {
-                    pendingIsLastPage = true;
-                }
-                else {
-                    pageNumber++;
-                }
-                swipeRefreshLayout.setRefreshing(false);
-                pendingIsLoading = false;
-                progressBar.setVisibility(View.INVISIBLE);
-                super.onPostExecute(l);
-            }
         }
     }
 
-    private class AcceptRejectFriend extends AsyncTask<Friend, String, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Friend... params) {
-            Friend friend = params[0];
-            try {
-                if (friend.isAccepted()) {
-                    Log.d("AcceptFriend", friend.getUser().getUsername());
-                    return friendsDBAdapter.addFriend(friend.getUser().getId());
+    private void callGetPendingFriends() {
+        if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+        pendingIsLoading = true;
+        new GetPendingFriends(pendingPageNumber) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
                 }
-                else {
-                    Log.d("RejectFriend", friend.getUser().getUsername());
-                    return friendsDBAdapter.removeFriend(friend.getUser().getId());
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
                 }
             }
-            catch (AuthorizationException | NotFoundException e) {
-                e.printStackTrace();
-                return false;
+
+            @Override
+            public void onResponseReceived(List<Friend> friends) {
+                l = friends;
+                updatePendingFriendsData();
             }
-        }
+        }.execute();
+    }
 
-        @Override
-        protected void onPostExecute(Boolean s) {
-            initializePagination();
-            refreshList();
-        }
+    private void callAcceptOrRejectFriend(Friend friend) {
+        new AcceptOrRejectFriend() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
 
-
+            @Override
+            public void onResponseReceived(boolean b) {
+                initializePagination();
+                refreshList();
+            }
+        }.execute(friend);
     }
 
     @Override
     protected void initializePagination() {
-
         super.initializePagination();
         pendingPageNumber = 0;
         pendingIsLastPage = false;

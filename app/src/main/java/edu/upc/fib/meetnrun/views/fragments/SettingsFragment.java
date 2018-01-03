@@ -26,8 +26,11 @@ import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.DeleteAccount;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.LoginActivity;
 
@@ -94,7 +97,7 @@ public class SettingsFragment extends BaseFragment {
                 showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                new deleteAccount().execute();
+                                callDeleteAccount();
                                 Intent intent = new Intent(getContext(),LoginActivity.class);
                                 getActivity().finishAffinity();
                                 startActivity(intent);
@@ -153,32 +156,27 @@ public class SettingsFragment extends BaseFragment {
     }
 
 
-    private class deleteAccount extends AsyncTask<String,String,String> {
-
-        boolean ok = false;
-
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                controller.deleteUserByID(cs.getCurrentUser().getId());
-                ok = true;
-            } catch (NotFoundException | AuthorizationException e) {
-                e.printStackTrace();
+    private void callDeleteAccount() {
+        new DeleteAccount() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            if (ok) {
+            @Override
+            public void onResponseReceived() {
                 Toast.makeText(getContext(), "Account has been removed successfully", Toast.LENGTH_SHORT).show();
                 deleteToken();
             }
-            else {
-                Toast.makeText(getContext(), "Delete account ERROR", Toast.LENGTH_SHORT).show();
-            }
-            super.onPostExecute(s);
-        }
+        }.execute();
     }
 
     public int getTitle() {
