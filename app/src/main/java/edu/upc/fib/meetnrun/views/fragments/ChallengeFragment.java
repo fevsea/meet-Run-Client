@@ -21,7 +21,11 @@ import java.util.concurrent.TimeUnit;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
+import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectChallenge;
+import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectFriend;
+import edu.upc.fib.meetnrun.asynctasks.GetChallenge;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -96,8 +100,8 @@ public class ChallengeFragment extends BaseFragment implements View.OnClickListe
         accept = view.findViewById(R.id.accept);
         reject = view.findViewById(R.id.reject);
 
-        GetChallenge getChallenge = new GetChallenge();
-        getChallenge.execute(challengeId);
+        callGetChallenge(challengeId);
+
 
         FloatingActionButton fab = view.findViewById(R.id.activity_fab);
 
@@ -193,94 +197,56 @@ public class ChallengeFragment extends BaseFragment implements View.OnClickListe
                 accept = false;
                 break;
         }
-        AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge();
-        acceptOrRejectChallenge.execute(accept);
+        callAcceptOrRejectChallenge(accept);
     }
 
-    private class GetChallenge extends AsyncTask<Integer, String, Boolean> {
 
-        private ProgressDialog progressDialog;
-        private Exception ex;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setTitle(getResources().getString(R.string.loading));
-            progressDialog.setMessage(getResources().getString(R.string.loading_challenge));
-            progressDialog.setIndeterminate(true);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected Boolean doInBackground(Integer... params) {
-            try {
-                challenge = CurrentSession.getInstance().getChallengeAdapter().getChallenge(params[0]);
+    private void callGetChallenge(final int challengeId) {
+        new GetChallenge() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
             }
-            catch(AuthorizationException | NotFoundException e) {
-                ex = e;
-                return false;
-            }
-            return true;
-        }
 
-        @Override
-        protected void onPostExecute(Boolean result) {
-            progressDialog.dismiss();
-            if (result && ex == null) {
+            @Override
+            public void onResponseReceived(Challenge challengeResponse) {
+                challenge = challengeResponse;
                 updateViews();
             }
-            else if (ex instanceof AuthorizationException) {
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else if (ex instanceof NotFoundException) {
-                Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-            }
-        }
-
+        }.execute(challengeId);
     }
 
-    private class AcceptOrRejectChallenge extends AsyncTask<Boolean, String, Boolean> {
+    private void dismissProgressBarsOnError() {
+        userProgressBar.setVisibility(View.INVISIBLE);
+        opponentProgressBar.setVisibility(View.INVISIBLE);
+    }
 
-        Exception exception;
-
-        @Override
-        protected Boolean doInBackground(Boolean... params) {
-            IChallengeAdapter challengeAdapter = CurrentSession.getInstance().getChallengeAdapter();
-            try {
-                if (params[0]) {
-                    challengeAdapter.acceptChallenge(challenge.getId());
+    private void callAcceptOrRejectChallenge(Boolean accept) {
+        new AcceptOrRejectChallenge(challenge.getId()) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException ) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
                 }
-                else {
-                    challengeAdapter.deleteRejectChallenge(challenge.getId());
+                else if ( e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
                 }
             }
-            catch (NotFoundException | AuthorizationException e) {
-                exception = e;
-            }
-            return true;
-        }
 
-        protected void onPostExecute(Boolean s) {
-            super.onPostExecute(s);
-            if (s && exception == null) {
+            @Override
+            public void onResponseReceived() {
                 getActivity().finish();
             }
-            else if (exception instanceof AuthorizationException){
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else if (exception instanceof NotFoundException) {
-                Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-            }
-        }
-
+        }.execute(accept);
     }
 
     public int getTitle() {

@@ -32,7 +32,7 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
  * Created by eric on 16/11/17.
  */
 
-public abstract class FriendListFragmentTemplate extends BaseFragment{
+public abstract class  FriendListFragmentTemplate extends BaseFragment{
 
     protected View view;
     protected FriendsAdapter friendsAdapter;
@@ -177,6 +177,10 @@ public abstract class FriendListFragmentTemplate extends BaseFragment{
         pageNumber = 0;
         isLoading = false;
         isLastPage = false;
+    }
+
+    protected void dismissProgressBarsOnError() {
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     public int getTitle() {
