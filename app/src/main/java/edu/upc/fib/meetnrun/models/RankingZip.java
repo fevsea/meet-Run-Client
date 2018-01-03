@@ -6,7 +6,7 @@ import java.util.List;
  * Created by Javier on 03/01/2018.
  */
 
-public class ZipUser {
+public class RankingZip {
     class zipPosition{
         int position;
         int zip;
