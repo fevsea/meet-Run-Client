@@ -15,6 +15,7 @@ public class RankingUser {
         float distance;
     }*/
     
+     /* NO SE SI USAR STRINGS ES UNA BUENA IDEA, NO SERÁ MUY ACTUALIZABLE. SI LO VES MEJOR, HAZ UNA CLASE CON LO DE ARRIBA Y HAZ QUE LAS LISTAS DE ABAJO SEAN DE USERPOSITION */
     /* Cada elemento de las listas seguirá el siguiente formato :
         xxxxxUyyyyyZzzzzzDwwwwwwww
         Donde x es la posición, y userId, z el zip o código postal, w la distancia */
