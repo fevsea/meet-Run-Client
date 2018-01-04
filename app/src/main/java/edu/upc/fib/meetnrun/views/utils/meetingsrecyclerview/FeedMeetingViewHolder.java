@@ -53,6 +53,7 @@ public class FeedMeetingViewHolder extends RecyclerView.ViewHolder implements Vi
         MapView mapView = view.findViewById(R.id.meeting_map);
 
         joinButton.setOnTouchListener(this);
+        joinLabel.setText(R.string.join_meeting);
 
         if (meeting.getFriend() != null) {
             char userNameFirstLetter = meeting.getFriend().getUsername().charAt(0);

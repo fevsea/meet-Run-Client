@@ -190,5 +190,6 @@
     <string name="feed_meeting_past">ha completat aquesta trobada</string>
     <string name="feed_meeting_joined">s\'ha apuntat a aquesta trobada</string>
     <string name="feed_meeting_created">ha creat aquesta trobada</string>
+    <string name="join_meeting">Unir-se a la trobada</string>
 
 </resources>

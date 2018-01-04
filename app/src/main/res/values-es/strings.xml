@@ -200,4 +200,5 @@
     <string name="feed_meeting_past">ha completado esta quedada</string>
     <string name="feed_meeting_joined">se ha apuntado a esta quedada</string>
     <string name="feed_meeting_created">ha creado esta quedada</string>
+    <string name="join_meeting">Unirse a la quedada</string>
 </resources>
