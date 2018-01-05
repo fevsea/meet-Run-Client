@@ -21,7 +21,7 @@ public class RankingUser {
         Donde x es la posición, y userId, z el zip o código postal, w la distancia */
     
     /* Tots els codis postals que tenen al menys un usuari */
-    private List<String> allZips;
+    private List<Integer> allZips;
     /* RANKINGS */
     /* Ranking global, sense importar el codi postal ni la ciutat */
     private List<String> allPositions;
