@@ -1,6 +1,5 @@
 package edu.upc.fib.meetnrun.models;
 
-import java.lang.reflect.Array;
 import java.util.List;
 
 /**
@@ -8,63 +7,41 @@ import java.util.List;
  */
 
 public class RankingUser {
-    /*class userPosition{
-        int position;
-        int userID;
-        int zip;
-        float distance;
-    }*/
-    
-     /* NO SE SI USAR STRINGS ES UNA BUENA IDEA, NO SERÁ MUY ACTUALIZABLE. SI LO VES MEJOR, HAZ UNA CLASE CON LO DE ARRIBA Y HAZ QUE LAS LISTAS DE ABAJO SEAN DE USERPOSITION */
-    /* Cada elemento de las listas seguirá el siguiente formato :
-        xxxxxUyyyyyZzzzzzDwwwwwwww
-        Donde x es la posición, y userId, z el zip o código postal, w la distancia */
-    
+
     /* Tots els codis postals que tenen al menys un usuari */
     private List<Integer> allZips;
     /* RANKINGS */
     /* Ranking global, sense importar el codi postal ni la ciutat */
-    private List<String> allPositions;
-    /* Ranking d'un codi postal, el donat a la funció */
-    private List<String> zipPositions;
-    /* Ranking d'una ciutat, la que inclou el codi postal donat, si es pot fer (DEJALA LA ULTIMA) */
-    private List<String> cityPositions;
-    
+    private List<PositionUser> Ranking;
+
     /* POSICIÓ DE CURRENT USER */
-    /* La posició al ranking global de CurrentUser */
-    private int currentUserGlobalPosition;
-    /* La posició al ranking del codi postal de CurrentUser */
-    private int currentUserZipPosition;
-    /* La posició al ranking de la ciutat de CurrentUser (DEJALA LA ULTIMA, no se si se hara)*/
-    private int currentUserCityPosition;
+    /* La posició al ranking de CurrentUser */
+    private int currentUserPosition;
 
-
-    public int getCurrentUserGlobalPosition(){
-        return currentUserGlobalPosition;
+    public RankingUser() {
     }
 
+/* ZIP: ranking del codigo postal, city: ranking de ciudad, global: ranking global */
     public int getCurrentUserZipPosition(){
-        return currentUserZipPosition;
+        return currentUserPosition;
     }
-    
     public int getCurrentUserCityPosition(){
-        return currentUserCityPosition;
+        return currentUserPosition;
     }
-    
+    public int getCurrentUserGlobalPosition(){
+        return currentUserPosition;
+    }
+
+
     public List<Integer> getAllZips(){
         return allZips;
     }
 
-    public List<String> getAllPositions(){
-        return allPositions;
+    public List<PositionUser> getRanking(){
+        return Ranking;
     }
-
-    public List<String> getZipPositions(int zip){
-        return zipPositions;
+    public List<PositionUser> getRankingByZip(int zip){
+        return Ranking;
     }
-
-    public List<String> getCityPositions(int cityZip){
-        //cityZip es un dels zips de la ciutat o poble
-        return cityPositions;
-    }
+    public List<PositionUser> getRankingByCity(int zip){ return Ranking; }
 }
