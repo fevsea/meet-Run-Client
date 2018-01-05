@@ -195,4 +195,6 @@
     <string name="error_deleting_friend">Error al eliminar el amigo</string>
     <string name="error_adding_friend">Error al añadir el amigo</string>
     <string name="meeting">Quedada</string>
+    <string name="delete_meeting">Eliminar quedada</string>
+    <string name="delete_meeting_message">¿Quieres borrar esta quedada?</string>
 </resources>
