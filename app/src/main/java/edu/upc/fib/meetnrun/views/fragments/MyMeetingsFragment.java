@@ -101,6 +101,7 @@ public class MyMeetingsFragment extends BaseFragment {
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
                 meetingInfoIntent.putExtra("chat",meeting.getChatID());
                 meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
+                meetingInfoIntent.putExtra("ownerId", meeting.getOwner().getId());
                 meetingInfoIntent.putExtra("id",meeting.getId());
                 meetingInfoIntent.putExtra("description",meeting.getDescription());
                 String datetime = meeting.getDate();

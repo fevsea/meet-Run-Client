@@ -12,8 +12,24 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
+import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Friend;
+import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.views.BaseActivity;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 /**
  * Created by Javier on 18/12/2017.
@@ -30,8 +46,11 @@ public class RankingsUserFragment extends Fragment {
     Spinner zipSpinner;
     View view;
     Context context;
-    /*Button users;
-    Button zips;*/
+    Button users;
+    Button zips;
+    IUserAdapter userAdapter;
+    User user;
+
 
     public static RankingsUserFragment newInstance(int page, String title) {
         RankingsUserFragment fragmentFirst = new RankingsUserFragment();
@@ -47,8 +66,8 @@ public class RankingsUserFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.d("User rankings","!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         super.onCreate(savedInstanceState);
-        title = getArguments().getString("Info");
-        page = getArguments().getInt("0", 0);
+/*        title = getArguments().getString("Info");
+        page = getArguments().getInt("0", 0); */
 
     }
 
@@ -75,16 +94,17 @@ public class RankingsUserFragment extends Fragment {
             }
 
         });
-        /*zips=view.findViewById(R.id.button3);
+        zips=view.findViewById(R.id.button3);
         zips.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), RankingsUserFragment.class);
-                startActivity(intent);
+                Intent intent=new Intent();
+                Fragment frag=new RankingsZipFragment();
+                BaseActivity.startWithFragment(getActivity(), frag, intent);
             }
         });
-        zips=view.findViewById(R.id.button2);
-        zips.setClickable(false); */
+        users=view.findViewById(R.id.button2);
+        users.setClickable(false);
         return view;
     }
 
@@ -98,5 +118,56 @@ public class RankingsUserFragment extends Fragment {
         isLoading = false;
         isLastPage = false;
     }
+    private void callGetAllFriends() {
+        new GetAllFriends() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
 
+            @Override
+            public void onResponseReceived(List<Friend> allfriends) {
+                ArrayList<User> friends = new ArrayList<User>();
+                Fragment frag=new UserProfileFragment();;
+                Intent intent=new Intent();
+                for (Friend f : allfriends) {
+                    User friend = f.getFriend();
+                    if (friend.equals(user)){
+                        frag = new FriendProfileFragment();
+                        BaseActivity.startWithFragment(getActivity(), frag, intent);
+
+                    }
+                    BaseActivity.startWithFragment(getActivity(), frag, intent);
+                }
+            }
+        }.execute();
+    }
+
+
+
+    protected RecyclerViewOnClickListener getRecyclerViewListener() {
+        return new RecyclerViewOnClickListener() {
+            @Override
+            public void onButtonClicked(int position) {}
+
+            @Override
+            public void onItemClicked(int position) {
+
+                user = userAdapter.getUser(position);
+                if (user.equals(CurrentSession.getInstance().getCurrentUser())){
+                    Intent i = new Intent(getActivity(),ProfileViewPagerFragment.class);
+                    startActivity(i);
+                }
+                else{
+                    callGetAllFriends();
+                }
+
+            }
+        };
+    }
 }
