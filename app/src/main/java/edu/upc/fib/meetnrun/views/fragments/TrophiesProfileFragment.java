@@ -30,6 +30,7 @@ public class TrophiesProfileFragment extends Fragment {
     private String title;
     private int page;
     private View view;
+    private TrophiesAdapter adapter;
     private LinearLayoutManager layoutManager;
 
     // newInstance constructor for creating fragment with arguments
@@ -66,20 +67,21 @@ public class TrophiesProfileFragment extends Fragment {
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(),4);
         recyclerView.setLayoutManager(layoutManager);
-        final ArrayList<Trophies> createLists = prepareData();
-        TrophiesAdapter adapter = new TrophiesAdapter(createLists, new RecyclerViewOnClickListener() {
+        ArrayList<Trophies> createLists = prepareData();
+        adapter = new TrophiesAdapter(createLists, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
             @Override
             public void onItemClicked(int position) {
                 Log.e("ONCLICK", String.valueOf(position)); //TODO ni entra ???
+                Trophies trophie = adapter.getTrophieAtPosition(position);
                 Toast.makeText(view.getContext(), "Showing selected trophie info", Toast.LENGTH_SHORT).show();
                 Intent trophieInfoIntent = new Intent();
-                trophieInfoIntent.putExtra("image",createLists.get(position).getImage_ID());
-                trophieInfoIntent.putExtra("title",createLists.get(position).getImage_title());
-                trophieInfoIntent.putExtra("description",createLists.get(position).getImage_description());
-                trophieInfoIntent.putExtra("obtained",createLists.get(position).getImage_isObtained());
+                trophieInfoIntent.putExtra("image",trophie.getImage_ID());
+                trophieInfoIntent.putExtra("title",trophie.getImage_title());
+                trophieInfoIntent.putExtra("description",trophie.getImage_description());
+                trophieInfoIntent.putExtra("obtained",trophie.getImage_isObtained());
                 BaseActivity.startWithFragment(getActivity(), new TrophieInfoFragment(), trophieInfoIntent);
             }
         });
@@ -92,7 +94,6 @@ public class TrophiesProfileFragment extends Fragment {
         ArrayList<Trophies> theimage = new ArrayList<>();
         for(int i = 0; i< image_ids.length; i++){
             Trophies trophies = new Trophies();
-            //trophies.setTrophie_position(i);
             trophies.setImage_ID(image_ids[i]);
             trophies.setImage_title(image_title[i]);
             trophies.setImage_isObtained(image_obtained[i]);

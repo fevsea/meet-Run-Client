@@ -15,7 +15,7 @@ import edu.upc.fib.meetnrun.models.Trophies;
 import edu.upc.fib.meetnrun.R;
 
 
-public class TrophiesAdapter extends RecyclerView.Adapter<TrophiesAdapter.ViewHolder> {
+public class TrophiesAdapter extends RecyclerView.Adapter<TrophiesViewHolder> {
     private ArrayList<Trophies> galleryList;
     private final RecyclerViewOnClickListener listener;
     private Context context;
@@ -27,13 +27,13 @@ public class TrophiesAdapter extends RecyclerView.Adapter<TrophiesAdapter.ViewHo
     }
 
     @Override
-    public TrophiesAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public TrophiesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.trophie_item, viewGroup, false);
-        return new ViewHolder(view);
+        return new TrophiesViewHolder(view, listener);
     }
 
     @Override
-    public void onBindViewHolder(TrophiesAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(TrophiesViewHolder viewHolder, int i) {
         viewHolder.img.setScaleType(ImageView.ScaleType.CENTER_CROP);
         viewHolder.img.setImageResource((galleryList.get(i).getImage_ID()));
     }
@@ -43,11 +43,7 @@ public class TrophiesAdapter extends RecyclerView.Adapter<TrophiesAdapter.ViewHo
         return galleryList.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        private ImageView img;
-        public ViewHolder(View view) {
-            super(view);
-            img = (ImageView) view.findViewById(R.id.img);
-        }
+    public Trophies getTrophieAtPosition(int position) {
+        return galleryList.get(position);
     }
 }
