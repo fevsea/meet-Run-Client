@@ -2,12 +2,13 @@ package edu.upc.fib.meetnrun.remote;
 
 import java.util.List;
 
-import edu.upc.fib.meetnrun.adapters.models.ChatServer;
 import edu.upc.fib.meetnrun.adapters.models.ChallengeServer;
+import edu.upc.fib.meetnrun.adapters.models.ChatServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.FriendServer;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
+import edu.upc.fib.meetnrun.adapters.models.PositionServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
@@ -171,5 +172,12 @@ public interface SOServices {
 
     @POST("/challenges/{id}")
     Call<Void> acceptChallenge(@Path("id") int id);
+
+    //RANKINGS
+    @GET("/rankings/zone")
+    Call<List<PositionServer>> getAvgKMPostalCode();
+
+    @GET("/rankings/zip")
+    Call<List<Forms.Zip>> getAllPostCodes();
 
 }

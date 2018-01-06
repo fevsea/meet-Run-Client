@@ -4,7 +4,7 @@ package edu.upc.fib.meetnrun.models;
  * Created by Javier on 05/01/2018.
  */
 
-abstract class Position {
+public class Position {
     private int position;
     private int zip;
     private float distance;
@@ -32,6 +32,15 @@ abstract class Position {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "position=" + position +
+                ", zip=" + zip +
+                ", distance=" + distance +
+                '}';
     }
 }
 
