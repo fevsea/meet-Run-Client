@@ -65,7 +65,7 @@ public class TrophiesProfileFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.trophiegallery);
         recyclerView.setHasFixedSize(true);
 
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(),4);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
         recyclerView.setLayoutManager(layoutManager);
         ArrayList<Trophies> createLists = prepareData();
         adapter = new TrophiesAdapter(createLists, new RecyclerViewOnClickListener() {
@@ -85,7 +85,6 @@ public class TrophiesProfileFragment extends Fragment {
                 BaseActivity.startWithFragment(getActivity(), new TrophieInfoFragment(), trophieInfoIntent);
             }
         });
-
         recyclerView.setAdapter(adapter);
     }
 
@@ -96,7 +95,7 @@ public class TrophiesProfileFragment extends Fragment {
             Trophies trophies = new Trophies();
             trophies.setImage_ID(image_ids[i]);
             trophies.setImage_title(image_title[i]);
-            trophies.setImage_isObtained(image_obtained[i]);
+            //trophies.setImage_isObtained(image_obtained[i]);
             theimage.add(trophies);
         }
         return theimage;
@@ -141,7 +140,7 @@ public class TrophiesProfileFragment extends Fragment {
             "Total of 10h ran",
     };
 
-    private final String image_obtained[] = {
+    /*private final String image_obtained[] = {
             "True",
             "False",
             "True",
@@ -159,7 +158,7 @@ public class TrophiesProfileFragment extends Fragment {
             "True",
             "False",
 
-    };
+    }; */
 
     /*private final Integer image_ids[] = {
             R.drawable.challenges1,

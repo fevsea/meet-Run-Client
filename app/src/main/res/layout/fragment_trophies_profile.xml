@@ -6,12 +6,13 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/trophiegallery"
+        android:clickable="true"
         android:layout_marginTop="20px"
         android:layout_marginLeft="60px"
         android:layout_marginBottom="40px"
         android:layout_marginRight="40px"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"/>
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
 
 </ScrollView>

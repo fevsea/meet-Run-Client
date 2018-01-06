@@ -19,6 +19,6 @@ public class TrophiesViewHolder extends RecyclerView.ViewHolder{
         super(itemView);
         view = itemView;
         this.listener = new WeakReference<>(listener);
-        img = (ImageView) view.findViewById(R.id.img);
+        img = view.findViewById(R.id.img);
     }
 }

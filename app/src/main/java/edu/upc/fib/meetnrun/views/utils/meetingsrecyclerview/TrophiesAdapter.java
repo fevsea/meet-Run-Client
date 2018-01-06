@@ -28,7 +28,8 @@ public class TrophiesAdapter extends RecyclerView.Adapter<TrophiesViewHolder> {
 
     @Override
     public TrophiesViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.trophie_item, viewGroup, false);
+        LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
+        View view = layoutInflater.inflate(R.layout.trophie_item, viewGroup, false);
         return new TrophiesViewHolder(view, listener);
     }
 
