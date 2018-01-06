@@ -1,6 +1,8 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +12,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +42,7 @@ import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.DeleteMeeting;
 import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetChat;
 import edu.upc.fib.meetnrun.asynctasks.GetMeeting;
@@ -80,6 +86,7 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
     private boolean isChatAvailable;
     private List<Meeting> myMeetings;
     private ImageButton chatButton;
+    private int ownerId;
 
 
     @Override
@@ -87,6 +94,7 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_info,container,false);
         this.view = view;
+        setHasOptionsMenu(true);
 
         friends = new ArrayList<>();
         callGetAllFriends();
@@ -120,25 +128,11 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
         level.setText(levelValue);
         date.setText(meetingInfo.getString("date"));
         time.setText(meetingInfo.getString("time"));
+        getActivity().setTitle(meetingInfo.getString("title"));
 
+        ownerId = meetingInfo.getInt("ownerId");
         fab = getActivity().findViewById(R.id.activity_fab);
-        if (CurrentSession.getInstance().getCurrentUser().getId() == meetingInfo.getInt("ownerId")) {
-
-            fab.setImageResource(android.R.drawable.ic_menu_edit);
-            fab.setBackgroundColor(0);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent editMeetingIntent = new Intent();
-                    editMeetingIntent.putExtra("id",meetingId);
-                    BaseActivity.startWithFragment(getActivity(), new EditMeetingFragment(), editMeetingIntent);
-                    getActivity().finish();
-                }
-            });
-        }
-        else {
-            fab.setVisibility(View.INVISIBLE);
-        }
+        fab.setVisibility(View.GONE);
 
         progressBar = view.findViewById(R.id.pb_loading);
         initializePagination();
@@ -433,6 +427,70 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
 
     public int getTitle() {
         return R.string.meeting;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.d("MeetingInfoFragment", String.valueOf(CurrentSession.getInstance().getCurrentUser().getId()));
+        Log.d("MeetingInfoFragment", String.valueOf(ownerId));
+        if (CurrentSession.getInstance().getCurrentUser().getId().equals(ownerId))
+            inflater.inflate(R.menu.meetinginfo_menu, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.edit:
+                Intent editMeetingIntent = new Intent();
+                editMeetingIntent.putExtra("id",meetingId);
+                BaseActivity.startWithFragment(getActivity(), new EditMeetingFragment(), editMeetingIntent);
+                getActivity().finish();
+                break;
+
+            case R.id.delete:
+                deleteMeeting();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteMeeting() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(R.string.delete_meeting);
+        builder.setMessage(R.string.delete_meeting_message);
+        builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(final DialogInterface dialog, int which) {
+                dialog.dismiss();
+                DeleteMeeting deleteMeeting = new DeleteMeeting() {
+                    @Override
+                    public void onResponseReceived() {
+                        getActivity().finish();
+                    }
+
+                    @Override
+                    public void onExceptionReceived(GenericException e) {
+                        if (e instanceof AuthorizationException) {
+                            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                        }
+                        else if (e instanceof NotFoundException) {
+                            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                };
+                deleteMeeting.execute(meetingId);
+            }
+        });
+        builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
     }
 
 }
