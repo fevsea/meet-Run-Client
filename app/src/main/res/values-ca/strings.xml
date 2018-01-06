@@ -201,5 +201,7 @@
     <string name="share_text">Ei! He fet aquesta ruta amb Meet&amp;Run!</string>
     <string name="share_via">Compartir via</string>
     <string name="rankings_label">Rankings</string>
+    <string name="delete_meeting">Eliminar trobada</string>
+    <string name="delete_meeting_message">Vols esborrar aquesta trobada?</string>
 
 </resources>

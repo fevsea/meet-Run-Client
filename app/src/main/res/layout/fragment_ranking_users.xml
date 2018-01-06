@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <!--
+
         <LinearLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent">
@@ -22,7 +22,7 @@
                 android:text="@string/rankings_zip" />
 
         </LinearLayout>
-    -->
+
         <TextView
             android:id="@+id/selectFilterTV"
             android:layout_width="match_parent"
