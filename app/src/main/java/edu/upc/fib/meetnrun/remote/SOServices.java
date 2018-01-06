@@ -11,6 +11,7 @@ import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.PositionServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
+import edu.upc.fib.meetnrun.adapters.models.PositionUserServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -76,7 +77,6 @@ public interface SOServices {
     Call<StatisticsServer> getUserStatisticsByID(@Path("id") int id);
 
 
-
     //LOGIN
 
     @POST("/users/login")
@@ -101,10 +101,10 @@ public interface SOServices {
     Call<PageServer<UserServer>> getAllParticipantsFromMeeting(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
 
     @POST("/meetings/{meetingID}/participants/{userID}")
-    Call<Void> joinMeeting(@Path("meetingID") int meetingID,@Path("userID") int userID);
+    Call<Void> joinMeeting(@Path("meetingID") int meetingID, @Path("userID") int userID);
 
     @DELETE("/meetings/{meetingID}/participants/{userID}")
-    Call<Void> leaveMeeting(@Path("meetingID") int meetingID,@Path("userID") int userID);
+    Call<Void> leaveMeeting(@Path("meetingID") int meetingID, @Path("userID") int userID);
 
 
     //FRIENDS
@@ -179,5 +179,11 @@ public interface SOServices {
 
     @GET("/rankings/zip")
     Call<List<Forms.Zip>> getAllPostCodes();
+
+    @GET("/rankings/users")
+    Call<PageServer<PositionUserServer>> getUsersInUsersRanking(@Query("limit") int limit, @Query("offset") int offset);
+
+    @GET("/rankings/zone/{zip}")
+    Call<PageServer<PositionUserServer>> getUsersInUsersRankingByPostCode(@Path("zip") String zip, @Query("limit") int limit, @Query("offset") int offset);
 
 }

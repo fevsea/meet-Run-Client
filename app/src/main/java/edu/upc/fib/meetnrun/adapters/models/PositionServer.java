@@ -26,9 +26,7 @@ public class PositionServer implements IServerModel{
 
     @Override
     public Position toGenericModel() {
-        Position p = new Position();
-        p.setZip(this.zip);
-        p.setDistance(this.distance);
+        Position p = new Position(this.zip,this.distance);
         return p;
     }
 }

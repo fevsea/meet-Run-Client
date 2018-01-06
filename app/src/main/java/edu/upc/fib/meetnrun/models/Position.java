@@ -9,6 +9,10 @@ public class Position {
     private int zip;
     private float distance;
 
+    public Position(int zip, float distance) {
+        this.zip = zip;
+        this.distance = distance;
+    }
 
     public int getZip() {
         return zip;
