@@ -42,6 +42,7 @@ import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetAllParticipants;
+import edu.upc.fib.meetnrun.asynctasks.GetPastMeetingsTracking;
 import edu.upc.fib.meetnrun.asynctasks.GetStaticMap;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
@@ -50,6 +51,7 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.TrackingData;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
@@ -59,13 +61,9 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyCallback
         {
     private View view;
-    private ArrayList<LatLng> path;
     private GoogleMap map;
     private UsersAdapter participantsAdapter;
-    private IMeetingAdapter meetingController;
-    private IFriendsAdapter friendsController;
     private List<Friend> friends;
-    private int meetingId;
     private Marker marker;
     private ImageButton shareTracking;
     private boolean staticMapAvailable;
@@ -74,6 +72,11 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
     private String distanceValue;
     private String timeValue;
     private String avSpeedValue;
+    private int userId;
+    private int meetingId;
+    private TrackingData tracking;
+    private ArrayList<LatLng> path;
+
 
 
 
@@ -87,23 +90,16 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
                 getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.INVISIBLE);
 
-        meetingController = CurrentSession.getInstance().getMeetingAdapter();
-        friendsController = CurrentSession.getInstance().getFriendsAdapter();
         Bundle pastMeetingInfo = getActivity().getIntent().getExtras();
-
-
+        userId = pastMeetingInfo.getInt("userId");
+        meetingId = pastMeetingInfo.getInt("meetingId");
+        getTrackingData();
         TextView title = view.findViewById(R.id.meeting_info_title);
         TextView level = view.findViewById(R.id.meeting_info_level);
         TextView description = view.findViewById(R.id.meeting_info_description);
         TextView date = view.findViewById(R.id.meeting_info_date);
         TextView time = view.findViewById(R.id.meeting_info_time);
         TextView owner = view.findViewById(R.id.meeting_info_creator);
-
-        TextView distance = view.findViewById(R.id.meeting_info_distance);
-        TextView steps = view.findViewById(R.id.meeting_info_steps);
-        TextView totalTime = view.findViewById(R.id.meeting_info_totaltime);
-        TextView avSpeed = view.findViewById(R.id.meeting_info_avspeed);
-        TextView calories = view.findViewById(R.id.meeting_info_calories);
 
         shareTracking = view.findViewById(R.id.meeting_info_share);
 
@@ -118,16 +114,6 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
         date.setText(pastMeetingInfo.getString("date"));
         time.setText(pastMeetingInfo.getString("time"));
 
-        distanceValue = pastMeetingInfo.getString("distance") + " " + "m"; //TODO parse a km
-        distance.setText(distanceValue);
-        String stepsValue  = pastMeetingInfo.getString("steps");
-        steps.setText(stepsValue);
-        timeValue = pastMeetingInfo.getString("totaltime") + " " + "ms";
-        totalTime.setText(timeValue);
-        avSpeedValue = pastMeetingInfo.getString("avspeed") + " " + "m/s";
-        avSpeed.setText(avSpeedValue);
-        String caloriesValue = pastMeetingInfo.getString("calories") + " " + "kcal";
-        calories.setText(caloriesValue);
 
         shareTracking.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,24 +122,9 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
             }
         });
 
-        path = (ArrayList<LatLng>) pastMeetingInfo.get("path");
-        if (path != null) {
-            staticMapAvailable = false;
-            if (path.size() > 1) {
-                Log.d("STATIC MAP", path.toString());
-                callGetStaticMap();
-            }
-        }
 
         setupRecyclerView();
 
-
-        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.past_meeting_info_map, mapFragment)
-                .commit();
-        mapFragment.getMapAsync(this);
 
         return view;
     }
@@ -290,8 +261,10 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
             @Override
             public void onResponseReceived(Bitmap bitmap) {
                 staticMap = bitmap;
-                saveImageToCache();
-                staticMapAvailable = true;
+                if (staticMap != null) {
+                    saveImageToCache();
+                    staticMapAvailable = true;
+                }
             }
         }.execute();
     }
@@ -338,6 +311,66 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
                 getString(R.string.distance)+ ": " + distanceValue + "\n" +
                 getString(R.string.time) + ": " + timeValue + "\n" +
                 getString(R.string.avg_speed) + ": " + avSpeedValue + "\n";
+    }
+
+    private void getTrackingData() {
+        callGetPastMeetingsTracking(userId,meetingId);
+    }
+
+    private void callGetPastMeetingsTracking(int userId, int meetingId) {
+        new GetPastMeetingsTracking() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(TrackingData trackingResponse) {
+                tracking = trackingResponse;
+                updateTrackingText();
+                if (tracking.getRoutePoints() != null) callGetStaticMap();
+            }
+        }.execute(userId,meetingId);
+    }
+
+    private void updateTrackingText() {
+        TextView distance = view.findViewById(R.id.meeting_info_distance);
+        TextView steps = view.findViewById(R.id.meeting_info_steps);
+        TextView totalTime = view.findViewById(R.id.meeting_info_totaltime);
+        TextView avSpeed = view.findViewById(R.id.meeting_info_avspeed);
+        TextView calories = view.findViewById(R.id.meeting_info_calories);
+        distanceValue = String.valueOf(tracking.getDistance()); //TODO parse a km
+        distance.setText(distanceValue);
+        String stepsValue  = String.valueOf(tracking.getSteps());
+        steps.setText(stepsValue);
+        timeValue = String.valueOf(tracking.getTotalTimeMillis());
+        totalTime.setText(timeValue);
+        avSpeedValue = String.valueOf(tracking.getAverageSpeed());
+        avSpeed.setText(avSpeedValue);
+        String caloriesValue = String.valueOf(tracking.getCalories());
+        calories.setText(caloriesValue);
+
+        path = (ArrayList<LatLng>) tracking.getRoutePoints();
+        if (path != null) {
+            staticMapAvailable = false;
+            if (path.size() > 1) {
+                Log.d("STATIC MAP", path.toString());
+                callGetStaticMap();
+            }
+        }
+
+        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.past_meeting_info_map, mapFragment)
+                .commit();
+        mapFragment.getMapAsync(this);
+
     }
 
 }
