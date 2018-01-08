@@ -290,8 +290,10 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
             @Override
             public void onResponseReceived(Bitmap bitmap) {
                 staticMap = bitmap;
-                saveImageToCache();
-                staticMapAvailable = true;
+                if (staticMap != null) {
+                    saveImageToCache();
+                    staticMapAvailable = true;
+                }
             }
         }.execute();
     }
