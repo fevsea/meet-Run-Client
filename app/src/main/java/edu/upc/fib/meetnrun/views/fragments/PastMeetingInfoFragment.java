@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,6 +78,7 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
     private int meetingId;
     private TrackingData tracking;
     private ArrayList<LatLng> path;
+    private ProgressBar progressBar;
 
 
 
@@ -89,7 +92,7 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
         FloatingActionButton fab =
                 getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.INVISIBLE);
-
+        progressBar = view.findViewById(R.id.pb_loading);
         Bundle pastMeetingInfo = getActivity().getIntent().getExtras();
         userId = pastMeetingInfo.getInt("userId");
         meetingId = pastMeetingInfo.getInt("meetingId");
@@ -314,6 +317,7 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
     }
 
     private void getTrackingData() {
+        progressBar.setVisibility(View.VISIBLE);
         callGetPastMeetingsTracking(userId,meetingId);
     }
 
@@ -348,9 +352,9 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
         distance.setText(distanceValue);
         String stepsValue  = String.valueOf(tracking.getSteps());
         steps.setText(stepsValue);
-        timeValue = String.valueOf(tracking.getTotalTimeMillis());
+        timeValue = getTimeInString(tracking.getTotalTimeMillis());
         totalTime.setText(timeValue);
-        avSpeedValue = String.valueOf(tracking.getAverageSpeed());
+        avSpeedValue = getSpeedInString(tracking.getAverageSpeed());
         avSpeed.setText(avSpeedValue);
         String caloriesValue = String.valueOf(tracking.getCalories());
         calories.setText(caloriesValue);
@@ -370,7 +374,19 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
                 .add(R.id.past_meeting_info_map, mapFragment)
                 .commit();
         mapFragment.getMapAsync(this);
+        progressBar.setVisibility(View.INVISIBLE);
+    }
 
+    public String getTimeInString(float time) {
+        float hours=time/3600000;
+        float mins=(time%3600000)/60000;
+        float secs=(time%60000)/1000;
+        return String.format("%sh %sm %ss", (int) hours, (int) mins, (int) secs);
+    }
+
+    public String getSpeedInString(float speed){
+        DecimalFormat df=new DecimalFormat("###.###");
+        return String.valueOf(df.format(speed)) + " m/s";
     }
 
 }
