@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
+import edu.upc.fib.meetnrun.adapters.IRankingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
@@ -26,9 +28,11 @@ import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
+import edu.upc.fib.meetnrun.models.PositionUser;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RankingsUserAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 /**
@@ -50,7 +54,7 @@ public class RankingsUserFragment extends Fragment {
     Button zips;
     IUserAdapter userAdapter;
     User user;
-
+    RankingsUserAdapter rankingsUserAdapter;
 
     public static RankingsUserFragment newInstance(int page, String title) {
         RankingsUserFragment fragmentFirst = new RankingsUserFragment();
@@ -77,6 +81,16 @@ public class RankingsUserFragment extends Fragment {
         context = this.getActivity();
         initializePagination();
         zipSpinner = view.findViewById(R.id.rankingSpinner);
+        List<PositionUser> positionUsers = new ArrayList<>();
+        rankingsUserAdapter=new RankingsUserAdapter(positionUsers,new RecyclerViewOnClickListener() {
+            @Override
+            public void onButtonClicked(int position) {
+            }
+
+            public void onItemClicked(int position) {
+                User user = rankingsUserAdapter.getUserAtPosition(position);
+            }
+        }, getContext());
         setSpinner();
         rdbFilter = view.findViewById(R.id.rdGUser);
         rdbFilter.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
@@ -110,6 +124,12 @@ public class RankingsUserFragment extends Fragment {
 
     private void setSpinner() {
         //TODO: catch stuff from server and put it on the spinner
+        List<String> zips=rankingAdapter.
+        ArrayAdapter<String> zipsArrayAdapter= new ArrayAdapter<String>(
+                getActivity(),
+                android.R.layout.simple_spinner_item,
+                zips);
+        zipSpinner.setAdapter(zipsArrayAdapter);
     }
 
 

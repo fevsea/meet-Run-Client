@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.PositionUser;
 import edu.upc.fib.meetnrun.models.User;
 
 /**
@@ -20,7 +21,7 @@ public class RankingsUserAdapter {
     private View v;
     private Context context;
 
-    public RankingsUserAdapter(List<User> neighbors, RecyclerViewOnClickListener listener, Context context) {
+    public RankingsUserAdapter(List<PositionUser> neighbors, RecyclerViewOnClickListener listener, Context context) {
         this.neighbors = neighbors;
         this.listener = listener;
         this.context = context;
@@ -40,4 +41,9 @@ public class RankingsUserAdapter {
     public int getItemCount() {
         return neighbors.size();
     }
+
+    public User getUserAtPosition(int position) {
+        return neighbors.get(position);
+    }
+
 }
