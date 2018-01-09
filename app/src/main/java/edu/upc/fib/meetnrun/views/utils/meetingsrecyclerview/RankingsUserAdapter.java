@@ -16,6 +16,7 @@ import edu.upc.fib.meetnrun.models.User;
  */
 
 public class RankingsUserAdapter {
+    /*
     private List<User> neighbors;
     private final RecyclerViewOnClickListener listener;
     private View v;
@@ -45,5 +46,5 @@ public class RankingsUserAdapter {
     public User getUserAtPosition(int position) {
         return neighbors.get(position);
     }
-
+*/
 }

@@ -82,16 +82,17 @@ public class RankingsUserFragment extends Fragment {
         initializePagination();
         zipSpinner = view.findViewById(R.id.rankingSpinner);
         List<PositionUser> positionUsers = new ArrayList<>();
+        /*
         rankingsUserAdapter=new RankingsUserAdapter(positionUsers,new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {
             }
 
             public void onItemClicked(int position) {
-                User user = rankingsUserAdapter.getUserAtPosition(position);
+              //  User user = rankingsUserAdapter.getUserAtPosition(position);
             }
         }, getContext());
-        setSpinner();
+        setSpinner(); */
         rdbFilter = view.findViewById(R.id.rdGUser);
         rdbFilter.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 
@@ -124,12 +125,13 @@ public class RankingsUserFragment extends Fragment {
 
     private void setSpinner() {
         //TODO: catch stuff from server and put it on the spinner
+        /*
         List<String> zips=rankingAdapter.
         ArrayAdapter<String> zipsArrayAdapter= new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_spinner_item,
                 zips);
-        zipSpinner.setAdapter(zipsArrayAdapter);
+        zipSpinner.setAdapter(zipsArrayAdapter); */
     }
 
 
