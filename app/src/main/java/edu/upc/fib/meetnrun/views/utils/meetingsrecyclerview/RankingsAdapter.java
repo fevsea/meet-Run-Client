@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,27 +12,23 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Position;
 import edu.upc.fib.meetnrun.models.PositionUser;
-import edu.upc.fib.meetnrun.models.RankingGeneric;
 import edu.upc.fib.meetnrun.models.RankingUser;
 import edu.upc.fib.meetnrun.models.RankingZip;
-import edu.upc.fib.meetnrun.models.User;
 
 /**
  * Created by Javier on 15/12/2017.
  */
 
 public class RankingsAdapter extends RecyclerView.Adapter<RankingsViewHolder>{
-    private RankingUser rankingUserList;
-    private RankingZip rankingZipList;
+    private List<PositionUser> rankingList;
     private final RecyclerViewOnClickListener listener;
     private View v;
     private Context context;
     private boolean zip;
     private Integer zipnum;
 
-    public RankingsAdapter(RankingGeneric rankinglist, RecyclerViewOnClickListener listener, Context context, boolean zip, Integer zipnum) {
-        if (zip) this.rankingZipList = (RankingZip)rankinglist;
-        else this.rankingUserList = (RankingUser) rankinglist;
+    public RankingsAdapter(List<PositionUser> rankinglist, RecyclerViewOnClickListener listener, Context context, boolean zip, Integer zipnum) {
+        this.rankingList = rankinglist;
         this.listener = listener;
         this.context = context;
         this.zip = zip;
@@ -53,24 +50,30 @@ public class RankingsAdapter extends RecyclerView.Adapter<RankingsViewHolder>{
     @Override
     public void onBindViewHolder(final RankingsViewHolder holder, int position) {
         if (zip) {
-            Position zipPosition = rankingZipList.getGlobalRanking().get(position);
-            holder.bindZipRanking(zipPosition);
+            Position zipPosition = rankingList.get(position);
+            holder.bindZipRanking(zipPosition,position);
         }
         else {
-            PositionUser userPosition = null;
-            if (zipnum == null) userPosition = rankingUserList.getRanking().get(position);
-            else userPosition = rankingUserList.getRankingByZip(zipnum).get(position);
-            holder.bindUserRanking(userPosition);
+            PositionUser userPosition = rankingList.get(position);
+            holder.bindUserRanking(userPosition,position);
         }
     }
 
+    public void updateRanking(List<PositionUser> rankings) {
+        this.rankingList = rankings;
+        notifyDataSetChanged();
+    }
+
+    public void addRankings(List<PositionUser> rankings) {
+        this.rankingList.addAll(rankings);
+        notifyDataSetChanged();
+    }
+
     public int getItemCount() {
-        if (!zip) {
-            if (zipnum == null) return rankingUserList.getRanking().size();
-            else return rankingUserList.getRankingByZip(zipnum).size();
-        }
-        else {
-            return rankingZipList.getGlobalRanking().size();
-        }
+        return rankingList.size();
+    }
+
+    public List<PositionUser> getRankingList() {
+        return rankingList;
     }
 }

@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -39,30 +40,31 @@ public class RankingsViewHolder extends RecyclerView.ViewHolder implements View.
         this.listener = new WeakReference<>(listener);
     }
 
-    public void bindUserRanking(PositionUser ranking) {
+    public void bindUserRanking(PositionUser ranking, int positionNum) {
         position = view.findViewById(R.id.ranking_item_user_photo2);
         km = view.findViewById(R.id.ranking_item_km);
         username = view.findViewById(R.id.ranking_item_username);
         realname = view.findViewById(R.id.ranking_item_name);
         zip = view.findViewById(R.id.ranking_item_postcode);
 
-        position.setText(ranking.getPosition());
+        position.setText(String.valueOf(positionNum));
+        Log.e("AAA",ranking.getPosition() + "");
         km.setText(String.valueOf(ranking.getDistance() + " km"));
         username.setText(ranking.getUserID());
         realname.setText(ranking.getFirstName() + " " + ranking.getLastName());
-        zip.setText(ranking.getZip());
+        zip.setText(String.valueOf(ranking.getZip()));
 
         view.setOnClickListener(this);
     }
 
-    public void bindZipRanking(Position ranking) {
-        position = view.findViewById(R.id.ranking_item_user_photo2);
-        km = view.findViewById(R.id.ranking_item_km);
-        zip = view.findViewById(R.id.ranking_item_postcode);
+    public void bindZipRanking(Position ranking, int positionNum) {
+        position = view.findViewById(R.id.ranking_zip_position);
+        km = view.findViewById(R.id.zip_km);
+        zip = view.findViewById(R.id.zip_code);
 
-        position.setText(ranking.getPosition());
+        position.setText(String.valueOf(positionNum));
         km.setText(String.valueOf(ranking.getDistance() + " km"));
-        zip.setText(ranking.getZip());
+        zip.setText(String.valueOf(ranking.getZip()));
 
         view.setOnClickListener(this);
     }
