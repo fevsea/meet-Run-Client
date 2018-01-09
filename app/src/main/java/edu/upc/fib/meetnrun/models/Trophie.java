@@ -1,14 +1,19 @@
 package edu.upc.fib.meetnrun.models;
 
 
-import java.util.ArrayList;
-
 public class Trophie {
     private String title;
     private Integer image_Obtained;
     private Integer image_NotObtained;
-    private String obtained;
+    private boolean obtained;
     private String description = "This is the description of the trophie.";
+
+    public Trophie(){
+
+    }
+    public Trophie(boolean obtained) {
+        this.obtained = obtained;
+    }
 
     public void setTrophieTitle(String title) {
         this.title = title;
@@ -26,11 +31,11 @@ public class Trophie {
         return this.description;
     }
 
-    public void setTrophieIsObtained(String obtained) {
+    public void setTrophieIsObtained(boolean obtained) {
         this.obtained = obtained;
     }
 
-    public String getTrophieIsObtained() {
+    public boolean getTrophieIsObtained() {
         return this.obtained;
     }
 
@@ -43,7 +48,7 @@ public class Trophie {
     }
 
     public Integer getImage() {
-        if (this.obtained == "You obtained this trophie, congratulations!") return this.image_Obtained;
+        if (this.obtained) return this.image_Obtained;
         else return this.image_NotObtained;
 
     }

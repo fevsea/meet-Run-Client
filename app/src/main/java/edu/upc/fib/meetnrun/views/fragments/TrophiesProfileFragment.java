@@ -67,27 +67,28 @@ public class TrophiesProfileFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new TrophiesAdapter(createLists, new RecyclerViewOnClickListener() {
             @Override
-            public void onButtonClicked(int position) {}
+            public void onButtonClicked(int position) {
+            }
 
             @Override
             public void onItemClicked(int position) {
                 Trophie trophie = adapter.getTrophieAtPosition(position);
                 Toast.makeText(view.getContext(), "Showing selected trophie info", Toast.LENGTH_SHORT).show();
                 Intent trophieInfoIntent = new Intent();
-                trophieInfoIntent.putExtra("image",trophie.getImage());
-                trophieInfoIntent.putExtra("title",trophie.getTrophieTitle());
-                trophieInfoIntent.putExtra("description",trophie.getTrophieDescription());
-                trophieInfoIntent.putExtra("obtained",trophie.getTrophieIsObtained());
+                trophieInfoIntent.putExtra("image", trophie.getImage());
+                trophieInfoIntent.putExtra("title", trophie.getTrophieTitle());
+                trophieInfoIntent.putExtra("description", trophie.getTrophieDescription());
+                trophieInfoIntent.putExtra("obtained", trophie.getTrophieIsObtained());
                 BaseActivity.startWithFragment(getActivity(), new TrophieInfoFragment(), trophieInfoIntent);
             }
         });
         recyclerView.setAdapter(adapter);
     }
 
-    private ArrayList<Trophie> prepareData(){
+    private ArrayList<Trophie> prepareData() {
 
         ArrayList<Trophie> theimage = new ArrayList<>();
-        for(int i = 0; i< image_Obtained.length; i++){
+        for (int i = 0; i < image_Obtained.length; i++) {
             Trophie trophie = new Trophie();
             trophie.setTrophieTitle(trophie_title[i]);
             trophie.setImage_Obtained(image_Obtained[i]);
@@ -157,23 +158,23 @@ public class TrophiesProfileFragment extends Fragment {
             "Total of 10h ran",
     };
 
-    private final String isObtained[] = {
-            "You obtained this trophie, congratulations!",
-            "Trophie not obtained yet, keep going!",
-            "You obtained this trophie, congratulations!",
-            "Trophie not obtained yet, keep going!",
-            "You obtained this trophie, congratulations!",
-            "Trophie not obtained yet, keep going!",
-            "You obtained this trophie, congratulations!",
-            "Trophie not obtained yet, keep going!",
-            "You obtained this trophie, congratulations!",
-            "Trophie not obtained yet, keep going!",
-            "You obtained this trophie, congratulations!",
-            "Trophie not obtained yet, keep going!",
-            "You obtained this trophie, congratulations!",
-            "Trophie not obtained yet, keep going!",
-            "You obtained this trophie, congratulations!",
-            "Trophie not obtained yet, keep going!",
+    private final boolean isObtained[] = {
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false
 
     };
 
