@@ -31,10 +31,12 @@ public class TrophieInfoFragment extends BaseFragment {
         ImageView image = view.findViewById(R.id.trophie_image);
         TextView title = view.findViewById(R.id.trophie_title);
         TextView description = view.findViewById(R.id.trophie_description);
+        TextView obtained = view.findViewById(R.id.trophie_obtained);
 
         image.setImageResource(trophieInfo.getInt("image"));
         title.setText(trophieInfo.getString("title"));
         description.setText(trophieInfo.getString("description"));
+        obtained.setText(trophieInfo.getString("obtained"));
 
         fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.INVISIBLE);

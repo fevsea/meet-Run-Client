@@ -11,16 +11,16 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 
-import edu.upc.fib.meetnrun.models.Trophies;
+import edu.upc.fib.meetnrun.models.Trophie;
 import edu.upc.fib.meetnrun.R;
 
 
 public class TrophiesAdapter extends RecyclerView.Adapter<TrophiesViewHolder> {
-    private ArrayList<Trophies> galleryList;
+    private ArrayList<Trophie> galleryList;
     private final RecyclerViewOnClickListener listener;
     private Context context;
 
-    public TrophiesAdapter(ArrayList<Trophies> galleryList, RecyclerViewOnClickListener listener) {
+    public TrophiesAdapter(ArrayList<Trophie> galleryList, RecyclerViewOnClickListener listener) {
         this.galleryList = galleryList;
         this.listener = listener;
         notifyDataSetChanged();
@@ -36,7 +36,7 @@ public class TrophiesAdapter extends RecyclerView.Adapter<TrophiesViewHolder> {
     @Override
     public void onBindViewHolder(TrophiesViewHolder viewHolder, int i) {
         viewHolder.img.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        viewHolder.img.setImageResource((galleryList.get(i).getImage_ID()));
+        viewHolder.img.setImageResource((galleryList.get(i).getImage()));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class TrophiesAdapter extends RecyclerView.Adapter<TrophiesViewHolder> {
         return galleryList.size();
     }
 
-    public Trophies getTrophieAtPosition(int position) {
+    public Trophie getTrophieAtPosition(int position) {
         return galleryList.get(position);
     }
 }

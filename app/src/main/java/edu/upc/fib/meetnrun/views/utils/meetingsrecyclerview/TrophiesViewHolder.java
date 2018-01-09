@@ -26,7 +26,6 @@ public class TrophiesViewHolder extends RecyclerView.ViewHolder implements View.
 
     @Override
     public void onClick(View view) {
-        Log.d("TROPHIE","ONCLICK");
         listener.get().onItemClicked(getAdapterPosition());
     }
 }

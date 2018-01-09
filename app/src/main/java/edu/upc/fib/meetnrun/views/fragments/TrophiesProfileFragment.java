@@ -7,20 +7,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.models.Meeting;
-import edu.upc.fib.meetnrun.models.Trophies;
+import edu.upc.fib.meetnrun.models.Trophie;
 import edu.upc.fib.meetnrun.views.BaseActivity;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.TrophiesAdapter;
 
@@ -62,46 +58,48 @@ public class TrophiesProfileFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
+        ArrayList<Trophie> createLists = prepareData();
+
         RecyclerView recyclerView = view.findViewById(R.id.trophiegallery);
         recyclerView.setHasFixedSize(true);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 4);
         recyclerView.setLayoutManager(layoutManager);
-        ArrayList<Trophies> createLists = prepareData();
         adapter = new TrophiesAdapter(createLists, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
             @Override
             public void onItemClicked(int position) {
-                Log.e("ONCLICK", String.valueOf(position)); //TODO ni entra ???
-                Trophies trophie = adapter.getTrophieAtPosition(position);
+                Trophie trophie = adapter.getTrophieAtPosition(position);
                 Toast.makeText(view.getContext(), "Showing selected trophie info", Toast.LENGTH_SHORT).show();
                 Intent trophieInfoIntent = new Intent();
-                trophieInfoIntent.putExtra("image",trophie.getImage_ID());
-                trophieInfoIntent.putExtra("title",trophie.getImage_title());
-                trophieInfoIntent.putExtra("description",trophie.getImage_description());
-                trophieInfoIntent.putExtra("obtained",trophie.getImage_isObtained());
+                trophieInfoIntent.putExtra("image",trophie.getImage());
+                trophieInfoIntent.putExtra("title",trophie.getTrophieTitle());
+                trophieInfoIntent.putExtra("description",trophie.getTrophieDescription());
+                trophieInfoIntent.putExtra("obtained",trophie.getTrophieIsObtained());
                 BaseActivity.startWithFragment(getActivity(), new TrophieInfoFragment(), trophieInfoIntent);
             }
         });
         recyclerView.setAdapter(adapter);
     }
 
-    private ArrayList<Trophies> prepareData(){
+    private ArrayList<Trophie> prepareData(){
 
-        ArrayList<Trophies> theimage = new ArrayList<>();
-        for(int i = 0; i< image_ids.length; i++){
-            Trophies trophies = new Trophies();
-            trophies.setImage_ID(image_ids[i]);
-            trophies.setImage_title(image_title[i]);
-            //trophies.setImage_isObtained(image_obtained[i]);
-            theimage.add(trophies);
+        ArrayList<Trophie> theimage = new ArrayList<>();
+        for(int i = 0; i< image_Obtained.length; i++){
+            Trophie trophie = new Trophie();
+            trophie.setTrophieTitle(trophie_title[i]);
+            trophie.setImage_Obtained(image_Obtained[i]);
+            trophie.setImage_NotObtained(image_NotObtained[i]);
+            trophie.setTrophieIsObtained(isObtained[i]);
+
+            theimage.add(trophie);
         }
         return theimage;
     }
 
-    private final Integer image_ids[] = {
+    private final Integer image_Obtained[] = {
             R.drawable.challenges1,
             R.drawable.challenges5,
             R.drawable.distance1km,
@@ -120,8 +118,27 @@ public class TrophiesProfileFragment extends Fragment {
             R.drawable.time10h,
     };
 
+    private final Integer image_NotObtained[] = {
+            R.drawable.not_get_challenges1,
+            R.drawable.not_get_challenges5,
+            R.drawable.not_get_distance1km,
+            R.drawable.not_get_distance10km,
+            R.drawable.not_get_friends1,
+            R.drawable.not_get_friends5,
+            R.drawable.not_get_level1,
+            R.drawable.not_get_level5,
+            R.drawable.not_get_meeting_distance1km,
+            R.drawable.not_get_meeting_distance5km,
+            R.drawable.not_get_meetings1,
+            R.drawable.not_get_meetings5,
+            R.drawable.not_get_steps10000,
+            R.drawable.not_get_steps20000,
+            R.drawable.not_get_time1h,
+            R.drawable.not_get_time10h,
+    };
 
-    private final String image_title[] = {
+
+    private final String trophie_title[] = {
             "Win 1 challenge",
             "Win 5 challenges",
             "Total distance of 1km ran",
@@ -140,27 +157,27 @@ public class TrophiesProfileFragment extends Fragment {
             "Total of 10h ran",
     };
 
-    /*private final String image_obtained[] = {
-            "True",
-            "False",
-            "True",
-            "False",
-            "True",
-            "False",
-            "True",
-            "False",
-            "True",
-            "False",
-            "True",
-            "False",
-            "True",
-            "False",
-            "True",
-            "False",
+    private final String isObtained[] = {
+            "You obtained this trophie, congratulations!",
+            "Trophie not obtained yet, keep going!",
+            "You obtained this trophie, congratulations!",
+            "Trophie not obtained yet, keep going!",
+            "You obtained this trophie, congratulations!",
+            "Trophie not obtained yet, keep going!",
+            "You obtained this trophie, congratulations!",
+            "Trophie not obtained yet, keep going!",
+            "You obtained this trophie, congratulations!",
+            "Trophie not obtained yet, keep going!",
+            "You obtained this trophie, congratulations!",
+            "Trophie not obtained yet, keep going!",
+            "You obtained this trophie, congratulations!",
+            "Trophie not obtained yet, keep going!",
+            "You obtained this trophie, congratulations!",
+            "Trophie not obtained yet, keep going!",
 
-    }; */
+    };
 
-    /*private final Integer image_ids[] = {
+    /*private final Integer all_image_ids[] = {
             R.drawable.challenges1,
             R.drawable.challenges5,
             R.drawable.challenges10,
