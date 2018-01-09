@@ -13,7 +13,7 @@
     <TextView
         android:id="@+id/trophie_title"
         android:text="Aqui va el titol"
-        android:layout_marginTop="20px"
+        android:layout_marginTop="60px"
         android:textStyle="bold"
         android:textSize="20sp"
         style="@style/TextAppearance.AppCompat.Title"

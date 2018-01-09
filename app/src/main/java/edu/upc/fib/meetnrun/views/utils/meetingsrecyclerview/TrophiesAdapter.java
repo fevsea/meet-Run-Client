@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class TrophiesAdapter extends RecyclerView.Adapter<TrophiesViewHolder> {
 
     @Override
     public int getItemCount() {
+        //Log.e("HOLIS", String.valueOf(galleryList.size()));
         return galleryList.size();
     }
 

@@ -36,7 +36,12 @@ public class TrophieInfoFragment extends BaseFragment {
         image.setImageResource(trophieInfo.getInt("image"));
         title.setText(trophieInfo.getString("title"));
         description.setText(trophieInfo.getString("description"));
-        obtained.setText(trophieInfo.getString("obtained"));
+        boolean isObtained = trophieInfo.getBoolean("obtained");
+        if (isObtained) {
+            obtained.setText("You already obtained this trophie, congratulations!"); //TODO afegir a Strings
+        } else {
+            obtained.setText("You don't have this trophie yet, keep going!"); //TODO afegir a Strings
+        }
 
         fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.INVISIBLE);

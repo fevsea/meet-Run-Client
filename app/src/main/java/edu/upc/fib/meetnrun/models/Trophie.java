@@ -2,6 +2,7 @@ package edu.upc.fib.meetnrun.models;
 
 
 public class Trophie {
+    private String id;
     private String title;
     private Integer image_Obtained;
     private Integer image_NotObtained;
@@ -14,6 +15,10 @@ public class Trophie {
     public Trophie(boolean obtained) {
         this.obtained = obtained;
     }
+
+    //public void setTrophieId(String id){this.id = id;}
+
+    //public String getTrophieId(){return this.id;}
 
     public void setTrophieTitle(String title) {
         this.title = title;
