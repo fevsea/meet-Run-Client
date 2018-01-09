@@ -48,10 +48,7 @@ public class PastMeetingsProfileFragment extends BaseFragment {
     private View view;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetings;
-    private List<LatLng> path;
 
-
-    private TrackingData tracking;
 
     private String title;
     private int page;
@@ -115,7 +112,6 @@ public class PastMeetingsProfileFragment extends BaseFragment {
                 Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 meetingId = meeting.getId();
-                getTrackingData();
 
                 Intent pastMeetingInfoIntent = new Intent();
 
@@ -128,32 +124,8 @@ public class PastMeetingsProfileFragment extends BaseFragment {
                 pastMeetingInfoIntent.putExtra("date", datetime.substring(0, datetime.indexOf('T')));
                 pastMeetingInfoIntent.putExtra("time", datetime.substring(datetime.indexOf('T') + 1, datetime.length()));
                 pastMeetingInfoIntent.putExtra("level", String.valueOf(meeting.getLevel()));
-
-                String distance, steps, totalTime, avSpeed, calories;
-                path = new ArrayList<>();
-
-                if (tracking == null) {
-                    distance = "0";
-                    steps = "0";
-                    totalTime = "0";
-                    avSpeed = "0";
-                    calories = "0";
-                    path.add(new LatLng(Double.valueOf(meeting.getLatitude()), Double.valueOf(meeting.getLongitude())));
-                } else {
-                    distance = String.valueOf(tracking.getDistance()); //m
-                    steps = String.valueOf(tracking.getSteps());
-                    totalTime = String.valueOf(tracking.getTotalTimeMillis()); //ms
-                    avSpeed = String.valueOf(tracking.getAverageSpeed()); // m/s
-                    calories = String.valueOf(tracking.getCalories()); // kcal
-                    path = tracking.getRoutePoints();
-                }
-                pastMeetingInfoIntent.putExtra("distance", distance);
-                pastMeetingInfoIntent.putExtra("steps", steps);
-                pastMeetingInfoIntent.putExtra("totaltime", totalTime);
-                pastMeetingInfoIntent.putExtra("avspeed", avSpeed);
-                pastMeetingInfoIntent.putExtra("calories", calories);
-
-                pastMeetingInfoIntent.putExtra("path", (Serializable) path);
+                pastMeetingInfoIntent.putExtra("userId",userId);
+                pastMeetingInfoIntent.putExtra("meetingId",meetingId);
 
                 BaseActivity.startWithFragment(getActivity(), new PastMeetingInfoFragment(), pastMeetingInfoIntent);
 
@@ -164,9 +136,6 @@ public class PastMeetingsProfileFragment extends BaseFragment {
 
     }
 
-    private void getTrackingData() {
-        callGetPastMeetingsTracking(userId,meetingId);
-    }
 
     private void updateMeetingList() {
         callGetPastMeetings(userId);
@@ -190,25 +159,6 @@ public class PastMeetingsProfileFragment extends BaseFragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         }.execute(userId);
-    }
-
-    private void callGetPastMeetingsTracking(int userId, int meetingId) {
-        new GetPastMeetingsTracking() {
-            @Override
-            public void onExceptionReceived(GenericException e) {
-                if (e instanceof AuthorizationException) {
-                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-                }
-                else if (e instanceof NotFoundException) {
-                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onResponseReceived(TrackingData trackingResponse) {
-                tracking = trackingResponse;
-            }
-        }.execute(userId,meetingId);
     }
 
 }
