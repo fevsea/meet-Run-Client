@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,9 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +31,14 @@ import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
+import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.RankingGeneric;
+import edu.upc.fib.meetnrun.models.RankingUser;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
+import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RankingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 /**
@@ -50,6 +60,10 @@ public class RankingsUserFragment extends Fragment {
     Button zips;
     IUserAdapter userAdapter;
     User user;
+    RankingsAdapter rankingAdapter;
+    RankingGeneric rankings;
+    boolean zip;
+    Integer zipnum;
 
 
     public static RankingsUserFragment newInstance(int page, String title) {
@@ -119,6 +133,27 @@ public class RankingsUserFragment extends Fragment {
         isLoading = false;
         isLastPage = false;
     }
+
+    private void setupRecyclerView() {
+        final RecyclerView rankingList = view.findViewById(R.id.ranking_rv);
+        rankingList.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        rankings = new RankingUser();
+        rankingAdapter = new RankingsAdapter(rankings, new RecyclerViewOnClickListener() {
+
+            @Override
+            public void onButtonClicked(int position) {
+            }
+
+            @Override
+            public void onItemClicked(int position) {
+                //TODO abrir
+            }
+        },getContext(),zip,zipnum);
+        rankingList.setAdapter(rankingAdapter);
+
+    }
+
     private void callGetAllFriends() {
         new GetAllFriends() {
             @Override
