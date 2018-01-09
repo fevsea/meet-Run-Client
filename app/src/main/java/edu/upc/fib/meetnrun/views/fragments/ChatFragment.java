@@ -339,8 +339,19 @@ public class ChatFragment extends BaseFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 adapter.deleteMessages();
                                 rvMessages.setAdapter(adapter);
-                                database.getReference(String.valueOf(chat.getId())).removeValue();
-                                callDeleteChat(chat.getId());
+
+                                if (chat.getType() == 0) {
+                                    database.getReference(String.valueOf(chat.getId())).removeValue();
+                                    callDeleteChat(chat.getId());
+                                }
+                                else {
+                                    chat.getListUsersChat().remove(currentUser);
+                                    if (chat.getListUsersChat().isEmpty()) {
+                                        database.getReference(String.valueOf(chat.getId())).removeValue();
+                                        callDeleteChat(chat.getId());
+                                    }
+                                }
+
                                 getActivity().finish();
                             }
                         },
