@@ -340,7 +340,7 @@ public class ChatFragment extends BaseFragment {
                                 adapter.deleteMessages();
                                 rvMessages.setAdapter(adapter);
                                 database.getReference(String.valueOf(chat.getId())).removeValue();
-                                new deleteChat().execute();
+                                callDeleteChat(chat.getId());
                                 getActivity().finish();
                             }
                         },
