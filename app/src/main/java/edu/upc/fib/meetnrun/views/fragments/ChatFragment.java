@@ -339,9 +339,20 @@ public class ChatFragment extends BaseFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 adapter.deleteMessages();
                                 rvMessages.setAdapter(adapter);
-                                //TODO eliminar chat
-                                //chat.getListUsersChat().remove(currentUser);
-                                //new updateChat().execute();
+
+                                if (chat.getType() == 0) {
+                                    database.getReference(String.valueOf(chat.getId())).removeValue();
+                                    callDeleteChat(chat.getId());
+                                }
+                                else {
+                                    chat.getListUsersChat().remove(currentUser);
+                                    callUpdateChat();
+                                    if (chat.getListUsersChat().isEmpty()) {
+                                        database.getReference(String.valueOf(chat.getId())).removeValue();
+                                        callDeleteChat(chat.getId());
+                                    }
+                                }
+
                                 getActivity().finish();
                             }
                         },
@@ -359,7 +370,6 @@ public class ChatFragment extends BaseFragment {
         super.onCreateOptionsMenu(menu, inflater);
 
     }
-
 
 
     private void openProfileView() {
