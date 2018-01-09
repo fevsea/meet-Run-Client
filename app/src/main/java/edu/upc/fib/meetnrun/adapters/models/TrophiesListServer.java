@@ -27,11 +27,7 @@ public class TrophiesListServer implements IServerModel {
     @SerializedName("km_1000")
     @Expose
     private boolean km_1000;
-
-    @SerializedName("km_10000")
-    @Expose
-    private boolean km_10000;
-
+    
     @SerializedName("h_1")
     @Expose
     private boolean h_1;
@@ -182,8 +178,6 @@ public class TrophiesListServer implements IServerModel {
         t = new Trophie(km_100);
         lt.add(t);
         t = new Trophie(km_1000);
-        lt.add(t);
-        t = new Trophie(km_10000);
         lt.add(t);
         t = new Trophie(h_1);
         lt.add(t);
