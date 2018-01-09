@@ -6,7 +6,7 @@ import java.util.List;
  * Created by Javier on 03/01/2018.
  */
 
-public class RankingZip {
+public class RankingZip implements RankingGeneric{
 
     /* RANKINGS*/
     private List<Position> Ranking;

@@ -26,13 +26,6 @@
             android:text="08028"
             android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
-        <TextView
-            android:id="@+id/zip_city"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Barcelona"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_weight="1" />
     </LinearLayout>
 
     <TextView
