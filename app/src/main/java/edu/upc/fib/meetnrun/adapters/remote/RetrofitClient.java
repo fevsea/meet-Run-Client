@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun.remote;
+package edu.upc.fib.meetnrun.adapters.remote;
 
 import android.util.Log;
 

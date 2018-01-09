@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun.remote;
+package edu.upc.fib.meetnrun.adapters.remote;
 
 import android.util.Log;
 
@@ -30,7 +30,6 @@ class AuthenticationInterceptor implements Interceptor {
         if (token != null && !token.equals("")){
             Request.Builder builder = original.newBuilder();
             builder = builder.header("Authorization","Token " + CurrentSession.getInstance().getToken());
-            //builder = builder.header("Authorization","Token 54d5210bc172307ff887fafc7fc0407f75f4f0c4");
             builder = builder.header("UserServer-Agent","Android");
             Request request = builder.build();
             r = chain.proceed(request);
