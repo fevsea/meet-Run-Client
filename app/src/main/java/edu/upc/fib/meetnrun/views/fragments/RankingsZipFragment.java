@@ -44,8 +44,10 @@ public class RankingsZipFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt("1", 1);
-        title = getArguments().getString("Zip");
+        page = 1;
+        title = "Zip";
+        //page = getArguments().getInt("1", 1);
+        //title = getArguments().getString("Zip");
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

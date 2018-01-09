@@ -64,11 +64,12 @@ public class RankingsUserFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d("User rankings","!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        Log.e("User rankings","!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         super.onCreate(savedInstanceState);
-/*        title = getArguments().getString("Info");
-        page = getArguments().getInt("0", 0); */
-
+        page = 0;
+        title = "User";
+        //page = getArguments().getInt("0", 0);
+        //title = getArguments().getString("Info");
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
