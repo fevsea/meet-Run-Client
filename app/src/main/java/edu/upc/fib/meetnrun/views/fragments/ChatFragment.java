@@ -346,6 +346,7 @@ public class ChatFragment extends BaseFragment {
                                 }
                                 else {
                                     chat.getListUsersChat().remove(currentUser);
+                                    callUpdateChat();
                                     if (chat.getListUsersChat().isEmpty()) {
                                         database.getReference(String.valueOf(chat.getId())).removeValue();
                                         callDeleteChat(chat.getId());
