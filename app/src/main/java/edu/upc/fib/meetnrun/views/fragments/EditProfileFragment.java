@@ -14,18 +14,19 @@ import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.UpdateUser;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 
 
-public class EditProfileFragment extends Fragment {
+public class EditProfileFragment extends BaseFragment {
 
     private User u;
     private View view;
-    private final IUserAdapter controller = CurrentSession.getInstance().getUserAdapter();
     private EditText userNameText;
     private EditText firstNameText;
     private EditText lastNameText;
@@ -106,43 +107,38 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void updateUserServer() {
-        new updateUser().execute(u);
+        callUpdateUser(u);
     }
 
-
-    private class updateUser extends AsyncTask<User, String, Boolean> {
-
-        Exception exception = null;
-        Boolean actualitzat_correctament;
-
-        @Override
-        protected Boolean doInBackground(User... params) {
-
-            try {
-                try {
-                    actualitzat_correctament = controller.updateUser(params[0]);
-                } catch (AuthorizationException e) {
-                    e.printStackTrace();
+    private void callUpdateUser(User user) {
+        new UpdateUser() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
                 }
-            } catch (NotFoundException e) {
-                exception = e;
-            } catch (ParamsException e) {
-                e.printStackTrace();
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
-            return actualitzat_correctament;
-        }
 
-        @Override
-        protected void onPostExecute(Boolean b) {
-
-            if(b) {
-                CurrentSession.getInstance().setCurrentUser(u);
-                changeToNewUserProfile();
+            @Override
+            public void onResponseReceived(boolean b) {
+                if(b) {
+                    CurrentSession.getInstance().setCurrentUser(u);
+                    changeToNewUserProfile();
                 }
                 else {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_edit_profile), Toast.LENGTH_SHORT).show();
                 }
-            super.onPostExecute(b);
-        }
+            }
+        }.execute(user);
+    }
+
+    public int getTitle() {
+        return R.string.title_edit_profile;
     }
 }

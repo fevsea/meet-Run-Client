@@ -184,5 +184,8 @@
     <string name="reject">Rebutjar</string>
     <string name="error_deleting_friend">Error al eliminar l\'amic</string>
     <string name="error_adding_friend">Error al afegir l\'amic</string>
+    <string name="meeting">Trobada</string>
+    <string name="delete_meeting">Eliminar trobada</string>
+    <string name="delete_meeting_message">Vols esborrar aquesta trobada?</string>
 
 </resources>

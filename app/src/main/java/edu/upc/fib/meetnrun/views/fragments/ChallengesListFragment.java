@@ -20,12 +20,14 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
+import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectChallenge;
+import edu.upc.fib.meetnrun.asynctasks.GetChallenges;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.views.ChallengeActivity;
-import edu.upc.fib.meetnrun.views.FriendsListActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChallengesAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChallengesRequestAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -34,7 +36,7 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.TwoButtonsRecyclerV
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChallengesListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+public class ChallengesListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private RecyclerView recyclerView;
     private RecyclerView recyclerViewRequest;
@@ -63,7 +65,6 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
 
         FloatingActionButton fab = getActivity().findViewById(R.id.activity_fab);
         fab.setOnClickListener(this);
-
         return view;
     }
 
@@ -78,9 +79,9 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             @Override
             public void onItemClicked(int position) {
                 Challenge challenge = challengesAdapter.getChallengeAt(position);
-                Intent i = new Intent(getActivity(), ChallengeActivity.class);
+                Intent i = new Intent();
                 i.putExtra("id", challenge.getId());
-                startActivity(i);
+                BaseActivity.startWithFragment(getActivity(), new ChallengeFragment(), i);
             }
         });
         recyclerView.setAdapter(challengesAdapter);
@@ -93,8 +94,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
                 Log.d("ChallengesList", "ACCEPTED REQUEST");
                 Challenge challenge = challengesAdapterRequest.getChallengeAt(position);
                 challenge.setAccepted(true);
-                AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge();
-                acceptOrRejectChallenge.execute(challenge);
+                callAcceptOrRejectChallenge(challenge);
             }
 
             @Override
@@ -102,8 +102,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
                 Log.d("ChallengesList", "REJECTED REQUEST");
                 Challenge challenge = challengesAdapterRequest.getChallengeAt(position);
                 challenge.setAccepted(false);
-                AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge();
-                acceptOrRejectChallenge.execute(challenge);
+                callAcceptOrRejectChallenge(challenge);
             }
 
             @Override
@@ -112,16 +111,16 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             @Override
             public void onItemClicked(int position) {
                 Challenge challenge = challengesAdapterRequest.getChallengeAt(position);
-                Intent i = new Intent(getActivity(), ChallengeActivity.class);
+                Intent i = new Intent();
                 i.putExtra("id", challenge.getId());
-                startActivity(i);
+                BaseActivity.startWithFragment(getActivity(), new ChallengeFragment(), i);
             }
         });
         recyclerViewRequest.setAdapter(challengesAdapterRequest);
     }
 
     private void updateChallengesList() {
-        new GetChallenges().execute();
+        callGetChallenges();
     }
 
     private void updateChallengesAdapters() {
@@ -159,81 +158,59 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.activity_fab) {
-            Intent i = new Intent(getActivity(), FriendsListActivity.class);
-            startActivity(i);
+            Intent i = new Intent();
+            BaseActivity.startWithFragment(getActivity(), new FriendsFragment());
         }
     }
 
-    private class GetChallenges extends AsyncTask<String,String,Boolean> {
+    private void callGetChallenges() {
+        new GetChallenges() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+            }
 
-        private Exception ex;
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-            try {
-                challenges = CurrentSession.getInstance().getChallengeAdapter().getCurrentUserChallenges();
+            @Override
+            public void onResponseReceived(List<Challenge> challengesResponse) {
+                    challenges = challengesResponse;
+                    updateChallengesAdapters();
+                    swipeRefreshLayout.setRefreshing(false);
             }
-            catch (AuthorizationException e) {
-                this.ex = e;
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean s) {
-            super.onPostExecute(s);
-            if (s && ex == null) {
-                updateChallengesAdapters();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-            else if (ex instanceof AuthorizationException){
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-            }
-        }
+        }.execute();
     }
 
-    private class AcceptOrRejectChallenge extends AsyncTask<Challenge, String, Boolean> {
 
-        Exception exception;
-
-        @Override
-        protected Boolean doInBackground(Challenge... params) {
-            IChallengeAdapter challengeAdapter = CurrentSession.getInstance().getChallengeAdapter();
-            try {
-                if (params[0].isAccepted()) {
-                    challengeAdapter.acceptChallenge(params[0].getId());
-                }
-                else {
-                    challengeAdapter.deleteRejectChallenge(params[0].getId());
-                }
-            }
-            catch (NotFoundException | AuthorizationException e) {
-                exception = e;
-            }
-            return true;
+    private void callAcceptOrRejectChallenge(Challenge challenge) {
+        boolean accept = false;
+        if (challenge.isAccepted()) {
+            accept = true;
         }
 
-        protected void onPostExecute(Boolean s) {
-            super.onPostExecute(s);
-            if (s && exception == null) {
+        new AcceptOrRejectChallenge(challenge.getId()) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException ) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if ( e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived() {
                 updateChallengesList();
             }
-            else if (exception instanceof AuthorizationException){
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else if (exception instanceof NotFoundException) {
-                Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-            }
-        }
-
+        }.execute(accept);
     }
+
+    @Override
+    public int getTitle() {
+        return R.string.challenges;
+    }
+
 
 
 }

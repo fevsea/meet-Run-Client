@@ -22,14 +22,16 @@ import java.util.List;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetMyMeetings;
+import edu.upc.fib.meetnrun.asynctasks.LeaveMeeting;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
-import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.TrackingActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsAdapter;
 import edu.upc.fib.meetnrun.R;
@@ -37,13 +39,10 @@ import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MyMeetingsListener;
 
 
-public class MyMeetingsFragment extends Fragment {
+public class MyMeetingsFragment extends BaseFragment {
 
     private MyMeetingsAdapter meetingsAdapter;
     private View view;
-    private IMeetingAdapter meetingController;
-    private IChatAdapter chatAdapter;
-    private IUserAdapter userController;
     public MyMeetingsFragment() {
 
     }
@@ -53,9 +52,6 @@ public class MyMeetingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
-        meetingController = CurrentSession.getInstance().getMeetingAdapter();
-        chatAdapter = CurrentSession.getInstance().getChatAdapter();
-        userController = CurrentSession.getInstance().getUserAdapter();
         setupRecyclerView();
 
         FloatingActionButton fab =
@@ -101,19 +97,20 @@ public class MyMeetingsFragment extends Fragment {
             public void onMeetingClicked(int position) {
                 Toast.makeText(view.getContext(), "Showing selectedUsers meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
-                Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
+                Intent meetingInfoIntent = new Intent();
                 meetingInfoIntent.putExtra("title",meeting.getTitle());
                 meetingInfoIntent.putExtra("chat",meeting.getChatID());
                 meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
+                meetingInfoIntent.putExtra("ownerId", meeting.getOwner().getId());
                 meetingInfoIntent.putExtra("id",meeting.getId());
                 meetingInfoIntent.putExtra("description",meeting.getDescription());
                 String datetime = meeting.getDate();
                 meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
-                meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
+                meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.length()));
                 meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
                 meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
                 meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
-                startActivity(meetingInfoIntent);
+                BaseActivity.startWithFragment(getActivity(), new MeetingInfoFragment(), meetingInfoIntent);
 
             }
         });
@@ -123,12 +120,11 @@ public class MyMeetingsFragment extends Fragment {
     }
 
     private void updateMeetingList() {
-            new GetMyMeetings().execute(CurrentSession.getInstance().getCurrentUser().getId());
+            callGetMyMeetings(CurrentSession.getInstance().getCurrentUser().getId());
     }
 
     private void createNewMeeting() {
-        Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
-        startActivity(intent);
+        BaseActivity.startWithFragment(getActivity(), new CreateMeetingFragment());
     }
 
     private void startMeeting(Meeting meeting) {
@@ -153,7 +149,7 @@ public class MyMeetingsFragment extends Fragment {
                     getString(R.string.ok), getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        new LeaveMeeting().execute(meeting.getId(),meeting.getChatID());
+                        callLeaveMeeting(meeting.getId(),meeting.getChatID());
                     }
                 },
                 new DialogInterface.OnClickListener() {
@@ -165,57 +161,48 @@ public class MyMeetingsFragment extends Fragment {
         );
     }
 
-    private class GetMyMeetings extends AsyncTask<Integer,String,String> {
-        List<Meeting> l = new ArrayList<>();
+    private void callGetMyMeetings(int userId) {
+        new GetMyMeetings() {
 
-        @Override
-        protected String doInBackground(Integer... integers) {
-            //TODO handle exceptions
-            try {
-                l = userController.getUsersFutureMeetings(integers[0]);
-            } catch (AuthorizationException | ParamsException e) {
-                e.printStackTrace();
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            meetingsAdapter.updateMeetingsList(l);
-            super.onPostExecute(s);
-        }
+            @Override
+            public void onResponseReceived(List<Meeting> myMeetings) {
+                meetingsAdapter.updateMeetingsList(myMeetings);
+            }
+        }.execute(userId);
     }
 
-    /*
-        LeaveMeeting.execute(meetingId,chatId)
-     */
-    private class LeaveMeeting extends AsyncTask<Integer,String,String> {
 
-        @Override
-        protected String doInBackground(Integer... integers) {
-            //TODO handle exceptions
-            try {
-                //TODO possible millora: crida al servidor leaveChat
-                meetingController.leaveMeeting(integers[0],CurrentSession.getInstance().getCurrentUser().getId());
-                Chat chat = chatAdapter.getChat(integers[1]);
-                List<User> chatUsers = chat.getListUsersChat();
-                chatUsers.remove(CurrentSession.getInstance().getCurrentUser());
-                chat.setListUsersChat(chatUsers);
-                chatAdapter.updateChat(chat);
-            } catch (AuthorizationException | ParamsException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
+    private void callLeaveMeeting(int meetingId, int chatId) {
+        new LeaveMeeting() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            updateMeetingList();
-            super.onPostExecute(s);
-        }
+            @Override
+            public void onResponseReceived() {
+                updateMeetingList();
+            }
+        }.execute(meetingId,chatId);
     }
+
+    public int getTitle() {
+        return R.string.mymeetings_label;
+    }
+
 }

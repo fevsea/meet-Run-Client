@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +18,21 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
+import edu.upc.fib.meetnrun.asynctasks.AddFriend;
+import edu.upc.fib.meetnrun.asynctasks.CreateChat;
+import edu.upc.fib.meetnrun.asynctasks.GetChat;
+import edu.upc.fib.meetnrun.asynctasks.GetPrivateChat;
+import edu.upc.fib.meetnrun.asynctasks.RemoveFriend;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
-import edu.upc.fib.meetnrun.views.CreateChallengeActivity;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ChatActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 
 /**
  * Created by eric on 2/11/17.
@@ -37,7 +41,6 @@ import edu.upc.fib.meetnrun.views.ChatActivity;
 public class FriendProfileFragment extends ProfileFragmentTemplate implements View.OnClickListener {
 
     private String friendUsername;
-    private IChatAdapter chatDBAdapter;
     private Date dateWithoutTime;
     private List<Integer> userList;
     private Chat chat;
@@ -53,7 +56,6 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
     protected void setImage() {
 
         friendUsername = currentFriend.getUsername();
-        chatDBAdapter = CurrentSession.getInstance().getChatAdapter();
 
         if (isAccepted) {
             chatImage.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +69,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                     showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    new getChat().execute();
+                                    callGetPrivateChat(currentFriend.getId());
                                 }
                             },
                             new DialogInterface.OnClickListener() {
@@ -105,7 +107,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
 
     @Override
     protected void getMethod(String s) {
-        new removeFriend().execute(Integer.valueOf(s));
+        callRemoveFriend(s);
     }
 
     @Override
@@ -120,144 +122,89 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
 
     @Override
     public void onClick(View v) {
-        Intent i = new Intent(getActivity(), CreateChallengeActivity.class);
+        Intent i = new Intent();
         i.putExtra("id",this.currentFriend.getId());
-        startActivity(i);
+        BaseActivity.startWithFragment(getActivity(), new CreateChallengeFragment(), i);
     }
 
-    private class removeFriend extends AsyncTask<Integer,String,String> {
-
-        boolean ok = false;
-
-        @Override
-        protected String doInBackground(Integer... s) {
-            try {
-                ok = friendsDBAdapter.removeFriend(s[0]);
-            } catch (AuthorizationException | ParamsException e) {
-                e.printStackTrace();
-            }
-            try {
-                chat = chatDBAdapter.getPrivateChat(currentFriend.getId());
-            } catch (AuthorizationException | NotFoundException e) {
-                e.printStackTrace();
-                chat = null;
-            }
-
-            if (chat != null) {
-                try {
-                    FirebaseDatabase.getInstance().getReference(String.valueOf(chat.getId())).removeValue();
-                    chatDBAdapter.deleteChat(chat.getId());
-                } catch (AuthorizationException | ParamsException | NotFoundException e) {
-                    e.printStackTrace();
+    private void callAddFriend(String s) {
+        new AddFriend() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
                 }
             }
 
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (ok) {
-                Toast.makeText(getContext(), "Friend removed", Toast.LENGTH_SHORT).show();
-                currentFriend.setFriend(false);
-                getActivity().finish();
+            @Override
+            public void onResponseReceived(boolean b) {
+                if (b) {
+                    Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                    //currentFriend.setFriend(true);
+                    getActivity().finish();
+                }
             }
-            super.onPostExecute(s);
-        }
+        }.execute(s);
     }
 
-    private class createChat extends AsyncTask<String,String,String> {
-
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                chat = chatDBAdapter.createChat(friendUsername, userList, 0, null, "", 0, dateWithoutTime);
-            } catch (AuthorizationException | ParamsException e) {
-                e.printStackTrace();
+    private void callRemoveFriend(String friendId) {
+        new RemoveFriend() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            if (chat != null) {
-                Intent i = new Intent(getContext(), ChatActivity.class);
-                CurrentSession.getInstance().setChat(chat);
-                getActivity().finish();
-                startActivity(i);
+            @Override
+            public void onResponseReceived(boolean b) {
+                if (b) {
+                    Toast.makeText(getContext(), "Friend removed", Toast.LENGTH_SHORT).show();
+                    currentFriend.setFriend(false);
+                    getActivity().finish();
+                }
             }
-        }
+        }.execute(friendId);
     }
 
-    private class getChat extends AsyncTask<String,String,String> {
 
-        User user;
-
-        @Override
-        protected void onPreExecute() {
-            user = CurrentSession.getInstance().getCurrentUser();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                chat = chatDBAdapter.getPrivateChat(currentFriend.getId());
-            } catch (AuthorizationException | NotFoundException e) {
-                e.printStackTrace();
-                chat = null;
+    private void callCreateChat() {
+        new CreateChat(friendUsername,userList,0,null,"",0,dateWithoutTime) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            if (chat == null) {
-                Calendar rightNow = Calendar.getInstance();
-                dateWithoutTime = rightNow.getTime();
-
-                userList = new ArrayList<>();
-                userList.add(user.getId());
-                userList.add(currentFriend.getId());
-
-                new createChat().execute();
-
+            @Override
+            public void onResponseReceived(Chat chat) {
+                if (chat != null) {
+                    Intent i = new Intent();
+                    CurrentSession.getInstance().setChat(chat);
+                    BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
+                    getActivity().finish();
+                }
             }
-            else {
-                Intent i = new Intent(getContext(), ChatActivity.class);
-                CurrentSession.getInstance().setChat(chat);
-                getActivity().finish();
-                startActivity(i);
-            }
-        }
+        }.execute();
     }
 
-    private class AddFriend extends AsyncTask<Integer, String, Boolean> {
 
-        private IFriendsAdapter friendsAdapter;
-        private Exception e;
-
-        private AddFriend() {
-            this.friendsAdapter = CurrentSession.getInstance().getFriendsAdapter();
-        }
-
-        @Override
-        protected Boolean doInBackground(Integer... params) {
-            try {
-                return friendsAdapter.addFriend(params[0]);
-            }
-            catch(AuthorizationException | NotFoundException e) {
-                this.e = e;
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            if (!result && e!= null) {
+    private void callGetPrivateChat(int chatId) {
+        final User user;
+        user = CurrentSession.getInstance().getCurrentUser();
+        new GetPrivateChat() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {
                     Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
                 }
@@ -265,14 +212,34 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                     Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
                 }
             }
-            getActivity().finish();
-        }
+
+            @Override
+            public void onResponseReceived(Chat responseChat) {
+                chat = responseChat;
+                if (chat == null) {
+                    Calendar rightNow = Calendar.getInstance();
+                    dateWithoutTime = rightNow.getTime();
+
+                    userList = new ArrayList<>();
+                    userList.add(user.getId());
+                    userList.add(currentFriend.getId());
+
+                    callCreateChat();
+
+                } else {
+                    Intent i = new Intent();
+                    CurrentSession.getInstance().setChat(chat);
+                    BaseActivity.startWithFragment(getActivity(), new ChatFragment(), i);
+                    getActivity().finish();
+                }            }
+        }.execute(chatId);
     }
+
 
     private View.OnClickListener acceptOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            new AddFriend().execute(currentFriend.getId());
+            callAddFriend(currentFriend.getId().toString());
         }
     };
 
@@ -280,8 +247,12 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
 
         @Override
         public void onClick(View v) {
-            new removeFriend().execute(currentFriend.getId());
+            callRemoveFriend(currentFriend.getId().toString());
         }
     };
+
+    public int getTitle() {
+        return R.string.friend_profile_label;
+    }
 
 }

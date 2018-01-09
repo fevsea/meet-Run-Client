@@ -26,6 +26,7 @@ import java.util.Scanner;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetCity;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 
@@ -33,7 +34,7 @@ import edu.upc.fib.meetnrun.models.User;
  * Created by eric on 16/11/17.
  */
 
-public abstract class ProfileFragmentTemplate extends Fragment {
+public abstract class ProfileFragmentTemplate extends BaseFragment {
 
     protected View view;
     protected TextView profileImg;
@@ -134,70 +135,16 @@ public abstract class ProfileFragmentTemplate extends Fragment {
     }
 
     private void getCityFromPostcode(String p) {
-        new getCity().execute(p);
+        callGetCity(p);
     }
 
-    private class getCity extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            URL url = null;
-            String result = null;
-
-            // build a URL
-            try {
-                url = new URL("https://maps.googleapis.com/maps/api/geocode/json?address=" + params[0] + "&components=country:ES&region=es&key=AIzaSyDm6Bt_p5gn3F7DAJJLMYSEOR0kyqNL800");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+    private void callGetCity(String p) {
+        new GetCity() {
+            @Override
+            public void onResponseReceived(String s) {
+                postCode.setText(s);
             }
-
-            // read from the URL
-            Scanner scan = null;
-            try {
-                scan = new Scanner(url.openStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String str = new String();
-
-            while (scan.hasNext()) str += scan.nextLine();
-            scan.close();
-
-            // build a JSON object
-            JSONObject obj = null;
-            try {
-                obj = new JSONObject(str);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            //if (! obj.getString("status").equals("OK"))
-            //return;
-
-            // get the first result
-            JSONObject res = null;
-            try {
-                res = obj.getJSONArray("results").getJSONObject(0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                result = res.getString("formatted_address");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            Log.e("URL", result);
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            Log.e("URL", "change view");
-            postCode.setText(s);
-        }
+        }.execute(p);
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {

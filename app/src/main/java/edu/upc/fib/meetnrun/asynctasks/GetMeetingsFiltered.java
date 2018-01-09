@@ -1,17 +1,16 @@
 package edu.upc.fib.meetnrun.asynctasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackMeetings;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 
 
-public abstract class GetMeetingsFiltered extends AsyncTask<String,Void,List<Meeting> > implements AsyncTaskCallback {
+public abstract class GetMeetingsFiltered extends AsyncTask<String,Void,List<Meeting> > implements AsyncTaskCallbackMeetings {
     private int page;
     private IMeetingAdapter meetingAdapter;
 
