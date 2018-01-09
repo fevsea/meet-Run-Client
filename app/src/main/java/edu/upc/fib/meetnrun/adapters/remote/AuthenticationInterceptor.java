@@ -36,7 +36,7 @@ class AuthenticationInterceptor implements Interceptor {
         } else {
             r = chain.proceed(original);
         }
-        Log.e("AUTHENTICATION","TOKEN USED: "+token);
+        Log.d("AUTHENTICATION","TOKEN USED: "+token);
         return r;
 
     }

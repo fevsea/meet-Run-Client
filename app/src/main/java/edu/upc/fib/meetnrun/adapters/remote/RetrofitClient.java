@@ -26,7 +26,7 @@ class RetrofitClient {
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
                 @Override
                 public void log(String message) {
-                    Log.w("RETROFIT", message);
+                    Log.d("RETROFIT", message);
                 }
             });
             Interceptor retry = new Interceptor() {
