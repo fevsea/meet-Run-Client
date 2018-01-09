@@ -44,6 +44,8 @@ import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetAllParticipants;
+import edu.upc.fib.meetnrun.asynctasks.GetMeeting;
+import edu.upc.fib.meetnrun.asynctasks.GetMyMeetings;
 import edu.upc.fib.meetnrun.asynctasks.GetParticipants;
 import edu.upc.fib.meetnrun.asynctasks.GetPastMeetingsTracking;
 import edu.upc.fib.meetnrun.asynctasks.GetStaticMap;
@@ -116,8 +118,9 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
         TextView owner = view.findViewById(R.id.meeting_info_creator);
 
         shareTracking = view.findViewById(R.id.meeting_info_share);
+        callGetMeeting(meetingId);
+        callGetMyMeetings(CurrentSession.getInstance().getCurrentUser().getId());
 
-        meetingId = pastMeetingInfo.getInt("id");
 
         title.setText(pastMeetingInfo.getString("title"));
         owner.setText(pastMeetingInfo.getString("owner"));
@@ -190,7 +193,9 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
 
                     }
                 }, getContext());
-        friendsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            friendsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -220,11 +225,11 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
         friendsList.setAdapter(participantsAdapter);
     }
 
-            private void initializePagination() {
-                pageNumber = 0;
-                isLoading = false;
-                isLastPage = false;
-            }
+    private void initializePagination() {
+        pageNumber = 0;
+        isLoading = false;
+        isLastPage = false;
+    }
 
     /*@Override
     public void onResume() {
@@ -234,7 +239,6 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
 
     private void getParticipantsList() {
         callGetParticipants(meetingId);
-        callGetAllFriends();
     }
 
     private void setLoading() {
@@ -245,32 +249,34 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
     private void updateData() {
       Log.e("MEETINGINFO","LIST = " + meetingUsers.toString());
       if (meetingUsers != null && meetingUsers.size() != 0) {
-                    if (pageNumber != 0) {
-                        participantsAdapter.updateFriendsList(meetingUsers);
-                    }
-                    else {
-                        participantsAdapter.addFriends(meetingUsers);
-                    }
+          if (pageNumber != 0) {
+              participantsAdapter.updateFriendsList(meetingUsers);
+          }
+          else {
+              participantsAdapter.addFriends(meetingUsers);
+          }
 
-                    if (meetingUsers.size() == 0) {
-                        isLastPage = true;
-                    }
-                    else pageNumber++;
-                }
-                isLoading = false;
-                progressBar.setVisibility(View.INVISIBLE);
+          if (meetingUsers.size() == 0) {
+              isLastPage = true;
+          }
+          else pageNumber++;
+      }
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
       }
 
-      private void dismissProgressBarsOnError() {
+    private void dismissProgressBarsOnError() {
                 progressBar.setVisibility(View.INVISIBLE);
             }
 
     private void callGetAllFriends() {
+
         new GetAllFriends() {
             @Override
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {
                     Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
                 }
                 else if (e instanceof NotFoundException) {
                     Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
@@ -304,6 +310,47 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
             }
         }.execute(meetingId);
     }
+
+            private void callGetMeeting(int meetingId) {
+                new GetMeeting() {
+                    @Override
+                    public void onExceptionReceived(GenericException e) {
+                        if (e instanceof NotFoundException) {
+                            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                            getActivity().finish();
+                        }
+                    }
+
+                    @Override
+                    public void onResponseReceived(Meeting meeting) {
+                        List<User> owner = new ArrayList<>();
+                        owner.add(meeting.getOwner());
+                        participantsAdapter.addFriends(owner);
+                    }
+                }.execute(meetingId);
+            }
+
+            private void callGetMyMeetings(int userId) {
+                new GetMyMeetings() {
+
+                    @Override
+                    public void onExceptionReceived(GenericException e) {
+                        if (e instanceof AuthorizationException) {
+                            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                        }
+                        else if (e instanceof ParamsException) {
+                            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onResponseReceived(List<Meeting> myMeetings) {
+                        for (Meeting joinedMeeting: myMeetings) {
+                            //if (joinedMeeting.getId().equals(meetingId)) chatButton.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }.execute(userId);
+            }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
