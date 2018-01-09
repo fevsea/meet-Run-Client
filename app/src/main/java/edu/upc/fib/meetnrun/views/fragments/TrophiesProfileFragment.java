@@ -198,7 +198,6 @@ public class TrophiesProfileFragment extends Fragment {
             "Warming up",
             "Totally into it",
             "On fire!",
-            "x",
             "Your first hour",
             "Ten & going forward",
             "Centenary",
@@ -238,7 +237,6 @@ public class TrophiesProfileFragment extends Fragment {
             "Total distance of 10km done",
             "Total distance of 100km done",
             "Total distance of 10000km done",
-            "x",
             "Total of 1h running",
             "Total of 10h running",
             "Total of 100h running",
@@ -274,7 +272,6 @@ public class TrophiesProfileFragment extends Fragment {
     };
 
     private final boolean trophiesObtained[] = {
-            true,
             true,
             true,
             true,
