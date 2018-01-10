@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetTrophies;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Trophie;
 import edu.upc.fib.meetnrun.views.BaseActivity;
@@ -29,10 +28,12 @@ public class TrophiesProfileFragment extends Fragment {
 
     private String title;
     private int page;
+    private int id;
     private View view;
     private TrophiesAdapter adapter;
     private LinearLayoutManager layoutManager;
-    //private List<Trophie> trophiesObtained;
+    private List<Trophie> trophiesObtained;
+    private ArrayList<Trophie> createLists;
 
     // newInstance constructor for creating fragment with arguments
     public static TrophiesProfileFragment newInstance(int page, String title) {
@@ -57,16 +58,13 @@ public class TrophiesProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_trophies_profile, container, false);
-        setupRecyclerView();
+        id = CurrentSession.getInstance().getCurrentUser().getId();
+        getTrophiesList();
 
         return view;
     }
 
     private void setupRecyclerView() {
-        //int id = CurrentSession.getInstance().getCurrentUser().getId();
-        //IUserAdapter controller = CurrentSession.getInstance().getUserAdapter();
-        //trophiesObtained = controller.getUserTrophieByID(id);
-        ArrayList<Trophie> createLists = prepareData();
 
         RecyclerView recyclerView = view.findViewById(R.id.trophiegallery);
         recyclerView.setHasFixedSize(true);
@@ -96,28 +94,41 @@ public class TrophiesProfileFragment extends Fragment {
     private ArrayList<Trophie> prepareData() {
 
         ArrayList<Trophie> theimage = new ArrayList<>();
-        //Log.e("Tamany trophiesObtained", String.valueOf(trophiesObtained.length));
-        //Log.e("Tamany imagestrophies", String.valueOf(image_Obtained.length));
+
         for (int i = 0; i < image_Obtained.length; i++) {
-            if (i != 4) {
                 Trophie trophie = new Trophie();
                 trophie.setTrophieTitle(trophie_title[i]);
                 trophie.setTrophieDescription(trophie_description[i]);
-                trophie.setTrophieIsObtained(trophiesObtained[i]);
+                trophie.setTrophieIsObtained(trophiesObtained.get(i).getTrophieIsObtained());
                 trophie.setImage_Obtained(image_Obtained[i]);
                 trophie.setImage_NotObtained(image_NotObtained[i]);
                 theimage.add(trophie);
-            }
         }
-        //Log.e("Trophies afegits", String.valueOf(theimage.size()));
         return theimage;
+    }
+
+    private void getTrophiesList() {
+        callGetAllTrophies(id);
+    }
+
+    private void callGetAllTrophies(int id) {
+        new GetTrophies() {
+
+            @Override
+            public void onResponseReceived(List<Trophie> trophies) {
+                trophiesObtained = trophies;
+                createLists = prepareData();
+                setupRecyclerView();
+            }
+
+        }.execute(id);
+
     }
 
     private final Integer image_Obtained[] = {
             R.drawable.distance1km,
             R.drawable.distance10km,
             R.drawable.distance100km,
-            R.drawable.distance1000km,
             R.drawable.distance1000km,
             R.drawable.time1h,
             R.drawable.time10h,
@@ -157,7 +168,6 @@ public class TrophiesProfileFragment extends Fragment {
             R.drawable.not_get_distance1km,
             R.drawable.not_get_distance10km,
             R.drawable.not_get_distance100km,
-            R.drawable.not_get_distance1000km,
             R.drawable.not_get_distance1000km,
             R.drawable.not_get_time1h,
             R.drawable.not_get_time10h,
@@ -271,7 +281,7 @@ public class TrophiesProfileFragment extends Fragment {
             "20 friends made",
     };
 
-    private final boolean trophiesObtained[] = {
+    /*private final boolean trophiesObtained[] = {
             true,
             true,
             true,
@@ -309,44 +319,5 @@ public class TrophiesProfileFragment extends Fragment {
             true,
             true,
             true,
-    };
-
-    /*private final Integer all_image_ids[] = {
-            R.drawable.challenges1,
-            R.drawable.challenges5,
-            R.drawable.challenges10,
-            R.drawable.challenges20,
-            R.drawable.distance1km,
-            R.drawable.distance10km,
-            R.drawable.distance100km,
-            R.drawable.distance1000km,
-            R.drawable.friends1,
-            R.drawable.friends5,
-            R.drawable.friends10,
-            R.drawable.friends20,
-            R.drawable.level1,
-            R.drawable.level5,
-            R.drawable.level10,
-            R.drawable.level25,
-            R.drawable.level40,
-            R.drawable.level50,
-            R.drawable.meeting_distance1km,
-            R.drawable.meeting_distance5km,
-            R.drawable.meeting_distance10km,
-            R.drawable.meeting_distance21km,
-            R.drawable.meeting_distance42km,
-            R.drawable.meetings1,
-            R.drawable.meetings5,
-            R.drawable.meetings10,
-            R.drawable.meetings20,
-            R.drawable.meetings50,
-            R.drawable.steps10000,
-            R.drawable.steps20000,
-            R.drawable.steps25000,
-            R.drawable.steps100000,
-            R.drawable.time1h,
-            R.drawable.time10h,
-            R.drawable.time100h,
-            R.drawable.time1000h,
     };*/
 }
