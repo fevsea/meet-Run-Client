@@ -121,9 +121,9 @@ public class DrawerActivity extends AppCompatActivity{
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.rankings:
-                                    fragment = new RankingsUserFragment();
+                                    i = new Intent(getApplicationContext(),RankingsViewPagerFragment.class);
                                     setTitle(R.string.rankings);
-                                    replaceFragment(fragment);
+                                    startActivity(i);
                                     break;
                                 case R.id.settings:
                                     fragment = new SettingsFragment();

@@ -2,59 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
 
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/rankings_users" />
-
-        <Button
-            android:id="@+id/button5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/rankings_zip" />
-
-    </LinearLayout>
     <TextView
         android:id="@+id/rankings_zip_filter_TV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <RadioGroup
-            android:id="@+id/rdGZip"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:text="@string/filter_ranking">
-
-            <RadioButton
-                android:id="@+id/rdbCity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/ranking_city" />
-
-            <RadioButton
-                android:id="@+id/rdbCountry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/ranking_country" />
-        </RadioGroup>
-    </LinearLayout>
-
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/ranking_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

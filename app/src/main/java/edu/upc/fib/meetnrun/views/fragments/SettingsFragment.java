@@ -138,7 +138,7 @@ public class SettingsFragment extends BaseFragment {
 
     private void setLanguanges(){
         String[] languages={
-                "English", "Spanish (Castillian)", "Catalan"
+                "English", "Spanish", "Catalan"
         };
         language.setAdapter(new ArrayAdapter<CharSequence>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, languages));
 
