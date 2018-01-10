@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,6 +97,7 @@ public class TrophiesProfileFragment extends Fragment {
         ArrayList<Trophie> theimage = new ArrayList<>();
 
         for (int i = 0; i < image_Obtained.length; i++) {
+            if (i != 4 && i != 28) {
                 Trophie trophie = new Trophie();
                 trophie.setTrophieTitle(trophie_title[i]);
                 trophie.setTrophieDescription(trophie_description[i]);
@@ -103,6 +105,7 @@ public class TrophiesProfileFragment extends Fragment {
                 trophie.setImage_Obtained(image_Obtained[i]);
                 trophie.setImage_NotObtained(image_NotObtained[i]);
                 theimage.add(trophie);
+            }
         }
         return theimage;
     }
@@ -130,6 +133,7 @@ public class TrophiesProfileFragment extends Fragment {
             R.drawable.distance10km,
             R.drawable.distance100km,
             R.drawable.distance1000km,
+            R.drawable.distance1000km,
             R.drawable.time1h,
             R.drawable.time10h,
             R.drawable.time100h,
@@ -153,6 +157,7 @@ public class TrophiesProfileFragment extends Fragment {
             R.drawable.steps10000,
             R.drawable.steps20000,
             R.drawable.steps25000,
+            R.drawable.steps25000,
             R.drawable.steps100000,
             R.drawable.challenges1,
             R.drawable.challenges5,
@@ -168,6 +173,7 @@ public class TrophiesProfileFragment extends Fragment {
             R.drawable.not_get_distance1km,
             R.drawable.not_get_distance10km,
             R.drawable.not_get_distance100km,
+            R.drawable.not_get_distance1000km,
             R.drawable.not_get_distance1000km,
             R.drawable.not_get_time1h,
             R.drawable.not_get_time10h,
@@ -192,6 +198,7 @@ public class TrophiesProfileFragment extends Fragment {
             R.drawable.not_get_steps10000,
             R.drawable.not_get_steps20000,
             R.drawable.not_get_steps25000,
+            R.drawable.not_get_steps25000,
             R.drawable.not_get_steps100000,
             R.drawable.not_get_challenges1,
             R.drawable.not_get_challenges5,
@@ -208,6 +215,7 @@ public class TrophiesProfileFragment extends Fragment {
             "Warming up",
             "Totally into it",
             "On fire!",
+            "x",
             "Your first hour",
             "Ten & going forward",
             "Centenary",
@@ -231,6 +239,7 @@ public class TrophiesProfileFragment extends Fragment {
             "First steps",
             "A few steps",
             "Some steps",
+            "x",
             "A lot of steps!",
             "Your first victory",
             "Winner",
@@ -246,7 +255,8 @@ public class TrophiesProfileFragment extends Fragment {
             "Total distance of 1km done",
             "Total distance of 10km done",
             "Total distance of 100km done",
-            "Total distance of 10000km done",
+            "Total distance of 1000km done",
+            "x",
             "Total of 1h running",
             "Total of 10h running",
             "Total of 100h running",
@@ -270,6 +280,7 @@ public class TrophiesProfileFragment extends Fragment {
             "Total of 10000 steeps accomplished",
             "Total of 20000 steps accomplished",
             "Total of 25000 steeps accomplished",
+            "x",
             "Total of 100000 steps accomplished",
             "Win 1 challenge",
             "Win 5 challenges",
@@ -281,43 +292,4 @@ public class TrophiesProfileFragment extends Fragment {
             "20 friends made",
     };
 
-    /*private final boolean trophiesObtained[] = {
-            true,
-            true,
-            true,
-            true,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            false,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-            true,
-    };*/
 }
