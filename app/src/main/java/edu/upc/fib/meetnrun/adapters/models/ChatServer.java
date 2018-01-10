@@ -52,35 +52,6 @@ public class ChatServer implements IServerModel {
     @Expose
     private String lastMessageDateTime;
 
-    public ChatServer(int id, String chatName, List<UserServer> participantUsers, int type,
-                      MeetingServer meetingToRelate, String lastMessage, String lastMessageUsernamePosition,
-                      Date lastMessageDateTime) {
-        this.id = id;
-        this.chatName = chatName;
-        this.participantUsers = participantUsers;
-        this.type = type;
-        this.meetingToRelate = meetingToRelate;
-        this.lastMessage = lastMessage;
-        this.lastMessageUsername = lastMessageUsernamePosition;
-        this.lastMessageDateTime = UtilsGlobal.formatDate(lastMessageDateTime);
-    }
-
-    public ChatServer(Chat c) {
-        List<UserServer> lus = new ArrayList<>();
-        for (int i = 0; i < c.getListUsersChat().size(); i++) {
-            lus.add(new UserServer(c.getListUsersChat().get(i)));
-        }
-
-        this.lastMessageUsername = c.getMessage().getName();
-        this.participantUsers = lus;
-        this.id = c.getId();
-        this.chatName = c.getChatName();
-        this.type = c.getType();
-        this.meetingToRelate = new MeetingServer(c.getMeeting());
-        this.lastMessage = c.getMessage().getMessage();
-        this.lastMessageDateTime = UtilsGlobal.formatDate(c.getMessage().getDateTime());
-
-    }
 
     @Override
     public Chat toGenericModel() {
