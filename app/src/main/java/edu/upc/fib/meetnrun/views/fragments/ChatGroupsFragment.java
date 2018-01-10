@@ -318,7 +318,7 @@ public class ChatGroupsFragment extends BaseFragment {
             @Override
             public void onResponseReceived() {
                 Log.d("ChatGroupsFragment","Chat updated");
-                
+
             }
         }.execute(chat);
     }
