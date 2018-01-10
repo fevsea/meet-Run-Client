@@ -31,8 +31,8 @@ public class ChatAdapterImpl implements IChatAdapter {
     }
 
     @Override
-    public Chat createChat(String chatName, List<Integer> listUsersChatIDs, int type, Integer meetingID, String lastMessage, int lastMessageUserNamePosition, Date lastDateTime) throws AuthorizationException, ParamsException {
-        Forms.ChatCreateUpdate ur = new Forms.ChatCreateUpdate(chatName, listUsersChatIDs, type, meetingID, lastMessage, lastMessageUserNamePosition, lastDateTime);
+    public Chat createChat(String chatName, List<Integer> listUsersChatIDs, int type, Integer meetingID, String lastMessage, String lastMessageUserName, Date lastDateTime) throws AuthorizationException, ParamsException {
+        Forms.ChatCreateUpdate ur = new Forms.ChatCreateUpdate(chatName, listUsersChatIDs, type, meetingID, lastMessage, lastMessageUserName, lastDateTime);
         ChatServer u = null;
         try {
             Response<ChatServer> ret = mServices.createChat(ur).execute();
