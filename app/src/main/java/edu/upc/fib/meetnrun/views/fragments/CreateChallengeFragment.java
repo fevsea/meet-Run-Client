@@ -101,7 +101,7 @@ public class CreateChallengeFragment extends BaseFragment implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.done_button) {
-            challenge.setDistance(distancePicker.getValue()*1000);
+            challenge.setDistance(distancePicker.getValue()*1000.0f);
             challenge.setCreator(CurrentSession.getInstance().getCurrentUser());
             callGetUser(userID);
         }
