@@ -275,7 +275,7 @@ public class ChatGroupsFragment extends BaseFragment {
 
     private void callCreateChat() {
         setLoading();
-        new CreateChat(name,selectedFriendsID,1,null,"",0,dateWithoutTime) {
+        new CreateChat(name,selectedFriendsID,1,null,"",CurrentSession.getInstance().getCurrentUser().getUsername(),dateWithoutTime) {
             @Override
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {
@@ -318,6 +318,7 @@ public class ChatGroupsFragment extends BaseFragment {
             @Override
             public void onResponseReceived() {
                 Log.d("ChatGroupsFragment","Chat updated");
+                
             }
         }.execute(chat);
     }
