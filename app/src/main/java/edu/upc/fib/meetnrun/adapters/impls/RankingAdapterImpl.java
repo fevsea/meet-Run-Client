@@ -11,7 +11,7 @@ import edu.upc.fib.meetnrun.adapters.models.PositionServer;
 import edu.upc.fib.meetnrun.adapters.models.PositionUserServer;
 import edu.upc.fib.meetnrun.models.Position;
 import edu.upc.fib.meetnrun.models.PositionUser;
-import edu.upc.fib.meetnrun.remote.SOServices;
+import edu.upc.fib.meetnrun.adapters.remote.SOServices;
 import retrofit2.Response;
 
 import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.calculateOffset;

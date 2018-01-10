@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IRankingAdapter;
 import edu.upc.fib.meetnrun.models.Position;
 import edu.upc.fib.meetnrun.models.PositionUser;
 import edu.upc.fib.meetnrun.models.RankingUser;
@@ -26,6 +27,7 @@ public class RankingsAdapter extends RecyclerView.Adapter<RankingsViewHolder>{
     private Context context;
     private boolean zip;
     private Integer zipnum;
+    private IRankingAdapter rankingAdapter;
 
     public RankingsAdapter(List<PositionUser> rankinglist, RecyclerViewOnClickListener listener, Context context, boolean zip, Integer zipnum) {
         this.rankingList = rankinglist;
@@ -67,6 +69,10 @@ public class RankingsAdapter extends RecyclerView.Adapter<RankingsViewHolder>{
     public void addRankings(List<PositionUser> rankings) {
         this.rankingList.addAll(rankings);
         notifyDataSetChanged();
+    }
+
+    public List<String> getZipList(){
+        return rankingAdapter.getAllPostalCodes();
     }
 
     public int getItemCount() {

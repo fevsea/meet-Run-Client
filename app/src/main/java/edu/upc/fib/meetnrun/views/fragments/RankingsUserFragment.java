@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.adapters.IRankingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetRankingsUser;
@@ -26,6 +28,7 @@ import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.PositionUser;
+import edu.upc.fib.meetnrun.models.RankingUser;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RankingsAdapter;
@@ -47,10 +50,10 @@ public class RankingsUserFragment extends Fragment {
     Spinner zipSpinner;
     View view;
     Context context;
-    IUserAdapter userAdapter;
     User user;
 
     RankingsAdapter rankingAdapter;
+    IRankingAdapter iRankingAdapter;
     List<PositionUser> rankings;
     Integer zipnum;
 
@@ -77,7 +80,6 @@ public class RankingsUserFragment extends Fragment {
         initializePagination();
         zipSpinner = view.findViewById(R.id.rankingSpinner);
 
-        setSpinner();
         progressBar = view.findViewById(R.id.pb_loading_ranking_users);
         rdbFilter = view.findViewById(R.id.rdGUser);
         rdbFilter.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
@@ -95,18 +97,19 @@ public class RankingsUserFragment extends Fragment {
         });
         setupRecyclerView();
         callGetRanking();
+        setSpinner();
         return view;
     }
 
     private void setSpinner() {
         //TODO: catch stuff from server and put it on the spinner
-        /*
-        List<String> zips=rankingAdapter.
+
+        List<String> zips=iRankingAdapter.getAllPostalCodes();
         ArrayAdapter<String> zipsArrayAdapter= new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_spinner_item,
                 zips);
-        zipSpinner.setAdapter(zipsArrayAdapter); */
+        zipSpinner.setAdapter(zipsArrayAdapter);
     }
 
 
@@ -200,7 +203,6 @@ public class RankingsUserFragment extends Fragment {
                     if (friend.equals(user)){
                         frag = new FriendProfileFragment();
                         BaseActivity.startWithFragment(getActivity(), frag, intent);
-
                     }
                     BaseActivity.startWithFragment(getActivity(), frag, intent);
                 }

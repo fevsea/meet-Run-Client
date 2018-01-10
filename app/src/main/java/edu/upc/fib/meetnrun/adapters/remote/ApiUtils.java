@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun.remote;
+package edu.upc.fib.meetnrun.adapters.remote;
 
 /**
  * Created by Awais Iqbal on 24/10/2017.

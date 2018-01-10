@@ -28,10 +28,10 @@
             android:id="@+id/delete_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/delete_my_account"
-            android:layout_gravity="bottom"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:layout_gravity="bottom"
+            android:text="@string/delete_my_account" />
     </LinearLayout>
 
 </RelativeLayout>
