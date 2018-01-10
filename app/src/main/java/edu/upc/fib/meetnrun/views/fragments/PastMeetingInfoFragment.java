@@ -175,6 +175,7 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
                                 if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
                                 if (participant.getId().equals(friend.getId())) isFriend = true;
                             }
+                            CurrentSession.getInstance().setFriend(participant);
                             if (isFriend) {
                                 profileIntent = new Intent();
                                 frag = new FriendProfileFragment();
