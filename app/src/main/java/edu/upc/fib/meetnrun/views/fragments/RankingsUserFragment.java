@@ -23,6 +23,7 @@ import edu.upc.fib.meetnrun.adapters.IRankingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetRankingsUser;
+import edu.upc.fib.meetnrun.asynctasks.GetRankingsUserAllZips;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
@@ -102,14 +103,30 @@ public class RankingsUserFragment extends Fragment {
     }
 
     private void setSpinner() {
-        //TODO: catch stuff from server and put it on the spinner
-
-        List<String> zips=iRankingAdapter.getAllPostalCodes();
-        ArrayAdapter<String> zipsArrayAdapter= new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_spinner_item,
-                zips);
-        zipSpinner.setAdapter(zipsArrayAdapter);
+        new GetRankingsUserAllZips() {
+            @Override
+            public void onResponseReceived(List<String> rankings) {
+                List<String> zips=rankings;
+                ArrayAdapter<String> zipsArrayAdapter= new ArrayAdapter<>(
+                        getActivity(),
+                        android.R.layout.simple_spinner_item,
+                        zips);
+                zipSpinner.setAdapter(zipsArrayAdapter);
+            }
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override
+            protected Void doInBackground(List<String>... lists) {
+                return null;
+            }
+        };
     }
 
 

@@ -79,6 +79,7 @@ public class SettingsFragment extends BaseFragment {
                 else if (position==2){
                     setLocale("ca");
                 }
+
             }
 
             @Override
@@ -137,10 +138,9 @@ public class SettingsFragment extends BaseFragment {
     }
 
     private void setLanguanges(){
-        String[] languages={
-                "English", "Spanish", "Catalan"
-        };
-        language.setAdapter(new ArrayAdapter<CharSequence>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, languages));
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.languages, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        language.setAdapter(adapter);
 
     }
 

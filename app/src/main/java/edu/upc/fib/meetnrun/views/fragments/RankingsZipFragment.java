@@ -26,6 +26,7 @@ import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Position;
 import edu.upc.fib.meetnrun.models.PositionUser;
+import edu.upc.fib.meetnrun.models.RankingUser;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RankingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
@@ -37,7 +38,6 @@ public class RankingsZipFragment extends Fragment  {
     private ProgressBar progressBar;
     private String title;
     private int page;
-    RadioGroup rdbFilter;
     Spinner zipSpinner;
     View view;
     Context context;
@@ -66,16 +66,10 @@ public class RankingsZipFragment extends Fragment  {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_ranking_zips, container, false);
         context = this.getActivity();
-        zipSpinner = view.findViewById(R.id.rankingSpinner);
-        setSpinner();
         progressBar = view.findViewById(R.id.pb_loading_ranking_users);
         setupRecyclerView();
         callGetRanking();
         return view;
-    }
-
-    private void setSpinner() {
-        //TODO: catch stuff from server and put it on the spinner
     }
 
 
@@ -93,9 +87,14 @@ public class RankingsZipFragment extends Fragment  {
             @Override
             public void onItemClicked(int position) {
                 //TODO abrir
+                openRankingUser();
             }
         },getContext(),true,zipnum);
         rankingList.setAdapter(rankingAdapter);
+    }
+
+    private void openRankingUser() {
+        Intent i=new Intent(getContext(), RankingsUserFragment.class);
     }
 
     private void updateData() {
