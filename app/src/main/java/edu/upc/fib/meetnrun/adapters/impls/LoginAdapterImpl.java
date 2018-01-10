@@ -9,7 +9,7 @@ import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.remote.SOServices;
+import edu.upc.fib.meetnrun.adapters.remote.SOServices;
 import retrofit2.Response;
 
 import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.checkErrorCodeAndThowException;
