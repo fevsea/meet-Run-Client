@@ -10,6 +10,7 @@ import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
+import edu.upc.fib.meetnrun.adapters.models.TrophiesListServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import edu.upc.fib.meetnrun.adapters.remote.SOServices;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
@@ -179,6 +180,36 @@ public class UserAdapterImpl implements IUserAdapter {
     }
 
     @Override
+    public List<Trophie> getUserTrophieByID(int id) throws AuthorizationException {
+        TrophiesListServer tls = null;
+        try {
+            Response<TrophiesListServer> ret = mServices.getTrophiesListByID(id).execute();
+            if (!ret.isSuccessful()) {
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            }
+            tls = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tls != null ? tls.toGenericModel() : null;
+    }
+
+    @Override
+    public boolean banUser(int targetUserID) throws ForbiddenException {
+        boolean ok = true;
+        try {
+            Response<Void> ret = mServices.requestBan(targetUserID).execute();
+            if (!ret.isSuccessful()) {
+                ok = false;
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ok;
+    }
+
+    @Override
     public List<FeedMeeting> getUsersFeed(int id) throws AuthorizationException {
 
         List<FeedMeeting> lfm = new ArrayList<>();
@@ -199,25 +230,5 @@ public class UserAdapterImpl implements IUserAdapter {
         }
         return lfm;
     }
-
-    @Override
-    public List<Trophie> getUserTrophieByID(int id) throws AuthorizationException {
-        return null;
-    }
-
-    @Override
-  public boolean banUser(int targetUserID) throws ForbiddenException {
-    boolean ok = true;
-        try {
-          Response<Void> ret = mServices.requestBan(targetUserID).execute();
-          if (!ret.isSuccessful()) {
-            ok = false;
-            checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
-          }
-        } catch (IOException e) {
-          e.printStackTrace();
-        }
-        return ok;
-  }
 
 }

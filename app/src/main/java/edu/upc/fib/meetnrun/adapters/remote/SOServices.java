@@ -10,6 +10,7 @@ import edu.upc.fib.meetnrun.adapters.models.FriendServer;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.PositionServer;
+import edu.upc.fib.meetnrun.adapters.models.PositionUserServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.PositionUserServer;
