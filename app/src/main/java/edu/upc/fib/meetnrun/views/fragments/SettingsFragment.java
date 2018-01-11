@@ -65,25 +65,28 @@ public class SettingsFragment extends BaseFragment {
 
         language = view.findViewById(R.id.spinnerLanguage);
         setLanguanges();
+        language.post(new Runnable() {
+            @Override public void run() {
+                language.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        if (position==0){
+                            setLocale("en");
+                        }
+                        else if (position==1){
+                            setLocale("es");
+                        }
+                        else if (position==2){
+                            setLocale("ca");
+                        }
 
-        language.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    }
 
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (position==0){
-                    setLocale("en");
-                }
-                else if (position==1){
-                    setLocale("es");
-                }
-                else if (position==2){
-                    setLocale("ca");
-                }
-
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
 
