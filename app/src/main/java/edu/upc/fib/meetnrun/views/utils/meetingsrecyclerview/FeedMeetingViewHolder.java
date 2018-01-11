@@ -125,8 +125,11 @@ public class FeedMeetingViewHolder extends RecyclerView.ViewHolder implements Vi
             if(path.size() > 2) {
                 camera = CameraUpdateFactory.newLatLngZoom(path.get((path.size()/2) + 1),13);
             }
-            else {
+            else  if (path.size() >= 1){
                 camera = CameraUpdateFactory.newLatLngZoom(path.get(0), 13);
+            }
+            else {
+                camera = CameraUpdateFactory.newLatLngZoom(position, 13);
             }
         }
         else {

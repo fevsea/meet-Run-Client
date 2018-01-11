@@ -130,6 +130,7 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
             Challenge ch = challenges.get(i);
             if (!ch.isAccepted()) {
                 Log.d("ChallengesList", ch.getId().toString() + " is not accepted");
+                Log.d("ChallengesList", String.valueOf(CurrentSession.getInstance().getCurrentUser().getId()));
                 if (ch.getChallenged().getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
                     challengesRequest.add(ch);
                 }

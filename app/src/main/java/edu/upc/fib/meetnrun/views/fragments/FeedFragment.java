@@ -75,11 +75,10 @@ public class FeedFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 if (feedMeeting.getType() == FeedMeeting.PAST_FRIEND) {
                     TrackingData tracking = feedMeeting.getTracking();
                     List<LatLng> path = tracking.getRoutePoints();
-                    int meetingId = meeting.getId();
 
                     Intent pastMeetingInfoIntent = new Intent();
 
-                    pastMeetingInfoIntent.putExtra("id", meeting.getId());
+                    pastMeetingInfoIntent.putExtra("meetingId", meeting.getId());
                     pastMeetingInfoIntent.putExtra("title", meeting.getTitle());
                     pastMeetingInfoIntent.putExtra("owner", meeting.getOwner().getUsername());
                     pastMeetingInfoIntent.putExtra("ownerId", meeting.getOwner().getId());
