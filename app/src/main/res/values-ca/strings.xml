@@ -217,5 +217,8 @@
         <item>Castellà</item>
         <item>Català</item>
     </string-array>
+    <string name="forbidden_error">Aquesta acció està prohibida</string>
+    <string name="trophie_not_obtained">Encara no tens aquest trofeu, ànims!</string>
+    <string name="trophie_obtained">Ja tens aquest trofeu, felicitats!</string>
 
 </resources>
