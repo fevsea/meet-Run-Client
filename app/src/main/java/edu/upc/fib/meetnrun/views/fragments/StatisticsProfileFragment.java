@@ -105,6 +105,7 @@ public class StatisticsProfileFragment extends BaseFragment {
             resUser = (float) (km /(10+2.5*(level*level)));
             if (resUser>1.0) resUser=(float) 1.0;
             res= (float) (0.5*resMeetings+0.5*resUser);
+
         }
         //TODO: Mirar que el nivel que se quiere poner no sea menor que el que ya tiene (data race)
         percentMeetings.setProgress ((int) (100*resMeetings));
