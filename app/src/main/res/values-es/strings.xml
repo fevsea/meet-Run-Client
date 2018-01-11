@@ -65,6 +65,9 @@
     <string name="user_profile_label">Perfil de usuario</string>
     <string name="joined_meeting">Se ha unido a la quedada!</string>
 
+    <string name="trophie_won">Trofeo ganado</string>
+    <string name="trophie_won_text">Has ganado el trofeu %1$s </string>
+
 
     <string name="title_activity_fullscreen">Actividad de pantalla completa</string>
     <string name="dummy_button">Boton tonto</string>
