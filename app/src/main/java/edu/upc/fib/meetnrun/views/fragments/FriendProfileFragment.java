@@ -175,7 +175,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
 
 
     private void callCreateChat() {
-        new CreateChat(friendUsername,userList,0,null,"",0,dateWithoutTime) {
+        new CreateChat(friendUsername,userList,0,null,"",CurrentSession.getInstance().getCurrentUser().getUsername(),dateWithoutTime) {
             @Override
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {

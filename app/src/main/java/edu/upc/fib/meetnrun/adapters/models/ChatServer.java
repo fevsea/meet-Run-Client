@@ -46,44 +46,12 @@ public class ChatServer implements IServerModel {
 
     @SerializedName("lastMessageUserName")
     @Expose
-    private int lastMessageUsernamePosition;
+    private String lastMessageUsername;
 
     @SerializedName("lastDateTime")
     @Expose
     private String lastMessageDateTime;
 
-    public ChatServer(int id, String chatName, List<UserServer> participantUsers, int type,
-                      MeetingServer meetingToRelate, String lastMessage, int lastMessageUsernamePosition,
-                      Date lastMessageDateTime) {
-        this.id = id;
-        this.chatName = chatName;
-        this.participantUsers = participantUsers;
-        this.type = type;
-        this.meetingToRelate = meetingToRelate;
-        this.lastMessage = lastMessage;
-        this.lastMessageUsernamePosition = lastMessageUsernamePosition;
-        this.lastMessageDateTime = UtilsGlobal.formatDate(lastMessageDateTime);
-    }
-
-    public ChatServer(Chat c) {
-        List<UserServer> lus = new ArrayList<>();
-        for (int i = 0; i < c.getListUsersChat().size(); i++) {
-
-            lus.add(new UserServer(c.getListUsersChat().get(i)));
-
-            if (c.getMessage().getName().equals(c.getListUsersChat().get(i).getUsername())) {
-                this.lastMessageUsernamePosition = i;
-            }
-        }
-        this.participantUsers = lus;
-        this.id = c.getId();
-        this.chatName = c.getChatName();
-        this.type = c.getType();
-        this.meetingToRelate = new MeetingServer(c.getMeeting());
-        this.lastMessage = c.getMessage().getMessage();
-        this.lastMessageDateTime = UtilsGlobal.formatDate(c.getMessage().getDateTime());
-
-    }
 
     @Override
     public Chat toGenericModel() {
@@ -91,9 +59,9 @@ public class ChatServer implements IServerModel {
         for (int i = 0; i < participantUsers.size(); i++) {
             lu.add(participantUsers.get(i).toGenericModel());
         }
-        Log.e("UTILS","lastMessageDateTime = " + lastMessageDateTime);
+        Log.d("UTILS","lastMessageDateTime = " + lastMessageDateTime);
         Date d = UtilsGlobal.parseDate(this.lastMessageDateTime);
-        Message m = new Message(this.lastMessage, participantUsers.get(lastMessageUsernamePosition).getUsername(), d);
+        Message m = new Message(this.lastMessage, this.lastMessageUsername, d);
         Chat c = null;
         if (meetingToRelate == null) {
             c = new Chat(this.id, this.chatName, lu, this.type, m, null);
