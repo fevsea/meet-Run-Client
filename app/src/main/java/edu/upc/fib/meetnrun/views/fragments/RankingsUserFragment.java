@@ -170,21 +170,23 @@ public class RankingsUserFragment extends Fragment {
                     startActivity(intent);
                 }
                 else{
-                    Fragment frag=new UserProfileFragment();
-                    Intent intent=new Intent();
+                    Intent intent=new Intent(getActivity(),ProfileViewPagerFragment.class);
+                    boolean isFriend=false;
                     for (Friend f : myFriends) {
                         String friendUsername = f.getUser().getUsername();
                         if (friendUsername.equals(userId)){
+                            isFriend=true;
                             intent.putExtra("userId",f.getUser().getId());
                             intent.putExtra("isFriend",true);
                             startActivity(intent);
                             break;
                         }
                     }
-                    intent.putExtra("userId",userPosition.getId());
-                    intent.putExtra("isFriend",false);
-                    startActivity(intent);
-
+                    if (!isFriend) {
+                        intent.putExtra("userId", userPosition.getId());
+                        intent.putExtra("isFriend", false);
+                        startActivity(intent);
+                    }
                 }
             }
         },getContext(),false,zipnum);
