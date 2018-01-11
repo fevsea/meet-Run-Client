@@ -13,6 +13,7 @@ import edu.upc.fib.meetnrun.adapters.models.PositionServer;
 import edu.upc.fib.meetnrun.adapters.models.PositionUserServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
+
 import edu.upc.fib.meetnrun.adapters.models.PositionUserServer;
 import edu.upc.fib.meetnrun.adapters.models.TrophiesListServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;

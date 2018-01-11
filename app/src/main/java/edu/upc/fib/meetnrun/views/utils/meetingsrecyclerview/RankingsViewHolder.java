@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +41,17 @@ public class RankingsViewHolder extends RecyclerView.ViewHolder implements View.
         this.listener = new WeakReference<>(listener);
     }
 
+    public void setPositionColors(int positionNum){
+        if (positionNum==0){
+            position.setTextColor(Color.rgb(0xff,0xd7,0x00));
+        }
+        else if (positionNum==1){
+            position.setTextColor(Color.rgb(0xc0,0xc0,0xc0));
+        }
+        else if (positionNum==2){
+            position.setTextColor(Color.rgb(0xcd,0x7f,0x32));
+        }
+    }
     public void bindUserRanking(PositionUser ranking, int positionNum) {
         position = view.findViewById(R.id.ranking_item_user_photo2);
         km = view.findViewById(R.id.ranking_item_km);
@@ -48,6 +60,8 @@ public class RankingsViewHolder extends RecyclerView.ViewHolder implements View.
         zip = view.findViewById(R.id.ranking_item_postcode);
 
         position.setText(String.valueOf(positionNum+1));
+        setPositionColors(positionNum);
+
         Log.e("AAA",ranking.getPosition() + "");
         km.setText(String.valueOf(ranking.getDistance()/1000.000 + " km"));
         username.setText(ranking.getUserID());
@@ -65,6 +79,7 @@ public class RankingsViewHolder extends RecyclerView.ViewHolder implements View.
         zip = view.findViewById(R.id.zip_code);
 
         position.setText(String.valueOf(positionNum+1));
+        setPositionColors(positionNum);
         km.setText(String.valueOf(ranking.getDistance()/1000.000 + " km"));
         String postalCode=String.valueOf(ranking.getZip());
         if (postalCode.length()==4) postalCode="0"+postalCode;
@@ -75,6 +90,8 @@ public class RankingsViewHolder extends RecyclerView.ViewHolder implements View.
 
     @Override
     public void onClick(View view) {
-            listener.get().onItemClicked(getAdapterPosition());
+
+        Log.d("EEE","Clickeddddd");
+        listener.get().onItemClicked(getAdapterPosition());
     }
 }
