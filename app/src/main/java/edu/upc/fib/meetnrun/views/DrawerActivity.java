@@ -94,10 +94,7 @@ public class DrawerActivity extends AppCompatActivity {
                                     break;
                                 case R.id.logout:
                                     resetFirebaseToken();
-                                    deleteToken();
-                                    i = new Intent(getApplicationContext(), LoginActivity.class);
-                                    startActivity(i);
-                                    finishAffinity();
+                                    //se ha movido el contenido de logout al recibir respuesta del server
                                     break;
 
                                 case R.id.meetings:
@@ -211,9 +208,13 @@ public class DrawerActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), R.string.authorization_error, Toast.LENGTH_LONG).show();
                 }
             }
+
             @Override
             public void onResponseReceived() {
-
+                deleteToken();
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(i);
+                finishAffinity();
             }
         }.execute();
     }
