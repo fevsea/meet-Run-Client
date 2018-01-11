@@ -2,25 +2,25 @@ package edu.upc.fib.meetnrun.asynctasks;
 
 import android.os.AsyncTask;
 
-import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallback;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
-public abstract class DeleteAccount extends AsyncTask<Void,Void,Void> implements AsyncTaskCallback,AsyncTaskException{
+public abstract class ResetFirebaseToken extends AsyncTask<Void,Void,Void> implements AsyncTaskCallback,AsyncTaskException{
 
     private GenericException exception;
-    private IUserAdapter userAdapter;
+    private ILoginAdapter loginAdapter;
 
-    public DeleteAccount(){
-        userAdapter = CurrentSession.getInstance().getUserAdapter();
+    public ResetFirebaseToken(){
+        loginAdapter = CurrentSession.getInstance().getLoginAdapter();
     }
 
     @Override
     protected Void doInBackground(Void... v){
         try {
-            userAdapter.deleteUserByID(CurrentSession.getInstance().getCurrentUser().getId());
+            loginAdapter.resetFirebaseToken();
         }
         catch (GenericException e) {
             exception = e;

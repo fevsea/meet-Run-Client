@@ -40,6 +40,9 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetAllParticipants;
+import edu.upc.fib.meetnrun.asynctasks.GetMeeting;
+import edu.upc.fib.meetnrun.asynctasks.GetMyMeetings;
+import edu.upc.fib.meetnrun.asynctasks.GetParticipants;
 import edu.upc.fib.meetnrun.asynctasks.GetPastMeetingsTracking;
 import edu.upc.fib.meetnrun.asynctasks.GetStaticMap;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
@@ -48,6 +51,7 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
+import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.TrackingData;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
@@ -60,7 +64,9 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
     private View view;
     private GoogleMap map;
     private UsersAdapter participantsAdapter;
-    private List<Friend> friends;
+    private LinearLayoutManager layoutManager;
+            private List<User> meetingUsers;
+            private List<Friend> friends;
     private Marker marker;
     private ImageButton shareTracking;
     private boolean staticMapAvailable;
@@ -74,6 +80,12 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
     private TrackingData tracking;
     private ArrayList<LatLng> path;
     private ProgressBar progressBar;
+            private Intent profileIntent;
+            private Fragment frag;
+            private FloatingActionButton fab;
+            private boolean isLoading;
+            private boolean isLastPage;
+            private int pageNumber;
 
 
 
@@ -83,11 +95,19 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_past_meeting_info,container,false);
         this.view = view;
+        setHasOptionsMenu(true);
+
+        friends = new ArrayList<>();
+        callGetAllFriends();
+
+        fab = getActivity().findViewById(R.id.activity_fab);
+
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder(); StrictMode.setVmPolicy(builder.build());
         FloatingActionButton fab =
                 getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.INVISIBLE);
         progressBar = view.findViewById(R.id.pb_loading);
+
         Bundle pastMeetingInfo = getActivity().getIntent().getExtras();
         userId = pastMeetingInfo.getInt("userId");
         meetingId = pastMeetingInfo.getInt("meetingId");
@@ -100,8 +120,9 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
         TextView owner = view.findViewById(R.id.meeting_info_creator);
 
         shareTracking = view.findViewById(R.id.meeting_info_share);
+        callGetMeeting(meetingId);
+        callGetMyMeetings(CurrentSession.getInstance().getCurrentUser().getId());
 
-        meetingId = pastMeetingInfo.getInt("id");
 
         title.setText(pastMeetingInfo.getString("title"));
         owner.setText(pastMeetingInfo.getString("owner"));
@@ -120,7 +141,7 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
             }
         });
 
-
+        initializePagination();
         setupRecyclerView();
 
 
@@ -131,12 +152,12 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
     private void setupRecyclerView() {
 
         final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
-        friendsList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        layoutManager = new LinearLayoutManager(getActivity());
+        friendsList.setLayoutManager(layoutManager);
 
-        List<User> users = new ArrayList<>();
-        getParticipantsList();
+        meetingUsers = new ArrayList<>();
 
-        participantsAdapter = new UsersAdapter(users, new RecyclerViewOnClickListener() {
+        participantsAdapter = new UsersAdapter(meetingUsers, new RecyclerViewOnClickListener() {
                     @Override
                     public void onButtonClicked(int position) {}
 
@@ -163,28 +184,90 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
 
                     }
                 }, getContext());
-                friendsList.setAdapter(participantsAdapter);
 
+            friendsList.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
+                fab.setVisibility(View.VISIBLE);
+
+                if (!isLoading && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0) {
+                    if (!isLastPage) {
+                        getParticipantsList();
+                    }
+                    else {
+                        fab.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
+
+        getParticipantsList();
+        friendsList.setAdapter(participantsAdapter);
     }
 
-    @Override
+    private void initializePagination() {
+        pageNumber = 0;
+        isLoading = false;
+        isLastPage = false;
+    }
+
+    /*@Override
     public void onResume() {
         getParticipantsList();
         super.onResume();
-    }
+    }*/
 
     private void getParticipantsList() {
-        callGetAllParticipants(meetingId);
-        callGetAllFriends();
+        callGetParticipants(meetingId);
     }
 
+    private void setLoading() {
+       progressBar.setVisibility(View.VISIBLE);
+       isLoading = true;
+    }
+
+    private void updateData() {
+      Log.e("MEETINGINFO","LIST = " + meetingUsers.toString());
+      if (meetingUsers != null && meetingUsers.size() != 0) {
+          if (pageNumber != 0) {
+              participantsAdapter.updateFriendsList(meetingUsers);
+          }
+          else {
+              participantsAdapter.addFriends(meetingUsers);
+          }
+
+          if (meetingUsers.size() == 0) {
+              isLastPage = true;
+          }
+          else pageNumber++;
+      }
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
+      }
+
+    private void dismissProgressBarsOnError() {
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+
     private void callGetAllFriends() {
+
         new GetAllFriends() {
             @Override
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {
                     Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
                 }
                 else if (e instanceof NotFoundException) {
                     Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
@@ -198,8 +281,9 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
         }.execute();
     }
 
-    private void callGetAllParticipants(int meetingId) {
-        new GetAllParticipants() {
+    private void callGetParticipants(int meetingId) {
+        setLoading();
+        new GetParticipants(pageNumber) {
             @Override
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {
@@ -212,10 +296,52 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
 
             @Override
             public void onResponseReceived(List<User> users) {
-                participantsAdapter.updateFriendsList(users);
+                meetingUsers = users;
+                updateData();
             }
         }.execute(meetingId);
     }
+
+            private void callGetMeeting(int meetingId) {
+                new GetMeeting() {
+                    @Override
+                    public void onExceptionReceived(GenericException e) {
+                        if (e instanceof NotFoundException) {
+                            Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                            getActivity().finish();
+                        }
+                    }
+
+                    @Override
+                    public void onResponseReceived(Meeting meeting) {
+                        List<User> owner = new ArrayList<>();
+                        owner.add(meeting.getOwner());
+                        participantsAdapter.addFriends(owner);
+                    }
+                }.execute(meetingId);
+            }
+
+            private void callGetMyMeetings(int userId) {
+                new GetMyMeetings() {
+
+                    @Override
+                    public void onExceptionReceived(GenericException e) {
+                        if (e instanceof AuthorizationException) {
+                            Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                        }
+                        else if (e instanceof ParamsException) {
+                            Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onResponseReceived(List<Meeting> myMeetings) {
+                        for (Meeting joinedMeeting: myMeetings) {
+                            //if (joinedMeeting.getId().equals(meetingId)) chatButton.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }.execute(userId);
+            }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {

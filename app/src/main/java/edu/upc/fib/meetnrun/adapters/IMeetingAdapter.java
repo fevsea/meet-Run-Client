@@ -19,7 +19,7 @@ import edu.upc.fib.meetnrun.models.User;
 public interface IMeetingAdapter {
     List<Meeting> getAllMeetings(int page);
 
-    Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID) throws ParamsException, AuthorizationException;
+    Meeting createMeeting(String title, String description, Boolean _public, Integer level, String date, String latitude, String longitude, Integer chatID) throws ParamsException, AuthorizationException, ForbiddenException;
 
     Meeting getMeeting(int targetMeetingid) throws NotFoundException;
 
@@ -29,7 +29,7 @@ public interface IMeetingAdapter {
 
     List<User> getParticipantsFromMeeting(int targetMeetingId, int page) throws AuthorizationException, ParamsException;
 
-    public boolean joinMeeting(int targetMeetingId, int targetUserId) throws AuthorizationException, ParamsException;
+    public boolean joinMeeting(int targetMeetingId, int targetUserId) throws AuthorizationException, ParamsException, ForbiddenException;
 
     public boolean leaveMeeting(int targetMeetingId, int targetUserId) throws AuthorizationException, ParamsException;
 
