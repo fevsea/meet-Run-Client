@@ -1,12 +1,8 @@
 package edu.upc.fib.meetnrun;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.test.InstrumentationRegistry;
-import android.support.test.espresso.Espresso;
 import android.support.test.espresso.action.ViewActions;
-import android.support.test.espresso.assertion.ViewAssertions;
+import android.support.test.espresso.contrib.PickerActions;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.Intents;
 import android.support.test.espresso.matcher.BoundedMatcher;
@@ -14,20 +10,20 @@ import android.support.test.filters.SmallTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import edu.upc.fib.meetnrun.adapters.AdaptersContainer;
-import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.User;
+import java.util.Random;
+
 import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.LoginActivity;
 import edu.upc.fib.meetnrun.views.fragments.CreateMeetingFragment;
@@ -35,11 +31,10 @@ import edu.upc.fib.meetnrun.views.fragments.MeetingInfoFragment;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsViewHolder;
 
 import static android.support.test.InstrumentationRegistry.getContext;
-import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.intent.Intents.intended;
@@ -47,14 +42,23 @@ import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCom
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.isRoot;
+import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static edu.upc.fib.meetnrun.TestUtils.TEST_MEETING;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static edu.upc.fib.meetnrun.TestUtils.TEST_NEW_DESCRIPTION;
+import static edu.upc.fib.meetnrun.TestUtils.TEST_NEW_LEVEL;
+import static edu.upc.fib.meetnrun.TestUtils.TEST_NEW_MEETING;
 import static edu.upc.fib.meetnrun.TestUtils.TEST_PASSWORD;
 import static edu.upc.fib.meetnrun.TestUtils.TEST_USERNAME;
+import static edu.upc.fib.meetnrun.TestUtils.getCurrentDay;
+import static edu.upc.fib.meetnrun.TestUtils.getCurrentHour;
+import static edu.upc.fib.meetnrun.TestUtils.getCurrentMinute;
+import static edu.upc.fib.meetnrun.TestUtils.getCurrentMonth;
+import static edu.upc.fib.meetnrun.TestUtils.getCurrentYear;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class MeetingListTest{
+public class CreateMeetingTest {
 
 
     @Rule
@@ -73,54 +77,26 @@ public class MeetingListTest{
         onView(withId(R.id.layout_buttons_login)).perform(ViewActions.scrollTo());
         Thread.sleep(250);
         onView(withId(R.id.login)).perform(click());
-    }
-
-    @Test
-    public void testFragmentFab() {
-        Intents.init();
         onView(withId(R.id.activity_fab)).check(matches(isDisplayed()));
         onView(withId(R.id.activity_fab)).perform(click());
-        intended(hasComponent(BaseActivity.class.getName()));
-        intended(hasExtra("fragment",CreateMeetingFragment.instantiate(getContext(),CreateMeetingFragment.class.getName()).getClass()));
-        Intents.release();
     }
 
     @Test
-    public void testRecyclerViewIntent() {
-        Intents.init();
-        onView(withId(R.id.fragment_meeting_container)).check(matches(isDisplayed()));
-        onView(withId(R.id.fragment_meeting_container))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0,click()));
-        intended(hasComponent(BaseActivity.class.getName()));
-        intended(hasExtra("fragment",MeetingInfoFragment.instantiate(getContext(),MeetingInfoFragment.class.getName()).getClass()));
-        Intents.release();
+    public void testCreateMeeting() throws InterruptedException {
+        onView(withId(R.id.name)).perform(typeText(TEST_NEW_MEETING));
+        onView(withId(R.id.pickDate)).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(getCurrentYear(),getCurrentMonth(),getCurrentDay()));
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.pickHour)).perform(click());
+        onView(withClassName(Matchers.equalTo(TimePicker.class.getName()))).perform(PickerActions.setTime(getCurrentHour(),getCurrentMinute()));
+        onView(withText("OK")).perform(click());
+        onView(isRoot()).perform(closeSoftKeyboard());
+        onView(withId(R.id.level)).perform(typeText(TEST_NEW_LEVEL)).perform(closeSoftKeyboard());
+        onView(withId(R.id.description)).perform(typeText(TEST_NEW_DESCRIPTION)).perform(closeSoftKeyboard());
+        onView(withId(R.id.done_button)).perform(click());
+        Thread.sleep(250);
+        onView(withText(R.string.private_no_friends)).perform(click());
     }
 
-    @Test
-    public void testRecyclerViewHolder() {
-        onView(withId(R.id.fragment_meeting_container))
-                .perform(RecyclerViewActions.scrollToHolder(
-                        withViewHolder(TEST_MEETING)
-                ));
-    }
-
-    public static Matcher<RecyclerView.ViewHolder> withViewHolder(final String text) {
-        return new BoundedMatcher<RecyclerView.ViewHolder, MeetingsViewHolder>(MeetingsViewHolder.class) {
-
-            @Override
-            public void describeTo(Description description) {
-
-            }
-
-            @Override
-            protected boolean matchesSafely(MeetingsViewHolder item) {
-                TextView timeViewText = item.itemView.findViewById(R.id.meeting_item_title);
-                if (timeViewText == null) {
-                    return false;
-                }
-                return timeViewText.getText().toString().contains(text);
-            }
-        };
-    }
 
 }
