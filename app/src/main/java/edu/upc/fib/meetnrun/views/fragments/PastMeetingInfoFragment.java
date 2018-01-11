@@ -4,9 +4,8 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,8 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
-import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetAllParticipants;
 import edu.upc.fib.meetnrun.asynctasks.GetMeeting;
@@ -103,6 +99,10 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
         callGetAllFriends();
 
         fab = getActivity().findViewById(R.id.activity_fab);
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder(); StrictMode.setVmPolicy(builder.build());
+        FloatingActionButton fab =
+                getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.INVISIBLE);
         progressBar = view.findViewById(R.id.pb_loading);
 
@@ -162,33 +162,22 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
                     @Override
                     public void onItemClicked(int position) {
                         User participant = participantsAdapter.getFriendAtPosition(position);
-                        Intent profileIntent;
+                        Intent userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
                         if (participant.getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
-                            profileIntent = new Intent(getActivity(),ProfileViewPagerFragment.class);
-                            startActivity(profileIntent);
+                            userProfileIntent.putExtra("userId",CurrentSession.getInstance().getCurrentUser().getId());
+                            userProfileIntent.putExtra("isFriend",false);
                         }
                         else {
                             boolean isFriend = false;
-                            Fragment frag;
                             for (Friend f : friends) {
                                 User friend = f.getFriend();
                                 if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
                                 if (participant.getId().equals(friend.getId())) isFriend = true;
                             }
-                            if (isFriend) {
-                                profileIntent = new Intent();
-                                frag = new FriendProfileFragment();
-                            }
-                            else {
-                                profileIntent = new Intent();
-                                frag = new UserProfileFragment();
-                            }
-                            profileIntent.putExtra("id",participant.getId().toString());
-                            profileIntent.putExtra("userName", participant.getUsername());
-                            String name = participant.getFirstName() + " " + participant.getLastName();
-                            profileIntent.putExtra("name", name);
-                            profileIntent.putExtra("postCode", participant.getPostalCode());
-                            BaseActivity.startWithFragment(getActivity(), frag, profileIntent);
+                            CurrentSession.getInstance().setFriend(participant);
+                            userProfileIntent.putExtra("userId",participant.getId());
+                            userProfileIntent.putExtra("isFriend",isFriend);
+                            startActivity(userProfileIntent);
                         }
 
                     }

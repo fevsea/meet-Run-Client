@@ -31,7 +31,7 @@ public class ChallengesRequestViewHolder extends ChallengesViewHolder {
         ImageButton reject = view.findViewById(R.id.reject);
         TextView expiresIn = view.findViewById(R.id.expires_in);
 
-        String totalText = String.format(Locale.forLanguageTag("es"), "%.0f km", challenge.getDistance());
+        String totalText = String.format(Locale.forLanguageTag("es"), "%.0f km", challenge.getDistance() / 1000.0f);
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
