@@ -67,6 +67,11 @@
             android:label="Tracking"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".views.RankingsViewPagerFragment"
+            android:label="@string/rankings_label"
+            android:screenOrientation="portrait" />
+
         <service android:name=".services.TrackingService" />
 
         <service android:name=".services.FirebaseInstanceService">

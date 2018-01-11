@@ -6,6 +6,7 @@ import edu.upc.fib.meetnrun.adapters.impls.ChatAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.impls.FriendsAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.impls.LoginAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.impls.MeetingAdapterImpl;
+import edu.upc.fib.meetnrun.adapters.impls.RankingAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.impls.UserAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.remote.ApiUtils;
 import edu.upc.fib.meetnrun.adapters.remote.SOServices;
@@ -21,6 +22,7 @@ public class AdaptersContainer {
     private ILoginAdapter loginAdapter;
     private IChatAdapter chatAdapter;
     private IChallengeAdapter challengesAdapter;
+    private IRankingAdapter rankingsAdapter;
     private SOServices mServices;
     private static AdaptersContainer instance = null;
 
@@ -100,6 +102,13 @@ public class AdaptersContainer {
             chatAdapter = new ChatAdapterImpl(mServices);
         }
         return chatAdapter;
+    }
+
+    public IRankingAdapter getRankingsAdapter(){
+        if(rankingsAdapter == null){
+            rankingsAdapter = new RankingAdapterImpl(mServices);
+        }
+        return rankingsAdapter;
     }
 
     public void setChatAdapter(IChatAdapter chatAdapter) {

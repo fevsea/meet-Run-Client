@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,7 +60,7 @@ public class SettingsFragment extends BaseFragment {
                 getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        TextView text = view.findViewById(R.id.delete_account);
+        Button text = view.findViewById(R.id.delete_account);
 
 
         language = view.findViewById(R.id.spinnerLanguage);

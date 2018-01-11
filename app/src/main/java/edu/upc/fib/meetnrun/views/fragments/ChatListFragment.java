@@ -1,10 +1,8 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,7 +45,7 @@ public class ChatListFragment extends BaseFragment {
     private Animation FabClose;
     private Animation FabRClockWise;
     private Animation FabRantiClockWise;
-    private List<Chat> l;
+    private List<Chat> charListArray;
     private ChatAdapter chatAdapter;
     private boolean isOpen = false;
     private IChatAdapter chatDBAdapter;
@@ -163,9 +161,9 @@ public class ChatListFragment extends BaseFragment {
         layoutManager = new LinearLayoutManager(getActivity());
         chatList.setLayoutManager(layoutManager);
 
-        l = new ArrayList<>();
+        charListArray = new ArrayList<>();
 
-        chatAdapter = new ChatAdapter(l, new RecyclerViewOnClickListener() {
+        chatAdapter = new ChatAdapter(charListArray, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
@@ -226,7 +224,7 @@ public class ChatListFragment extends BaseFragment {
                 filtered = true;
                 newText = newText.toLowerCase();
                 ArrayList<Chat> newList = new ArrayList<>();
-                for (Chat chat : l) {
+                for (Chat chat : charListArray) {
                     String chatName = chat.getChatName().toLowerCase();
                     if (chatName != null) {
                         if (chatName.contains(newText)) newList.add(chat);
@@ -261,7 +259,7 @@ public class ChatListFragment extends BaseFragment {
 
             @Override
             public void onResponseReceived(List<Chat> chats) {
-                l = chats;
+                charListArray = chats;
                 updateData();
             }
         }.execute();
@@ -269,11 +267,11 @@ public class ChatListFragment extends BaseFragment {
 
     private void updateData() {
 
-        if (l != null) {
-            if (pageNumber == 0) chatAdapter.updateChatList(l);
-            else chatAdapter.addChats(l);
+        if (charListArray != null) {
+            if (pageNumber == 0) chatAdapter.updateChatList(charListArray);
+            else chatAdapter.addChats(charListArray);
 
-            if (l.size() == 0) {
+            if (charListArray.size() == 0) {
                 isLastPage = true;
             }
             else pageNumber++;
