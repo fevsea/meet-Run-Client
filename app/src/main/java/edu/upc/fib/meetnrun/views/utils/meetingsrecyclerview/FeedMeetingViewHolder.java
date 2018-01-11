@@ -111,8 +111,9 @@ public class FeedMeetingViewHolder extends RecyclerView.ViewHolder implements Vi
         if (meeting.getType() == FeedMeeting.PAST_FRIEND) {
             map.getUiSettings().setAllGesturesEnabled(true);
             List<LatLng> path = meeting.getTracking().getRoutePoints();
-
-            marker = map.addMarker(new MarkerOptions().position(path.get(0)).title("Start"));
+            if (path.size() >= 1) {
+                marker = map.addMarker(new MarkerOptions().position(path.get(0)).title("Start"));
+            }
             if(path.size() > 1) {
                 marker = map.addMarker(new MarkerOptions().position(path.get(path.size() - 1)).title("End"));
             }
