@@ -46,6 +46,11 @@ public class MyMeetingsAdapter extends RecyclerView.Adapter<MyMeetingsViewHolder
         notifyDataSetChanged();
     }
 
+    public void deleteMeetingAtPosition(int pos) {
+        meetings.remove(pos);
+        notifyDataSetChanged();
+    }
+
     public Meeting getMeetingAtPosition(int position) {
         return meetings.get(position);
     }
