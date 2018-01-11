@@ -1,12 +1,13 @@
 MIT License
 
-Copyright (c) 2018  Agustín Baena, Alejandro <aagustinb2@gmail.com>
-                    Alemán Colorado, Javier <javieralemancolorado@gmail.com>
-                    Castro Olivares, Guillem <guillemcastro4@gmail.com>
-                    Follana Martinez, Mònica <monicfm44@gmail.com>
-                    Iqbal Begum, Awais <awais.iqbal2@gmail.com>
-                    Paricio Valles, Marc <paricio.marc@gmail.com>
-                    Rodríguez Balsells, Eric <erick29496@gmail.com>
+Copyright (c) 2018  
+* Agustín Baena, Alejandro <aagustinb2@gmail.com>
+* Alemán Colorado, Javier <javieralemancolorado@gmail.com>
+* Castro Olivares, Guillem <guillemcastro4@gmail.com>
+* Follana Martinez, Mònica <monicfm44@gmail.com>
+* Iqbal Begum, Awais <awais.iqbal2@gmail.com>
+* Paricio Valles, Marc <paricio.marc@gmail.com>
+* Rodríguez Balsells, Eric <erick29496@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
