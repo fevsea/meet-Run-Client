@@ -231,7 +231,14 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                     Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
                 }
                 else if (e instanceof NotFoundException) {
-                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    Calendar rightNow = Calendar.getInstance();
+                    dateWithoutTime = rightNow.getTime();
+
+                    userList = new ArrayList<>();
+                    userList.add(user.getId());
+                    userList.add(currentFriend.getId());
+
+                    callCreateChat();
                 }
             }
 
@@ -256,7 +263,6 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
                 }            }
         }.execute(chatId);
     }
-
 
     private View.OnClickListener acceptOnClickListener = new View.OnClickListener() {
         @Override

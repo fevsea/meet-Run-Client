@@ -1,13 +1,12 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,7 +45,7 @@ public class ChatListFragment extends BaseFragment {
     private Animation FabClose;
     private Animation FabRClockWise;
     private Animation FabRantiClockWise;
-    private List<Chat> l;
+    private List<Chat> charListArray;
     private ChatAdapter chatAdapter;
     private boolean isOpen = false;
     private IChatAdapter chatDBAdapter;
@@ -58,6 +57,8 @@ public class ChatListFragment extends BaseFragment {
     private int pageNumber;
     private ProgressBar progressBar;
 
+    private boolean filtered;
+
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class ChatListFragment extends BaseFragment {
         setHasOptionsMenu(true);
 
         this.view = inflater.inflate(R.layout.fragment_chat_list, container, false);
-
+        filtered = false;
         chatDBAdapter = CurrentSession.getInstance().getChatAdapter();
 
         initializePagination();
@@ -74,6 +75,7 @@ public class ChatListFragment extends BaseFragment {
 
         fab = getActivity().findViewById(R.id.activity_fab);
         fab.setImageResource(R.drawable.chat);
+        fab.setVisibility(View.VISIBLE);
 
         fab2 = view.findViewById(R.id.fab2);
         fab3 = view.findViewById(R.id.fab3);
@@ -138,7 +140,7 @@ public class ChatListFragment extends BaseFragment {
     }
 
     private void updateChats() {
-        callGetChats();
+        if (!filtered) callGetChats();
     }
 
     private void addChat() {
@@ -160,9 +162,9 @@ public class ChatListFragment extends BaseFragment {
         layoutManager = new LinearLayoutManager(getActivity());
         chatList.setLayoutManager(layoutManager);
 
-        l = new ArrayList<>();
+        charListArray = new ArrayList<>();
 
-        chatAdapter = new ChatAdapter(l, new RecyclerViewOnClickListener() {
+        chatAdapter = new ChatAdapter(charListArray, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
@@ -205,7 +207,7 @@ public class ChatListFragment extends BaseFragment {
         chatList.setAdapter(chatAdapter);
     }
 
-    @Override
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.search_menu, menu);
@@ -220,10 +222,12 @@ public class ChatListFragment extends BaseFragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                filtered = true;
                 newText = newText.toLowerCase();
                 ArrayList<Chat> newList = new ArrayList<>();
-                for (Chat chat : l) {
+                for (Chat chat : charListArray) {
                     String chatName = chat.getChatName().toLowerCase();
+                    Log.e("name", chatName);
                     if (chatName != null) {
                         if (chatName.contains(newText)) newList.add(chat);
                     }
@@ -232,9 +236,17 @@ public class ChatListFragment extends BaseFragment {
                 return true;
             }
         });
-
+        searchView.setOnCloseListener(new android.widget.SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                filtered = false;
+                initializePagination();
+                updateChats();
+                return false;
+            }
+        });
         super.onCreateOptionsMenu(menu, inflater);
-    }
+    }*/
 
     private void callGetChats() {
         setLoading();
@@ -249,7 +261,7 @@ public class ChatListFragment extends BaseFragment {
 
             @Override
             public void onResponseReceived(List<Chat> chats) {
-                l = chats;
+                charListArray = chats;
                 updateData();
             }
         }.execute();
@@ -257,11 +269,11 @@ public class ChatListFragment extends BaseFragment {
 
     private void updateData() {
 
-        if (l != null) {
-            if (pageNumber == 0) chatAdapter.updateChatList(l);
-            else chatAdapter.addChats(l);
+        if (charListArray != null) {
+            if (pageNumber == 0) chatAdapter.updateChatList(charListArray);
+            else chatAdapter.addChats(charListArray);
 
-            if (l.size() == 0) {
+            if (charListArray.size() == 0) {
                 isLastPage = true;
             }
             else pageNumber++;

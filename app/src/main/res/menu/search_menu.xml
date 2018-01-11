@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/search_menu"
-        android:title="Search"
+        android:title="@string/search"
         android:icon="@android:drawable/ic_menu_search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always" />

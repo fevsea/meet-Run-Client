@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +41,20 @@ public class RankingsViewHolder extends RecyclerView.ViewHolder implements View.
         this.listener = new WeakReference<>(listener);
     }
 
+    public void setPositionColors(int positionNum){
+        if (positionNum==0){
+            position.setBackground(getColoredCircularShape(0));
+        }
+        else if (positionNum==1){
+            position.setBackground(getColoredCircularShape(1));
+        }
+        else if (positionNum==2){
+            position.setBackground(getColoredCircularShape(2));
+        }
+        else {
+            position.setBackground(getColoredCircularShape(3));
+        }
+    }
     public void bindUserRanking(PositionUser ranking, int positionNum) {
         position = view.findViewById(R.id.ranking_item_user_photo2);
         km = view.findViewById(R.id.ranking_item_km);
@@ -48,6 +63,8 @@ public class RankingsViewHolder extends RecyclerView.ViewHolder implements View.
         zip = view.findViewById(R.id.ranking_item_postcode);
 
         position.setText(String.valueOf(positionNum+1));
+        setPositionColors(positionNum);
+
         Log.e("AAA",ranking.getPosition() + "");
         km.setText(String.valueOf(ranking.getDistance()/1000.000 + " km"));
         username.setText(ranking.getUserID());
@@ -65,6 +82,7 @@ public class RankingsViewHolder extends RecyclerView.ViewHolder implements View.
         zip = view.findViewById(R.id.zip_code);
 
         position.setText(String.valueOf(positionNum+1));
+        setPositionColors(positionNum);
         km.setText(String.valueOf(ranking.getDistance()/1000.000 + " km"));
         String postalCode=String.valueOf(ranking.getZip());
         if (postalCode.length()==4) postalCode="0"+postalCode;
@@ -75,6 +93,27 @@ public class RankingsViewHolder extends RecyclerView.ViewHolder implements View.
 
     @Override
     public void onClick(View view) {
-            listener.get().onItemClicked(getAdapterPosition());
+
+        Log.d("EEE","Clickeddddd");
+        listener.get().onItemClicked(getAdapterPosition());
+    }
+
+    private GradientDrawable getColoredCircularShape(int pos) {
+
+        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(view.getContext(),R.drawable.user_profile_circular_text_view);
+
+        if (pos == 0) {
+            circularShape.setColor(ContextCompat.getColor(view.getContext(), R.color.gold));
+        }
+        else if (pos == 1) {
+            circularShape.setColor(ContextCompat.getColor(view.getContext(), R.color.silver));
+        }
+        else if (pos == 2) {
+            circularShape.setColor(ContextCompat.getColor(view.getContext(), R.color.bronze));
+        }
+        else {
+            circularShape.setColor(ContextCompat.getColor(view.getContext(), R.color.blue_profile));
+        }
+        return circularShape;
     }
 }

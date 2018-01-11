@@ -420,6 +420,8 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
             TrackingService.TrackingBinder binder = (TrackingService.TrackingBinder) service;
             trackingService = binder.getService();
             mBound = true;
+            trackingData = trackingService.getTrackingData();
+            updateUI(trackingData);
         }
 
         @Override

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,16 +24,21 @@ import edu.upc.fib.meetnrun.adapters.IRankingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetRankingsUser;
+import edu.upc.fib.meetnrun.asynctasks.GetRankingsUserAllZips;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.PositionUser;
 import edu.upc.fib.meetnrun.models.RankingUser;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RankingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
+
+import static android.content.Intent.getIntent;
 
 /**
  * Created by Javier on 18/12/2017.
@@ -51,6 +57,7 @@ public class RankingsUserFragment extends Fragment {
     View view;
     Context context;
     User user;
+    List<Friend> myFriends;
 
     RankingsAdapter rankingAdapter;
     IRankingAdapter iRankingAdapter;
@@ -77,24 +84,12 @@ public class RankingsUserFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_ranking_users, container, false);
         context = this.getActivity();
+        callGetAllFriends();
         initializePagination();
-        zipSpinner = view.findViewById(R.id.rankingSpinner);
 
         progressBar = view.findViewById(R.id.pb_loading_ranking_users);
-        rdbFilter = view.findViewById(R.id.rdGUser);
-        rdbFilter.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.rdbPostcode){
-                    //TODO: Filter by postcode
-                }else if (checkedId == R.id.rdbGlobal){
-                    //TODO: Filter by country or world
-                }
 
-            }
-
-        });
         setupRecyclerView();
         callGetRanking();
         setSpinner();
@@ -102,14 +97,30 @@ public class RankingsUserFragment extends Fragment {
     }
 
     private void setSpinner() {
-        //TODO: catch stuff from server and put it on the spinner
-
-        List<String> zips=iRankingAdapter.getAllPostalCodes();
-        ArrayAdapter<String> zipsArrayAdapter= new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_spinner_item,
-                zips);
-        zipSpinner.setAdapter(zipsArrayAdapter);
+        new GetRankingsUserAllZips() {
+            @Override
+            public void onResponseReceived(List<String> rankings) {
+                List<String> zips=rankings;
+                ArrayAdapter<String> zipsArrayAdapter= new ArrayAdapter<>(
+                        getActivity(),
+                        android.R.layout.simple_spinner_item,
+                        zips);
+                zipSpinner.setAdapter(zipsArrayAdapter);
+            }
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override
+            protected Void doInBackground(List<String>... lists) {
+                return null;
+            }
+        };
     }
 
 
@@ -133,6 +144,37 @@ public class RankingsUserFragment extends Fragment {
             @Override
             public void onItemClicked(int position) {
                 //TODO abrir
+                PositionUser userPosition=rankingAdapter.getPosition(position);
+                String userId=userPosition.getUserID();
+                Log.d("fragment", "inside itemClicked");
+                Log.d("fragment",userId+" "+CurrentSession.getInstance().getCurrentUser().getUsername());
+                if (userId.equals(CurrentSession.getInstance().getCurrentUser().getUsername())){
+                    Log.d("fragment", "is me");
+                    Intent intent=new Intent(getActivity(),ProfileViewPagerFragment.class);
+                    intent.putExtra("userId",CurrentSession.getInstance().getCurrentUser().getId());
+                    intent.putExtra("isFriend",false);
+                    startActivity(intent);
+                }
+                else{
+                    Intent intent=new Intent(getActivity(),ProfileViewPagerFragment.class);
+                    boolean isFriend=false;
+                    for (Friend f : myFriends) {
+                        String friendUsername = f.getUser().getUsername();
+                        if (friendUsername.equals(userId)){
+                            isFriend=true;
+                            intent.putExtra("userId",f.getUser().getId());
+                            intent.putExtra("isFriend",true);
+                            startActivity(intent);
+                            break;
+                        }
+                    }
+                    if(!isFriend) {
+                        intent.putExtra("userId", userPosition.getId());
+                        intent.putExtra("isFriend", false);
+                        startActivity(intent);
+                    }
+
+                }
             }
         },getContext(),false,zipnum);
         rankingList.setAdapter(rankingAdapter);
@@ -195,17 +237,7 @@ public class RankingsUserFragment extends Fragment {
 
             @Override
             public void onResponseReceived(List<Friend> allfriends) {
-                ArrayList<User> friends = new ArrayList<User>();
-                Fragment frag=new UserProfileFragment();;
-                Intent intent=new Intent();
-                for (Friend f : allfriends) {
-                    User friend = f.getFriend();
-                    if (friend.equals(user)){
-                        frag = new FriendProfileFragment();
-                        BaseActivity.startWithFragment(getActivity(), frag, intent);
-                    }
-                    BaseActivity.startWithFragment(getActivity(), frag, intent);
-                }
+                myFriends=allfriends;
             }
         }.execute();
     }
