@@ -53,7 +53,6 @@ public class StatisticsProfileFragment extends BaseFragment {
     User u;
     View view;
     String user;
-    private int userLevel;
     String name, userlevel, usermeetings, usersteps, userkm, usertime, usercalories, userrhythm, userspeed, usermaxspeed, userminspeed, usermaxtime, usermintime, usermaxlength, userminlength;
 
     // newInstance constructor for creating fragment with arguments
@@ -70,10 +69,8 @@ public class StatisticsProfileFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt("2", 2);
-        title = getArguments().getString("Statistics");
-       /* Bundle bundle = getActivity().getIntent().getExtras();
-        userId=bundle.getInt("userId");*/
+        page = getArguments().getInt("0", 0);
+        title = getArguments().getString("Info");
     }
 
     public int getActualLevel (int meetings, float km, int level){

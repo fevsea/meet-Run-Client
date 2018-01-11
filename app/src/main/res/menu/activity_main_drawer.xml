@@ -26,6 +26,11 @@
             android:title="@string/challenges"
             />
         <item
+            android:id="@+id/rankings"
+            android:icon="@drawable/rankings"
+            android:title="@string/rankings"
+            />
+        <item
             android:id="@+id/logout"
             android:icon="@drawable/exit"
             android:title="@string/log_out" />

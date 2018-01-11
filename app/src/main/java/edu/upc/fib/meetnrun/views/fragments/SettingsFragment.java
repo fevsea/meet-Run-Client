@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,7 +60,7 @@ public class SettingsFragment extends BaseFragment {
                 getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        TextView text = view.findViewById(R.id.delete_account);
+        Button text = view.findViewById(R.id.delete_account);
 
 
         language = view.findViewById(R.id.spinnerLanguage);
@@ -78,6 +79,7 @@ public class SettingsFragment extends BaseFragment {
                 else if (position==2){
                     setLocale("ca");
                 }
+
             }
 
             @Override
@@ -136,10 +138,9 @@ public class SettingsFragment extends BaseFragment {
     }
 
     private void setLanguanges(){
-        String[] languages={
-                "English", "Spanish", "Catalan"
-        };
-        language.setAdapter(new ArrayAdapter<CharSequence>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, languages));
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.languages, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        language.setAdapter(adapter);
 
     }
 

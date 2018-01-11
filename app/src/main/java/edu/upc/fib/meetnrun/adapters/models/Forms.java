@@ -53,9 +53,23 @@ public class Forms {
             this.token = token;
         }
 
-      public String getToken() {
-        return token;
-      }
+        public String getToken() {
+            return token;
+        }
+    }
+
+    public static class Zip {
+        @SerializedName("zip")
+        @Expose
+        private String zip;
+
+        public Zip(String zip) {
+            this.zip = zip;
+        }
+
+        public String getZip() {
+            return zip;
+        }
     }
 
     public static class UserRegistration {
