@@ -227,4 +227,7 @@
         <item>Castellano</item>
         <item>Catalán</item>
     </string-array>
+    <string name="friend_request">Nueva solicitud de amistad</string>
+    <string name="friend_request_text">%1$s te ha enviado una solicitud de amistad</string>
+    <string name="friend_accepted">%1$s ha aceptado tu solicitud!</string>
 </resources>

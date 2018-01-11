@@ -217,5 +217,8 @@
         <item>Castellà</item>
         <item>Català</item>
     </string-array>
+    <string name="friend_request">Nova sol·licitud d\'amistat</string>
+    <string name="friend_request_text">%1$s t\'ha enviat una sol·licitud d\'amistat</string>
+    <string name="friend_accepted">%1$s ha acceptat la teva sol·licitud!</string>
 
 </resources>
