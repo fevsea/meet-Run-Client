@@ -247,5 +247,8 @@
     </string-array>
     <string name="trophie_not_obtained">You do not have this trophie yet, keep going!</string>
     <string name="trophie_obtained">You already obtained this trophie, congratulations!</string>
+    <string name="friend_request">New friend request</string>
+    <string name="friend_request_text">%1$s has sent you a friend request</string>
+    <string name="friend_accepted">%1$s accepted your request!</string>
 </resources>
 

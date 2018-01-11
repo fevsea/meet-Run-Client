@@ -217,6 +217,9 @@
         <item>Castellà</item>
         <item>Català</item>
     </string-array>
+    <string name="friend_request">Nova sol·licitud d\'amistat</string>
+    <string name="friend_request_text">%1$s t\'ha enviat una sol·licitud d\'amistat</string>
+    <string name="friend_accepted">%1$s ha acceptat la teva sol·licitud!</string>
     <string name="forbidden_error">Aquesta acció està prohibida</string>
     <string name="trophie_not_obtained">Encara no tens aquest trofeu, ànims!</string>
     <string name="trophie_obtained">Ja tens aquest trofeu, felicitats!</string>
