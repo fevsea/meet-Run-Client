@@ -205,4 +205,9 @@ public class MyMeetingsFragment extends BaseFragment {
         return R.string.mymeetings_label;
     }
 
+    @Override
+    public void onResume() {
+        updateMeetingList();
+        super.onResume();
+    }
 }
