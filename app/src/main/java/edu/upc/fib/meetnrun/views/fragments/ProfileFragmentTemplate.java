@@ -193,7 +193,7 @@ public abstract class ProfileFragmentTemplate extends BaseFragment {
             @Override
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof ForbiddenException) {
-                    Toast.makeText(getActivity(), R.string.forbidden_banned, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.forbidden_error, Toast.LENGTH_LONG).show();
                 }
             }
 
