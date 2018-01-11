@@ -86,12 +86,6 @@ public class RankingsZipFragment extends Fragment  {
 
             @Override
             public void onItemClicked(int position) {
-                //TODO abrir
-                Intent i=new Intent(getContext(), RankingsUserFragment.class);
-                Position p=rankingAdapter.getPosition(position);
-                int zip=p.getZip();
-                i.putExtra("zip",zip);
-                startActivity(i);
             }
         },getContext(),true,zipnum);
         rankingList.setAdapter(rankingAdapter);
@@ -127,7 +121,7 @@ public class RankingsZipFragment extends Fragment  {
     private void toPositionUser(List<Position> positions) {
         rankings = new ArrayList<>();
         for (Position p : positions) {
-            PositionUser positionUser = new PositionUser(p.getZip(),p.getDistance(),"","","");
+            PositionUser positionUser = new PositionUser(0,p.getZip(),p.getDistance(),"","","");
             rankings.add(positionUser);
         }
     }

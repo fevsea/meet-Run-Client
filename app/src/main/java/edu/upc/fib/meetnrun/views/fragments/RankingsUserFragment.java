@@ -87,23 +87,9 @@ public class RankingsUserFragment extends Fragment {
         callGetAllFriends();
         initializePagination();
 
-        zipSpinner = view.findViewById(R.id.rankingSpinner);
-
         progressBar = view.findViewById(R.id.pb_loading_ranking_users);
-        rdbFilter = view.findViewById(R.id.rdGUser);
-        rdbFilter.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
 
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.rdbPostcode){
-                    //TODO: Filter by postcode
-                }else if (checkedId == R.id.rdbGlobal){
-                    //TODO: Filter by country or world
-                }
 
-            }
-
-        });
         setupRecyclerView();
         callGetRanking();
         setSpinner();
@@ -182,11 +168,12 @@ public class RankingsUserFragment extends Fragment {
                             break;
                         }
                     }
-                    if (!isFriend) {
+                    if(!isFriend) {
                         intent.putExtra("userId", userPosition.getId());
                         intent.putExtra("isFriend", false);
                         startActivity(intent);
                     }
+
                 }
             }
         },getContext(),false,zipnum);

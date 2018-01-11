@@ -10,8 +10,9 @@ public class PositionUser extends Position {
     private String firstName;
     private String lastName;
 
-    public PositionUser(int zip, float distance, String userID, String firstName, String lastName) {
+    public PositionUser(int id, int zip, float distance, String userID, String firstName, String lastName) {
         super(zip, distance);
+        this.id=id;
         this.userID = userID;
         this.firstName = firstName;
         this.lastName = lastName;

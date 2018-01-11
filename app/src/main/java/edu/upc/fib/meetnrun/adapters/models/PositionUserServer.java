@@ -14,6 +14,7 @@ public class PositionUserServer implements IServerModel {
     @SerializedName("id")
     @Expose
     private Integer id;
+
     @SerializedName("username")
     @Expose
     private String username;
@@ -36,7 +37,7 @@ public class PositionUserServer implements IServerModel {
 
     @Override
     public PositionUser toGenericModel() {
-        PositionUser pu = new PositionUser(Integer.valueOf(postal_code),this.distance,this.username,this.first_name,this.last_name);
+        PositionUser pu = new PositionUser(this.id, Integer.valueOf(postal_code),this.distance,this.username,this.first_name,this.last_name);
         return pu;
     }
 }
