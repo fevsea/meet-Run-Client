@@ -73,7 +73,7 @@ public class FriendsFragment extends FriendListFragmentTemplate {
 
     @Override
     protected void getPaginationMethod() {
-        callGetFriends();
+        if (!filtered) callGetFriends();
     }
 
     protected void refreshList() {
