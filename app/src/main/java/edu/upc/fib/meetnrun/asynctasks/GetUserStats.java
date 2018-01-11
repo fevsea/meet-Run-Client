@@ -15,11 +15,11 @@ import edu.upc.fib.meetnrun.models.User;
 public abstract class GetUserStats extends AsyncTask<String,Void,Statistics> implements AsyncTaskCallbackStatistics,AsyncTaskException {
 
     private GenericException exception;
-    private User u;
     private IUserAdapter userAdapter;
+    private int userId;
 
-    public GetUserStats(User u) {
-        this.u = u;
+    public GetUserStats(int userId) {
+        this.userId = userId;
         userAdapter = CurrentSession.getInstance().getUserAdapter();
     }
 
@@ -27,8 +27,7 @@ public abstract class GetUserStats extends AsyncTask<String,Void,Statistics> imp
     protected Statistics doInBackground(String... strings) {
             //TODO: Que tot no sigui de current user
             try {
-                int id = u.getId();
-                return userAdapter.getUserStatisticsByID(id);
+                return userAdapter.getUserStatisticsByID(userId);
             }
             catch (GenericException e) {
                 exception = e;

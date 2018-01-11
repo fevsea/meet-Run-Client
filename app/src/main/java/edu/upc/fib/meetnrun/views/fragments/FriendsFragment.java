@@ -25,6 +25,7 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.PendingFriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.TwoButtonsRecyclerViewOnClickListener;
@@ -63,9 +64,11 @@ public class FriendsFragment extends FriendListFragmentTemplate {
 
     @Override
     protected void getIntent(User friend) {
-        Intent friendProfileIntent = new Intent();
         CurrentSession.getInstance().setFriend(friend);
-        BaseActivity.startWithFragment(getActivity(), new FriendProfileFragment(), friendProfileIntent);
+        Intent intent = new Intent(getActivity(), ProfileViewPagerFragment.class);
+        intent.putExtra("userId",friend.getId());
+        intent.putExtra("isFriend",true);
+        startActivity(intent);
     }
 
     @Override
@@ -168,10 +171,11 @@ public class FriendsFragment extends FriendListFragmentTemplate {
                 Friend friendship = pendingFriendsAdapter.getFriendAtPosition(position);
                 User friend = friendship.getFriend();
                 if (currentUser.getUsername().equals(friend.getUsername())) friend = friendship.getUser();
-                Intent friendProfileIntent = new Intent();
                 CurrentSession.getInstance().setFriend(friend);
-                friendProfileIntent.putExtra("accepted", friendship.isAccepted());
-                BaseActivity.startWithFragment(getActivity(), new FriendProfileFragment(), friendProfileIntent);
+                Intent intent = new Intent(getActivity(), ProfileViewPagerFragment.class);
+                intent.putExtra("userId",friend.getId());
+                intent.putExtra("isFriend",true);
+                startActivity(intent);
             }
         };
     }
