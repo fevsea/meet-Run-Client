@@ -3,6 +3,7 @@ package edu.upc.fib.meetnrun.adapters;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
@@ -32,4 +33,7 @@ public interface IUserAdapter {
     public List<Meeting> getUserPastMeetings(int targetUserId) throws AuthorizationException, ParamsException;
 
     Statistics getUserStatisticsByID(int id) throws AuthorizationException;
+
+    public boolean banUser(int id) throws ForbiddenException;
+
 }

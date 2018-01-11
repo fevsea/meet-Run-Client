@@ -76,6 +76,9 @@ public interface SOServices {
     @GET("/users/{id}/statistics")
     Call<StatisticsServer> getUserStatisticsByID(@Path("id") int id);
 
+    @POST("/users/{id}/ban")
+    Call<Void> requestBan(@Path("id") int id);
+
 
     //LOGIN
 
