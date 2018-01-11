@@ -230,4 +230,7 @@
     <string name="friend_request">Nueva solicitud de amistad</string>
     <string name="friend_request_text">%1$s te ha enviado una solicitud de amistad</string>
     <string name="friend_accepted">%1$s ha aceptado tu solicitud!</string>
+    <string name="forbidden_error">Esta acción está prohibida</string>
+    <string name="trophie_not_obtained">No tienes este trofeo. ¡Adelante!</string>
+    <string name="trophie_obtained">Ya tienes este trofeo. ¡Genial!</string>
 </resources>
