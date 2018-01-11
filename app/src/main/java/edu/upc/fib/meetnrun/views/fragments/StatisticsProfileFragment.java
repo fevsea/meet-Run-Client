@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -72,10 +75,10 @@ public class StatisticsProfileFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         page = getArguments().getInt("2", 2);
         title = getArguments().getString("Statistics");
         userId = getArguments().getInt("userId");
+        setHasOptionsMenu(true);
        /* Bundle bundle = getActivity().getIntent().getExtras();
         userId=bundle.getInt("userId");*/
     }
@@ -205,5 +208,20 @@ public class StatisticsProfileFragment extends BaseFragment {
                 updateData();
             }
         }.execute();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.empty_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.home:
+                getActivity().finish();
+                break;
+        }
+        return false;
     }
 }

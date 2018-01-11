@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -97,6 +98,7 @@ public class ProfileViewPagerFragment extends AppCompatActivity {
         return true;
     }
 
+
     public class PagerAdapterFragment extends FragmentPagerAdapter {
 
         private static final int NUM_ITEMS = 4;
@@ -151,7 +153,7 @@ public class ProfileViewPagerFragment extends AppCompatActivity {
             }
 
             @Override
-            public void onResponseReceied(User u) {
+            public void onResponseReceived(User u) {
                 profileUser = u;
                 progressBar.setVisibility(View.INVISIBLE);
                 loadProfileViews();
@@ -186,4 +188,5 @@ public class ProfileViewPagerFragment extends AppCompatActivity {
     private Fragment getTrohpiesFragment() {
         return TrophiesProfileFragment.newInstance(3, "trophies",userId);
     }
+
 }

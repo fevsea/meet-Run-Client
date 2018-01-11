@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +28,9 @@ import java.util.Scanner;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetCity;
+import edu.upc.fib.meetnrun.asynctasks.ReportUser;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 
@@ -47,6 +51,7 @@ public abstract class ProfileFragmentTemplate extends BaseFragment {
     protected ImageView imgSecondary;
     protected User currentFriend;
     protected Button challengeButton;
+    protected Button reportButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,6 +69,13 @@ public abstract class ProfileFragmentTemplate extends BaseFragment {
         this.img = view.findViewById(R.id.action_friend);
         this.chatImage = view.findViewById(R.id.chat_friend);
         this.imgSecondary = view.findViewById(R.id.action_friend_secondary);
+        this.reportButton = view.findViewById(R.id.report_button);
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog(getString(R.string.report),getString(R.string.ok),getString(R.string.cancel));
+            }
+        });
 
         char letter = currentFriend.getUsername().charAt(0);
         String firstLetter = String.valueOf(letter);
@@ -110,6 +122,7 @@ public abstract class ProfileFragmentTemplate extends BaseFragment {
         challengeButton = view.findViewById(R.id.challenge_button);
         configureChallengeButton();
         setImage();
+        setHasOptionsMenu(true);
         return this.view;
     }
 
@@ -154,5 +167,40 @@ public abstract class ProfileFragmentTemplate extends BaseFragment {
         int position = letter%colors.length;
         circularShape.setColor(colors[position]);
         return circularShape;
+    }
+
+    public void showDialog(String title, String okButtonText, String negativeButtonText) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(title);
+        builder.setPositiveButton(okButtonText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                callReportUser(Integer.valueOf(getArguments().getString("id")));
+            }
+        });
+        builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void callReportUser(int userId) {
+        new ReportUser(userId) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof ForbiddenException) {
+                    Toast.makeText(getActivity(), R.string.forbidden_banned, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(boolean b) {
+                Toast.makeText(getActivity(), R.string.report_success, Toast.LENGTH_LONG).show();
+            }
+        }.execute();
     }
 }

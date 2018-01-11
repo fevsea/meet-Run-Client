@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
@@ -8,6 +9,9 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -54,6 +58,7 @@ public class ProfileActivityFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("0", 0);
         title = getArguments().getString("Info");
+        setHasOptionsMenu(true);
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {
@@ -70,9 +75,7 @@ public class ProfileActivityFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
-
         u = CurrentSession.getInstance().getCurrentUser();
-
         String userName = u.getUsername();
         String name = u.getFirstName() + ' ' + u.getLastName();
         String postCode = u.getPostalCode();
@@ -110,6 +113,21 @@ public class ProfileActivityFragment extends BaseFragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.empty_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.home:
+                getActivity().finish();
+                break;
+        }
+        return false;
     }
 
 

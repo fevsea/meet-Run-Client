@@ -214,6 +214,9 @@
     <string name="rankings_label">Rankings</string>
     <string name="delete_meeting">Eliminar trobada</string>
     <string name="delete_meeting_message">Vols esborrar aquesta trobada?</string>
+    <string name="report">Reportar usuari</string>
+    <string name="forbidden_banned">El teu compte està suspès, no pots realitzar la acció</string>
+    <string name="report_success">El report ha sigut enviat correctament</string>
 
     <string-array name="languages">
         <item>Anglès</item>
