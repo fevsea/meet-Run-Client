@@ -22,6 +22,7 @@ import org.junit.runner.RunWith;
 
 import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.LoginActivity;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.fragments.CreateMeetingFragment;
 import edu.upc.fib.meetnrun.views.fragments.FriendProfileFragment;
 import edu.upc.fib.meetnrun.views.fragments.MeetingInfoFragment;
@@ -86,8 +87,7 @@ public class FriendListTest {
         onView(withId(R.id.fragment_friends_container)).check(matches(isDisplayed()));
         onView(withId(R.id.fragment_friends_container))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        intended(hasComponent(BaseActivity.class.getName()));
-        intended(hasExtra("fragment", FriendProfileFragment.instantiate(getContext(), FriendProfileFragment.class.getName()).getClass()));
+        intended(hasComponent(ProfileViewPagerFragment.class.getName()));
         Intents.release();
     }
 
