@@ -4,9 +4,11 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +44,9 @@ public class FeedFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_feed, container, false);
+
+        FloatingActionButton button = getActivity().findViewById(R.id.activity_fab);
+        button.setVisibility(View.GONE);
 
         itemListView = view.findViewById(R.id.feed_recyclerview);
         swipeRefreshLayout = view.findViewById(R.id.feed_swiperefresh);

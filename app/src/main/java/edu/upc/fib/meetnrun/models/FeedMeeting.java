@@ -19,6 +19,10 @@ public class FeedMeeting {
     @Nullable
     private TrackingData tracking;
 
+    public FeedMeeting() {
+
+    }
+
 
     public FeedMeeting(Meeting meeting, int type, User friend, TrackingData tracking) {
         this.meeting = meeting;

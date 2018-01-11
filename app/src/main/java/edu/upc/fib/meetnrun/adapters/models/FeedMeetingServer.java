@@ -32,7 +32,19 @@ public class FeedMeetingServer implements IServerModel {
 
 
     public FeedMeeting toGenericModel() {
-        FeedMeeting fm = new FeedMeeting(this.meeting.toGenericModel(), this.type, this.friend.toGenericModel(), this.tracking.toGenericModel());
+        FeedMeeting fm = new FeedMeeting();
+        if (this.meeting != null) {
+            fm.setMeeting(this.meeting.toGenericModel());
+        }
+        if (this.type != null) {
+            fm.setType(this.type);
+        }
+        if (this.friend != null) {
+            fm.setFriend(this.friend.toGenericModel());
+        }
+        if (this.tracking != null) {
+            fm.setTracking(this.tracking.toGenericModel());
+        }
         return fm;
     }
 }
