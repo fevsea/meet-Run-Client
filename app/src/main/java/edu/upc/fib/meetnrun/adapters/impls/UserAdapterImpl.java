@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.adapters.models.FeedMeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
@@ -16,6 +17,7 @@ import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.FeedMeeting;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.Trophie;
@@ -205,6 +207,28 @@ public class UserAdapterImpl implements IUserAdapter {
             e.printStackTrace();
         }
         return ok;
+    }
+
+    @Override
+    public List<FeedMeeting> getUsersFeed(int id) throws AuthorizationException {
+
+        List<FeedMeeting> lfm = new ArrayList<>();
+        try {
+            Response<List<FeedMeetingServer>> ret =
+                    mServices.getFeedMeeting(id).execute();
+            if (!ret.isSuccessful())
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+
+            List<FeedMeetingServer> u = ret.body();
+            if (u != null) {
+                for (int i = 0; i < u.size(); i++) {
+                    lfm.add(u.get(i).toGenericModel());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lfm;
     }
 
 }
