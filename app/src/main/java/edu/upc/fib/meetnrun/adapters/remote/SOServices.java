@@ -1,15 +1,21 @@
-package edu.upc.fib.meetnrun.remote;
+package edu.upc.fib.meetnrun.adapters.remote;
 
 import java.util.List;
 
-import edu.upc.fib.meetnrun.adapters.models.ChatServer;
 import edu.upc.fib.meetnrun.adapters.models.ChallengeServer;
+import edu.upc.fib.meetnrun.adapters.models.FeedMeetingServer;
+import edu.upc.fib.meetnrun.adapters.models.ChatServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.FriendServer;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
+import edu.upc.fib.meetnrun.adapters.models.PositionServer;
+import edu.upc.fib.meetnrun.adapters.models.PositionUserServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
+
+import edu.upc.fib.meetnrun.adapters.models.PositionUserServer;
+import edu.upc.fib.meetnrun.adapters.models.TrophiesListServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -74,6 +80,15 @@ public interface SOServices {
     @GET("/users/{id}/statistics")
     Call<StatisticsServer> getUserStatisticsByID(@Path("id") int id);
 
+    @POST("/users/{id}/ban")
+    Call<Void> requestBan(@Path("id") int id);
+
+    @GET("/trophies/{id}")
+    Call<TrophiesListServer> getTrophiesListByID(@Path("id") int id);
+    
+    @GET("/feed/{id}")
+    Call<List<FeedMeetingServer>> getFeedMeeting(@Path("id") int id);
+
 
 
     //LOGIN
@@ -93,6 +108,9 @@ public interface SOServices {
     @POST("/users/token")
     Call<Void> updateFirebaseToken(@Body Forms.Token token);
 
+    @DELETE("/users/token")
+    Call<Void> resetToken();
+
 
     //PARTICIPANTS
 
@@ -100,10 +118,10 @@ public interface SOServices {
     Call<PageServer<UserServer>> getAllParticipantsFromMeeting(@Path("id") int id, @Query("limit") int limit, @Query("offset") int offset);
 
     @POST("/meetings/{meetingID}/participants/{userID}")
-    Call<Void> joinMeeting(@Path("meetingID") int meetingID,@Path("userID") int userID);
+    Call<Void> joinMeeting(@Path("meetingID") int meetingID, @Path("userID") int userID);
 
     @DELETE("/meetings/{meetingID}/participants/{userID}")
-    Call<Void> leaveMeeting(@Path("meetingID") int meetingID,@Path("userID") int userID);
+    Call<Void> leaveMeeting(@Path("meetingID") int meetingID, @Path("userID") int userID);
 
 
     //FRIENDS
@@ -171,5 +189,18 @@ public interface SOServices {
 
     @POST("/challenges/{id}")
     Call<Void> acceptChallenge(@Path("id") int id);
+
+    //RANKINGS
+    @GET("/rankings/zone")
+    Call<List<PositionServer>> getAvgKMPostalCode();
+
+    @GET("/rankings/zip")
+    Call<List<Forms.Zip>> getAllPostCodes();
+
+    @GET("/rankings/users")
+    Call<PageServer<PositionUserServer>> getUsersInUsersRanking(@Query("limit") int limit, @Query("offset") int offset);
+
+    @GET("/rankings/zone/{zip}")
+    Call<PageServer<PositionUserServer>> getUsersInUsersRankingByPostCode(@Path("zip") String zip, @Query("limit") int limit, @Query("offset") int offset);
 
 }

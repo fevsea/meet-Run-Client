@@ -111,6 +111,14 @@
             android:layout_centerHorizontal="true"
             android:text="@string/to_challenge"/>
 
+        <Button
+            android:id="@+id/report_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/challenge_button"
+            android:layout_centerHorizontal="true"
+            android:text="@string/report"/>
+
     </RelativeLayout>
 
 </ScrollView>

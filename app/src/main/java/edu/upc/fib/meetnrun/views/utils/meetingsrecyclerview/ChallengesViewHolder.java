@@ -58,7 +58,7 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         ProgressBar opponentBar = view.findViewById(R.id.opponent_progress);
         ProgressBar youBar = view.findViewById(R.id.my_progress);
         TextView expirationView = view.findViewById(R.id.expires_in);
-        String totalText = String.format(Locale.forLanguageTag("es"), "%.0f km", challenge.getDistance());
+        String totalText = String.format(Locale.forLanguageTag("es"), "%.0f km", challenge.getDistance() / 1000.0f);
         totalView.setText(totalText);
         TextView opponentName = view.findViewById(R.id.opponent);
         TextView youName = view.findViewById(R.id.you);

@@ -8,7 +8,7 @@
     <string name="create_meeting_label">Crear Quedada</string>
     <string name="meeting_info_label">Información de la quedada</string>
     <string name="start_meeting_label">Iniciar quedada</string>
-    <string name="not_start_meeting_label">La quedada no está disponile</string>
+    <string name="not_start_meeting_label">La quedada no está disponible</string>
     <string name="leave_meeting_label">Abandonar quedada</string>
     <string name="leave_meeting_message">¿Está seguro que quiere abandonar la quedada?</string>
     <string name="friends_label">Amigos</string>
@@ -65,6 +65,9 @@
     <string name="user_profile_label">Perfil de usuario</string>
     <string name="joined_meeting">Se ha unido a la quedada!</string>
 
+    <string name="trophie_won">Trofeo ganado</string>
+    <string name="trophie_won_text">Has ganado el trofeu %1$s </string>
+
 
     <string name="title_activity_fullscreen">Actividad de pantalla completa</string>
     <string name="dummy_button">Boton tonto</string>
@@ -101,9 +104,10 @@
     <string name="log_in">Conectarse</string>
     <string name="password">Contraseña</string>
 
-    <string name="profile_fragment_title">Tu perfil</string>
-    <string name="past_meetings_fragment_title">Tus quedadas pasadas</string>
-    <string name="statistics_fragment_title">Tus estadísticas</string>
+    <string name="profile_fragment_title">Perfil</string>
+    <string name="past_meetings_fragment_title">Quedadas pasadas</string>
+    <string name="statistics_fragment_title">Estadísticas</string>
+    <string name="trophies_fragment_title">Trofeos</string>
 
     <string name="private_friends">¿Quiere correr con amigos, o solo?</string>
     <string name="private_no_friends">Quiero correr solo</string>
@@ -129,6 +133,7 @@
     <string name="rhythm">Ritmo</string>
     <string name="statistics_title">Estadísticas</string>
     <string name="total_km">Distancia total (en km)</string>
+    <string name="total_m">Distancia total (en m)</string>
     <string name="total_meetings">Quedadas completadas</string>
     <string name="total_steps">Número de pasos total</string>
 
@@ -192,9 +197,48 @@
     <string name="spanish">Castellano</string>
     <string name="accept">Aceptar</string>
     <string name="reject">Rechazar</string>
+    <string name="rankings">Rankings</string>
+    <string name="chat_not_available">El chat no está disponible</string>
+    <string name="filter_ranking">Filtrar por:</string>
+    <string name="max_level">Nivel Máx.:</string>
+    <string name="ranking_city">Ciudad</string>
+    <string name="ranking_country">Pais</string>
+    <string name="ranking_global">Global</string>
+    <string name="ranking_postcode">Código postal</string>
+    <string name="rankings_users">Ránking de usuarios</string>
+    <string name="rankings_zip">Ránking de código postal</string>
+    <string name="settingsLanguage">Cambiar idioma:</string>
     <string name="error_deleting_friend">Error al eliminar el amigo</string>
     <string name="error_adding_friend">Error al añadir el amigo</string>
     <string name="meeting">Quedada</string>
+    <string name="feed">Muro</string>
+    <string name="feed_meeting_near">Esta quedada está cerca de tu ubicación</string>
+    <string name="feed_meeting_past">ha completado esta quedada</string>
+    <string name="feed_meeting_joined">se ha apuntado a esta quedada</string>
+    <string name="feed_meeting_created">ha creado esta quedada</string>
+    <string name="join_meeting">Unirse a la quedada</string>
+    <string name="ranking_current">Tu posición:</string>
+    <string name="rankings_choose_zip">Código Postal:</string>
+    <string name="share_text">¡Mira qué ruta he hecho con Meet&amp;Run!</string>
+    <string name="share_via">Compartir via</string>
+    <string name="rankings_label">Rankings</string>
     <string name="delete_meeting">Eliminar quedada</string>
     <string name="delete_meeting_message">¿Quieres borrar esta quedada?</string>
+    <string name="report">Reportar usuario</string>
+    <string name="forbidden_banned">Tu cuenta esta suspendida, no puedes realizar esta acción</string>
+    <string name="report_success">El reporta ha sido enviado correctamente</string>
+
+
+    <string-array name="languages">
+        <item>Inglés</item>
+        <item>Castellano</item>
+        <item>Catalán</item>
+    </string-array>
+    <string name="friend_request">Nueva solicitud de amistad</string>
+    <string name="friend_request_text">%1$s te ha enviado una solicitud de amistad</string>
+    <string name="friend_accepted">%1$s ha aceptado tu solicitud!</string>
+    <string name="forbidden_error">Esta acción está prohibida</string>
+    <string name="trophie_not_obtained">No tienes este trofeo. ¡Adelante!</string>
+    <string name="trophie_obtained">Ya tienes este trofeo. ¡Genial!</string>
+>>>>>>> 9f31d86c05d79abcb38ac9c11062ea4cc7e9a798
 </resources>

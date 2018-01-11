@@ -3,13 +3,14 @@ package edu.upc.fib.meetnrun.asynctasks;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackBitmap;
 
 public abstract class GetStaticMap extends AsyncTask<String, String, Bitmap> implements AsyncTaskCallbackBitmap {
 

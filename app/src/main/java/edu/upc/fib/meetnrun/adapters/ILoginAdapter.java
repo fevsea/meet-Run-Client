@@ -21,6 +21,8 @@ public interface ILoginAdapter {
 
     String getFirebaseToken() throws AuthorizationException, NotFoundException;
 
-    boolean uppdateFirebaseToken(String token) throws AuthorizationException, NotFoundException;
+    boolean updateFirebaseToken(String token) throws AuthorizationException, NotFoundException;
+
+    boolean resetFirebaseToken() throws AuthorizationException;
 
 }

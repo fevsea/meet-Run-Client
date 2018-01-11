@@ -1,14 +1,15 @@
 package edu.upc.fib.meetnrun.adapters;
 
 
-import edu.upc.fib.meetnrun.adapters.impls.ChatAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.impls.ChallengeAdapterImpl;
+import edu.upc.fib.meetnrun.adapters.impls.ChatAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.impls.FriendsAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.impls.LoginAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.impls.MeetingAdapterImpl;
+import edu.upc.fib.meetnrun.adapters.impls.RankingAdapterImpl;
 import edu.upc.fib.meetnrun.adapters.impls.UserAdapterImpl;
-import edu.upc.fib.meetnrun.remote.ApiUtils;
-import edu.upc.fib.meetnrun.remote.SOServices;
+import edu.upc.fib.meetnrun.adapters.remote.ApiUtils;
+import edu.upc.fib.meetnrun.adapters.remote.SOServices;
 
 /**
  * Created by Awais Iqbal on 07/11/2017.
@@ -21,17 +22,12 @@ public class AdaptersContainer {
     private ILoginAdapter loginAdapter;
     private IChatAdapter chatAdapter;
     private IChallengeAdapter challengesAdapter;
+    private IRankingAdapter rankingsAdapter;
     private SOServices mServices;
     private static AdaptersContainer instance = null;
 
     private AdaptersContainer() {
         mServices = ApiUtils.getSOService();
-        userAdapter = new UserAdapterImpl(mServices);
-        friendsAdapter = new FriendsAdapterImpl(mServices);
-        meetingAdapter = new MeetingAdapterImpl(mServices);
-        loginAdapter = new LoginAdapterImpl(mServices);
-        chatAdapter = new ChatAdapterImpl(mServices);
-        challengesAdapter = new ChallengeAdapterImpl(mServices);
     }
 
     public static AdaptersContainer getInstance() {
@@ -41,8 +37,10 @@ public class AdaptersContainer {
         return instance;
     }
 
-
     public IFriendsAdapter getFriendsAdapter() {
+        if (friendsAdapter == null) {
+            friendsAdapter = new FriendsAdapterImpl(mServices);
+        }
         return friendsAdapter;
     }
 
@@ -51,6 +49,9 @@ public class AdaptersContainer {
     }
 
     public IUserAdapter getUserAdapter() {
+        if (userAdapter == null) {
+            userAdapter = new UserAdapterImpl(mServices);
+        }
         return userAdapter;
     }
 
@@ -59,6 +60,9 @@ public class AdaptersContainer {
     }
 
     public IMeetingAdapter getMeetingAdapter() {
+        if (meetingAdapter == null) {
+            meetingAdapter = new MeetingAdapterImpl(mServices);
+        }
         return meetingAdapter;
     }
 
@@ -67,6 +71,9 @@ public class AdaptersContainer {
     }
 
     public ILoginAdapter getLoginAdapter() {
+        if (loginAdapter == null) {
+            loginAdapter = new LoginAdapterImpl(mServices);
+        }
         return loginAdapter;
     }
 
@@ -74,15 +81,11 @@ public class AdaptersContainer {
         this.loginAdapter = loginAdapter;
     }
 
-    public SOServices getmServices() {
-        return mServices;
-    }
-
-    public void setmServices(SOServices mServices) {
-        this.mServices = mServices;
-    }
 
     public IChallengeAdapter getChallengesAdapter() {
+        if (challengesAdapter == null) {
+            challengesAdapter = new ChallengeAdapterImpl(mServices);
+        }
         return challengesAdapter;
     }
 
@@ -95,10 +98,28 @@ public class AdaptersContainer {
     }
 
     public IChatAdapter getChatAdapter() {
+        if (chatAdapter == null) {
+            chatAdapter = new ChatAdapterImpl(mServices);
+        }
         return chatAdapter;
+    }
+
+    public IRankingAdapter getRankingsAdapter(){
+        if(rankingsAdapter == null){
+            rankingsAdapter = new RankingAdapterImpl(mServices);
+        }
+        return rankingsAdapter;
     }
 
     public void setChatAdapter(IChatAdapter chatAdapter) {
         this.chatAdapter = chatAdapter;
+    }
+
+    public SOServices getmServices() {
+        return mServices;
+    }
+
+    public void setmServices(SOServices mServices) {
+        this.mServices = mServices;
     }
 }

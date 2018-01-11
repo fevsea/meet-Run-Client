@@ -1,13 +1,12 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,10 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
-import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
-import edu.upc.fib.meetnrun.asynctasks.GetFriends;
 import edu.upc.fib.meetnrun.asynctasks.GetUsers;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
@@ -33,7 +29,7 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.BaseActivity;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 
@@ -45,7 +41,7 @@ public class UsersListFragment extends BaseFragment {
 
     private View view;
     private UsersAdapter usersAdapter;
-    private List<User> l;
+    private List<User> userList;
     private List<Friend> friends;
     private FloatingActionButton fab;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -55,6 +51,9 @@ public class UsersListFragment extends BaseFragment {
     private boolean isLastPage;
     private int pageNumber;
     private ProgressBar progressBar;
+    private List<User> queryUserList;
+
+    private boolean filtered;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,7 +62,7 @@ public class UsersListFragment extends BaseFragment {
         setHasOptionsMenu(true);
 
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
-
+        filtered = false;
         CurrentSession cs = CurrentSession.getInstance();
         currentUser = cs.getCurrentUser();
 
@@ -100,9 +99,9 @@ public class UsersListFragment extends BaseFragment {
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         usersList.setLayoutManager(layoutManager);
 
-        l = new ArrayList<>();
+        userList = new ArrayList<>();
 
-        usersAdapter = new UsersAdapter(l, new RecyclerViewOnClickListener() {
+        usersAdapter = new UsersAdapter(userList, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
@@ -141,7 +140,7 @@ public class UsersListFragment extends BaseFragment {
 
     }
 
-    @Override
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.search_menu, menu);
@@ -156,9 +155,11 @@ public class UsersListFragment extends BaseFragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (!filtered) queryUserList = usersAdapter.getAdapterList();
+                filtered = true;
                 newText = newText.toLowerCase();
                 ArrayList<User> newList = new ArrayList<>();
-                for (User user : l) {
+                for (User user : queryUserList) {
                     String userName = user.getUsername().toLowerCase();
                     String name = (user.getFirstName()+" "+user.getLastName()).toLowerCase();
                     String postCode = user.getPostalCode();
@@ -171,9 +172,17 @@ public class UsersListFragment extends BaseFragment {
                 return true;
             }
         });
-
+        searchView.setOnCloseListener(new android.widget.SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                filtered = false;
+                initializePagination();
+                getMethod();
+                return false;
+            }
+        });
         super.onCreateOptionsMenu(menu, inflater);
-    }
+    }*/
 
     protected void initializePagination() {
         pageNumber = 0;
@@ -183,30 +192,29 @@ public class UsersListFragment extends BaseFragment {
 
 
     private void initList() {
-        getMethod();
+        if (!filtered) getMethod();
     }
 
     private void getIntent(User friend) {
-        Intent friendProfileIntent = new Intent();
-        Fragment frag;
-        if (friend.isFriend()) {
-            frag = new FriendProfileFragment();
-        }
-        else {
-            frag = new UserProfileFragment();
-        }
         CurrentSession.getInstance().setFriend(friend);
-        BaseActivity.startWithFragment(getActivity(), frag, friendProfileIntent);
+        Intent userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
+        userProfileIntent.putExtra("userId",friend.getId());
+        userProfileIntent.putExtra("isFriend",friend.isFriend());
+        startActivity(userProfileIntent);
     }
 
     private void getMethod() {
-        callGetFriends();
+        Log.e("USER","ENTRA1");
+        if (!filtered) {
+            Log.e("USER","ENTRA2");
+            callGetFriends();
+        }
     }
 
     private void updateData(List<User> users) {
-        l = users;
-        l.remove(CurrentSession.getInstance().getCurrentUser());
-        for (User user: l) {
+        userList = users;
+        userList.remove(CurrentSession.getInstance().getCurrentUser());
+        for (User user: userList) {
             boolean equal = false;
             for (Friend f: friends) {
                 User friend = f.getFriend();
@@ -219,11 +227,11 @@ public class UsersListFragment extends BaseFragment {
             if (equal) user.setFriend(true);
         }
 
-        if (l != null) {
-            if (pageNumber == 0) usersAdapter.updateFriendsList(l);
-            else usersAdapter.addFriends(l);
+        if (userList != null) {
+            if (pageNumber == 0) usersAdapter.updateFriendsList(userList);
+            else usersAdapter.addFriends(userList);
 
-            if (l.size() == 0) {
+            if (userList.size() == 0) {
                 isLastPage = true;
             }
             else pageNumber++;
