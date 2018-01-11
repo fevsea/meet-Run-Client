@@ -54,11 +54,12 @@ public class PastMeetingsProfileFragment extends BaseFragment {
     private int page;
 
     // newInstance constructor for creating fragment with arguments
-    public static PastMeetingsProfileFragment newInstance(int page, String title) {
+    public static PastMeetingsProfileFragment newInstance(int page, String title, int userId) {
         PastMeetingsProfileFragment fragmentFirst = new PastMeetingsProfileFragment();
         Bundle args = new Bundle();
         args.putInt("1", page);
         args.putString("meetings", title);
+        args.putInt("userId",userId);
         fragmentFirst.setArguments(args);
         return fragmentFirst;
     }
@@ -69,6 +70,7 @@ public class PastMeetingsProfileFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("1", 1);
         title = getArguments().getString("meetings");
+        userId = getArguments().getInt("userId");
         setHasOptionsMenu(true);
     }
 
@@ -77,9 +79,6 @@ public class PastMeetingsProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_list, container, false);
         this.view = view;
-
-        User u = CurrentSession.getInstance().getCurrentUser();
-        userId = u.getId();
 
         userController = CurrentSession.getInstance().getUserAdapter();
         meetingController = CurrentSession.getInstance().getMeetingAdapter();

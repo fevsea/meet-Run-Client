@@ -34,6 +34,7 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 
@@ -187,16 +188,11 @@ public class UsersListFragment extends BaseFragment {
     }
 
     private void getIntent(User friend) {
-        Intent friendProfileIntent = new Intent();
-        Fragment frag;
-        if (friend.isFriend()) {
-            frag = new FriendProfileFragment();
-        }
-        else {
-            frag = new UserProfileFragment();
-        }
         CurrentSession.getInstance().setFriend(friend);
-        BaseActivity.startWithFragment(getActivity(), frag, friendProfileIntent);
+        Intent userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
+        userProfileIntent.putExtra("userId",friend.getId());
+        userProfileIntent.putExtra("isFriend",friend.isFriend());
+        startActivity(userProfileIntent);
     }
 
     private void getMethod() {

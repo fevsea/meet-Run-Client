@@ -48,6 +48,7 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MessageAdapter;
 
 
@@ -365,20 +366,23 @@ public class ChatFragment extends BaseFragment {
         int type = chat.getType();
         Log.e("AAA","PASSA");
         if (type == 0) {
-            chatIntent = new Intent();
-            chatFragment = new FriendProfileFragment();
+            chatIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
             if (!currentUser.getUsername().equals(chat.getUser1().getUsername()))
                 user = chat.getUser1();
             else user = chat.getUser2();
+            chatIntent.putExtra("userId",user.getId());
+            chatIntent.putExtra("isFriend",true);
             CurrentSession.getInstance().setFriend(user);
+            startActivity(chatIntent);
         }
         //else if (type == 1) {
         else {
             chatIntent = new Intent();
             chatFragment = new ChatGroupInfoFragment();
+            BaseActivity.startWithFragment(getActivity(), chatFragment,chatIntent);
+
             //chatIntent.putExtra("name",chat.getChatName());
         }
-        BaseActivity.startWithFragment(getActivity(), chatFragment,chatIntent);
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {

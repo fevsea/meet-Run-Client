@@ -37,11 +37,12 @@ public class TrophiesProfileFragment extends Fragment {
     private ArrayList<Trophie> createLists;
 
     // newInstance constructor for creating fragment with arguments
-    public static TrophiesProfileFragment newInstance(int page, String title) {
+    public static TrophiesProfileFragment newInstance(int page, String title, int userId) {
         TrophiesProfileFragment fragmentFirst = new TrophiesProfileFragment();
         Bundle args = new Bundle();
         args.putInt("3", page);
         args.putString("trophies", title);
+        args.putInt("userId",userId);
         fragmentFirst.setArguments(args);
         return fragmentFirst;
     }
@@ -52,6 +53,7 @@ public class TrophiesProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("3", 3);
         title = getArguments().getString("trophies");
+        id = getArguments().getInt("userId");
         setHasOptionsMenu(true);
     }
 
@@ -59,7 +61,6 @@ public class TrophiesProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_trophies_profile, container, false);
-        id = CurrentSession.getInstance().getCurrentUser().getId();
         getTrophiesList();
 
         return view;

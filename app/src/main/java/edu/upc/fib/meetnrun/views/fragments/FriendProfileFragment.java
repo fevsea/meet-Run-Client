@@ -46,6 +46,18 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
     private Chat chat;
     private boolean isAccepted;
 
+
+    public static FriendProfileFragment newInstance(String id, String userName, String name, String postalCode) {
+        FriendProfileFragment fragmentFirst = new FriendProfileFragment();
+        Bundle args = new Bundle();
+        args.putString("id", id);
+        args.putString("userName", userName);
+        args.putString("name",name);
+        args.putString("postalCode",postalCode);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         isAccepted = getActivity().getIntent().getBooleanExtra("accepted", true);
         View v = super.onCreateView(inflater, container, savedInstanceState);
