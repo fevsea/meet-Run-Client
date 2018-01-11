@@ -207,7 +207,7 @@ public class ChatListFragment extends BaseFragment {
         chatList.setAdapter(chatAdapter);
     }
 
-    @Override
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.search_menu, menu);
@@ -227,6 +227,7 @@ public class ChatListFragment extends BaseFragment {
                 ArrayList<Chat> newList = new ArrayList<>();
                 for (Chat chat : charListArray) {
                     String chatName = chat.getChatName().toLowerCase();
+                    Log.e("name", chatName);
                     if (chatName != null) {
                         if (chatName.contains(newText)) newList.add(chat);
                     }
@@ -245,7 +246,7 @@ public class ChatListFragment extends BaseFragment {
             }
         });
         super.onCreateOptionsMenu(menu, inflater);
-    }
+    }*/
 
     private void callGetChats() {
         setLoading();

@@ -140,7 +140,7 @@ public abstract class  FriendListFragmentTemplate extends BaseFragment{
 
 
 
-    @Override
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.search_menu, menu);
@@ -184,7 +184,7 @@ public abstract class  FriendListFragmentTemplate extends BaseFragment{
             }
         });
         super.onCreateOptionsMenu(menu, inflater);
-    }
+    }*/
 
     protected void initializePagination() {
         pageNumber = 0;

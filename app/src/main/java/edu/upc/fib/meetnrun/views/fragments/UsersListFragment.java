@@ -140,7 +140,7 @@ public class UsersListFragment extends BaseFragment {
 
     }
 
-    @Override
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.search_menu, menu);
@@ -182,7 +182,7 @@ public class UsersListFragment extends BaseFragment {
             }
         });
         super.onCreateOptionsMenu(menu, inflater);
-    }
+    }*/
 
     protected void initializePagination() {
         pageNumber = 0;
