@@ -19,6 +19,7 @@ import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Trophie;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.LoginActivity;
 
@@ -114,6 +115,11 @@ public class FirebaseMsgService extends FirebaseMessagingService {
                     textFinalized = "";
                 }
                 issueNotification(titleFinalized, textFinalized);
+                break;
+            case "new_trophie":
+                String titleNewTrophie = getString(R.string.trophie_won);
+                String textNewTrophie = String.format(getString(R.string.trophie_won_text), data.get("trophy_name"));
+                issueNotification(titleNewTrophie, textNewTrophie);
                 break;
             default:
                 Log.w(TAG, "UNINPLEMENTED: " + type);

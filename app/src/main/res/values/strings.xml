@@ -195,11 +195,13 @@
     <string name="challenge_accepted">Challenge accepted</string>
     <string name="challenge_accepted_text">%1$s has accepted your challenge</string>
     <string name="challenge_won">Challenge won</string>
+    <string name="trophie_won">Trophie won</string>
     <string name="challenge_lost">Challenge lost</string>
     <string name="challenge_lost_text">You have lost a challenge against %1$s</string>
     <string name="challenge_expired">Expired challenge</string>
     <string name="challenge_expired_text">Your challenge against %1$s has expired</string>
     <string name="challenge_won_text">You have won a challenge against %1$s</string>
+    <string name="trophie_won_text">You have won the trophie %1$s </string>
     <string name="requests">Requests</string>
     <string name="english">English</string>
     <string name="spanish">Spanish (Castillian)</string>

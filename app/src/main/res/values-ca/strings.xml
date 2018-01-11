@@ -149,6 +149,9 @@
     <string name="total_time">Temps total corrent</string>
     <string name="you">Tú</string>
 
+    <string name="trophie_won">Trofeu guanyat</string>
+    <string name="trophie_won_text">Has guanyat el trofeu %1$s </string>
+
     <string name="profile_fragment_title">Perfil</string>
     <string name="past_meetings_fragment_title">Trobades passades</string>
     <string name="statistics_fragment_title">Estadístiques</string>
