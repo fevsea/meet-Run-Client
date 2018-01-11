@@ -28,6 +28,7 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.fragments.ChallengesListFragment;
 import edu.upc.fib.meetnrun.views.fragments.ChatListFragment;
+import edu.upc.fib.meetnrun.views.fragments.FeedFragment;
 import edu.upc.fib.meetnrun.views.fragments.FriendsFragment;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
 import edu.upc.fib.meetnrun.views.fragments.MyMeetingsFragment;
@@ -95,6 +96,11 @@ public class DrawerActivity extends AppCompatActivity {
                                 case R.id.logout:
                                     resetFirebaseToken();
                                     //se ha movido el contenido de logout al recibir respuesta del server
+                                    break;
+                                case R.id.feed:
+                                    fragment = new FeedFragment();
+                                    setTitle(R.string.feed);
+                                    replaceFragment(fragment);
                                     break;
 
                                 case R.id.meetings:

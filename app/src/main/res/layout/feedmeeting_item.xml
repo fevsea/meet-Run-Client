@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/meeting_item_padding_horizontal"
+    android:paddingRight="@dimen/meeting_item_padding_horizontal"
+    android:paddingBottom="@dimen/meeting_item_padding_vertical"
+    android:paddingTop="@dimen/meeting_item_padding_vertical">
+    <android.support.v7.widget.CardView
+        android:id="@+id/mymeeting_item_cardview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/cardview_margin"
+        card_view:cardCornerRadius="@dimen/card_radius"
+        card_view:cardElevation="@dimen/card_depth">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/mymeeting_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/meeting_item_padding_vertical">
+                <LinearLayout
+                    android:id="@+id/mymeeting_item_iconslayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/meeting_user_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:layout_margin="@dimen/meeting_item_margin"
+                        android:layout_gravity="start|center_vertical"
+                        android:background="@drawable/user_profile_circular_text_view"
+                        style="@style/TextAppearance.AppCompat.Body2"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_gravity="center_vertical">
+
+
+                        <LinearLayout
+                            android:id="@+id/action_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/action_username"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textSize="16sp"
+                                android:layout_gravity="center_vertical"
+                                android:text="username"
+                                style="@style/TextAppearance.AppCompat.Body1"/>
+
+                            <TextView
+                                android:id="@+id/action_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:layout_margin="@dimen/meeting_item_margin"
+                                android:textSize="16sp"
+                                android:layout_gravity="center_vertical"
+                                android:text="created this Meeting"
+                                style="@style/TextAppearance.AppCompat.Body1"/>
+
+                        </LinearLayout>
+
+
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/meeting_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_below="@id/mymeeting_item_iconslayout"
+                    android:textSize="16sp"
+                    android:layout_margin="@dimen/meeting_item_margin"/>
+
+                <LinearLayout
+                    android:id="@+id/mymeeting_item_datetime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="@dimen/meeting_item_margin"
+                    android:orientation="vertical"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@id/mymeeting_item_iconslayout"
+                    android:layout_gravity="end">
+                    <TextView
+                        android:id="@+id/meeting_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
+                    <TextView
+                        android:id="@+id/meeting_time"
+                        android:layout_width="wrap_content"
+
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        style="@style/TextAppearance.AppCompat.Body1"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/meeting_map"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/map_size"
+                android:clickable="false"
+                android:layout_below="@+id/mymeeting_info"
+                android:layout_marginTop="@dimen/map_margin"
+                android:layout_marginEnd="@dimen/map_margin"
+                android:layout_marginStart="@dimen/map_margin">
+            </com.google.android.gms.maps.MapView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/meeting_map"
+                android:layout_margin="@dimen/meeting_item_margin"
+                android:layout_alignParentEnd="true">
+
+                <TextView
+                    android:id="@+id/meeting_join_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/meeting_item_margin"
+                    style="@style/TextAppearance.AppCompat.Body1"/>
+
+                <ImageButton
+                    android:id="@+id/meeting_join"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_marginTop="@dimen/meeting_item_margin"
+                    android:layout_marginEnd="@dimen/map_margin"
+                    android:background="@null"
+                    android:src="@drawable/add_user_512"
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true" />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
