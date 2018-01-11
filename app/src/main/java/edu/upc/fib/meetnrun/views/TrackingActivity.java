@@ -97,6 +97,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     private String distanceText;
 
     private boolean reentrantLocation;
+    private boolean requestingPermisions;
 
 
     @Override
@@ -105,6 +106,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         setContentView(R.layout.activity_tracking);
 
         reentrantLocation = false;
+        requestingPermisions = false;
 
         meetingId = getIntent().getIntExtra("id", -1);
         if (meetingId == -1) {
@@ -171,6 +173,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
                     GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
                     GoogleSignIn.getLastSignedInAccount(this),
                     fitnessOptions);
+            requestingPermisions = true;
         }
         else if(trackingService != null) {
             trackingService.onLogInDone();
@@ -196,12 +199,17 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     private void getLocationPermission() {
+        if (requestingPermisions) {
+            return;
+        }
+        requestingPermisions = true;
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             enableLocationButtonAndView();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
+        requestingPermisions = false;
     }
 
     @Override
@@ -213,7 +221,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
         /*
         Enables the 'center to location' button and enables showing the current location with a blue dot.
          */
-        if (mMap == null || reentrantLocation) {
+        if (mMap == null) {
             return;
         }
         try {
@@ -364,6 +372,12 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
             }
             trackingService.onLogInDone();
 
+            requestingPermisions = false;
+
+            if (!checkPermissions()) {
+                getLocationPermission();
+            }
+
         }
 
     }
@@ -387,6 +401,7 @@ public class TrackingActivity extends FragmentActivity implements OnMapReadyCall
 
                 ConnectionResult connectionResult = intent.getParcelableExtra("error");
                 try {
+                    requestingPermisions = true;
                     connectionResult.startResolutionForResult(TrackingActivity.this, ConnectionResult.SIGN_IN_REQUIRED);
                 }
                 catch (IntentSender.SendIntentException ex) {

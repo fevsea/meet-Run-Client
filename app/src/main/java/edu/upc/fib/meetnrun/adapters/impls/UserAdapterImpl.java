@@ -10,17 +10,17 @@ import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
+import edu.upc.fib.meetnrun.adapters.remote.SOServices;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.Statistics;
+import edu.upc.fib.meetnrun.models.Trophie;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.adapters.remote.SOServices;
 import retrofit2.Response;
 
-import static android.R.attr.id;
 import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.calculateOffset;
 import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.checkErrorCodeAndThowException;
 
@@ -176,11 +176,16 @@ public class UserAdapterImpl implements IUserAdapter {
     return ss != null ? ss.toGenericModel() : null;
   }
 
-  @Override
+    @Override
+    public List<Trophie> getUserTrophieByID(int id) throws AuthorizationException {
+        return null;
+    }
+
+    @Override
   public boolean banUser(int targetUserID) throws ForbiddenException {
     boolean ok = true;
         try {
-          Response<Void> ret = mServices.requestBan(id).execute();
+          Response<Void> ret = mServices.requestBan(targetUserID).execute();
           if (!ret.isSuccessful()) {
             ok = false;
             checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());

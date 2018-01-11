@@ -122,7 +122,7 @@
                 android:layout_alignParentStart="true"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
-                android:text="@string/total_km"
+                android:text="@string/total_m"
                 style="@style/TextAppearance.AppCompat.Body2"/>
 
             <TextView
