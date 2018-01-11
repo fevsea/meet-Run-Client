@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.models.ChatServer;
 import edu.upc.fib.meetnrun.adapters.models.ChallengeServer;
+import edu.upc.fib.meetnrun.adapters.models.FeedMeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.FriendServer;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
@@ -73,6 +74,9 @@ public interface SOServices {
 
     @GET("/users/{id}/statistics")
     Call<StatisticsServer> getUserStatisticsByID(@Path("id") int id);
+
+    @GET("/feed/{id}")
+    Call<List<FeedMeetingServer>> getFeedMeeting(@Path("id") int id);
 
 
 

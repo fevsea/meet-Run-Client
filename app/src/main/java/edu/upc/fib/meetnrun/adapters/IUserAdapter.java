@@ -5,6 +5,7 @@ import java.util.List;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.FeedMeeting;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.User;
@@ -32,4 +33,6 @@ public interface IUserAdapter {
     public List<Meeting> getUserPastMeetings(int targetUserId) throws AuthorizationException, ParamsException;
 
     Statistics getUserStatisticsByID(int id) throws AuthorizationException;
+
+    public List<FeedMeeting> getUsersFeed(int id) throws AuthorizationException;
 }
