@@ -160,20 +160,8 @@ public class FeedFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
         @Override
         protected Boolean doInBackground(Void... params) {
-
-            User friend = CurrentSession.getInstance().getCurrentUser();
-            Meeting m = new Meeting(1, "title", "description", true, 0, UtilsGlobal.formatDate(new Date()), "41.2", "2.3", 0, friend, new ArrayList<User>());
-            ArrayList<LatLng> path = new ArrayList<LatLng>();
-            path.add(new LatLng(41.2, 2.3));
-            path.add(new LatLng(41.3, 2.4));
-            path.add(new LatLng(41.3, 2.5));
-            TrackingData data = new TrackingData(5.3f, 400.0f, 50, 0, path, 1000);
-
-            itemList = new ArrayList<>();
-            itemList.add(new FeedMeeting(m, FeedMeeting.FUTURE_FRIEND_CREATED, friend, data));
-            itemList.add(new FeedMeeting(m, FeedMeeting.FUTURE_FRIEND_JOINED, friend, data));
-            itemList.add(new FeedMeeting(m, FeedMeeting.FUTURE_NEAR, friend, data));
-            itemList.add(new FeedMeeting(m, FeedMeeting.PAST_FRIEND, friend, data));
+            int userID = CurrentSession.getInstance().getCurrentUser().getId();
+            itemList = CurrentSession.getInstance().getUserAdapter().getUsersFeed(userID);
             return true;
         }
 
