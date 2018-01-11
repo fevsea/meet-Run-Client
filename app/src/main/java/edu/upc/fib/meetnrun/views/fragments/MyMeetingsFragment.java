@@ -84,7 +84,7 @@ public class MyMeetingsFragment extends BaseFragment {
             @Override
             public void onStartClicked(int position) {
                 Meeting selectedMeeting = meetingsAdapter.getMeetingAtPosition(position);
-                startMeeting(selectedMeeting);
+                startMeeting(selectedMeeting,position);
             }
 
             @Override
@@ -127,7 +127,8 @@ public class MyMeetingsFragment extends BaseFragment {
         BaseActivity.startWithFragment(getActivity(), new CreateMeetingFragment());
     }
 
-    private void startMeeting(Meeting meeting) {
+    private void startMeeting(Meeting meeting, int pos) {
+        meetingsAdapter.deleteMeetingAtPosition(pos);
         Intent intent = new Intent(getActivity(), TrackingActivity.class);
         intent.putExtra("id", meeting.getId());
         startActivity(intent);
