@@ -1,10 +1,16 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -25,13 +31,16 @@ import edu.upc.fib.meetnrun.asynctasks.GetPrivateChat;
 import edu.upc.fib.meetnrun.asynctasks.RemoveFriend;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 
+import edu.upc.fib.meetnrun.asynctasks.ReportUser;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.utils.UtilsViews;
 import edu.upc.fib.meetnrun.views.BaseActivity;
 
 /**
@@ -46,9 +55,22 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
     private Chat chat;
     private boolean isAccepted;
 
+
+    public static FriendProfileFragment newInstance(String id, String userName, String name, String postalCode) {
+        FriendProfileFragment fragmentFirst = new FriendProfileFragment();
+        Bundle args = new Bundle();
+        args.putString("id", id);
+        args.putString("userName", userName);
+        args.putString("name",name);
+        args.putString("postalCode",postalCode);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         isAccepted = getActivity().getIntent().getBooleanExtra("accepted", true);
         View v = super.onCreateView(inflater, container, savedInstanceState);
+        setHasOptionsMenu(true);
         return v;
     }
 
@@ -175,7 +197,7 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
 
 
     private void callCreateChat() {
-        new CreateChat(friendUsername,userList,0,null,"",0,dateWithoutTime) {
+        new CreateChat(friendUsername,userList,0,null,"",CurrentSession.getInstance().getCurrentUser().getUsername(),dateWithoutTime) {
             @Override
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {
@@ -253,6 +275,59 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
 
     public int getTitle() {
         return R.string.friend_profile_label;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_report, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.home:
+                getActivity().finish();
+                break;
+            case R.id.report_button:
+                showDialog(getString(R.string.report),getString(R.string.ok),getString(R.string.cancel));
+                break;
+        }
+        return false;
+    }
+
+    public void showDialog(String title, String okButtonText, String negativeButtonText) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(title);
+        builder.setPositiveButton(okButtonText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                callReportUser(Integer.valueOf(getArguments().getString("id")));
+            }
+        });
+        builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void callReportUser(int userId) {
+        new ReportUser(userId) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof ForbiddenException) {
+                    Toast.makeText(getActivity(), R.string.forbidden_banned, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(boolean b) {
+                Toast.makeText(getActivity(), R.string.report_success, Toast.LENGTH_LONG).show();
+            }
+        }.execute();
     }
 
 }

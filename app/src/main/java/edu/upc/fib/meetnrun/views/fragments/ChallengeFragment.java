@@ -118,10 +118,11 @@ public class ChallengeFragment extends BaseFragment implements View.OnClickListe
         User opponent;
         float userProgress;
         float opponentProgress;
+        float totalDistance = challenge.getDistance() / 1000.0f;
         if (currentUser.getId().equals(challenge.getCreator().getId())) {
             opponent = challenge.getChallenged();
-            userProgress = challenge.getCreatorDistance();
-            opponentProgress = challenge.getChallengedDistance();
+            userProgress = challenge.getCreatorDistance() / 1000.0f;
+            opponentProgress = challenge.getChallengedDistance() / 1000.0f;
         }
         else {
             opponent = challenge.getCreator();
@@ -134,11 +135,11 @@ public class ChallengeFragment extends BaseFragment implements View.OnClickListe
         userLevel.setText(String.valueOf(currentUser.getLevel()));
         userPhoto.setText(String.valueOf(currentUser.getUsername().charAt(0)));
         if (challenge.isAccepted()) {
-            userProgressBar.setMax((int) challenge.getDistance());
+            userProgressBar.setMax((int) totalDistance);
             userProgressBar.setProgress((int) userProgress);
             String userProgressString = String.format(Locale.forLanguageTag("es"),
-                    progressTextResource, userProgress, challenge.getDistance(),
-                    ((float) userProgress) / ((float) challenge.getDistance()) * 100, "%");
+                    progressTextResource, userProgress, totalDistance,
+                    ((float) userProgress) / ((float) totalDistance) * 100, "%");
             userProgressText.setText(userProgressString);
         }
         else {
@@ -151,11 +152,11 @@ public class ChallengeFragment extends BaseFragment implements View.OnClickListe
         opponentLevel.setText(String.valueOf(opponent.getLevel()));
         opponentPhoto.setText(String.valueOf(opponent.getUsername().charAt(0)));
         if (challenge.isAccepted()) {
-            opponentProgressBar.setMax((int) challenge.getDistance());
+            opponentProgressBar.setMax((int) totalDistance);
             opponentProgressBar.setProgress((int) opponentProgress);
             String opponentProgressString = String.format(Locale.forLanguageTag("es"),
-                    progressTextResource, opponentProgress, challenge.getDistance(),
-                    ((float) opponentProgress) / ((float) challenge.getDistance()) * 100, "%");
+                    progressTextResource, opponentProgress, totalDistance,
+                    ((float) opponentProgress) / ((float) totalDistance) * 100, "%");
             opponentProgressText.setText(opponentProgressString);
         }
         else {

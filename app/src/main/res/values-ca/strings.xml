@@ -118,6 +118,7 @@
     <string name="rhythm">Ritme</string>
     <string name="statistics_title">Estadístiques</string>
     <string name="total_km">Distància total (en km)</string>
+    <string name="total_m">Distància total (en m)</string>
     <string name="total_meetings">Trobades completades</string>
     <string name="total_steps">Nombre total de passos</string>
     <string name="authorization_error">Hi ha hagut un error autoritzant aquesta petició</string>
@@ -148,9 +149,10 @@
     <string name="total_time">Temps total corrent</string>
     <string name="you">Tú</string>
 
-    <string name="profile_fragment_title">El teu perfil</string>
-    <string name="past_meetings_fragment_title">Les teves trobades passades</string>
-    <string name="statistics_fragment_title">Les teves estadístiques</string>
+    <string name="profile_fragment_title">Perfil</string>
+    <string name="past_meetings_fragment_title">Trobades passades</string>
+    <string name="statistics_fragment_title">Estadístiques</string>
+    <string name="trophies_fragment_title">Trofeus</string>
 
     <string name="english">English</string>
     <string name="aaa">TEST</string>
@@ -203,5 +205,8 @@
     <string name="rankings_label">Rankings</string>
     <string name="delete_meeting">Eliminar trobada</string>
     <string name="delete_meeting_message">Vols esborrar aquesta trobada?</string>
+    <string name="report">Reportar usuari</string>
+    <string name="forbidden_banned">El teu compte està suspès, no pots realitzar la acció</string>
+    <string name="report_success">El report ha sigut enviat correctament</string>
 
 </resources>

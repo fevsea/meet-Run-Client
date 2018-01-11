@@ -12,6 +12,7 @@ import edu.upc.fib.meetnrun.adapters.models.PositionServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
 import edu.upc.fib.meetnrun.adapters.models.TrackServer;
 import edu.upc.fib.meetnrun.adapters.models.PositionUserServer;
+import edu.upc.fib.meetnrun.adapters.models.TrophiesListServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -78,6 +79,10 @@ public interface SOServices {
 
     @POST("/users/{id}/ban")
     Call<Void> requestBan(@Path("id") int id);
+
+    @GET("/trophies/{id}")
+    Call<TrophiesListServer> getTrophiesListByID(@Path("id") int id);
+
 
 
     //LOGIN

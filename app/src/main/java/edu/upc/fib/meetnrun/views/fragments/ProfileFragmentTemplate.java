@@ -97,7 +97,7 @@ public abstract class ProfileFragmentTemplate extends BaseFragment {
         });
         FloatingActionButton fab =
                 getActivity().findViewById(R.id.activity_fab);
-        fab.setVisibility(View.GONE);
+        if (fab != null) fab.setVisibility(View.GONE);
 
         userName.setText(currentFriend.getUsername());
         String nameFriend = currentFriend.getFirstName()+" "+currentFriend.getLastName();
@@ -110,6 +110,7 @@ public abstract class ProfileFragmentTemplate extends BaseFragment {
         challengeButton = view.findViewById(R.id.challenge_button);
         configureChallengeButton();
         setImage();
+        setHasOptionsMenu(true);
         return this.view;
     }
 

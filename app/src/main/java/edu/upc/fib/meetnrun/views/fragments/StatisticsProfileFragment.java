@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -53,14 +56,17 @@ public class StatisticsProfileFragment extends BaseFragment {
     User u;
     View view;
     String user;
+    private int userId;
+    private int userLevel;
     String name, userlevel, usermeetings, usersteps, userkm, usertime, usercalories, userrhythm, userspeed, usermaxspeed, userminspeed, usermaxtime, usermintime, usermaxlength, userminlength;
 
     // newInstance constructor for creating fragment with arguments
-    public static StatisticsProfileFragment newInstance(int page, String title) {
+    public static StatisticsProfileFragment newInstance(int page, String title, int userId) {
         StatisticsProfileFragment fragmentFirst = new StatisticsProfileFragment();
         Bundle args = new Bundle();
         args.putInt("2", page);
         args.putString("Statistics", title);
+        args.putInt("userId",userId);
         fragmentFirst.setArguments(args);
         return fragmentFirst;
     }
@@ -69,8 +75,12 @@ public class StatisticsProfileFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt("0", 0);
-        title = getArguments().getString("Info");
+        page = getArguments().getInt("2", 2);
+        title = getArguments().getString("Statistics");
+        userId = getArguments().getInt("userId");
+        setHasOptionsMenu(true);
+       /* Bundle bundle = getActivity().getIntent().getExtras();
+        userId=bundle.getInt("userId");*/
     }
 
     public int getActualLevel (int meetings, float km, int level){
@@ -181,7 +191,7 @@ public class StatisticsProfileFragment extends BaseFragment {
     }
 
     private void callGetUserStats() {
-        new GetUserStats(u) {
+        new GetUserStats(userId) {
             @Override
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {
@@ -198,5 +208,20 @@ public class StatisticsProfileFragment extends BaseFragment {
                 updateData();
             }
         }.execute();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.empty_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.home:
+                getActivity().finish();
+                break;
+        }
+        return false;
     }
 }

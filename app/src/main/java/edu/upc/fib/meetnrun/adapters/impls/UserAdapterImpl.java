@@ -9,6 +9,7 @@ import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
+import edu.upc.fib.meetnrun.adapters.models.TrophiesListServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
@@ -16,6 +17,7 @@ import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.Statistics;
+import edu.upc.fib.meetnrun.models.Trophie;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.adapters.remote.SOServices;
 import retrofit2.Response;
@@ -179,16 +181,30 @@ public class UserAdapterImpl implements IUserAdapter {
   @Override
   public boolean banUser(int targetUserID) throws ForbiddenException {
     boolean ok = true;
+    try {
+      Response<Void> ret = mServices.requestBan(targetUserID).execute();
+      if (!ret.isSuccessful()) {
+        ok = false;
+        checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return ok;
+  }
+
+  public List<Trophie> getUserTrophieByID(int id) throws AuthorizationException {
+    TrophiesListServer tls = null;
         try {
-          Response<Void> ret = mServices.requestBan(id).execute();
+          Response<TrophiesListServer> ret = mServices.getTrophiesListByID(id).execute();
           if (!ret.isSuccessful()) {
-            ok = false;
             checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
           }
+            tls = ret.body();
         } catch (IOException e) {
           e.printStackTrace();
         }
-        return ok;
+        return tls != null ? tls.toGenericModel() : null;
   }
 
 }

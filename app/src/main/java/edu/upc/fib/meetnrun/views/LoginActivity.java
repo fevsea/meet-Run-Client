@@ -156,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponseReceied(User u) {
+            public void onResponseReceived(User u) {
                 cs.setCurrentUser(u);
                 progressBar.setVisibility(View.INVISIBLE);
                 changeToMainActivity();

@@ -123,10 +123,10 @@
     <string name="password">Password</string>
 
 
-    <string name="profile_fragment_title">Your profile</string>
-    <string name="past_meetings_fragment_title">Your past meetings</string>
-    <string name="statistics_fragment_title">Your Statistics</string>
-
+    <string name="profile_fragment_title">Profile</string>
+    <string name="past_meetings_fragment_title">Past meetings</string>
+    <string name="statistics_fragment_title">Statistics</string>
+    <string name="trophies_fragment_title">Trophies</string>
     <string name="statistics_title">Statistics</string>
     <string name="avg_speed">Average speed</string>
     <string name="rhythm">Rhythm</string>
@@ -139,6 +139,7 @@
     <string name="total_steps">Total number of steps</string>
     <string name="total_meetings">Completed meetings</string>
     <string name="total_km">Total distance (in Km)</string>
+    <string name="total_m">Total distance (in m)</string>
     <string name="total_time">Total run time</string>
 
     <string name="aaa">TEST</string>
@@ -228,7 +229,12 @@
     <string name="share_via">Share via</string>
     <string name="rankings_label">Rankings</string>
     <string name="share_text">Hey! I have done this route with Meet&amp;run!!</string>
+    <string name="report">Report user</string>
     <string name="delete_meeting">Delete meeting</string>
     <string name="delete_meeting_message">Do you want to delete this meeting?</string>
+    <string name="trophie_not_obtained">You do not have this trophie yet, keep going!</string>
+    <string name="trophie_obtained">You already obtained this trophie, congratulations!</string>
+    <string name="forbidden_banned">Your account is suspended, you cannot do this action</string>
+    <string name="report_success">The report has been send successfully</string>
 </resources>
 

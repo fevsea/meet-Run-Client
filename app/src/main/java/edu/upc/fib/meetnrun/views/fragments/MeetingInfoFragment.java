@@ -166,13 +166,12 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
             @Override
             public void onItemClicked(int position) {
                 User participant = participantsAdapter.getFriendAtPosition(position);
-                Intent profileIntent;
+                Intent userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
                 if (participant.getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
-                    profileIntent = new Intent(getActivity(),ProfileViewPagerFragment.class);
-                    startActivity(profileIntent);
+                    userProfileIntent.putExtra("userId",CurrentSession.getInstance().getCurrentUser().getId());
+                    userProfileIntent.putExtra("isFriend",false);
                 }
                 else {
-                    Fragment frag;
                     boolean isFriend = false;
                     for (Friend f : friends) {
                         User friend = f.getFriend();
@@ -180,20 +179,9 @@ public class MeetingInfoFragment extends BaseFragment implements OnMapReadyCallb
                         if (participant.getId().equals(friend.getId())) isFriend = true;
                     }
                     CurrentSession.getInstance().setFriend(participant);
-                    if (isFriend) {
-                        profileIntent = new Intent();
-                        frag = new FriendProfileFragment();
-                    }
-                    else {
-                        profileIntent = new Intent();
-                        frag = new UserProfileFragment();
-                    }
-                    profileIntent.putExtra("id",participant.getId().toString());
-                    profileIntent.putExtra("userName", participant.getUsername());
-                    String name = participant.getFirstName() + " " + participant.getLastName();
-                    profileIntent.putExtra("name", name);
-                    profileIntent.putExtra("postCode", participant.getPostalCode());
-                    BaseActivity.startWithFragment(getActivity(), frag, profileIntent);
+                    userProfileIntent.putExtra("userId",participant.getId());
+                    userProfileIntent.putExtra("isFriend",isFriend);
+                    startActivity(userProfileIntent);
                 }
             }
         }, getContext());
