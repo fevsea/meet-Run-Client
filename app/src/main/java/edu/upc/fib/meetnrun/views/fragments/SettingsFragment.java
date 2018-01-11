@@ -65,24 +65,28 @@ public class SettingsFragment extends BaseFragment {
 
         language = view.findViewById(R.id.spinnerLanguage);
         setLanguanges();
+        language.post(new Runnable() {
+            @Override public void run() {
+                language.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        if (position==0){
+                            setLocale("en");
+                        }
+                        else if (position==1){
+                            setLocale("es");
+                        }
+                        else if (position==2){
+                            setLocale("ca");
+                        }
 
-        language.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    }
 
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (position==0){
-                    setLocale("en");
-                }
-                else if (position==1){
-                    setLocale("es");
-                }
-                else if (position==2){
-                    setLocale("ca");
-                }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
 
@@ -137,10 +141,9 @@ public class SettingsFragment extends BaseFragment {
     }
 
     private void setLanguanges(){
-        String[] languages={
-                "English", "Spanish", "Catalan"
-        };
-        language.setAdapter(new ArrayAdapter<CharSequence>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, languages));
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.languages, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        language.setAdapter(adapter);
 
     }
 

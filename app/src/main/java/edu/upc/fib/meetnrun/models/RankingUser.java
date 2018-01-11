@@ -9,39 +9,22 @@ import java.util.List;
 public class RankingUser{
 
     /* Tots els codis postals que tenen al menys un usuari */
-    private List<Integer> allZips;
+    private List<String> allZips;
     /* RANKINGS */
     /* Ranking global, sense importar el codi postal ni la ciutat */
     private List<PositionUser> Ranking;
 
-    /* POSICIÓ DE CURRENT USER */
-    /* La posició al ranking de CurrentUser */
-    private int currentUserPosition;
 
     public RankingUser() {
     }
 
-/* ZIP: ranking del codigo postal, city: ranking de ciudad, global: ranking global */
-    public int getCurrentUserZipPosition(){
-        return currentUserPosition;
-    }
-    public int getCurrentUserCityPosition(){
-        return currentUserPosition;
-    }
-    public int getCurrentUserGlobalPosition(){
-        return currentUserPosition;
-    }
-
-
-    public List<Integer> getAllZips(){
+    public List<String> getAllZips(){
         return allZips;
     }
-
     public List<PositionUser> getRanking(){
         return Ranking;
     }
     public List<PositionUser> getRankingByZip(int zip){
         return Ranking;
     }
-    public List<PositionUser> getRankingByCity(int zip){ return Ranking; }
 }

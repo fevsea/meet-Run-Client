@@ -82,4 +82,8 @@ public class RankingsAdapter extends RecyclerView.Adapter<RankingsViewHolder>{
     public List<PositionUser> getRankingList() {
         return rankingList;
     }
+
+    public PositionUser getPosition(int position){
+        return rankingList.get(position);
+    }
 }

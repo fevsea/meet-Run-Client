@@ -212,4 +212,10 @@
     <string name="delete_meeting">Eliminar trobada</string>
     <string name="delete_meeting_message">Vols esborrar aquesta trobada?</string>
 
+    <string-array name="languages">
+        <item>Anglès</item>
+        <item>Castellà</item>
+        <item>Català</item>
+    </string-array>
+
 </resources>
