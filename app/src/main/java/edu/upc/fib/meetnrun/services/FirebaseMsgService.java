@@ -120,10 +120,18 @@ public class FirebaseMsgService extends FirebaseMessagingService {
                 String titleNewTrophie = getString(R.string.trophie_won);
                 String textNewTrophie = String.format(getString(R.string.trophie_won_text), data.get("trophy_name"));
                 issueNotification(titleNewTrophie, textNewTrophie);
+
+            case "friend_request":
+                String titleFriendRequest = getString(R.string.friend_request);
+                String textFriendRequest = String.format(getString(R.string.friend_request_text), data.get("friend_name"));
+                issueNotification(titleFriendRequest, textFriendRequest);
+                break;
+            case "friend_accepted":
+                String titleFriendAccepted = String.format(getString(R.string.friend_accepted), data.get("friend_name"));
+                issueNotification(titleFriendAccepted, "");
                 break;
             default:
-                Log.w(TAG, "UNINPLEMENTED: " + type);
-                issueNotification("UNINPLEMENTED", type);
+                issueNotification(type, "");
         }
     }
 

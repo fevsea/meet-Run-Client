@@ -46,6 +46,8 @@ public abstract class  FriendListFragmentTemplate extends BaseFragment{
     protected boolean isLastPage;
     protected int pageNumber;
     protected ProgressBar progressBar;
+    protected boolean filtered;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,6 +56,7 @@ public abstract class  FriendListFragmentTemplate extends BaseFragment{
         setHasOptionsMenu(true);
 
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
+        filtered = false;
         adapter();
 
         CurrentSession cs = CurrentSession.getInstance();
@@ -137,7 +140,7 @@ public abstract class  FriendListFragmentTemplate extends BaseFragment{
 
 
 
-    @Override
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.search_menu, menu);
@@ -152,6 +155,7 @@ public abstract class  FriendListFragmentTemplate extends BaseFragment{
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                filtered = true;
                 newText = newText.toLowerCase();
                 ArrayList<Friend> newList = new ArrayList<>();
                 for (Friend f : l) {
@@ -170,8 +174,17 @@ public abstract class  FriendListFragmentTemplate extends BaseFragment{
             }
         });
 
+        searchView.setOnCloseListener(new android.widget.SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                filtered = false;
+                initializePagination();
+                getPaginationMethod();
+                return false;
+            }
+        });
         super.onCreateOptionsMenu(menu, inflater);
-    }
+    }*/
 
     protected void initializePagination() {
         pageNumber = 0;

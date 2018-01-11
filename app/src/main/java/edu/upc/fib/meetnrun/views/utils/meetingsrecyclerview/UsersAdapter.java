@@ -58,6 +58,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersViewHolder> {
         notifyDataSetChanged();
     }
 
+    public List<User> getAdapterList() {
+        return this.users;
+    }
+
     public User getFriendAtPosition(int position) {
         return users.get(position);
     }

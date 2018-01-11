@@ -187,10 +187,44 @@
     <string name="new_challenge_text">%1$s t\'ha desafiat</string>
     <string name="requests">Peticions</string>
     <string name="reject">Rebutjar</string>
+    <string name="rankings">Rankings</string>
+    <string name="chat_not_available">El xat no es troba disponible</string>
+    <string name="filter_ranking">Filtrar per:</string>
+    <string name="max_level">Nivell Màx.:</string>
+    <string name="ranking_city">Ciutat</string>
+    <string name="ranking_country">País</string>
+    <string name="ranking_global">Global</string>
+    <string name="ranking_postcode">Codi postal</string>
+    <string name="rankings_users">Rànquing d\'usuaris</string>
+    <string name="rankings_zip">Rànquings de codi postal</string>
+    <string name="settingsLanguage">Canviar idioma:</string>
     <string name="error_deleting_friend">Error al eliminar l\'amic</string>
     <string name="error_adding_friend">Error al afegir l\'amic</string>
     <string name="meeting">Trobada</string>
+    <string name="feed">Mur</string>
+    <string name="feed_meeting_near">Aquesta trobada és a prop de la teva localització</string>
+    <string name="feed_meeting_past">ha completat aquesta trobada</string>
+    <string name="feed_meeting_joined">s\'ha apuntat a aquesta trobada</string>
+    <string name="feed_meeting_created">ha creat aquesta trobada</string>
+    <string name="join_meeting">Unir-se a la trobada</string>
+    <string name="ranking_current">La teva posició:</string>
+    <string name="rankings_choose_zip">Codi Postal:</string>
+    <string name="share_text">Ei! He fet aquesta ruta amb Meet&amp;Run!</string>
+    <string name="share_via">Compartir via</string>
+    <string name="rankings_label">Rankings</string>
     <string name="delete_meeting">Eliminar trobada</string>
     <string name="delete_meeting_message">Vols esborrar aquesta trobada?</string>
+
+    <string-array name="languages">
+        <item>Anglès</item>
+        <item>Castellà</item>
+        <item>Català</item>
+    </string-array>
+    <string name="friend_request">Nova sol·licitud d\'amistat</string>
+    <string name="friend_request_text">%1$s t\'ha enviat una sol·licitud d\'amistat</string>
+    <string name="friend_accepted">%1$s ha acceptat la teva sol·licitud!</string>
+    <string name="forbidden_error">Aquesta acció està prohibida</string>
+    <string name="trophie_not_obtained">Encara no tens aquest trofeu, ànims!</string>
+    <string name="trophie_obtained">Ja tens aquest trofeu, felicitats!</string>
 
 </resources>

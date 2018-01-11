@@ -72,6 +72,7 @@ public class StatisticsProfileFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         page = getArguments().getInt("2", 2);
         title = getArguments().getString("Statistics");
         userId = getArguments().getInt("userId");

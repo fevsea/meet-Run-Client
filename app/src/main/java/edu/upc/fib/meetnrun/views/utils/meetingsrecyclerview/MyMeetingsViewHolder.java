@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.utils.UtilsGlobal;
@@ -115,8 +116,10 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
 
         location = new LatLng(Double.parseDouble(meeting.getLatitude()),Double.parseDouble(meeting.getLongitude()));
 
-
-        leaveMeetingButton.setOnClickListener(this);
+        if (meeting.getOwner().getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
+            leaveMeetingButton.setVisibility(View.INVISIBLE);
+        }
+        else leaveMeetingButton.setOnClickListener(this);
 
         mapView.onCreate(new Bundle());
         mapView.setClickable(false);

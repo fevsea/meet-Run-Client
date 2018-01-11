@@ -3,8 +3,10 @@ package edu.upc.fib.meetnrun.adapters;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.FeedMeeting;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.Statistics;
 import edu.upc.fib.meetnrun.models.Trophie;
@@ -26,11 +28,13 @@ public interface IUserAdapter {
 
     boolean deleteUserByID(int targetUserId) throws NotFoundException, AuthorizationException;
 
-    public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime) throws AuthorizationException, ParamsException;
+    public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime)throws AuthorizationException, ParamsException;
 
     public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AuthorizationException, ParamsException;
 
     public List<Meeting> getUserPastMeetings(int targetUserId) throws AuthorizationException, ParamsException;
+
+    public boolean banUser(int id) throws ForbiddenException;
 
     public Statistics getUserStatisticsByID(int id) throws AuthorizationException;
 
@@ -79,4 +83,6 @@ public interface IUserAdapter {
      * @throws AuthorizationException Exception thrown when you don't have permission
      */
     public List<Trophie> getUserTrophieByID(int id) throws AuthorizationException;
+
+    public List<FeedMeeting> getUsersFeed(int id) throws AuthorizationException;
 }

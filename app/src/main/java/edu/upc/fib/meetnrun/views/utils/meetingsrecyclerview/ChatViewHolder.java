@@ -77,7 +77,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
 
         lastHour.setText(messageHourMin);
 
-        TextView numberChats = view.findViewById(R.id.chat_new_messages);
+        /*TextView numberChats = view.findViewById(R.id.chat_new_messages);
 
         if (!chat.getMessage().getName().equals(CurrentSession.getInstance().getCurrentUser().getUsername())) {
 
@@ -87,7 +87,7 @@ public class ChatViewHolder extends RecyclerView.ViewHolder implements View.OnCl
             }
             else numberChats.setVisibility(View.GONE);
         }
-        else numberChats.setVisibility(View.GONE);
+        else numberChats.setVisibility(View.GONE);*/
 
         view.setOnClickListener(this);
     }
