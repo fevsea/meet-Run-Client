@@ -80,14 +80,15 @@ public interface SOServices {
     @GET("/users/{id}/statistics")
     Call<StatisticsServer> getUserStatisticsByID(@Path("id") int id);
 
+    @POST("/users/{id}/ban")
+    Call<Void> requestBan(@Path("id") int id);
+
     @GET("/trophies/{id}")
     Call<TrophiesListServer> getTrophiesListByID(@Path("id") int id);
-
+    
     @GET("/feed/{id}")
     Call<List<FeedMeetingServer>> getFeedMeeting(@Path("id") int id);
 
-    @POST("/users/{id}/ban")
-    Call<Void> requestBan(@Path("id") int id);
 
 
     //LOGIN

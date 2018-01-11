@@ -1,13 +1,11 @@
 package edu.upc.fib.meetnrun.asynctasks;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskCallbackUser;
 import edu.upc.fib.meetnrun.asynctasks.callbacks.AsyncTaskException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
-import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 
@@ -42,7 +40,7 @@ public abstract class Register extends AsyncTask<String,String,User> implements 
 
     @Override
     protected void onPostExecute(User u) {
-        if (exception == null) onResponseReceied(u);
+        if (exception == null) onResponseReceived(u);
         else onExceptionReceived(exception);
         super.onPostExecute(u);
     }

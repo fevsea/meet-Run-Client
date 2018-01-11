@@ -127,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onResponseReceied(User u) {
+            public void onResponseReceived(User u) {
                 if (u == null) {
                     //TODO hardcoded
                     Toast.makeText(getApplicationContext(), "Register ERROR", Toast.LENGTH_SHORT).show();

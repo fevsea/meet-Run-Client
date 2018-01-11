@@ -185,7 +185,7 @@ public class CreateChallengeFragment extends BaseFragment implements View.OnClic
             }
 
             @Override
-            public void onResponseReceied(User u) {
+            public void onResponseReceived(User u) {
                 challenged = u;
                 challenge.setChallenged(challenged);
                 callCreateChallenge();
