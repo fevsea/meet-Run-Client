@@ -180,22 +180,6 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
                             userProfileIntent.putExtra("userId",participant.getId());
                             userProfileIntent.putExtra("isFriend",isFriend);
                             startActivity(userProfileIntent);
-
-
-                            if (isFriend) {
-                                profileIntent = new Intent();
-                                frag = new FriendProfileFragment();
-                            }
-                            else {
-                                profileIntent = new Intent();
-                                frag = new UserProfileFragment();
-                            }
-                            profileIntent.putExtra("id",participant.getId().toString());
-                            profileIntent.putExtra("userName", participant.getUsername());
-                            String name = participant.getFirstName() + " " + participant.getLastName();
-                            profileIntent.putExtra("name", name);
-                            profileIntent.putExtra("postCode", participant.getPostalCode());
-                            BaseActivity.startWithFragment(getActivity(), frag, profileIntent);
                         }
 
                     }
