@@ -47,6 +47,8 @@ public abstract class  FriendListFragmentTemplate extends BaseFragment{
     protected int pageNumber;
     protected ProgressBar progressBar;
 
+    private boolean filtered;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public abstract class  FriendListFragmentTemplate extends BaseFragment{
         setHasOptionsMenu(true);
 
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
+        filtered = false;
         adapter();
 
         CurrentSession cs = CurrentSession.getInstance();

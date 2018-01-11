@@ -57,6 +57,8 @@ public class UsersListFragment extends BaseFragment {
     private int pageNumber;
     private ProgressBar progressBar;
 
+    private boolean filtered;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,7 +66,7 @@ public class UsersListFragment extends BaseFragment {
         setHasOptionsMenu(true);
 
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
-
+        filtered = false;
         CurrentSession cs = CurrentSession.getInstance();
         currentUser = cs.getCurrentUser();
 
@@ -157,6 +159,7 @@ public class UsersListFragment extends BaseFragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                filtered = true;
                 newText = newText.toLowerCase();
                 ArrayList<User> newList = new ArrayList<>();
                 for (User user : l) {
@@ -172,7 +175,15 @@ public class UsersListFragment extends BaseFragment {
                 return true;
             }
         });
-
+        searchView.setOnCloseListener(new android.widget.SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                filtered = false;
+                initializePagination();
+                getMethod();
+                return false;
+            }
+        });
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -184,7 +195,7 @@ public class UsersListFragment extends BaseFragment {
 
 
     private void initList() {
-        getMethod();
+        if (!filtered) getMethod();
     }
 
     private void getIntent(User friend) {
