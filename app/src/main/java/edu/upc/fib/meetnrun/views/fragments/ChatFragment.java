@@ -88,18 +88,12 @@ public class ChatFragment extends BaseFragment {
 
     private ChildEventListener childEventListener;
 
-    @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        setHasOptionsMenu(true);
-
+    private void loadChat() {
         CurrentSession cs = CurrentSession.getInstance();
+
         chat = cs.getChat();
         currentUser = cs.getCurrentUser();
         chatDBAdapter = cs.getChatAdapter();
-
-        //first = true;
 
         for (int i = 0; i < chat.getListUsersChatSize(); i++) {
             if (currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
@@ -116,8 +110,6 @@ public class ChatFragment extends BaseFragment {
 
         getActivity().setTitle("");
 
-        this.view = inflater.inflate(R.layout.fragment_chat, container, false);
-
         fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
@@ -133,25 +125,18 @@ public class ChatFragment extends BaseFragment {
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference(String.valueOf(chat.getId())); //Chat name
-        /*myRef = database.getReference();
+        if (chat.getMessage().getMessage().equals("")) removeProgressChat();
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snap: dataSnapshot.getChildren()) {
-                    if (snap.getKey().equals(String.valueOf(chat.getId()))) {
-                        MAX_MESSAGES_LOAD = snap.getChildrenCount();
-                    }
-                }
-                if (NUMB_MESSAGES_LOAD > MAX_MESSAGES_LOAD) NUMB_MESSAGES_LOAD = (int)MAX_MESSAGES_LOAD;
-                changeNumbMessages();
-            }
+    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+    @Override
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             Bundle savedInstanceState) {
 
-            }
-        });*/
+        setHasOptionsMenu(true);
+        this.view = inflater.inflate(R.layout.fragment_chat, container, false);
+
+        loadChat();
 
         childEventListener = new ChildEventListener() {
             @Override
@@ -420,6 +405,7 @@ public class ChatFragment extends BaseFragment {
 
     @Override
     public void onResume() {
+        loadChat();
         firstTime = true;
         chat.setNumbMessagesAtPosition(userPosition, 0);
         super.onResume();

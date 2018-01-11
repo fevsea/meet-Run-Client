@@ -125,7 +125,7 @@ public class ChatFriendsFragment extends FriendListFragmentTemplate {
     }
 
     private void callCreateChat() {
-        new CreateChat(friendUserName,userList,0,null,"",0,dateWithoutTime) {
+        new CreateChat(friendUserName,userList,0,null,"",CurrentSession.getInstance().getCurrentUser().getUsername(),dateWithoutTime) {
             @Override
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {
