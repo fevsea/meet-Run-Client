@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.app.ActionBar;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -30,8 +31,8 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
         Bundle args = new Bundle();
         args.putString("id", id);
         args.putString("userName", userName);
-        args.putString("name",name);
-        args.putString("postalCode",postalCode);
+        args.putString("name", name);
+        args.putString("postalCode", postalCode);
         fragmentFirst.setArguments(args);
         return fragmentFirst;
     }
@@ -60,7 +61,7 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
 
     @Override
     protected String setDialogMessage() {
-        return getResources().getString(R.string.friend_request_dialog_message)+" "+currentFriend.getUsername()+"?";
+        return getResources().getString(R.string.friend_request_dialog_message) + " " + currentFriend.getUsername() + "?";
     }
 
     @Override
@@ -74,8 +75,7 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {
                     Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-                }
-                else if (e instanceof ParamsException) {
+                } else if (e instanceof ParamsException) {
                     Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
                 }
             }
@@ -93,58 +93,5 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
 
     public int getTitle() {
         return R.string.user_profile_label;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_report, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.home:
-                getActivity().finish();
-                break;
-            case R.id.report_button:
-                showDialog(getString(R.string.report),getString(R.string.ok),getString(R.string.cancel));
-                break;
-        }
-        return false;
-    }
-
-    public void showDialog(String title, String okButtonText, String negativeButtonText) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(title);
-        builder.setPositiveButton(okButtonText, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                callReportUser(Integer.valueOf(getArguments().getString("id")));
-            }
-        });
-        builder.setNegativeButton(negativeButtonText, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void callReportUser(int userId) {
-        new ReportUser(userId) {
-            @Override
-            public void onExceptionReceived(GenericException e) {
-                if (e instanceof ForbiddenException) {
-                    Toast.makeText(getActivity(), R.string.forbidden_banned, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onResponseReceived(boolean b) {
-                Toast.makeText(getActivity(), R.string.report_success, Toast.LENGTH_LONG).show();
-            }
-        }.execute();
     }
 }

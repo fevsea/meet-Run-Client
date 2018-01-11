@@ -235,6 +235,6 @@
     <string name="trophie_not_obtained">You do not have this trophie yet, keep going!</string>
     <string name="trophie_obtained">You already obtained this trophie, congratulations!</string>
     <string name="forbidden_banned">Your account is suspended, you cannot do this action</string>
-    <string name="report_success">The report has been send successfully</string>
+    <string name="report_success">The report has been sent successfully</string>
 </resources>
 

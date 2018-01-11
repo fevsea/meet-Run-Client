@@ -81,6 +81,23 @@ public class ProfileViewPagerFragment extends AppCompatActivity {
         tabs.setupWithViewPager(pager);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.empty_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
+    }
+
 
     public class PagerAdapterFragment extends FragmentPagerAdapter {
 
@@ -171,4 +188,5 @@ public class ProfileViewPagerFragment extends AppCompatActivity {
     private Fragment getTrohpiesFragment() {
         return TrophiesProfileFragment.newInstance(3, "trophies",userId);
     }
+
 }

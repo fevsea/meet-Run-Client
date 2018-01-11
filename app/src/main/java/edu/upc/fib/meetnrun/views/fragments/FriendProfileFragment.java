@@ -277,23 +277,6 @@ public class FriendProfileFragment extends ProfileFragmentTemplate implements Vi
         return R.string.friend_profile_label;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_report, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.home:
-                getActivity().finish();
-                break;
-            case R.id.report_button:
-                showDialog(getString(R.string.report),getString(R.string.ok),getString(R.string.cancel));
-                break;
-        }
-        return false;
-    }
 
     public void showDialog(String title, String okButtonText, String negativeButtonText) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
