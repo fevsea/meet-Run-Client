@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,6 +59,8 @@ public class ChatListFragment extends BaseFragment {
     private int pageNumber;
     private ProgressBar progressBar;
 
+    private boolean filtered;
+
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,7 +68,7 @@ public class ChatListFragment extends BaseFragment {
         setHasOptionsMenu(true);
 
         this.view = inflater.inflate(R.layout.fragment_chat_list, container, false);
-
+        filtered = false;
         chatDBAdapter = CurrentSession.getInstance().getChatAdapter();
 
         initializePagination();
@@ -138,7 +141,7 @@ public class ChatListFragment extends BaseFragment {
     }
 
     private void updateChats() {
-        callGetChats();
+        if (!filtered) callGetChats();
     }
 
     private void addChat() {
@@ -220,6 +223,7 @@ public class ChatListFragment extends BaseFragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                filtered = true;
                 newText = newText.toLowerCase();
                 ArrayList<Chat> newList = new ArrayList<>();
                 for (Chat chat : l) {
@@ -232,7 +236,15 @@ public class ChatListFragment extends BaseFragment {
                 return true;
             }
         });
-
+        searchView.setOnCloseListener(new android.widget.SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                filtered = false;
+                initializePagination();
+                updateChats();
+                return false;
+            }
+        });
         super.onCreateOptionsMenu(menu, inflater);
     }
 
