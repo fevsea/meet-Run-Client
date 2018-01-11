@@ -97,6 +97,9 @@ public interface SOServices {
     @POST("/users/token")
     Call<Void> updateFirebaseToken(@Body Forms.Token token);
 
+    @DELETE("/users/token")
+    Call<Void> resetToken();
+
 
     //PARTICIPANTS
 

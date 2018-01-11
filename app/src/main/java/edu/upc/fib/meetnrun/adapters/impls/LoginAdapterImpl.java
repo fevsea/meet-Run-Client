@@ -111,7 +111,7 @@ public class LoginAdapterImpl implements ILoginAdapter {
   }
 
   @Override
-  public boolean uppdateFirebaseToken(String token) throws AuthorizationException, NotFoundException {
+  public boolean updateFirebaseToken(String token) throws AuthorizationException, NotFoundException {
     boolean ok = true;
     try {
       Forms.Token ownTokenModel = new Forms.Token(token);
@@ -124,5 +124,20 @@ public class LoginAdapterImpl implements ILoginAdapter {
       e.printStackTrace();
     }
     return ok;
+  }
+
+  @Override
+  public boolean resetFirebaseToken() throws AuthorizationException {
+    boolean ok = true;
+        try {
+          Response<Void> ret = mServices.resetToken().execute();
+          if (!ret.isSuccessful()) {
+            ok = false;
+            checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        return ok;
   }
 }
