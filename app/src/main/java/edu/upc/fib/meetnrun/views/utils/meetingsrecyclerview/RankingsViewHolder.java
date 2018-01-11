@@ -90,6 +90,8 @@ public class RankingsViewHolder extends RecyclerView.ViewHolder implements View.
 
     @Override
     public void onClick(View view) {
-            listener.get().onItemClicked(getAdapterPosition());
+
+        Log.d("EEE","Clickeddddd");
+        listener.get().onItemClicked(getAdapterPosition());
     }
 }

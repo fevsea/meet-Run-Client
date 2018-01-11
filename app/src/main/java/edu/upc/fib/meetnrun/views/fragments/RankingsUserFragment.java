@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +28,17 @@ import edu.upc.fib.meetnrun.asynctasks.GetRankingsUserAllZips;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.PositionUser;
 import edu.upc.fib.meetnrun.models.RankingUser;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RankingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
+
+import static android.content.Intent.getIntent;
 
 /**
  * Created by Javier on 18/12/2017.
@@ -52,6 +57,7 @@ public class RankingsUserFragment extends Fragment {
     View view;
     Context context;
     User user;
+    List<Friend> myFriends;
 
     RankingsAdapter rankingAdapter;
     IRankingAdapter iRankingAdapter;
@@ -78,7 +84,9 @@ public class RankingsUserFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_ranking_users, container, false);
         context = this.getActivity();
+        callGetAllFriends();
         initializePagination();
+
         zipSpinner = view.findViewById(R.id.rankingSpinner);
 
         progressBar = view.findViewById(R.id.pb_loading_ranking_users);
@@ -150,6 +158,34 @@ public class RankingsUserFragment extends Fragment {
             @Override
             public void onItemClicked(int position) {
                 //TODO abrir
+                PositionUser userPosition=rankingAdapter.getPosition(position);
+                String userId=userPosition.getUserID();
+                Log.d("fragment", "inside itemClicked");
+                Log.d("fragment",userId+" "+CurrentSession.getInstance().getCurrentUser().getUsername());
+                if (userId.equals(CurrentSession.getInstance().getCurrentUser().getUsername())){
+                    Log.d("fragment", "is me");
+                    Intent intent=new Intent(getActivity(),ProfileViewPagerFragment.class);
+                    intent.putExtra("userId",CurrentSession.getInstance().getCurrentUser().getId());
+                    intent.putExtra("isFriend",false);
+                    startActivity(intent);
+                }
+                else{
+                    Fragment frag=new UserProfileFragment();
+                    Intent intent=new Intent();
+                    for (Friend f : myFriends) {
+                        String friendUsername = f.getUser().getUsername();
+                        if (friendUsername.equals(userId)){
+                            intent.putExtra("userId",f.getUser().getId());
+                            intent.putExtra("isFriend",true);
+                            startActivity(intent);
+                            break;
+                        }
+                    }
+                    intent.putExtra("userId",userPosition.getId());
+                    intent.putExtra("isFriend",false);
+                    startActivity(intent);
+
+                }
             }
         },getContext(),false,zipnum);
         rankingList.setAdapter(rankingAdapter);
@@ -212,17 +248,7 @@ public class RankingsUserFragment extends Fragment {
 
             @Override
             public void onResponseReceived(List<Friend> allfriends) {
-                ArrayList<User> friends = new ArrayList<User>();
-                Fragment frag=new UserProfileFragment();;
-                Intent intent=new Intent();
-                for (Friend f : allfriends) {
-                    User friend = f.getFriend();
-                    if (friend.equals(user)){
-                        frag = new FriendProfileFragment();
-                        BaseActivity.startWithFragment(getActivity(), frag, intent);
-                    }
-                    BaseActivity.startWithFragment(getActivity(), frag, intent);
-                }
+                myFriends=allfriends;
             }
         }.execute();
     }

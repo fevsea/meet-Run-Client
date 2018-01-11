@@ -152,6 +152,8 @@ public class DrawerActivity extends AppCompatActivity{
                 @Override
                 public void onClick(View view) {
                     Intent i = new Intent(getApplicationContext(),ProfileViewPagerFragment.class);
+                    i.putExtra("userId",cs.getCurrentUser().getId());
+                    i.putExtra("isFriend",false);
                     startActivity(i);
                     drawerLayout.closeDrawers();
                 }

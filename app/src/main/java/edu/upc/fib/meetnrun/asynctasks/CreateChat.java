@@ -25,11 +25,11 @@ public abstract class CreateChat extends AsyncTask<Void,Void,Chat> implements As
     private int type;
     private Integer meetingId;
     private String lastMessage;
-    private int lastMessageUserNamePosition;
+    private String lastMessageUserNamePosition;
     private Date lastDateTime;
 
     public CreateChat(String chatName, List<Integer> listUsersChatIDs, int type, Integer meetingId, String lastMessage,
-                      int lastMessageUserNamePosition, Date lastDateTime) {
+                      String lastMessageUserNamePosition, Date lastDateTime) {
 
         chatAdapter = CurrentSession.getInstance().getChatAdapter();
         this.chatName = chatName;

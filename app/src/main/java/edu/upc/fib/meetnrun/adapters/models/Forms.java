@@ -191,21 +191,21 @@ public class Forms {
 
         @SerializedName("lastMessageUserName")
         @Expose
-        private int lastMessageUsernamePosition;
+        private String lastMessageUsername;
 
         @SerializedName("lastDateTime")
         @Expose
         private String lastMessageDateTime;
 
         public ChatCreateUpdate(String chatName, List<Integer> listUsersChat, int type,
-                                Integer meetingToRelate, String lastMessage, int lastMessageUsernamePosition,
+                                Integer meetingToRelate, String lastMessage, String lastMessageUsername,
                                 Date lastMessageDateTime) {
             this.chatName = chatName;
             this.listUsersChat = listUsersChat;
             this.type = type;
             this.meetingToRelate = meetingToRelate;
             this.lastMessage = lastMessage;
-            this.lastMessageUsernamePosition = lastMessageUsernamePosition;
+            this.lastMessageUsername = lastMessageUsername;
             this.lastMessageDateTime = UtilsGlobal.formatDate(lastMessageDateTime);
         }
 
@@ -214,10 +214,8 @@ public class Forms {
             List<Integer> lic = new ArrayList<>();
             for (int i = 0; i < c.getListUsersChat().size(); i++) {
                 lic.add(c.getListUsersChat().get(i).getId());
-                if (c.getMessage().getName().equals(c.getListUsersChat().get(i).getUsername())) {
-                    this.lastMessageUsernamePosition = i;
-                }
             }
+            this. lastMessageUsername = c.getMessage().getName();
             this.listUsersChat = lic;
             this.type = c.getType();
             this.meetingToRelate = (c.getMeeting() != null) ? c.getMeeting().getId() : null;

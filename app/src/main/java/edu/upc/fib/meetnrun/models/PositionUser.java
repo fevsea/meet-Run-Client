@@ -5,6 +5,7 @@ package edu.upc.fib.meetnrun.models;
  */
 
 public class PositionUser extends Position {
+    private int id;
     private String userID;//username
     private String firstName;
     private String lastName;
@@ -14,6 +15,14 @@ public class PositionUser extends Position {
         this.userID = userID;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public int getId(){
+        return id;
+    }
+
+    public void setId(int id){
+        this.id=id;
     }
 
     public String getFirstName() {
@@ -43,6 +52,7 @@ public class PositionUser extends Position {
     @Override
     public String toString() {
         return "PositionUser{" +
+                "id=" + id + '\''+
                 "userID='" + userID + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

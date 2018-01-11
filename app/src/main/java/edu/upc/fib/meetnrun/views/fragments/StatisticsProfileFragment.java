@@ -53,14 +53,17 @@ public class StatisticsProfileFragment extends BaseFragment {
     User u;
     View view;
     String user;
+    private int userId;
+    private int userLevel;
     String name, userlevel, usermeetings, usersteps, userkm, usertime, usercalories, userrhythm, userspeed, usermaxspeed, userminspeed, usermaxtime, usermintime, usermaxlength, userminlength;
 
     // newInstance constructor for creating fragment with arguments
-    public static StatisticsProfileFragment newInstance(int page, String title) {
+    public static StatisticsProfileFragment newInstance(int page, String title, int userId) {
         StatisticsProfileFragment fragmentFirst = new StatisticsProfileFragment();
         Bundle args = new Bundle();
         args.putInt("2", page);
         args.putString("Statistics", title);
+        args.putInt("userId",userId);
         fragmentFirst.setArguments(args);
         return fragmentFirst;
     }
@@ -69,8 +72,12 @@ public class StatisticsProfileFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt("0", 0);
-        title = getArguments().getString("Info");
+
+        page = getArguments().getInt("2", 2);
+        title = getArguments().getString("Statistics");
+        userId = getArguments().getInt("userId");
+       /* Bundle bundle = getActivity().getIntent().getExtras();
+        userId=bundle.getInt("userId");*/
     }
 
     public int getActualLevel (int meetings, float km, int level){
@@ -181,7 +188,7 @@ public class StatisticsProfileFragment extends BaseFragment {
     }
 
     private void callGetUserStats() {
-        new GetUserStats(u) {
+        new GetUserStats(userId) {
             @Override
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {

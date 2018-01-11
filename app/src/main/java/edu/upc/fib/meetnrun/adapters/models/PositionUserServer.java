@@ -11,6 +11,9 @@ import edu.upc.fib.meetnrun.models.PositionUser;
 
 public class PositionUserServer implements IServerModel {
 
+    @SerializedName("id")
+    @Expose
+    private Integer id;
     @SerializedName("username")
     @Expose
     private String username;
