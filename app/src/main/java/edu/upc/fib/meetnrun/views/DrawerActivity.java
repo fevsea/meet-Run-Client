@@ -8,12 +8,9 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-
 import android.support.v4.content.ContextCompat;
-
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,20 +18,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.asynctasks.ResetFirebaseToken;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.fragments.ChallengesListFragment;
 import edu.upc.fib.meetnrun.views.fragments.ChatListFragment;
 import edu.upc.fib.meetnrun.views.fragments.FriendsFragment;
 import edu.upc.fib.meetnrun.views.fragments.MeetingListFragment;
 import edu.upc.fib.meetnrun.views.fragments.MyMeetingsFragment;
-import edu.upc.fib.meetnrun.views.fragments.RankingsUserFragment;
 import edu.upc.fib.meetnrun.views.fragments.SettingsFragment;
 
-public class DrawerActivity extends AppCompatActivity{
+public class DrawerActivity extends AppCompatActivity {
 
     private DrawerLayout drawerLayout;
     private static final String MY_PREFS_NAME = "TokenFile";
@@ -94,8 +93,9 @@ public class DrawerActivity extends AppCompatActivity{
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.logout:
+                                    resetFirebaseToken();
                                     deleteToken();
-                                    i = new Intent(getApplicationContext(),LoginActivity.class);
+                                    i = new Intent(getApplicationContext(), LoginActivity.class);
                                     startActivity(i);
                                     finishAffinity();
                                     break;
@@ -121,7 +121,7 @@ public class DrawerActivity extends AppCompatActivity{
                                     replaceFragment(fragment);
                                     break;
                                 case R.id.rankings:
-                                    i = new Intent(getApplicationContext(),RankingsViewPagerFragment.class);
+                                    i = new Intent(getApplicationContext(), RankingsViewPagerFragment.class);
                                     setTitle(R.string.rankings);
                                     startActivity(i);
                                     break;
@@ -140,7 +140,7 @@ public class DrawerActivity extends AppCompatActivity{
 
             TextView nav_user = navigationView.getHeaderView(0).findViewById(R.id.nameProfile);
             User user = cs.getCurrentUser();
-            String name = user.getFirstName()+" "+user.getLastName();
+            String name = user.getFirstName() + " " + user.getLastName();
             nav_user.setText(name);
 
             TextView profileButton = navigationView.getHeaderView(0).findViewById(R.id.imageView);
@@ -151,7 +151,7 @@ public class DrawerActivity extends AppCompatActivity{
             profileButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent i = new Intent(getApplicationContext(),ProfileViewPagerFragment.class);
+                    Intent i = new Intent(getApplicationContext(), ProfileViewPagerFragment.class);
                     startActivity(i);
                     drawerLayout.closeDrawers();
                 }
@@ -167,7 +167,7 @@ public class DrawerActivity extends AppCompatActivity{
 
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .add(R.id.activity_contentFrame,currentFragment)
+                        .add(R.id.activity_contentFrame, currentFragment)
                         .addToBackStack(backStateName)
                         .commit();
                 navigationView.getMenu().getItem(0).setChecked(true);
@@ -175,11 +175,10 @@ public class DrawerActivity extends AppCompatActivity{
         }
 
 
-
     }
 
     @Override
-    public boolean onOptionsItemSelected (MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
@@ -189,8 +188,8 @@ public class DrawerActivity extends AppCompatActivity{
 
     private GradientDrawable getColoredCircularShape(char letter) {
         int[] colors = getResources().getIntArray(R.array.colors);
-        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(getApplicationContext(),R.drawable.user_profile_circular_text_view);
-        int position = letter%colors.length;
+        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(getApplicationContext(), R.drawable.user_profile_circular_text_view);
+        int position = letter % colors.length;
         circularShape.setColor(colors[position]);
         return circularShape;
     }
@@ -204,9 +203,24 @@ public class DrawerActivity extends AppCompatActivity{
         editor.commit();
     }
 
+    private void resetFirebaseToken() {
+        new ResetFirebaseToken() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getApplicationContext(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override
+            public void onResponseReceived() {
+
+            }
+        }.execute();
+    }
+
     @Override
     public void onBackPressed() {
         finish();
     }
-    
+
 }
