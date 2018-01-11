@@ -43,13 +43,16 @@ public class RankingsViewHolder extends RecyclerView.ViewHolder implements View.
 
     public void setPositionColors(int positionNum){
         if (positionNum==0){
-            position.setTextColor(Color.rgb(0xff,0xd7,0x00));
+            position.setBackground(getColoredCircularShape(0));
         }
         else if (positionNum==1){
-            position.setTextColor(Color.rgb(0xc0,0xc0,0xc0));
+            position.setBackground(getColoredCircularShape(1));
         }
         else if (positionNum==2){
-            position.setTextColor(Color.rgb(0xcd,0x7f,0x32));
+            position.setBackground(getColoredCircularShape(2));
+        }
+        else {
+            position.setBackground(getColoredCircularShape(3));
         }
     }
     public void bindUserRanking(PositionUser ranking, int positionNum) {
@@ -93,5 +96,24 @@ public class RankingsViewHolder extends RecyclerView.ViewHolder implements View.
 
         Log.d("EEE","Clickeddddd");
         listener.get().onItemClicked(getAdapterPosition());
+    }
+
+    private GradientDrawable getColoredCircularShape(int pos) {
+
+        GradientDrawable circularShape = (GradientDrawable) ContextCompat.getDrawable(view.getContext(),R.drawable.user_profile_circular_text_view);
+
+        if (pos == 0) {
+            circularShape.setColor(ContextCompat.getColor(view.getContext(), R.color.gold));
+        }
+        else if (pos == 1) {
+            circularShape.setColor(ContextCompat.getColor(view.getContext(), R.color.silver));
+        }
+        else if (pos == 2) {
+            circularShape.setColor(ContextCompat.getColor(view.getContext(), R.color.bronze));
+        }
+        else {
+            circularShape.setColor(ContextCompat.getColor(view.getContext(), R.color.blue_profile));
+        }
+        return circularShape;
     }
 }
