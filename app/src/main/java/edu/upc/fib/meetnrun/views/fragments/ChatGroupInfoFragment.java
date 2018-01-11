@@ -134,22 +134,16 @@ public class ChatGroupInfoFragment extends BaseFragment {
         if (isLoading) Toast.makeText(getContext(),R.string.loading_list,Toast.LENGTH_LONG).show();
         else {
             CurrentSession.getInstance().setFriend(friend);
-            Intent userProfileIntent = null;
-            Fragment userProfileFragment;
+            Intent userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
             if (CurrentSession.getInstance().getCurrentUser().getId().equals(friend.getId())) {
-                userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
-                startActivity(userProfileIntent);
-                return;
-            }
-            else if (isFriend(friend)) {
-                userProfileIntent = new Intent();
-                userProfileFragment = new FriendProfileFragment();
+                userProfileIntent.putExtra("userId",CurrentSession.getInstance().getCurrentUser().getId());
+                userProfileIntent.putExtra("isFriend",false);
             }
             else {
-                userProfileIntent = new Intent();
-                userProfileFragment = new UserProfileFragment();
+                userProfileIntent.putExtra("userId",friend.getId());
+                userProfileIntent.putExtra("isFriend",isFriend(friend));
             }
-            BaseActivity.startWithFragment(getActivity(), userProfileFragment, userProfileIntent);
+            startActivity(userProfileIntent);
         }
     }
 

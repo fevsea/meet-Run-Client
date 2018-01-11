@@ -9,12 +9,14 @@ import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
+import edu.upc.fib.meetnrun.adapters.models.TrophiesListServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.Statistics;
+import edu.upc.fib.meetnrun.models.Trophie;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.adapters.remote.SOServices;
 import retrofit2.Response;
@@ -172,6 +174,21 @@ public class UserAdapterImpl implements IUserAdapter {
       e.printStackTrace();
     }
     return ss != null ? ss.toGenericModel() : null;
+  }
+
+  @Override
+  public List<Trophie> getUserTrophieByID(int id) throws AuthorizationException {
+    TrophiesListServer tls = null;
+        try {
+          Response<TrophiesListServer> ret = mServices.getTrophiesListByID(id).execute();
+          if (!ret.isSuccessful()) {
+            checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+          }
+            tls = ret.body();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+        return tls != null ? tls.toGenericModel() : null;
   }
 
 }
