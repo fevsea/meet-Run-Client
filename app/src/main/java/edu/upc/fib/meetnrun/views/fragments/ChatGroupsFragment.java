@@ -26,6 +26,7 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.asynctasks.CreateChat;
+import edu.upc.fib.meetnrun.asynctasks.GetChat;
 import edu.upc.fib.meetnrun.asynctasks.GetFriends;
 import edu.upc.fib.meetnrun.asynctasks.UpdateChat;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
@@ -68,6 +69,7 @@ public class ChatGroupsFragment extends BaseFragment {
     private ProgressBar progressBar;
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private int chatId;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -125,8 +127,8 @@ public class ChatGroupsFragment extends BaseFragment {
                         List<User> groupUsers = chat.getListUsersChat();
                         groupUsers.addAll(selectedFriends);
                         chat.setListUsersChat(groupUsers);
+                        chatId = chat.getId();
                         callUpdateChat(chat);
-                        getActivity().finish();
                     }
                     else {
                         Calendar rightNow = Calendar.getInstance();
@@ -275,7 +277,7 @@ public class ChatGroupsFragment extends BaseFragment {
 
     private void callCreateChat() {
         setLoading();
-        new CreateChat(name,selectedFriendsID,1,null,"",0,dateWithoutTime) {
+        new CreateChat(name,selectedFriendsID,1,null,"",CurrentSession.getInstance().getCurrentUser().getUsername(),dateWithoutTime) {
             @Override
             public void onExceptionReceived(GenericException e) {
                 if (e instanceof AuthorizationException) {
@@ -318,8 +320,32 @@ public class ChatGroupsFragment extends BaseFragment {
             @Override
             public void onResponseReceived() {
                 Log.d("ChatGroupsFragment","Chat updated");
+                callGetChat(chatId);
+                getActivity().finish();
+
             }
         }.execute(chat);
+    }
+
+    private void callGetChat(int chatId) {
+        new GetChat() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(Chat responseChat) {
+                chat = responseChat;
+                CurrentSession.getInstance().setChat(chat);
+                getActivity().finish();
+            }
+        }.execute(chatId);
     }
 
     private void initializePagination() {

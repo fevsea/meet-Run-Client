@@ -1,6 +1,7 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,6 +16,22 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
  */
 
 public class UserProfileFragment extends ProfileFragmentTemplate {
+
+    public static UserProfileFragment newInstance(String id, String userName, String name, String postalCode) {
+        UserProfileFragment fragmentFirst = new UserProfileFragment();
+        Bundle args = new Bundle();
+        args.putString("id", id);
+        args.putString("userName", userName);
+        args.putString("name",name);
+        args.putString("postalCode",postalCode);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void configureChallengeButton() {

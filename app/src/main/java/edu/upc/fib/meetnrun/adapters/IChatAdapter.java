@@ -22,14 +22,14 @@ public interface IChatAdapter {
      * @param type                        Type of chat if is individual chat or by groups
      * @param meetingID                   ID of the relation meeting
      * @param lastMessage                 Last message send in the chat
-     * @param lastMessageUserNamePosition The position in the list of the last user who send the message
+     * @param lastMessageUserName The position in the list of the last user who send the message
      * @param lastDateTime                last datetimestamp
      * @return New instance of @{@link Chat} created in server
      * @throws AuthorizationException Throwed when the user is not logged
      * @throws ParamsException       Throwed when one or more parameters are incorrect
      */
     public Chat createChat(String chatName, List<Integer> listUsersChatIDs, int type, Integer meetingID,
-                           String lastMessage, int lastMessageUserNamePosition, Date lastDateTime)
+                           String lastMessage, String lastMessageUserName, Date lastDateTime)
             throws AuthorizationException, ParamsException;
 
     /**
