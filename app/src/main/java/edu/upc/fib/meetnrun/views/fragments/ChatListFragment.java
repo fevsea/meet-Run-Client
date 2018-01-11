@@ -75,6 +75,7 @@ public class ChatListFragment extends BaseFragment {
 
         fab = getActivity().findViewById(R.id.activity_fab);
         fab.setImageResource(R.drawable.chat);
+        fab.setVisibility(View.VISIBLE);
 
         fab2 = view.findViewById(R.id.fab2);
         fab3 = view.findViewById(R.id.fab3);
