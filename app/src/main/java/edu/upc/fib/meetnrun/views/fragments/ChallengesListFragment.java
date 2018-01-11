@@ -57,6 +57,7 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_challenges_list, container, false);
+
         recyclerView = view.findViewById(R.id.fragment_challenge_recycler);
         recyclerViewRequest = view.findViewById(R.id.fragment_challenge_recycler_requests);
         swipeRefreshLayout = view.findViewById(R.id.fragment_challenge_swipe);
@@ -64,6 +65,8 @@ public class ChallengesListFragment extends BaseFragment implements SwipeRefresh
         setupRecyclerView();
 
         FloatingActionButton fab = getActivity().findViewById(R.id.activity_fab);
+        fab.setVisibility(View.VISIBLE);
+        fab.setImageResource(R.drawable.ic_challenge);
         fab.setOnClickListener(this);
         return view;
     }
