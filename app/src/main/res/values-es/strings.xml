@@ -227,4 +227,7 @@
         <item>Castellano</item>
         <item>Catalán</item>
     </string-array>
+    <string name="forbidden_error">Esta acción está prohibida</string>
+    <string name="trophie_not_obtained">No tienes este trofeo. ¡Adelante!</string>
+    <string name="trophie_obtained">Ya tienes este trofeo. ¡Genial!</string>
 </resources>
