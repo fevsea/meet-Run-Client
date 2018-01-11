@@ -25,7 +25,7 @@ public class FirebaseInstanceService extends FirebaseInstanceIdService {
         Log.d(TAG, "Refreshed token: " + refreshedToken);
         ILoginAdapter userAdapter = CurrentSession.getInstance().getLoginAdapter();
         try {
-            userAdapter.uppdateFirebaseToken(refreshedToken);
+            userAdapter.updateFirebaseToken(refreshedToken);
         } catch (AuthorizationException e) {
             e.printStackTrace();
         } catch (NotFoundException e) {

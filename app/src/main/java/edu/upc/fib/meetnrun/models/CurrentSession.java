@@ -6,6 +6,7 @@ import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.adapters.IRankingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
 
 /**
@@ -91,6 +92,10 @@ public class CurrentSession {
 
     public IChallengeAdapter getChallengeAdapter() {
         return adapterContainer.getChallengesAdapter();
+    }
+
+    public IRankingAdapter getRankingAdapter(){
+        return adapterContainer.getRankingsAdapter();
     }
 
 }

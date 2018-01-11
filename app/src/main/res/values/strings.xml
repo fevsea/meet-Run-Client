@@ -211,10 +211,23 @@
     <string name="group_name">Group name</string>
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
+    <string name="ranking_postcode">Zip</string>
+    <string name="ranking_city">City</string>
+    <string name="ranking_country">Country</string>
+    <string name="ranking_global">Global</string>
+    <string name="filter_ranking">Filter by:</string>
+    <string name="rankings_zip">ZIP rankings</string>
+    <string name="rankings_users">User rankings</string>
+    <string name="rankings">Rankings</string>
+    <string name="settingsLanguage">Change language:</string>
     <string name="error_deleting_friend">Error deleting friend</string>
     <string name="error_adding_friend">Error adding friend</string>
+    <string name="ranking_current">Your position:</string>
+    <string name="rankings_choose_zip">ZIP:</string>
     <string name="meeting">Meeting</string>
+
     <string name="share_via">Share via</string>
+    <string name="rankings_label">Rankings</string>
     <string name="share_text">Hey! I have done this route with Meet&amp;run!!</string>
     <string name="delete_meeting">Delete meeting</string>
     <string name="delete_meeting_message">Do you want to delete this meeting?</string>

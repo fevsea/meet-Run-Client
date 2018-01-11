@@ -194,9 +194,25 @@
     <string name="spanish">Castellano</string>
     <string name="accept">Aceptar</string>
     <string name="reject">Rechazar</string>
+    <string name="rankings">Rankings</string>
+    <string name="chat_not_available">El chat no está disponible</string>
+    <string name="filter_ranking">Filtrar por:</string>
+    <string name="max_level">Nivel Máx.:</string>
+    <string name="ranking_city">Ciudad</string>
+    <string name="ranking_country">Pais</string>
+    <string name="ranking_global">Global</string>
+    <string name="ranking_postcode">Código postal</string>
+    <string name="rankings_users">Ránking de usuarios</string>
+    <string name="rankings_zip">Ránking de código postal</string>
+    <string name="settingsLanguage">Cambiar idioma:</string>
     <string name="error_deleting_friend">Error al eliminar el amigo</string>
     <string name="error_adding_friend">Error al añadir el amigo</string>
     <string name="meeting">Quedada</string>
+    <string name="ranking_current">Tu posición:</string>
+    <string name="rankings_choose_zip">Código Postal:</string>
+    <string name="share_text">¡Mira qué ruta he hecho con Meet&amp;Run!</string>
+    <string name="share_via">Compartir via</string>
+    <string name="rankings_label">Rankings</string>
     <string name="delete_meeting">Eliminar quedada</string>
     <string name="delete_meeting_message">¿Quieres borrar esta quedada?</string>
 </resources>
