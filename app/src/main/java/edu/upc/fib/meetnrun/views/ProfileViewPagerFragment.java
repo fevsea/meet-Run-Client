@@ -29,8 +29,8 @@ import edu.upc.fib.meetnrun.views.fragments.PastMeetingsProfileFragment;
 import edu.upc.fib.meetnrun.views.fragments.ProfileActivityFragment;
 import edu.upc.fib.meetnrun.views.fragments.StatisticsProfileFragment;
 import edu.upc.fib.meetnrun.views.fragments.UserProfileFragment;
+import edu.upc.fib.meetnrun.views.fragments.TrophiesProfileFragment;
 
-import static android.support.v4.content.res.TypedArrayUtils.getString;
 
 public class ProfileViewPagerFragment extends AppCompatActivity {
 
@@ -99,7 +99,7 @@ public class ProfileViewPagerFragment extends AppCompatActivity {
 
     public class PagerAdapterFragment extends FragmentPagerAdapter {
 
-        private static final int NUM_ITEMS = 3;
+        private static final int NUM_ITEMS = 4;
 
         public PagerAdapterFragment(FragmentManager fragmentManager) {
             super(fragmentManager);
@@ -121,6 +121,8 @@ public class ProfileViewPagerFragment extends AppCompatActivity {
                     return getPastMeetingsFragment();
                 case 2:
                     return getStatisticsFragment();
+                case 3:
+                    return getTrohpiesFragment();
                 default:
                     return null;
             }
@@ -133,6 +135,7 @@ public class ProfileViewPagerFragment extends AppCompatActivity {
             if(position == 0) return getString(R.string.profile_fragment_title);
             else if(position == 1) return getString(R.string.past_meetings_fragment_title);
             else if(position == 2) return getString(R.string.statistics_fragment_title);
+            else if(position == 3) return getString(R.string.trophies_fragment_title);
             return null;
         }
     }
@@ -178,5 +181,9 @@ public class ProfileViewPagerFragment extends AppCompatActivity {
 
     private Fragment getStatisticsFragment() {
         return StatisticsProfileFragment.newInstance(2, "statistics",userId);
+    }
+
+    private Fragment getTrohpiesFragment() {
+        return TrophiesProfileFragment.newInstance(3, "trophies",userId);
     }
 }

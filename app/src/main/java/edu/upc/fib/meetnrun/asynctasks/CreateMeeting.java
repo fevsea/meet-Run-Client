@@ -54,7 +54,7 @@ public abstract class CreateMeeting extends AsyncTask<String,Void,Meeting> imple
         Meeting meeting = null;
         try {
             meeting = meetingAdapter.createMeeting(name, description, publ, level, date, lat, lon, null);
-            Chat chat = chatAdapter.createChat(name, owner, 1, meeting.getId(), "", 0, currentDate);
+            Chat chat = chatAdapter.createChat(name, owner, 1, meeting.getId(), "", name, currentDate);
             CurrentSession.getInstance().setChat(chat);
         }
         catch (GenericException e) {

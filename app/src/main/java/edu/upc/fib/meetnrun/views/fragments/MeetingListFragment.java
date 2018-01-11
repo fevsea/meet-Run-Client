@@ -120,7 +120,6 @@ public class MeetingListFragment extends BaseFragment {
             }
 
             @Override
-
             public void onItemClicked(int position) {
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 Intent meetingInfoIntent = new Intent();
