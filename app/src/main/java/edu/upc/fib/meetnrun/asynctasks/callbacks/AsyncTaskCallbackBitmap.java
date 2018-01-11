@@ -1,4 +1,4 @@
-package edu.upc.fib.meetnrun.asynctasks;
+package edu.upc.fib.meetnrun.asynctasks.callbacks;
 
 
 import android.graphics.Bitmap;
