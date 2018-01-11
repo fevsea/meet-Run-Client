@@ -38,4 +38,12 @@
 
     </android.support.v4.view.ViewPager>
 
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"/>
+
 </RelativeLayout>

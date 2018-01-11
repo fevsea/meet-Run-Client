@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -36,7 +37,10 @@ import java.util.Date;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
+import edu.upc.fib.meetnrun.asynctasks.DeleteChat;
+import edu.upc.fib.meetnrun.asynctasks.UpdateChat;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -44,6 +48,7 @@ import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Message;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MessageAdapter;
 
 
@@ -84,18 +89,12 @@ public class ChatFragment extends BaseFragment {
 
     private ChildEventListener childEventListener;
 
-    @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        setHasOptionsMenu(true);
-
+    private void loadChat() {
         CurrentSession cs = CurrentSession.getInstance();
+
         chat = cs.getChat();
         currentUser = cs.getCurrentUser();
         chatDBAdapter = cs.getChatAdapter();
-
-        //first = true;
 
         for (int i = 0; i < chat.getListUsersChatSize(); i++) {
             if (currentUser.getUsername().equals(chat.getUserAtPosition(i).getUsername())) {
@@ -112,8 +111,6 @@ public class ChatFragment extends BaseFragment {
 
         getActivity().setTitle("");
 
-        this.view = inflater.inflate(R.layout.fragment_chat, container, false);
-
         fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
@@ -129,25 +126,18 @@ public class ChatFragment extends BaseFragment {
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference(String.valueOf(chat.getId())); //Chat name
-        /*myRef = database.getReference();
+        if (chat.getMessage().getMessage().equals("")) removeProgressChat();
 
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snap: dataSnapshot.getChildren()) {
-                    if (snap.getKey().equals(String.valueOf(chat.getId()))) {
-                        MAX_MESSAGES_LOAD = snap.getChildrenCount();
-                    }
-                }
-                if (NUMB_MESSAGES_LOAD > MAX_MESSAGES_LOAD) NUMB_MESSAGES_LOAD = (int)MAX_MESSAGES_LOAD;
-                changeNumbMessages();
-            }
+    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+    @Override
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             Bundle savedInstanceState) {
 
-            }
-        });*/
+        setHasOptionsMenu(true);
+        this.view = inflater.inflate(R.layout.fragment_chat, container, false);
+
+        loadChat();
 
         childEventListener = new ChildEventListener() {
             @Override
@@ -193,7 +183,7 @@ public class ChatFragment extends BaseFragment {
                 //NUMB_MESSAGES_LOAD++;
                 txtMessage.setText("");
                 chat.setMessage(m);
-                new updateChat().execute();
+                callUpdateChat();
 
             }
         });
@@ -335,9 +325,20 @@ public class ChatFragment extends BaseFragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 adapter.deleteMessages();
                                 rvMessages.setAdapter(adapter);
-                                //TODO eliminar chat
-                                //chat.getListUsersChat().remove(currentUser);
-                                //new updateChat().execute();
+
+                                if (chat.getType() == 0) {
+                                    database.getReference(String.valueOf(chat.getId())).removeValue();
+                                    callDeleteChat(chat.getId());
+                                }
+                                else {
+                                    chat.getListUsersChat().remove(currentUser);
+                                    callUpdateChat();
+                                    if (chat.getListUsersChat().isEmpty()) {
+                                        database.getReference(String.valueOf(chat.getId())).removeValue();
+                                        callDeleteChat(chat.getId());
+                                    }
+                                }
+
                                 getActivity().finish();
                             }
                         },
@@ -357,7 +358,6 @@ public class ChatFragment extends BaseFragment {
     }
 
 
-
     private void openProfileView() {
 
         Intent chatIntent;
@@ -366,20 +366,23 @@ public class ChatFragment extends BaseFragment {
         int type = chat.getType();
         Log.e("AAA","PASSA");
         if (type == 0) {
-            chatIntent = new Intent();
-            chatFragment = new FriendProfileFragment();
+            chatIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
             if (!currentUser.getUsername().equals(chat.getUser1().getUsername()))
                 user = chat.getUser1();
             else user = chat.getUser2();
+            chatIntent.putExtra("userId",user.getId());
+            chatIntent.putExtra("isFriend",true);
             CurrentSession.getInstance().setFriend(user);
+            startActivity(chatIntent);
         }
         //else if (type == 1) {
         else {
             chatIntent = new Intent();
             chatFragment = new ChatGroupInfoFragment();
+            BaseActivity.startWithFragment(getActivity(), chatFragment,chatIntent);
+
             //chatIntent.putExtra("name",chat.getChatName());
         }
-        BaseActivity.startWithFragment(getActivity(), chatFragment,chatIntent);
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {
@@ -406,46 +409,55 @@ public class ChatFragment extends BaseFragment {
 
     @Override
     public void onResume() {
+        loadChat();
         firstTime = true;
         chat.setNumbMessagesAtPosition(userPosition, 0);
         super.onResume();
     }
 
-    private class updateChat extends AsyncTask<String,String,String> {
-
-        @Override
-        protected String doInBackground(String... s) {
-
-            try {
-                chatDBAdapter.updateChat(chat);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
+    private void callUpdateChat() {
+        new UpdateChat() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
 
-            return null;
-        }
+            @Override
+            public void onResponseReceived() {
+                Log.d("ChatFragment","Chat updated");
+            }
+        }.execute(chat);
     }
 
-    private class deleteChat extends AsyncTask<String,String,String> {
 
-        @Override
-        protected String doInBackground(String... s) {
-
-            try {
-                chatDBAdapter.deleteChat(chat.getId());
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
+    private void callDeleteChat(int chatId) {
+        new DeleteChat() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
-            return null;
-        }
+
+            @Override
+            public void onResponseReceived() {
+                Log.d("ChatFragment","Chat deleted");
+            }
+        }.execute(chatId);
     }
 
     public int getTitle() {

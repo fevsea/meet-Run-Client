@@ -122,7 +122,7 @@
                 android:layout_alignParentStart="true"
                 android:textStyle="bold"
                 android:layout_marginTop="10dp"
-                android:text="@string/total_km"
+                android:text="@string/total_m"
                 style="@style/TextAppearance.AppCompat.Body2"/>
 
             <TextView
@@ -237,7 +237,6 @@
             android:layout_below="@+id/meeting_info_statistics"
             android:src="@android:color/transparent"
             android:layout_marginTop="20dp" />
-        <!-- TODO  recyclerview extends to the bottom, solve this -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/fragment_friends_container"
             android:layout_width="match_parent"
@@ -247,5 +246,14 @@
             android:clickable="true"
             android:orientation="vertical">
         </android.support.v7.widget.RecyclerView>
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"/>
+
     </RelativeLayout>
 </ScrollView>

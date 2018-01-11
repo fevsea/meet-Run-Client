@@ -11,7 +11,7 @@ import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Friend;
-import edu.upc.fib.meetnrun.remote.SOServices;
+import edu.upc.fib.meetnrun.adapters.remote.SOServices;
 import retrofit2.Response;
 
 import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.calculateOffset;

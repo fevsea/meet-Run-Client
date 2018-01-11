@@ -22,7 +22,10 @@ import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetPastMeetings;
+import edu.upc.fib.meetnrun.asynctasks.GetPastMeetingsTracking;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -45,20 +48,18 @@ public class PastMeetingsProfileFragment extends BaseFragment {
     private View view;
     private SwipeRefreshLayout swipeRefreshLayout;
     private List<Meeting> meetings;
-    private List<LatLng> path;
 
-
-    private TrackingData tracking;
 
     private String title;
     private int page;
 
     // newInstance constructor for creating fragment with arguments
-    public static PastMeetingsProfileFragment newInstance(int page, String title) {
+    public static PastMeetingsProfileFragment newInstance(int page, String title, int userId) {
         PastMeetingsProfileFragment fragmentFirst = new PastMeetingsProfileFragment();
         Bundle args = new Bundle();
         args.putInt("1", page);
         args.putString("meetings", title);
+        args.putInt("userId",userId);
         fragmentFirst.setArguments(args);
         return fragmentFirst;
     }
@@ -69,6 +70,7 @@ public class PastMeetingsProfileFragment extends BaseFragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("1", 1);
         title = getArguments().getString("meetings");
+        userId = getArguments().getInt("userId");
         setHasOptionsMenu(true);
     }
 
@@ -77,9 +79,6 @@ public class PastMeetingsProfileFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_meeting_list, container, false);
         this.view = view;
-
-        User u = CurrentSession.getInstance().getCurrentUser();
-        userId = u.getId();
 
         userController = CurrentSession.getInstance().getUserAdapter();
         meetingController = CurrentSession.getInstance().getMeetingAdapter();
@@ -112,7 +111,6 @@ public class PastMeetingsProfileFragment extends BaseFragment {
                 Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
                 meetingId = meeting.getId();
-                getTrackingData();
 
                 Intent pastMeetingInfoIntent = new Intent();
 
@@ -125,32 +123,8 @@ public class PastMeetingsProfileFragment extends BaseFragment {
                 pastMeetingInfoIntent.putExtra("date", datetime.substring(0, datetime.indexOf('T')));
                 pastMeetingInfoIntent.putExtra("time", datetime.substring(datetime.indexOf('T') + 1, datetime.length()));
                 pastMeetingInfoIntent.putExtra("level", String.valueOf(meeting.getLevel()));
-
-                String distance, steps, totalTime, avSpeed, calories;
-                path = new ArrayList<>();
-
-                if (tracking == null) {
-                    distance = "0";
-                    steps = "0";
-                    totalTime = "0";
-                    avSpeed = "0";
-                    calories = "0";
-                    path.add(new LatLng(Double.valueOf(meeting.getLatitude()), Double.valueOf(meeting.getLongitude())));
-                } else {
-                    distance = String.valueOf(tracking.getDistance()); //m
-                    steps = String.valueOf(tracking.getSteps());
-                    totalTime = String.valueOf(tracking.getTotalTimeMillis()); //ms
-                    avSpeed = String.valueOf(tracking.getAverageSpeed()); // m/s
-                    calories = String.valueOf(tracking.getCalories()); // kcal
-                    path = tracking.getRoutePoints();
-                }
-                pastMeetingInfoIntent.putExtra("distance", distance);
-                pastMeetingInfoIntent.putExtra("steps", steps);
-                pastMeetingInfoIntent.putExtra("totaltime", totalTime);
-                pastMeetingInfoIntent.putExtra("avspeed", avSpeed);
-                pastMeetingInfoIntent.putExtra("calories", calories);
-
-                pastMeetingInfoIntent.putExtra("path", (Serializable) path);
+                pastMeetingInfoIntent.putExtra("userId",userId);
+                pastMeetingInfoIntent.putExtra("meetingId",meetingId);
 
                 BaseActivity.startWithFragment(getActivity(), new PastMeetingInfoFragment(), pastMeetingInfoIntent);
 
@@ -161,59 +135,31 @@ public class PastMeetingsProfileFragment extends BaseFragment {
 
     }
 
-    private void getTrackingData() {
-        new getPastMeetingsTracking().execute(userId, meetingId);
-    }
 
     private void updateMeetingList() {
-        new PastMeetingsProfileFragment.GetPastMeetings().execute(userId);
+        callGetPastMeetings(userId);
     }
 
-
-    private class GetPastMeetings extends AsyncTask<Integer, Integer, String> {
-        List<Meeting> l = new ArrayList<>();
-
-        @Override
-        protected String doInBackground(Integer... integers) {
-            try {
-                l = userController.getUserPastMeetings(integers[0]);//TODO arreglar paginas
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
-                e.printStackTrace();
+    private void callGetPastMeetings(int userId) {
+        new GetPastMeetings() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            meetingsAdapter.updateMeetingsList(l);
-            super.onPostExecute(s);
-        }
-    }
-
-
-    private class getPastMeetingsTracking extends AsyncTask<Integer, Integer, String> {
-        @Override
-        protected String doInBackground(Integer... integers) {
-            try {
-                tracking = meetingController.getTracking(integers[0], integers[1]);
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
+            @Override
+            public void onResponseReceived(List<Meeting> meetings) {
+                meetingsAdapter.updateMeetingsList(meetings);
+                swipeRefreshLayout.setRefreshing(false);
             }
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(String s) {
-            System.err.println("FINISHED");
-            super.onPostExecute(s);
-        }
+        }.execute(userId);
     }
+
 }
 
 

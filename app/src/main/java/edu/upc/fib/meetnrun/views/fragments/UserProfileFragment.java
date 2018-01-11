@@ -6,11 +6,14 @@ import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.asynctasks.AddFriend;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 
 /**
@@ -18,6 +21,22 @@ import edu.upc.fib.meetnrun.exceptions.ParamsException;
  */
 
 public class UserProfileFragment extends ProfileFragmentTemplate {
+
+    public static UserProfileFragment newInstance(String id, String userName, String name, String postalCode) {
+        UserProfileFragment fragmentFirst = new UserProfileFragment();
+        Bundle args = new Bundle();
+        args.putString("id", id);
+        args.putString("userName", userName);
+        args.putString("name",name);
+        args.putString("postalCode",postalCode);
+        fragmentFirst.setArguments(args);
+        return fragmentFirst;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     protected void configureChallengeButton() {
@@ -42,32 +61,30 @@ public class UserProfileFragment extends ProfileFragmentTemplate {
 
     @Override
     protected void getMethod(String s) {
-        new addFriend().execute(s);
+        callAddFriend(s);
     }
 
-    private class addFriend extends AsyncTask<String,String,String> {
-
-        boolean ok = false;
-
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                ok = friendsDBAdapter.addFriend(Integer.parseInt(s[0]));
-            } catch (AuthorizationException | ParamsException e) {
-                e.printStackTrace();
+    private void callAddFriend(String s) {
+        new AddFriend() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            if (ok) {
-                Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
-                //currentFriend.setFriend(true);
-                getActivity().finish();
+            @Override
+            public void onResponseReceived(boolean b) {
+                if (b) {
+                    Toast.makeText(getContext(), "Friend request sent", Toast.LENGTH_SHORT).show();
+                    //currentFriend.setFriend(true);
+                    getActivity().finish();
+                }
             }
-            super.onPostExecute(s);
-        }
+        }.execute(s);
     }
 
     public int getTitle() {

@@ -4,9 +4,8 @@ package edu.upc.fib.meetnrun.views.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,19 +33,22 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
-import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
+import edu.upc.fib.meetnrun.asynctasks.GetAllParticipants;
+import edu.upc.fib.meetnrun.asynctasks.GetPastMeetingsTracking;
 import edu.upc.fib.meetnrun.asynctasks.GetStaticMap;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
-import edu.upc.fib.meetnrun.models.Meeting;
+import edu.upc.fib.meetnrun.models.TrackingData;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
@@ -56,13 +58,9 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyCallback
         {
     private View view;
-    private ArrayList<LatLng> path;
     private GoogleMap map;
     private UsersAdapter participantsAdapter;
-    private IMeetingAdapter meetingController;
-    private IFriendsAdapter friendsController;
     private List<Friend> friends;
-    private int meetingId;
     private Marker marker;
     private ImageButton shareTracking;
     private boolean staticMapAvailable;
@@ -71,6 +69,12 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
     private String distanceValue;
     private String timeValue;
     private String avSpeedValue;
+    private int userId;
+    private int meetingId;
+    private TrackingData tracking;
+    private ArrayList<LatLng> path;
+    private ProgressBar progressBar;
+
 
 
 
@@ -79,28 +83,21 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_past_meeting_info,container,false);
         this.view = view;
-
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder(); StrictMode.setVmPolicy(builder.build());
         FloatingActionButton fab =
                 getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.INVISIBLE);
-
-        meetingController = CurrentSession.getInstance().getMeetingAdapter();
-        friendsController = CurrentSession.getInstance().getFriendsAdapter();
+        progressBar = view.findViewById(R.id.pb_loading);
         Bundle pastMeetingInfo = getActivity().getIntent().getExtras();
-
-
+        userId = pastMeetingInfo.getInt("userId");
+        meetingId = pastMeetingInfo.getInt("meetingId");
+        getTrackingData();
         TextView title = view.findViewById(R.id.meeting_info_title);
         TextView level = view.findViewById(R.id.meeting_info_level);
         TextView description = view.findViewById(R.id.meeting_info_description);
         TextView date = view.findViewById(R.id.meeting_info_date);
         TextView time = view.findViewById(R.id.meeting_info_time);
         TextView owner = view.findViewById(R.id.meeting_info_creator);
-
-        TextView distance = view.findViewById(R.id.meeting_info_distance);
-        TextView steps = view.findViewById(R.id.meeting_info_steps);
-        TextView totalTime = view.findViewById(R.id.meeting_info_totaltime);
-        TextView avSpeed = view.findViewById(R.id.meeting_info_avspeed);
-        TextView calories = view.findViewById(R.id.meeting_info_calories);
 
         shareTracking = view.findViewById(R.id.meeting_info_share);
 
@@ -115,16 +112,6 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
         date.setText(pastMeetingInfo.getString("date"));
         time.setText(pastMeetingInfo.getString("time"));
 
-        distanceValue = pastMeetingInfo.getString("distance") + " " + "m"; //TODO parse a km
-        distance.setText(distanceValue);
-        String stepsValue  = pastMeetingInfo.getString("steps");
-        steps.setText(stepsValue);
-        timeValue = pastMeetingInfo.getString("totaltime") + " " + "ms";
-        totalTime.setText(timeValue);
-        avSpeedValue = pastMeetingInfo.getString("avspeed") + " " + "m/s";
-        avSpeed.setText(avSpeedValue);
-        String caloriesValue = pastMeetingInfo.getString("calories") + " " + "kcal";
-        calories.setText(caloriesValue);
 
         shareTracking.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,24 +120,9 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
             }
         });
 
-        path = (ArrayList<LatLng>) pastMeetingInfo.get("path");
-        if (path != null) {
-            staticMapAvailable = false;
-            if (path.size() > 1) {
-                Log.d("STATIC MAP", path.toString());
-                callGetStaticMap();
-            }
-        }
 
         setupRecyclerView();
 
-
-        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.past_meeting_info_map, mapFragment)
-                .commit();
-        mapFragment.getMapAsync(this);
 
         return view;
     }
@@ -171,33 +143,22 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
                     @Override
                     public void onItemClicked(int position) {
                         User participant = participantsAdapter.getFriendAtPosition(position);
-                        Intent profileIntent;
+                        Intent userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
                         if (participant.getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
-                            profileIntent = new Intent(getActivity(),ProfileViewPagerFragment.class);
-                            startActivity(profileIntent);
+                            userProfileIntent.putExtra("userId",CurrentSession.getInstance().getCurrentUser().getId());
+                            userProfileIntent.putExtra("isFriend",false);
                         }
                         else {
                             boolean isFriend = false;
-                            Fragment frag;
                             for (Friend f : friends) {
                                 User friend = f.getFriend();
                                 if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
                                 if (participant.getId().equals(friend.getId())) isFriend = true;
                             }
-                            if (isFriend) {
-                                profileIntent = new Intent();
-                                frag = new FriendProfileFragment();
-                            }
-                            else {
-                                profileIntent = new Intent();
-                                frag = new UserProfileFragment();
-                            }
-                            profileIntent.putExtra("id",participant.getId().toString());
-                            profileIntent.putExtra("userName", participant.getUsername());
-                            String name = participant.getFirstName() + " " + participant.getLastName();
-                            profileIntent.putExtra("name", name);
-                            profileIntent.putExtra("postCode", participant.getPostalCode());
-                            BaseActivity.startWithFragment(getActivity(), frag, profileIntent);
+                            CurrentSession.getInstance().setFriend(participant);
+                            userProfileIntent.putExtra("userId",participant.getId());
+                            userProfileIntent.putExtra("isFriend",isFriend);
+                            startActivity(userProfileIntent);
                         }
 
                     }
@@ -205,61 +166,57 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
                 friendsList.setAdapter(participantsAdapter);
 
 
+    }
+
+    @Override
+    public void onResume() {
+        getParticipantsList();
+        super.onResume();
+    }
+
+    private void getParticipantsList() {
+        callGetAllParticipants(meetingId);
+        callGetAllFriends();
+    }
+
+    private void callGetAllFriends() {
+        new GetAllFriends() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
-            public void onResume() {
-                getParticipantsList();
-                super.onResume();
+            public void onResponseReceived(List<Friend> allfriends) {
+                friends = allfriends;
             }
+        }.execute();
+    }
 
-            private void getParticipantsList() {
-                new PastMeetingInfoFragment.getParticipants().execute(meetingId);
-                new PastMeetingInfoFragment.getFriends().execute(CurrentSession.getInstance().getCurrentUser().getId().toString());
-            }
-
-            private class getParticipants extends AsyncTask<Integer,String,String> {
-
-                private List<User> l = new ArrayList<>();
-
-                @Override
-                protected String doInBackground(Integer... integers) {
-                    //TODO handle exceptions
-                    try {
-                        l = meetingController.getParticipantsFromMeeting(integers[0],0);//TODO arreglar paginas
-                    } catch (AuthorizationException | ParamsException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
+    private void callGetAllParticipants(int meetingId) {
+        new GetAllParticipants() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
                 }
-
-                @Override
-                protected void onPostExecute(String s) {
-                    participantsAdapter.updateFriendsList(l);
-                    super.onPostExecute(s);
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
                 }
             }
 
-            private class getFriends extends AsyncTask<String,String,String> {
-
-                @Override
-                protected String doInBackground(String... strings) {
-
-                    try {
-                        friends = friendsController.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(), 0);
-                    } catch (AuthorizationException e) {
-                        e.printStackTrace();
-                    } catch (NotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(String s) {
-                    super.onPostExecute(s);
-                }
+            @Override
+            public void onResponseReceived(List<User> users) {
+                participantsAdapter.updateFriendsList(users);
             }
+        }.execute(meetingId);
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.map = googleMap;
@@ -291,8 +248,10 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
             @Override
             public void onResponseReceived(Bitmap bitmap) {
                 staticMap = bitmap;
-                saveImageToCache();
-                staticMapAvailable = true;
+                if (staticMap != null) {
+                    saveImageToCache();
+                    staticMapAvailable = true;
+                }
             }
         }.execute();
     }
@@ -339,6 +298,79 @@ public class PastMeetingInfoFragment extends BaseFragment implements OnMapReadyC
                 getString(R.string.distance)+ ": " + distanceValue + "\n" +
                 getString(R.string.time) + ": " + timeValue + "\n" +
                 getString(R.string.avg_speed) + ": " + avSpeedValue + "\n";
+    }
+
+    private void getTrackingData() {
+        progressBar.setVisibility(View.VISIBLE);
+        callGetPastMeetingsTracking(userId,meetingId);
+    }
+
+    private void callGetPastMeetingsTracking(int userId, int meetingId) {
+        new GetPastMeetingsTracking() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(TrackingData trackingResponse) {
+                tracking = trackingResponse;
+                updateTrackingText();
+                if (tracking.getRoutePoints() != null) callGetStaticMap();
+            }
+        }.execute(userId,meetingId);
+    }
+
+    private void updateTrackingText() {
+        TextView distance = view.findViewById(R.id.meeting_info_distance);
+        TextView steps = view.findViewById(R.id.meeting_info_steps);
+        TextView totalTime = view.findViewById(R.id.meeting_info_totaltime);
+        TextView avSpeed = view.findViewById(R.id.meeting_info_avspeed);
+        TextView calories = view.findViewById(R.id.meeting_info_calories);
+        distanceValue = String.valueOf(tracking.getDistance()); //TODO parse a km
+        distance.setText(distanceValue);
+        String stepsValue  = String.valueOf(tracking.getSteps());
+        steps.setText(stepsValue);
+        timeValue = getTimeInString(tracking.getTotalTimeMillis());
+        totalTime.setText(timeValue);
+        avSpeedValue = getSpeedInString(tracking.getAverageSpeed());
+        avSpeed.setText(avSpeedValue);
+        String caloriesValue = String.valueOf(tracking.getCalories());
+        calories.setText(caloriesValue);
+
+        path = (ArrayList<LatLng>) tracking.getRoutePoints();
+        if (path != null) {
+            staticMapAvailable = false;
+            if (path.size() > 1) {
+                Log.d("STATIC MAP", path.toString());
+                callGetStaticMap();
+            }
+        }
+
+        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.past_meeting_info_map, mapFragment)
+                .commit();
+        mapFragment.getMapAsync(this);
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    public String getTimeInString(float time) {
+        float hours=time/3600000;
+        float mins=(time%3600000)/60000;
+        float secs=(time%60000)/1000;
+        return String.format("%sh %sm %ss", (int) hours, (int) mins, (int) secs);
+    }
+
+    public String getSpeedInString(float speed){
+        DecimalFormat df=new DecimalFormat("###.###");
+        return String.valueOf(df.format(speed)) + " m/s";
     }
 
 }

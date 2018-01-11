@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
+import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
@@ -40,7 +42,6 @@ public class ChatGroupInfoFragment extends BaseFragment {
 
     protected View view;
     protected UsersAdapter usersAdapter;
-    protected IFriendsAdapter friendsDBAdapter;
     protected List<User> groupUsers;
     protected FloatingActionButton fab;
     private TextView groupName;
@@ -62,7 +63,6 @@ public class ChatGroupInfoFragment extends BaseFragment {
 
         this.view = inflater.inflate(R.layout.fragment_chat_group_info, container, false);
 
-        friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
         chat = CurrentSession.getInstance().getChat();
 
         String name = chat.getChatName();
@@ -97,7 +97,7 @@ public class ChatGroupInfoFragment extends BaseFragment {
         setupRecyclerView();
         fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.INVISIBLE);
-        new GetAllFriends().execute();
+        callGetAllFriends();
         return this.view;
     }
 
@@ -134,22 +134,16 @@ public class ChatGroupInfoFragment extends BaseFragment {
         if (isLoading) Toast.makeText(getContext(),R.string.loading_list,Toast.LENGTH_LONG).show();
         else {
             CurrentSession.getInstance().setFriend(friend);
-            Intent userProfileIntent = null;
-            Fragment userProfileFragment;
+            Intent userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
             if (CurrentSession.getInstance().getCurrentUser().getId().equals(friend.getId())) {
-                userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
-                startActivity(userProfileIntent);
-                return;
-            }
-            else if (isFriend(friend)) {
-                userProfileIntent = new Intent();
-                userProfileFragment = new FriendProfileFragment();
+                userProfileIntent.putExtra("userId",CurrentSession.getInstance().getCurrentUser().getId());
+                userProfileIntent.putExtra("isFriend",false);
             }
             else {
-                userProfileIntent = new Intent();
-                userProfileFragment = new UserProfileFragment();
+                userProfileIntent.putExtra("userId",friend.getId());
+                userProfileIntent.putExtra("isFriend",isFriend(friend));
             }
-            BaseActivity.startWithFragment(getActivity(), userProfileFragment, userProfileIntent);
+            startActivity(userProfileIntent);
         }
     }
 
@@ -168,50 +162,48 @@ public class ChatGroupInfoFragment extends BaseFragment {
         return circularShape;
     }
 
-    private class GetAllFriends extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            friends = new ArrayList<>();
-            progressBar.setVisibility(View.VISIBLE);
-            isLoading = true;
-            pageNumber = 0;
-            isLastPage = false;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                List<Friend> friendsPage = new ArrayList<>();
-                while (!isLastPage) {
-                    friendsPage = friendsDBAdapter.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(),pageNumber);
-                    if (friendsPage.size() != 0) {
-                        for (Friend f : friendsPage) {
-                            User friend = f.getFriend();
-                            if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
-                            friends.add(friend);
-                        }
-                        ++pageNumber;
-                    }
-                    else isLastPage = true;
-                }
-            } catch (AuthorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            isLoading = false;
-            progressBar.setVisibility(View.INVISIBLE);
-            Log.e("Friends",friends.toString());
-            super.onPostExecute(s);
-        }
-
+    private void setLoading() {
+        friends = new ArrayList<>();
+        progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+        pageNumber = 0;
+        isLastPage = false;
     }
+
+    private void updateData() {
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
+        Log.e("Friends",friends.toString());
+    }
+
+    private void callGetAllFriends() {
+        setLoading();
+        new GetAllFriends() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(List<Friend> allfriends) {
+                friends = new ArrayList<User>();
+                for (Friend f : allfriends) {
+                    User friend = f.getFriend();
+                    if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
+                    friends.add(friend);
+                }
+                updateData();
+            }
+        }.execute();
+    }
+
 
     @Override
     public void onResume() {
@@ -232,11 +224,15 @@ public class ChatGroupInfoFragment extends BaseFragment {
         meetingInfoIntent.putExtra("description",meeting.getDescription());
         String datetime = meeting.getDate();
         meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
-        meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
+        meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.length()));
         meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
         meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
         meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
         BaseActivity.startWithFragment(getActivity(), new MeetingInfoFragment(), meetingInfoIntent);
+    }
+
+    private void dismissProgressBarsOnError() {
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 }
