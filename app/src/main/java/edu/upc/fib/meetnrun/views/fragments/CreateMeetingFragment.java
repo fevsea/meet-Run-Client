@@ -61,6 +61,7 @@ import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.asynctasks.CreateMeeting;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
@@ -395,6 +396,9 @@ public class CreateMeetingFragment extends BaseFragment implements OnMapReadyCal
                 }
                 else if (e instanceof ParamsException) {
                     Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ForbiddenException) {
+                    Toast.makeText(getActivity(), R.string.forbidden_banned, Toast.LENGTH_LONG).show();
                 }
             }
 

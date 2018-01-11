@@ -32,6 +32,7 @@ import edu.upc.fib.meetnrun.asynctasks.GetMeetingsFiltered;
 import edu.upc.fib.meetnrun.asynctasks.GetMyMeetings;
 import edu.upc.fib.meetnrun.asynctasks.JoinMeeting;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -294,6 +295,9 @@ public class MeetingListFragment extends BaseFragment {
                 }
                 else if (e instanceof ParamsException) {
                     Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ForbiddenException) {
+                    Toast.makeText(getActivity(), R.string.forbidden_banned, Toast.LENGTH_LONG).show();
                 }
             }
 

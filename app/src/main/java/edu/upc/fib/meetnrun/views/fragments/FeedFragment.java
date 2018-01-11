@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -22,8 +23,12 @@ import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
+import edu.upc.fib.meetnrun.asynctasks.JoinMeeting;
 import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.FeedMeeting;
 import edu.upc.fib.meetnrun.models.Meeting;
@@ -65,7 +70,7 @@ public class FeedFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             @Override
             public void onButtonClicked(int position) {
                 Meeting m = adapter.getItemAt(position).getMeeting();
-                new JoinMeeting().execute(m.getId());
+                callJoinMeeting(m.getId(),m.getChatID());
             }
 
             @Override
@@ -115,20 +120,19 @@ public class FeedFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                     pastMeetingInfoIntent.putExtra("path", (Serializable) path);
 
                     BaseActivity.startWithFragment(getActivity(), new PastMeetingInfoFragment(), pastMeetingInfoIntent);
-                }
-                else {
+                } else {
                     Intent meetingInfoIntent = new Intent();
-                    meetingInfoIntent.putExtra("title",meeting.getTitle());
-                    meetingInfoIntent.putExtra("chat",meeting.getChatID());
-                    meetingInfoIntent.putExtra("owner",meeting.getOwner().getUsername());
-                    meetingInfoIntent.putExtra("id",meeting.getId());
-                    meetingInfoIntent.putExtra("description",meeting.getDescription());
+                    meetingInfoIntent.putExtra("title", meeting.getTitle());
+                    meetingInfoIntent.putExtra("chat", meeting.getChatID());
+                    meetingInfoIntent.putExtra("owner", meeting.getOwner().getUsername());
+                    meetingInfoIntent.putExtra("id", meeting.getId());
+                    meetingInfoIntent.putExtra("description", meeting.getDescription());
                     String datetime = meeting.getDate();
-                    meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
-                    meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
-                    meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
-                    meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
-                    meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
+                    meetingInfoIntent.putExtra("date", datetime.substring(0, datetime.indexOf('T')));
+                    meetingInfoIntent.putExtra("time", datetime.substring(datetime.indexOf('T') + 1, datetime.indexOf('Z')));
+                    meetingInfoIntent.putExtra("level", String.valueOf(meeting.getLevel()));
+                    meetingInfoIntent.putExtra("latitude", meeting.getLatitude());
+                    meetingInfoIntent.putExtra("longitude", meeting.getLongitude());
                     BaseActivity.startWithFragment(getActivity(), new MeetingInfoFragment(), meetingInfoIntent);
                 }
             }
@@ -176,25 +180,26 @@ public class FeedFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         }
     }
 
-    private class JoinMeeting extends AsyncTask<Integer, String, Boolean> {
-
-        Exception exception;
-
-        @Override
-        protected Boolean doInBackground(Integer... params) {
-            IMeetingAdapter meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
-            try {
-                return meetingAdapter.joinMeeting(params[0], CurrentSession.getInstance().getCurrentUser().getId());
+    private void callJoinMeeting(int meetingId, int chatId) {
+        List<User> current = new ArrayList<>();
+        current.add(CurrentSession.getInstance().getCurrentUser());
+        new edu.upc.fib.meetnrun.asynctasks.JoinMeeting(meetingId, chatId, current) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                } else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                } else if (e instanceof ForbiddenException) {
+                    Toast.makeText(getActivity(), R.string.forbidden_banned, Toast.LENGTH_LONG).show();
+                }
             }
-            catch (AuthorizationException | NotFoundException e) {
-                exception = e;
-                return false;
-            }
-        }
 
-        @Override
-        protected void onPostExecute(Boolean s) {
-            updateFeed();
-        }
+            @Override
+            public void onResponseReceived() {
+                Toast.makeText(getActivity(), getString(R.string.joined_meeting), Toast.LENGTH_SHORT).show();
+                updateFeed();
+            }
+        }.execute();
     }
 }
