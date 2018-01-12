@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.asynctasks.Register;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
@@ -108,43 +110,34 @@ public class RegisterActivity extends AppCompatActivity{
     }
 
     private void registerUser() {
-        new register().execute();
+        callRegister();
     }
 
     private void changeToLoginActivity() {
         finish();
     }
 
-    private class register extends AsyncTask<String,String,String> {
+    private void callRegister() {
+        new Register(name,surname,username,password1,quest,answ,pcInt) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof ParamsException) {
+                    Toast.makeText(RegisterActivity.this, R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
 
-        User user = null;
-        boolean uar = false;
-
-        @Override
-        protected String doInBackground(String... registerUser) {
-            try {
-                user = controller.registerUser(username, name, surname, pcInt, password1, quest, answ);
-            } catch (ParamsException e) {
-                e.printStackTrace();
-                uar = true;
+            @Override
+            public void onResponseReceived(User u) {
+                if (u == null) {
+                    //TODO hardcoded
+                    Toast.makeText(getApplicationContext(), "Register ERROR", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Register complete!", Toast.LENGTH_SHORT).show();
+                    changeToLoginActivity();
+                }
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (uar) {
-                Toast.makeText(getApplicationContext(), "User already registered", Toast.LENGTH_SHORT).show();
-            }
-            else if (user == null) {
-                Toast.makeText(getApplicationContext(), "Register ERROR", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "Register complete!", Toast.LENGTH_SHORT).show();
-                changeToLoginActivity();
-            }
-            super.onPostExecute(s);
-        }
+        }.execute();
     }
 
     @Override

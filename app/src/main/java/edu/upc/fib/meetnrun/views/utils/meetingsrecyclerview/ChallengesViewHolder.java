@@ -1,6 +1,5 @@
 package edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview;
 
-import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -8,9 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -19,15 +16,18 @@ import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.utils.UtilsGlobal;
+
+import static edu.upc.fib.meetnrun.utils.UtilsViews.getExpirationText;
 
 public class ChallengesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     final protected View view;
     final protected WeakReference<RecyclerViewOnClickListener> listener;
-    private String expirationTextResourceDays;
-    private String expirationTextResourceNoDays;
-    private String expirationPastTextResourceDays;
-    private String expirationPastTextResourceNoDays;
+    protected String expirationTextResourceDays;
+    protected String expirationTextResourceNoDays;
+    protected String expirationPastTextResourceDays;
+    protected String expirationPastTextResourceNoDays;
 
     public ChallengesViewHolder(View itemView, RecyclerViewOnClickListener listener) {
         super(itemView);
@@ -58,7 +58,7 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         ProgressBar opponentBar = view.findViewById(R.id.opponent_progress);
         ProgressBar youBar = view.findViewById(R.id.my_progress);
         TextView expirationView = view.findViewById(R.id.expires_in);
-        String totalText = String.format(Locale.forLanguageTag("es"), "%.0f km", challenge.getDistance());
+        String totalText = String.format(Locale.forLanguageTag("es"), "%.0f km", challenge.getDistance() / 1000.0f);
         totalView.setText(totalText);
         TextView opponentName = view.findViewById(R.id.opponent);
         TextView youName = view.findViewById(R.id.you);
@@ -73,7 +73,7 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         youBar.setProgress((int)currentUserDistance);
 
         try {
-            expirationView.setText(getExpirationText(challenge.getDeadline()));
+            expirationView.setText(getExpirationText(challenge.getDeadline(), expirationTextResourceDays, expirationTextResourceNoDays, expirationPastTextResourceDays, expirationPastTextResourceNoDays));
         }
         catch (ParseException ex) {
             expirationView.setText("");
@@ -87,38 +87,4 @@ public class ChallengesViewHolder extends RecyclerView.ViewHolder implements Vie
         listener.get().onItemClicked(getAdapterPosition());
     }
 
-    protected String getExpirationText(String deadline) throws ParseException {
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.forLanguageTag("es"));
-        Date dateTime;
-        String expirationText;
-        try {
-            dateTime = inputFormat.parse(deadline);
-        } catch (ParseException e) {
-            inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
-            dateTime = inputFormat.parse(deadline);
-        }
-        if (dateTime.getTime() > System.currentTimeMillis()) {
-            final long millis = dateTime.getTime() - System.currentTimeMillis();
-            long days = TimeUnit.MILLISECONDS.toDays(millis);
-            long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(days);
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
-            if (days > 0) {
-                expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceDays, days, hours, minutes);
-            } else {
-                expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceNoDays, hours, minutes);
-            }
-        }
-        else {
-            final long millis = System.currentTimeMillis() - dateTime.getTime();
-            long days = TimeUnit.MILLISECONDS.toDays(millis);
-            long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(days);
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
-            if (days > 0) {
-                expirationText = String.format(Locale.forLanguageTag("es"), expirationPastTextResourceDays, days, hours, minutes);
-            } else {
-                expirationText = String.format(Locale.forLanguageTag("es"), expirationPastTextResourceNoDays, hours, minutes);
-            }
-        }
-        return expirationText;
-    }
 }

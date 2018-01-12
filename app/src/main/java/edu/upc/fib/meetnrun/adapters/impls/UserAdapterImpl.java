@@ -5,19 +5,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
+import edu.upc.fib.meetnrun.adapters.models.FeedMeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.MeetingServer;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
 import edu.upc.fib.meetnrun.adapters.models.StatisticsServer;
+import edu.upc.fib.meetnrun.adapters.models.TrophiesListServer;
 import edu.upc.fib.meetnrun.adapters.models.UserServer;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
-import edu.upc.fib.meetnrun.exceptions.GenericException;
+import edu.upc.fib.meetnrun.adapters.remote.SOServices;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
+import edu.upc.fib.meetnrun.models.FeedMeeting;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.Statistics;
+import edu.upc.fib.meetnrun.models.Trophie;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.remote.SOServices;
 import retrofit2.Response;
 
 import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.calculateOffset;
@@ -42,7 +46,7 @@ public class UserAdapterImpl implements IUserAdapter {
             if (!ret.isSuccessful())
                 checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
             pus = ret.body();
-        } catch (IOException | GenericException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         List<User> lu = new ArrayList<>();
@@ -65,15 +69,12 @@ public class UserAdapterImpl implements IUserAdapter {
             us = ret.body();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof NotFoundException) throw (NotFoundException) e;
         }
         return us != null ? us.toGenericModel() : null;
     }
 
     @Override
-    public boolean updateUser(User obj) throws ParamsException, NotFoundException, AutorizationException {
+    public boolean updateUser(User obj) throws ParamsException, NotFoundException, AuthorizationException {
         boolean ok = false;
         UserServer us = new UserServer(obj);
         try {
@@ -85,21 +86,12 @@ public class UserAdapterImpl implements IUserAdapter {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof NotFoundException) {
-                throw (NotFoundException) e;
-            } else if (e instanceof ParamsException) {
-                throw (ParamsException) e;
-            } else if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            }
         }
         return ok;
     }
 
     @Override
-    public boolean deleteUserByID(int id) throws NotFoundException, AutorizationException {
+    public boolean deleteUserByID(int id) throws NotFoundException, AuthorizationException {
         boolean ok = true;
         try {
             Response<Void> ret = mServices.deleteUser(id).execute();
@@ -109,13 +101,6 @@ public class UserAdapterImpl implements IUserAdapter {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof NotFoundException) {
-                throw (NotFoundException) e;
-            } else if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            }
         }
         return ok;
     }
@@ -133,11 +118,6 @@ public class UserAdapterImpl implements IUserAdapter {
             u = ret.body();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof ParamsException) {
-                throw (ParamsException) e;
-            }
         }
         return u != null ? u.toGenericModel() : null;
 
@@ -150,11 +130,11 @@ public class UserAdapterImpl implements IUserAdapter {
      * @param targetUserId Target user who most be in the meeting
      * @param filterByTime Filter can be : past, future, all
      * @return List of {@link List<Meeting>}
-     * @throws AutorizationException
+     * @throws AuthorizationException
      * @throws ParamsException
      */
     @Override
-    public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime) throws AutorizationException, ParamsException {
+    public List<Meeting> getUserMeetingsFilteres(int targetUserId, String filterByTime) throws AuthorizationException, ParamsException {
         List<Meeting> ul = new ArrayList<>();
         try {
             Response<List<MeetingServer>> ret =
@@ -170,28 +150,21 @@ public class UserAdapterImpl implements IUserAdapter {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            } else if (e instanceof ParamsException) {
-                throw (ParamsException) e;
-            }
         }
         return ul;
     }
 
     @Override
-    public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AutorizationException, ParamsException {
+    public List<Meeting> getUsersFutureMeetings(int targetUserId) throws AuthorizationException, ParamsException {
         return getUserMeetingsFilteres(targetUserId, "future");
     }
 
     @Override
-    public List<Meeting> getUserPastMeetings(int targetUserId) throws AutorizationException, ParamsException {
+    public List<Meeting> getUserPastMeetings(int targetUserId) throws AuthorizationException, ParamsException {
         return getUserMeetingsFilteres(targetUserId, "past");
     }
 
-    public Statistics getUserStatisticsByID(int id) throws AutorizationException {
+    public Statistics getUserStatisticsByID(int id) throws AuthorizationException {
 
         StatisticsServer ss = null;
         try {
@@ -202,13 +175,60 @@ public class UserAdapterImpl implements IUserAdapter {
             ss = ret.body();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            }
         }
         return ss != null ? ss.toGenericModel() : null;
+    }
+
+    @Override
+    public List<Trophie> getUserTrophieByID(int id) throws AuthorizationException {
+        TrophiesListServer tls = null;
+        try {
+            Response<TrophiesListServer> ret = mServices.getTrophiesListByID(id).execute();
+            if (!ret.isSuccessful()) {
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            }
+            tls = ret.body();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tls != null ? tls.toGenericModel() : null;
+    }
+
+    @Override
+    public boolean banUser(int targetUserID) throws ForbiddenException {
+        boolean ok = true;
+        try {
+            Response<Void> ret = mServices.requestBan(targetUserID).execute();
+            if (!ret.isSuccessful()) {
+                ok = false;
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ok;
+    }
+
+    @Override
+    public List<FeedMeeting> getUsersFeed(int id) throws AuthorizationException {
+
+        List<FeedMeeting> lfm = new ArrayList<>();
+        try {
+            Response<List<FeedMeetingServer>> ret =
+                    mServices.getFeedMeeting(id).execute();
+            if (!ret.isSuccessful())
+                checkErrorCodeAndThowException(ret.code(), ret.errorBody().string());
+
+            List<FeedMeetingServer> u = ret.body();
+            if (u != null) {
+                for (int i = 0; i < u.size(); i++) {
+                    lfm.add(u.get(i).toGenericModel());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return lfm;
     }
 
 }

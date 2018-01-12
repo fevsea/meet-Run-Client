@@ -1,10 +1,8 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,23 +15,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
-import edu.upc.fib.meetnrun.adapters.IUserAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
+import edu.upc.fib.meetnrun.asynctasks.GetUsers;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.FriendProfileActivity;
-import edu.upc.fib.meetnrun.views.LoginActivity;
-import edu.upc.fib.meetnrun.views.UserProfileActivity;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
+import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 
@@ -41,13 +37,11 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
  * Created by eric on 2/11/17.
  */
 
-public class UsersListFragment extends Fragment {
+public class UsersListFragment extends BaseFragment {
 
-    private IUserAdapter usersDBAdapter;
     private View view;
     private UsersAdapter usersAdapter;
-    private IFriendsAdapter friendsDBAdapter;
-    private List<User> l;
+    private List<User> userList;
     private List<Friend> friends;
     private FloatingActionButton fab;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -57,6 +51,9 @@ public class UsersListFragment extends Fragment {
     private boolean isLastPage;
     private int pageNumber;
     private ProgressBar progressBar;
+    private List<User> queryUserList;
+
+    private boolean filtered;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,10 +62,8 @@ public class UsersListFragment extends Fragment {
         setHasOptionsMenu(true);
 
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
-
+        filtered = false;
         CurrentSession cs = CurrentSession.getInstance();
-        usersDBAdapter = cs.getUserAdapter();
-        friendsDBAdapter = cs.getFriendsAdapter();
         currentUser = cs.getCurrentUser();
 
         friends = new ArrayList<>();
@@ -104,9 +99,9 @@ public class UsersListFragment extends Fragment {
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         usersList.setLayoutManager(layoutManager);
 
-        l = new ArrayList<>();
+        userList = new ArrayList<>();
 
-        usersAdapter = new UsersAdapter(l, new RecyclerViewOnClickListener() {
+        usersAdapter = new UsersAdapter(userList, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {}
 
@@ -145,7 +140,7 @@ public class UsersListFragment extends Fragment {
 
     }
 
-    @Override
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.search_menu, menu);
@@ -160,9 +155,11 @@ public class UsersListFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                if (!filtered) queryUserList = usersAdapter.getAdapterList();
+                filtered = true;
                 newText = newText.toLowerCase();
                 ArrayList<User> newList = new ArrayList<>();
-                for (User user : l) {
+                for (User user : queryUserList) {
                     String userName = user.getUsername().toLowerCase();
                     String name = (user.getFirstName()+" "+user.getLastName()).toLowerCase();
                     String postCode = user.getPostalCode();
@@ -175,9 +172,17 @@ public class UsersListFragment extends Fragment {
                 return true;
             }
         });
-
+        searchView.setOnCloseListener(new android.widget.SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                filtered = false;
+                initializePagination();
+                getMethod();
+                return false;
+            }
+        });
         super.onCreateOptionsMenu(menu, inflater);
-    }
+    }*/
 
     protected void initializePagination() {
         pageNumber = 0;
@@ -187,104 +192,88 @@ public class UsersListFragment extends Fragment {
 
 
     private void initList() {
-        getMethod();
+        if (!filtered) getMethod();
     }
 
     private void getIntent(User friend) {
-        Intent friendProfileIntent;
-        if (friend.isFriend()) friendProfileIntent = new Intent(getActivity(),FriendProfileActivity.class);
-        else friendProfileIntent = new Intent(getActivity(),UserProfileActivity.class);
         CurrentSession.getInstance().setFriend(friend);
-        startActivity(friendProfileIntent);
+        Intent userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
+        userProfileIntent.putExtra("userId",friend.getId());
+        userProfileIntent.putExtra("isFriend",friend.isFriend());
+        startActivity(userProfileIntent);
     }
 
     private void getMethod() {
-        new getFriends().execute();
-    }
-
-
-    private class getFriends extends AsyncTask<String,String,String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            List<Friend> aux = new ArrayList<>();
-
-            try {
-                aux = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), 0);
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }
-
-            int count = 1;
-            while (aux.size() != 0) {
-                friends.addAll(aux);
-                try {
-                    aux = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), count);
-                } catch (AutorizationException e) {
-                    e.printStackTrace();
-                } catch (NotFoundException e) {
-                    e.printStackTrace();
-                }
-                count++;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            new getUsers().execute();
-            super.onPostExecute(s);
+        Log.e("USER","ENTRA1");
+        if (!filtered) {
+            Log.e("USER","ENTRA2");
+            callGetFriends();
         }
     }
 
-    private class getUsers extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
-            isLoading = true;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            l = usersDBAdapter.getAllUsers(pageNumber);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-
-            l.remove(CurrentSession.getInstance().getCurrentUser());
-            for (User user: l) {
-                boolean equal = false;
-                for (Friend f: friends) {
-                    User friend = f.getFriend();
-                    if (currentUser.getUsername().equals(friend.getUsername())) friend = f.getUser();
-                    if (user.getUsername().equals(friend.getUsername())) {
-                        equal = true;
-                        break;
-                    }
+    private void updateData(List<User> users) {
+        userList = users;
+        userList.remove(CurrentSession.getInstance().getCurrentUser());
+        for (User user: userList) {
+            boolean equal = false;
+            for (Friend f: friends) {
+                User friend = f.getFriend();
+                if (currentUser.getUsername().equals(friend.getUsername())) friend = f.getUser();
+                if (user.getUsername().equals(friend.getUsername())) {
+                    equal = true;
+                    break;
                 }
-                if (equal) user.setFriend(true);
+            }
+            if (equal) user.setFriend(true);
+        }
+
+        if (userList != null) {
+            if (pageNumber == 0) usersAdapter.updateFriendsList(userList);
+            else usersAdapter.addFriends(userList);
+
+            if (userList.size() == 0) {
+                isLastPage = true;
+            }
+            else pageNumber++;
+        }
+        swipeRefreshLayout.setRefreshing(false);
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    private void callGetFriends() {
+        new GetAllFriends() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
             }
 
-            if (l != null) {
-                if (pageNumber == 0) usersAdapter.updateFriendsList(l);
-                else usersAdapter.addFriends(l);
-
-                if (l.size() == 0) {
-                    isLastPage = true;
-                }
-                else pageNumber++;
+            @Override
+            public void onResponseReceived(List<Friend> allfriends) {
+                friends = allfriends;
+                callGetUsers();
             }
-            swipeRefreshLayout.setRefreshing(false);
-            isLoading = false;
-            progressBar.setVisibility(View.INVISIBLE);
-            super.onPostExecute(s);
-        }
+        }.execute();
+    }
+
+    private void callGetUsers() {
+        if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+        new GetUsers(pageNumber) {
+            @Override
+            public void onResponseReceived(List<User> users) {
+                updateData(users);
+            }
+        }.execute();
+    }
+
+    public int getTitle() {
+        return R.string.users_label;
     }
 
 }

@@ -6,10 +6,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
-import edu.upc.fib.meetnrun.adapters.IUserAdapter;
-import edu.upc.fib.meetnrun.adapters.impls.LoginAdapterImpl;
-import edu.upc.fib.meetnrun.adapters.impls.UserAdapterImpl;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
@@ -28,8 +25,8 @@ public class FirebaseInstanceService extends FirebaseInstanceIdService {
         Log.d(TAG, "Refreshed token: " + refreshedToken);
         ILoginAdapter userAdapter = CurrentSession.getInstance().getLoginAdapter();
         try {
-            userAdapter.uppdateFirebaseToken(refreshedToken);
-        } catch (AutorizationException e) {
+            userAdapter.updateFirebaseToken(refreshedToken);
+        } catch (AuthorizationException e) {
             e.printStackTrace();
         } catch (NotFoundException e) {
             e.printStackTrace();

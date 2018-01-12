@@ -14,23 +14,27 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectChallenge;
+import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectFriend;
+import edu.upc.fib.meetnrun.asynctasks.GetChallenge;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 
-public class ChallengeFragment extends Fragment implements View.OnClickListener {
+import static edu.upc.fib.meetnrun.utils.UtilsViews.getExpirationText;
+
+public class ChallengeFragment extends BaseFragment implements View.OnClickListener {
 
     private Challenge challenge;
 
@@ -96,8 +100,15 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
         accept = view.findViewById(R.id.accept);
         reject = view.findViewById(R.id.reject);
 
-        GetChallenge getChallenge = new GetChallenge();
-        getChallenge.execute(challengeId);
+        callGetChallenge(challengeId);
+
+
+        FloatingActionButton fab = view.findViewById(R.id.activity_fab);
+
+        if (fab != null) {
+            fab.setVisibility(View.INVISIBLE);
+        }
+
         return view;
     }
 
@@ -107,10 +118,11 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
         User opponent;
         float userProgress;
         float opponentProgress;
+        float totalDistance = challenge.getDistance() / 1000.0f;
         if (currentUser.getId().equals(challenge.getCreator().getId())) {
             opponent = challenge.getChallenged();
-            userProgress = challenge.getCreatorDistance();
-            opponentProgress = challenge.getChallengedDistance();
+            userProgress = challenge.getCreatorDistance() / 1000.0f;
+            opponentProgress = challenge.getChallengedDistance() / 1000.0f;
         }
         else {
             opponent = challenge.getCreator();
@@ -123,11 +135,11 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
         userLevel.setText(String.valueOf(currentUser.getLevel()));
         userPhoto.setText(String.valueOf(currentUser.getUsername().charAt(0)));
         if (challenge.isAccepted()) {
-            userProgressBar.setMax((int) challenge.getDistance());
+            userProgressBar.setMax((int) totalDistance);
             userProgressBar.setProgress((int) userProgress);
             String userProgressString = String.format(Locale.forLanguageTag("es"),
-                    progressTextResource, userProgress, challenge.getDistance(),
-                    ((float) userProgress) / ((float) challenge.getDistance()) * 100, "%");
+                    progressTextResource, userProgress, totalDistance,
+                    ((float) userProgress) / ((float) totalDistance) * 100, "%");
             userProgressText.setText(userProgressString);
         }
         else {
@@ -140,11 +152,11 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
         opponentLevel.setText(String.valueOf(opponent.getLevel()));
         opponentPhoto.setText(String.valueOf(opponent.getUsername().charAt(0)));
         if (challenge.isAccepted()) {
-            opponentProgressBar.setMax((int) challenge.getDistance());
+            opponentProgressBar.setMax((int) totalDistance);
             opponentProgressBar.setProgress((int) opponentProgress);
             String opponentProgressString = String.format(Locale.forLanguageTag("es"),
-                    progressTextResource, opponentProgress, challenge.getDistance(),
-                    ((float) opponentProgress) / ((float) challenge.getDistance()) * 100, "%");
+                    progressTextResource, opponentProgress, totalDistance,
+                    ((float) opponentProgress) / ((float) totalDistance) * 100, "%");
             opponentProgressText.setText(opponentProgressString);
         }
         else {
@@ -154,7 +166,7 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
 
 
         try {
-            endsIn.setText(getExpirationText(challenge.getDeadline()));
+            endsIn.setText(getExpirationText(challenge.getDeadline(), expirationTextResourceDays, expirationTextResourceNoDays, expirationPastTextResourceDays, expirationPastTextResourceNoDays));
         }
         catch (ParseException e) {
             endsIn.setText("");
@@ -173,40 +185,7 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
 
     }
 
-    private String getExpirationText(String deadline) throws ParseException {
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.forLanguageTag("es"));
-        Date dateTime;
-        String expirationText;
-        try {
-            dateTime = inputFormat.parse(deadline);
-        } catch (ParseException e) {
-            inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.forLanguageTag("es"));
-            dateTime = inputFormat.parse(deadline);
-        }
-        if (dateTime.getTime() > System.currentTimeMillis()) {
-            final long millis = dateTime.getTime() - System.currentTimeMillis();
-            long days = TimeUnit.MILLISECONDS.toDays(millis);
-            long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(days);
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
-            if (days > 0) {
-                expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceDays, days, hours, minutes);
-            } else {
-                expirationText = String.format(Locale.forLanguageTag("es"), expirationTextResourceNoDays, hours, minutes);
-            }
-        }
-        else {
-            final long millis = System.currentTimeMillis() - dateTime.getTime();
-            long days = TimeUnit.MILLISECONDS.toDays(millis);
-            long hours = TimeUnit.MILLISECONDS.toHours(millis) - TimeUnit.DAYS.toHours(days);
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
-            if (days > 0) {
-                expirationText = String.format(Locale.forLanguageTag("es"), expirationPastTextResourceDays, days, hours, minutes);
-            } else {
-                expirationText = String.format(Locale.forLanguageTag("es"), expirationPastTextResourceNoDays, hours, minutes);
-            }
-        }
-        return expirationText;
-    }
+
 
     @Override
     public void onClick(View v) {
@@ -219,94 +198,60 @@ public class ChallengeFragment extends Fragment implements View.OnClickListener 
                 accept = false;
                 break;
         }
-        AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge();
-        acceptOrRejectChallenge.execute(accept);
+        callAcceptOrRejectChallenge(accept);
     }
 
-    private class GetChallenge extends AsyncTask<Integer, String, Boolean> {
 
-        private ProgressDialog progressDialog;
-        private Exception ex;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setTitle(getResources().getString(R.string.loading));
-            progressDialog.setMessage(getResources().getString(R.string.loading_challenge));
-            progressDialog.setIndeterminate(true);
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected Boolean doInBackground(Integer... params) {
-            try {
-                challenge = CurrentSession.getInstance().getChallengeAdapter().getChallenge(params[0]);
+    private void callGetChallenge(final int challengeId) {
+        new GetChallenge() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
             }
-            catch(AutorizationException | NotFoundException e) {
-                ex = e;
-                return false;
-            }
-            return true;
-        }
 
-        @Override
-        protected void onPostExecute(Boolean result) {
-            progressDialog.dismiss();
-            if (result && ex == null) {
+            @Override
+            public void onResponseReceived(Challenge challengeResponse) {
+                challenge = challengeResponse;
                 updateViews();
             }
-            else if (ex instanceof AutorizationException) {
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else if (ex instanceof NotFoundException) {
-                Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-            }
-        }
-
+        }.execute(challengeId);
     }
 
-    private class AcceptOrRejectChallenge extends AsyncTask<Boolean, String, Boolean> {
+    private void dismissProgressBarsOnError() {
+        userProgressBar.setVisibility(View.INVISIBLE);
+        opponentProgressBar.setVisibility(View.INVISIBLE);
+    }
 
-        Exception exception;
-
-        @Override
-        protected Boolean doInBackground(Boolean... params) {
-            IChallengeAdapter challengeAdapter = CurrentSession.getInstance().getChallengeAdapter();
-            try {
-                if (params[0]) {
-                    challengeAdapter.acceptChallenge(challenge.getId());
+    private void callAcceptOrRejectChallenge(Boolean accept) {
+        new AcceptOrRejectChallenge(challenge.getId()) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException ) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
                 }
-                else {
-                    challengeAdapter.deleteRejectChallenge(challenge.getId());
+                else if ( e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
                 }
             }
-            catch (NotFoundException | AutorizationException e) {
-                exception = e;
-            }
-            return true;
-        }
 
-        protected void onPostExecute(Boolean s) {
-            super.onPostExecute(s);
-            if (s && exception == null) {
+            @Override
+            public void onResponseReceived() {
                 getActivity().finish();
             }
-            else if (exception instanceof AutorizationException){
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else if (exception instanceof NotFoundException) {
-                Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-            }
-        }
+        }.execute(accept);
+    }
 
+    public int getTitle() {
+        return R.string.challenge;
     }
 
 }

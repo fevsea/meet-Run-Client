@@ -28,22 +28,6 @@ public class Forms {
             this.oldPasword = oldPasword;
             this.newPassword = newPassword;
         }
-
-        public String getOldPasword() {
-            return oldPasword;
-        }
-
-        public void setOldPasword(String oldPasword) {
-            this.oldPasword = oldPasword;
-        }
-
-        public String getNewPassword() {
-            return newPassword;
-        }
-
-        public void setNewPassword(String newPassword) {
-            this.newPassword = newPassword;
-        }
     }
 
     public static class LoginUser {
@@ -56,22 +40,6 @@ public class Forms {
 
         public LoginUser(String username, String password) {
             this.username = username;
-            this.password = password;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public void setPassword(String password) {
             this.password = password;
         }
     }
@@ -88,9 +56,19 @@ public class Forms {
         public String getToken() {
             return token;
         }
+    }
 
-        public void setToken(String token) {
-            this.token = token;
+    public static class Zip {
+        @SerializedName("zip")
+        @Expose
+        private String zip;
+
+        public Zip(String zip) {
+            this.zip = zip;
+        }
+
+        public String getZip() {
+            return zip;
         }
     }
 
@@ -146,78 +124,6 @@ public class Forms {
             this.answer = answer;
             this.password = password;
         }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public String getPostalCode() {
-            return postalCode;
-        }
-
-        public void setPostalCode(String postalCode) {
-            this.postalCode = postalCode;
-        }
-
-        public String getQuestion() {
-            return question;
-        }
-
-        public void setQuestion(String question) {
-            this.question = question;
-        }
-
-        public String getAnswer() {
-            return answer;
-        }
-
-        public void setAnswer(String answer) {
-            this.answer = answer;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public void setPassword(String password) {
-            this.password = password;
-        }
-
-        public Integer getLevel() {
-            return level;
-        }
-
-        public void setLevel(Integer level) {
-            this.level = level;
-        }
     }
 
     public static class CreateMeeting {
@@ -259,78 +165,6 @@ public class Forms {
             this.longitude = longitude;
             this.chatID = chatID;
         }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public Boolean get_public() {
-            return _public;
-        }
-
-        public void set_public(Boolean _public) {
-            this._public = _public;
-        }
-
-        public Integer getLevel() {
-            return level;
-        }
-
-        public void setLevel(Integer level) {
-            this.level = level;
-        }
-
-        public String getDate() {
-            return date;
-        }
-
-        public void setDate(String date) {
-            this.date = date;
-        }
-
-        public String getLatitude() {
-            return latitude;
-        }
-
-        public void setLatitude(String latitude) {
-            this.latitude = latitude;
-        }
-
-        public String getLongitude() {
-            return longitude;
-        }
-
-        public void setLongitude(String longitude) {
-            this.longitude = longitude;
-        }
-
-        public Integer getId() {
-            return id;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public Integer getChatID() {
-            return chatID;
-        }
-
-        public void setChatID(Integer chatID) {
-            this.chatID = chatID;
-        }
     }
 
     public static class ChatCreateUpdate {
@@ -357,21 +191,21 @@ public class Forms {
 
         @SerializedName("lastMessageUserName")
         @Expose
-        private int lastMessageUsernamePosition;
+        private String lastMessageUsername;
 
         @SerializedName("lastDateTime")
         @Expose
         private String lastMessageDateTime;
 
         public ChatCreateUpdate(String chatName, List<Integer> listUsersChat, int type,
-                                Integer meetingToRelate, String lastMessage, int lastMessageUsernamePosition,
+                                Integer meetingToRelate, String lastMessage, String lastMessageUsername,
                                 Date lastMessageDateTime) {
             this.chatName = chatName;
             this.listUsersChat = listUsersChat;
             this.type = type;
             this.meetingToRelate = meetingToRelate;
             this.lastMessage = lastMessage;
-            this.lastMessageUsernamePosition = lastMessageUsernamePosition;
+            this.lastMessageUsername = lastMessageUsername;
             this.lastMessageDateTime = UtilsGlobal.formatDate(lastMessageDateTime);
         }
 
@@ -380,10 +214,8 @@ public class Forms {
             List<Integer> lic = new ArrayList<>();
             for (int i = 0; i < c.getListUsersChat().size(); i++) {
                 lic.add(c.getListUsersChat().get(i).getId());
-                if (c.getMessage().getName().equals(c.getListUsersChat().get(i).getUsername())) {
-                    this.lastMessageUsernamePosition = i;
-                }
             }
+            this. lastMessageUsername = c.getMessage().getName();
             this.listUsersChat = lic;
             this.type = c.getType();
             this.meetingToRelate = (c.getMeeting() != null) ? c.getMeeting().getId() : null;

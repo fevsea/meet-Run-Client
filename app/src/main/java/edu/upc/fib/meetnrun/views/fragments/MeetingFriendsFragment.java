@@ -1,46 +1,31 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
-import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseBooleanArray;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
-import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.asynctasks.GetFriends;
+import edu.upc.fib.meetnrun.asynctasks.GetMeetingsFiltered;
+import edu.upc.fib.meetnrun.asynctasks.JoinMeeting;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
+import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 
@@ -65,14 +50,19 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
     @Override
     protected void adapter() {}
 
+    @Override
+    protected void refreshList() {
+        getPaginationMethod();
+    }
+
 
     @Override
     protected void getIntent(User friend) {
     }
 
     @Override
-    protected void getMethod() {
-        new getFriends().execute();
+    protected void getPaginationMethod() {
+        callGetFriends();
     }
 
 
@@ -101,96 +91,77 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
         };
     }
 
-
-    private class getFriends extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
-            isLoading = true;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            try {
-                l = friendsDBAdapter.listUserAcceptedFriends(currentUser.getId(), pageNumber);
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (l != null) {
-                if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
-                else friendsAdapter.addFriends(l);
-
-                if (l.size() == 0) {
-                    isLastPage = true;
-                }
-                else pageNumber++;
-            }
-            swipeRefreshLayout.setRefreshing(false);
-            isLoading = false;
-            progressBar.setVisibility(View.INVISIBLE);
-            super.onPostExecute(s);
-        }
-
+    private void setLoading() {
+        if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
     }
 
-    private class JoinMeeting extends AsyncTask<ArrayList<User>,String,String> {
-        private int meetingId;
+    private void updateData() {
+        if (l != null) {
+            if (pageNumber == 0) friendsAdapter.updateFriendsList(l);
+            else friendsAdapter.addFriends(l);
 
-        @Override
-
-        protected void onPreExecute() {
-            meetingId = getActivity().getIntent().getExtras().getInt("meetingId");
+            if (l.size() == 0) {
+                isLastPage = true;
+            }
+            else pageNumber++;
         }
-        @Override
-        protected String doInBackground(ArrayList<User>... users) {
-            try {
-                IMeetingAdapter meetingAdapter = CurrentSession.getInstance().getMeetingAdapter();
-                for (User user : users[0]) {
-                    //TODO handle exceptions
-                    try {
-                        meetingAdapter.joinMeeting(meetingId,user.getId());
-                    } catch (ParamsException e) {
-                        e.printStackTrace();
+        swipeRefreshLayout.setRefreshing(false);
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+
+
+    private void callGetFriends() {
+        setLoading();
+        new GetFriends(pageNumber) {
+
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(List<Friend> friends) {
+                l = friends;
+                updateData();
+            }
+        }.execute();
+    }
+
+    private void callJoinMeeting(int meetingId, int chatId, List<User> users) {
+            new JoinMeeting(meetingId,chatId,users) {
+
+                @Override
+                public void onExceptionReceived(GenericException e) {
+                    if (e instanceof AuthorizationException) {
+                        Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    }
+                    else if (e instanceof ParamsException) {
+                        Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
                     }
                 }
-                Chat chat = CurrentSession.getInstance().getChat();
-                List<User> chatUsers = chat.getListUsersChat();
-                chatUsers.addAll(users[0]);
-                chat.setListUsersChat(chatUsers);
-                chatAdapter.updateChat(chat);
 
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            } catch (ParamsException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            getActivity().finish();
-            super.onPostExecute(s);
-        }
+                @Override
+                public void onResponseReceived() {
+                    Log.e("MeetingFriendsFragment", "Users joined meeting succesfully");
+                    getActivity().finish();
+                }
+            }.execute();
     }
-
 
     @Override
     public void onResume() {
         initializePagination();
-        getMethod();
+        getPaginationMethod();
         super.onResume();
     }
 
@@ -210,7 +181,8 @@ public class MeetingFriendsFragment extends FriendListFragmentTemplate {
             for (User user : selectedFriends) {
                 selectedFriendsID.add(user);
             }
-            new JoinMeeting().execute(selectedFriendsID);
+            int meetingId = getActivity().getIntent().getExtras().getInt("meetingId");
+            callJoinMeeting(meetingId,CurrentSession.getInstance().getChat().getId(),selectedFriendsID);
         }
         return super.onOptionsItemSelected(item);
     }

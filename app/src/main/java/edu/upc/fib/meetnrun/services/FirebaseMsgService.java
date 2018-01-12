@@ -12,16 +12,14 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Map;
 
 import edu.upc.fib.meetnrun.R;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
+import edu.upc.fib.meetnrun.models.Trophie;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.views.LoginActivity;
 
@@ -87,7 +85,7 @@ public class FirebaseMsgService extends FirebaseMessagingService {
                     User opponent = (ch.getChallenged().getId()==currentUserId)?ch.getCreator():ch.getChallenged();
                     textWon = String.format(getString(R.string.challenge_expired_text), opponent.getUsername());
                 }
-                catch (AutorizationException | NotFoundException e) {
+                catch (AuthorizationException | NotFoundException e) {
                     textWon = "";
                 }
                 issueNotification(titleWon, textWon);
@@ -113,14 +111,27 @@ public class FirebaseMsgService extends FirebaseMessagingService {
                     User opponent = (ch.getChallenged().getId()==currentUserId)?ch.getCreator():ch.getChallenged();
                     textFinalized = String.format(getString(R.string.challenge_expired_text), opponent.getUsername());
                 }
-                catch (AutorizationException | NotFoundException e) {
+                catch (AuthorizationException | NotFoundException e) {
                     textFinalized = "";
                 }
                 issueNotification(titleFinalized, textFinalized);
                 break;
+            case "new_trophie":
+                String titleNewTrophie = getString(R.string.trophie_won);
+                String textNewTrophie = String.format(getString(R.string.trophie_won_text), data.get("trophy_name"));
+                issueNotification(titleNewTrophie, textNewTrophie);
+
+            case "friend_request":
+                String titleFriendRequest = getString(R.string.friend_request);
+                String textFriendRequest = String.format(getString(R.string.friend_request_text), data.get("friend_name"));
+                issueNotification(titleFriendRequest, textFriendRequest);
+                break;
+            case "friend_accepted":
+                String titleFriendAccepted = String.format(getString(R.string.friend_accepted), data.get("friend_name"));
+                issueNotification(titleFriendAccepted, "");
+                break;
             default:
-                Log.w(TAG, "UNINPLEMENTED: " + type);
-                issueNotification("UNINPLEMENTED", type);
+                issueNotification(type, "");
         }
     }
 

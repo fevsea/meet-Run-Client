@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,8 +26,11 @@ import java.util.Locale;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.asynctasks.DeleteAccount;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
+import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.views.LoginActivity;
 
@@ -34,7 +38,7 @@ import edu.upc.fib.meetnrun.views.LoginActivity;
  * Created by eric on 9/11/17.
  */
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends BaseFragment {
 
     private View view;
     private IUserAdapter controller;
@@ -56,29 +60,33 @@ public class SettingsFragment extends Fragment {
                 getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.GONE);
 
-        TextView text = view.findViewById(R.id.delete_account);
+        Button text = view.findViewById(R.id.delete_account);
 
 
         language = view.findViewById(R.id.spinnerLanguage);
         setLanguanges();
+        language.post(new Runnable() {
+            @Override public void run() {
+                language.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        if (position==0){
+                            setLocale("en");
+                        }
+                        else if (position==1){
+                            setLocale("es");
+                        }
+                        else if (position==2){
+                            setLocale("ca");
+                        }
 
-        language.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    }
 
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (position==0){
-                    setLocale("en");
-                }
-                else if (position==1){
-                    setLocale("es");
-                }
-                else if (position==2){
-                    setLocale("ca");
-                }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
 
@@ -93,7 +101,7 @@ public class SettingsFragment extends Fragment {
                 showDialog(title, message, ok, cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                new deleteAccount().execute();
+                                callDeleteAccount();
                                 Intent intent = new Intent(getContext(),LoginActivity.class);
                                 getActivity().finishAffinity();
                                 startActivity(intent);
@@ -133,10 +141,9 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setLanguanges(){
-        String[] languages={
-                "English", "Spanish", "Catalan"
-        };
-        language.setAdapter(new ArrayAdapter<CharSequence>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item, languages));
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.languages, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        language.setAdapter(adapter);
 
     }
 
@@ -152,32 +159,31 @@ public class SettingsFragment extends Fragment {
     }
 
 
-    private class deleteAccount extends AsyncTask<String,String,String> {
-
-        boolean ok = false;
-
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                controller.deleteUserByID(cs.getCurrentUser().getId());
-                ok = true;
-            } catch (NotFoundException | AutorizationException e) {
-                e.printStackTrace();
+    private void callDeleteAccount() {
+        new DeleteAccount() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
             }
-            return null;
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            if (ok) {
+            @Override
+            public void onResponseReceived() {
                 Toast.makeText(getContext(), "Account has been removed successfully", Toast.LENGTH_SHORT).show();
                 deleteToken();
             }
-            else {
-                Toast.makeText(getContext(), "Delete account ERROR", Toast.LENGTH_SHORT).show();
-            }
-            super.onPostExecute(s);
-        }
+        }.execute();
+    }
+
+    public int getTitle() {
+        return R.string.action_settings;
     }
 
 }

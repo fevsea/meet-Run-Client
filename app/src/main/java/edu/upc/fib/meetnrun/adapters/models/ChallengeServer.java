@@ -35,11 +35,11 @@ public class ChallengeServer implements IServerModel {
     @Expose
     private String creationDate;
 
-    @SerializedName("creatorDistance")
+    @SerializedName("creator_distance")
     @Expose
     private Float creatorDistance;
 
-    @SerializedName("challengedDistance")
+    @SerializedName("challenged_distance")
     @Expose
     private Float challengedDistance;
 

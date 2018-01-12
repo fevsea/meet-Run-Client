@@ -1,5 +1,6 @@
 package edu.upc.fib.meetnrun.views.fragments;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
@@ -8,16 +9,19 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.asynctasks.GetCity;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ChangePasswordActivity;
-import edu.upc.fib.meetnrun.views.EditProfileActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +32,7 @@ import java.net.URL;
 import java.util.Scanner;
 
 
-public class ProfileActivityFragment extends Fragment {
+public class ProfileActivityFragment extends BaseFragment {
 
     private User u;
     private View view;
@@ -54,6 +58,7 @@ public class ProfileActivityFragment extends Fragment {
         super.onCreate(savedInstanceState);
         page = getArguments().getInt("0", 0);
         title = getArguments().getString("Info");
+        setHasOptionsMenu(true);
     }
 
     private GradientDrawable getColoredCircularShape(char letter) {
@@ -70,9 +75,7 @@ public class ProfileActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
-
         u = CurrentSession.getInstance().getCurrentUser();
-
         String userName = u.getUsername();
         String name = u.getFirstName() + ' ' + u.getLastName();
         String postCode = u.getPostalCode();
@@ -98,90 +101,47 @@ public class ProfileActivityFragment extends Fragment {
         Button button = view.findViewById(R.id.editProfile_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent;
-                intent = new Intent(getActivity(), EditProfileActivity.class);
-                startActivity(intent);
+                BaseActivity.startWithFragment(getActivity(), new EditProfileFragment());
             }
         });
 
         Button button2 = view.findViewById(R.id.changePass_button);
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent;
-                intent = new Intent(getActivity(), ChangePasswordActivity.class);
-                startActivity(intent);
+                BaseActivity.startWithFragment(getActivity(), new ChangePasswordFragment());
             }
         });
 
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.empty_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.home:
+                getActivity().finish();
+                break;
+        }
+        return false;
+    }
+
 
     private void getCityFromPostcode(String p) {
-        new ProfileActivityFragment.getCity().execute(p);
+        callGetCity(p);
     }
 
-
-    private class getCity extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            URL url = null;
-            String result = null;
-
-            // build a URL
-            try {
-                url = new URL("https://maps.googleapis.com/maps/api/geocode/json?address=" + params[0] + "&components=country:ES&region=es&key=AIzaSyDm6Bt_p5gn3F7DAJJLMYSEOR0kyqNL800");
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+    private void callGetCity(String p) {
+        new GetCity() {
+            @Override
+            public void onResponseReceived(String s) {
+                userPostCodeTextView.setText(s);
             }
-
-            // read from the URL
-            Scanner scan = null;
-            try {
-                scan = new Scanner(url.openStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String str = new String();
-
-            while (scan.hasNext()) str += scan.nextLine();
-            scan.close();
-
-            // build a JSON object
-            JSONObject obj = null;
-            try {
-                obj = new JSONObject(str);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            // get the first result
-            JSONObject res = null;
-            try {
-                res = obj.getJSONArray("results").getJSONObject(0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            try {
-                result = res.getString("formatted_address");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            Log.e("URL", result);
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            userPostCodeTextView.setText(s);
-        }
+        }.execute(p);
     }
-
-
 
 }

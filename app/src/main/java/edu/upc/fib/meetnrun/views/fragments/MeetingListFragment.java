@@ -21,34 +21,36 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.IMeetingAdapter;
 import edu.upc.fib.meetnrun.adapters.IUserAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.asynctasks.GetMeetings;
+import edu.upc.fib.meetnrun.asynctasks.GetMeetingsFiltered;
+import edu.upc.fib.meetnrun.asynctasks.GetMyMeetings;
+import edu.upc.fib.meetnrun.asynctasks.JoinMeeting;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.CreateMeetingActivity;
-import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.MeetingsAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 
 //TODO implementar crida a joinedMeetings per separat (ja no es dona aquesta info amb el meeting)
 //TODO pero ara no funciona be la crida
-public class MeetingListFragment extends Fragment {
+public class MeetingListFragment extends BaseFragment {
 
     private MeetingsAdapter meetingsAdapter;
-    private IMeetingAdapter meetingDBAdapter;
-    private IChatAdapter chatAdapter;
-    private IUserAdapter userAdapter;
     private View view;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private List<Meeting> meetings;
     private  FloatingActionButton fab;
     boolean filtered;
     String filteredQuery;
@@ -63,9 +65,6 @@ public class MeetingListFragment extends Fragment {
     private int pageNumber;
     private ProgressBar progressBar;
 
-    public MeetingListFragment() {
-        meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,9 +78,6 @@ public class MeetingListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_meeting_list,container,false);
         this.view = view;
 
-        meetingDBAdapter = CurrentSession.getInstance().getMeetingAdapter();
-        chatAdapter = CurrentSession.getInstance().getChatAdapter();
-        userAdapter = CurrentSession.getInstance().getUserAdapter();
         //iniciar paginacion y progressbar
         initializePagination();
         refresh = false;
@@ -116,7 +112,7 @@ public class MeetingListFragment extends Fragment {
         final RecyclerView meetingsList = view.findViewById(R.id.fragment_meeting_container);
         layoutManager = new LinearLayoutManager(getActivity());
         meetingsList.setLayoutManager(layoutManager);
-        meetings = new ArrayList<>();
+        List<Meeting> meetings = new ArrayList<>();
         meetingsAdapter = new MeetingsAdapter(meetings, new RecyclerViewOnClickListener() {
             @Override
             public void onButtonClicked(int position) {
@@ -125,11 +121,9 @@ public class MeetingListFragment extends Fragment {
             }
 
             @Override
-
             public void onItemClicked(int position) {
-                Toast.makeText(view.getContext(), "Showing selected meeting info", Toast.LENGTH_SHORT).show();
                 Meeting meeting = meetingsAdapter.getMeetingAtPosition(position);
-                Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
+                Intent meetingInfoIntent = new Intent();
                 meetingInfoIntent.putExtra("id",meeting.getId());
                 //TODO 'if' temporal, fins que es borri la BD
                 if (meeting.getChatID() != null) meetingInfoIntent.putExtra("chat",meeting.getChatID());
@@ -139,11 +133,11 @@ public class MeetingListFragment extends Fragment {
                 meetingInfoIntent.putExtra("description",meeting.getDescription());
                 String datetime = meeting.getDate();
                 meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
-                meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
+                meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.length()));
                 meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
                 meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
                 meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
-                startActivity(meetingInfoIntent);
+                BaseActivity.startWithFragment(getActivity(), new MeetingInfoFragment(), meetingInfoIntent);
 
             }
         });
@@ -223,54 +217,30 @@ public class MeetingListFragment extends Fragment {
     }
 
     private void updateMeetingList() {
-        if (filtered) new GetMeetingsFiltered().execute(filteredQuery);
-        else new GetMeetings().execute();
+        if (filtered) callGetMeetingsFiltered(filteredQuery);
+        else callGetMeetings();
     }
 
     private void createNewMeeting() {
         refresh = true;
-        Intent intent = new Intent(getActivity(),CreateMeetingActivity.class);
-        startActivity(intent);
+        Intent intent = new Intent();
+        BaseActivity.startWithFragment(getActivity(), new CreateMeetingFragment(), intent);
     }
 
     private void getMyMeetings() {
-        new GetMyMeetings().execute(CurrentSession.getInstance().getCurrentUser().getId());
+        callGetMyMeetings(CurrentSession.getInstance().getCurrentUser().getId());
     }
 
     private void joinMeeting(Meeting meeting) {
-        new JoinMeeting().execute(meeting.getId(),meeting.getChatID());
+        callJoinMeeting(meeting.getId(),meeting.getChatID());
     }
-
-    //en cada asynctask hay que hacer cambios, tomad esta como modelo
-    //si no usais swiperefreshlayout no lo pongais
-    private class GetMeetings extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            setLoading();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetings(pageNumber);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            updateData();
-            super.onPostExecute(s);
-        }
-    }
-
 
     private void setLoading() {
         if (!swipeRefreshLayout.isRefreshing()) progressBar.setVisibility(View.VISIBLE);
         isLoading = true;
     }
 
-    private void updateData() {
+    private void updateData(List<Meeting> meetings) {
         if (meetings != null) {
             if (pageNumber == 0) {
                 meetingsAdapter.updateMeetingsList(meetings);
@@ -290,79 +260,74 @@ public class MeetingListFragment extends Fragment {
         progressBar.setVisibility(View.INVISIBLE);
     }
 
-    private class GetMeetingsFiltered extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            setLoading();
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            Log.e("MAIN","DOINGGGG");
-            meetings = meetingDBAdapter.getAllMeetingsFilteredByName(strings[0],pageNumber);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            updateData();
-            super.onPostExecute(s);
-        }
-    }
-
-    /*
-        new JoinMeeting.execute(meetingId,chatId)
-     */
-    private class JoinMeeting extends AsyncTask<Integer,String,String> {
-
-        @Override
-        protected String doInBackground(Integer... integers) {
-            Log.e("MAIN","DOINGGGG");
-            //TODO handle exceptions
-            try {
-                //TODO possible millora: crida al servidor joinChat
-                meetingDBAdapter.joinMeeting(integers[0],CurrentSession.getInstance().getCurrentUser().getId());
-                Chat chat = chatAdapter.getChat(integers[1]);
-                List<User> chatUsers = chat.getListUsersChat();
-                chatUsers.add(CurrentSession.getInstance().getCurrentUser());
-                chat.setListUsersChat(chatUsers);
-                chatAdapter.updateChat(chat);
-            } catch (AutorizationException | ParamsException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
+    //nueva forma de usar asynctasks
+    private void callGetMeetings() {
+        setLoading();
+        new GetMeetings(pageNumber) {
+            @Override
+            public void onResponseReceived(List<Meeting> meetings) {
+                updateData(meetings);
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            Toast.makeText(getActivity(),getString(R.string.joined_meeting),Toast.LENGTH_SHORT).show();
-            getMyMeetings();
-            super.onPostExecute(s);
-        }
+        }.execute();
     }
 
-    private class GetMyMeetings extends AsyncTask<Integer,String,String> {
+    private void callGetMeetingsFiltered(String query) {
+        setLoading();
+        new GetMeetingsFiltered(pageNumber) {
 
-        @Override
-        protected String doInBackground(Integer... integers) {
-            //TODO handle exceptions
-            try {
-                myMeetings = userAdapter.getUsersFutureMeetings(integers[0]);
-            } catch (AutorizationException | ParamsException e) {
-                e.printStackTrace();
+            @Override
+            public void onResponseReceived(List<Meeting> meetings) {
+                updateData(meetings);
             }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String s) {
-            meetingsAdapter.setMyMeetings(myMeetings);
-            super.onPostExecute(s);
-        }
-
+        }.execute(query);
     }
+
+
+
+    private void callJoinMeeting(int meetingId, int chatId) {
+        List<User> current = new ArrayList<>();
+        current.add(CurrentSession.getInstance().getCurrentUser());
+        new JoinMeeting(meetingId,chatId,current) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ForbiddenException) {
+                    Toast.makeText(getActivity(), R.string.forbidden_banned, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived() {
+                Toast.makeText(getActivity(),getString(R.string.joined_meeting),Toast.LENGTH_SHORT).show();
+                getMyMeetings();
+            }
+        }.execute();
+    }
+
+    private void callGetMyMeetings(int userId) {
+        new GetMyMeetings() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ParamsException) {
+                    Toast.makeText(getActivity(), R.string.params_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(List<Meeting> myMeetings) {
+                meetingsAdapter.setMyMeetings(myMeetings);
+            }
+        }.execute(userId);
+    }
+
 
     @Override
     public void onResume() {
@@ -373,6 +338,11 @@ public class MeetingListFragment extends Fragment {
         }
         getMyMeetings();
         super.onResume();
+    }
+
+    @Override
+    public int getTitle() {
+        return R.string.meetings;
     }
 
 }

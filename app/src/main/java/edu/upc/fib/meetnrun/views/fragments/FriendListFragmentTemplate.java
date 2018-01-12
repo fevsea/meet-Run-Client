@@ -32,7 +32,7 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClick
  * Created by eric on 16/11/17.
  */
 
-public abstract class FriendListFragmentTemplate extends Fragment{
+public abstract class  FriendListFragmentTemplate extends BaseFragment{
 
     protected View view;
     protected FriendsAdapter friendsAdapter;
@@ -46,6 +46,8 @@ public abstract class FriendListFragmentTemplate extends Fragment{
     protected boolean isLastPage;
     protected int pageNumber;
     protected ProgressBar progressBar;
+    protected boolean filtered;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,6 +56,7 @@ public abstract class FriendListFragmentTemplate extends Fragment{
         setHasOptionsMenu(true);
 
         this.view = inflater.inflate(R.layout.fragment_friends, container, false);
+        filtered = false;
         adapter();
 
         CurrentSession cs = CurrentSession.getInstance();
@@ -74,7 +77,7 @@ public abstract class FriendListFragmentTemplate extends Fragment{
             @Override
             public void onRefresh() {
                 initializePagination();
-                getMethod();
+                refreshList();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -93,7 +96,9 @@ public abstract class FriendListFragmentTemplate extends Fragment{
 
     protected abstract void adapter();
 
-    private void setupRecyclerView() {
+    protected abstract void refreshList();
+
+    protected void setupRecyclerView() {
 
         final RecyclerView friendsList = view.findViewById(R.id.fragment_friends_container);
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -119,7 +124,7 @@ public abstract class FriendListFragmentTemplate extends Fragment{
                 if (!isLoading && !isLastPage) {
                     if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
                             && firstVisibleItemPosition >= 0) {
-                        getMethod();
+                        getPaginationMethod();
                     }
                 }
             }
@@ -131,9 +136,11 @@ public abstract class FriendListFragmentTemplate extends Fragment{
 
     protected abstract void getIntent(User friend);
 
-    protected abstract void getMethod();
+    protected abstract void getPaginationMethod();
 
-    @Override
+
+
+    /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.search_menu, menu);
@@ -148,6 +155,7 @@ public abstract class FriendListFragmentTemplate extends Fragment{
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                filtered = true;
                 newText = newText.toLowerCase();
                 ArrayList<Friend> newList = new ArrayList<>();
                 for (Friend f : l) {
@@ -166,12 +174,29 @@ public abstract class FriendListFragmentTemplate extends Fragment{
             }
         });
 
+        searchView.setOnCloseListener(new android.widget.SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                filtered = false;
+                initializePagination();
+                getPaginationMethod();
+                return false;
+            }
+        });
         super.onCreateOptionsMenu(menu, inflater);
-    }
+    }*/
 
     protected void initializePagination() {
         pageNumber = 0;
         isLoading = false;
         isLastPage = false;
+    }
+
+    protected void dismissProgressBarsOnError() {
+        progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    public int getTitle() {
+        return R.string.friends_label;
     }
 }

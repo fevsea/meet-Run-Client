@@ -9,12 +9,11 @@ import edu.upc.fib.meetnrun.adapters.IChatAdapter;
 import edu.upc.fib.meetnrun.adapters.models.ChatServer;
 import edu.upc.fib.meetnrun.adapters.models.Forms;
 import edu.upc.fib.meetnrun.adapters.models.PageServer;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
-import edu.upc.fib.meetnrun.exceptions.GenericException;
+import edu.upc.fib.meetnrun.adapters.remote.SOServices;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
 import edu.upc.fib.meetnrun.models.Chat;
-import edu.upc.fib.meetnrun.remote.SOServices;
 import retrofit2.Response;
 
 import static edu.upc.fib.meetnrun.adapters.utils.UtilsAdapter.calculateOffset;
@@ -32,8 +31,8 @@ public class ChatAdapterImpl implements IChatAdapter {
     }
 
     @Override
-    public Chat createChat(String chatName, List<Integer> listUsersChatIDs, int type, Integer meetingID, String lastMessage, int lastMessageUserNamePosition, Date lastDateTime) throws AutorizationException, ParamsException {
-        Forms.ChatCreateUpdate ur = new Forms.ChatCreateUpdate(chatName, listUsersChatIDs, type, meetingID, lastMessage, lastMessageUserNamePosition, lastDateTime);
+    public Chat createChat(String chatName, List<Integer> listUsersChatIDs, int type, Integer meetingID, String lastMessage, String lastMessageUserName, Date lastDateTime) throws AuthorizationException, ParamsException {
+        Forms.ChatCreateUpdate ur = new Forms.ChatCreateUpdate(chatName, listUsersChatIDs, type, meetingID, lastMessage, lastMessageUserName, lastDateTime);
         ChatServer u = null;
         try {
             Response<ChatServer> ret = mServices.createChat(ur).execute();
@@ -43,19 +42,12 @@ public class ChatAdapterImpl implements IChatAdapter {
             u = ret.body();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof ParamsException) {
-                throw (ParamsException) e;
-            } else if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            }
         }
         return u != null ? u.toGenericModel() : null;
     }
 
     @Override
-    public List<Chat> getChats(int page) throws AutorizationException {
+    public List<Chat> getChats(int page) throws AuthorizationException {
         List<Chat> l = new ArrayList<>();
         try {
             int offset = calculateOffset(SOServices.PAGELIMIT, page);
@@ -74,7 +66,7 @@ public class ChatAdapterImpl implements IChatAdapter {
     }
 
     @Override
-    public boolean updateChat(Chat c) throws AutorizationException, ParamsException, NotFoundException {
+    public boolean updateChat(Chat c) throws AuthorizationException, ParamsException, NotFoundException {
         boolean ok = false;
         Forms.ChatCreateUpdate ur = new Forms.ChatCreateUpdate(c);
         try {
@@ -86,21 +78,12 @@ public class ChatAdapterImpl implements IChatAdapter {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof NotFoundException) {
-                throw (NotFoundException) e;
-            } else if (e instanceof ParamsException) {
-                throw (ParamsException) e;
-            } else if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            }
         }
         return ok;
     }
 
     @Override
-    public boolean deleteChat(int id) throws AutorizationException, ParamsException, NotFoundException {
+    public boolean deleteChat(int id) throws AuthorizationException, ParamsException, NotFoundException {
         boolean ok = true;
         try {
             Response<Void> ret = mServices.deleteChat(id).execute();
@@ -110,21 +93,12 @@ public class ChatAdapterImpl implements IChatAdapter {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof NotFoundException) {
-                throw (NotFoundException) e;
-            } else if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            } else if (e instanceof ParamsException) {
-                throw (ParamsException) e;
-            }
         }
         return ok;
     }
 
     @Override
-    public Chat getChat(int id) throws AutorizationException, NotFoundException {
+    public Chat getChat(int id) throws AuthorizationException, NotFoundException {
         ChatServer cs = null;
         try {
             Response<ChatServer> ret = mServices.getChat(id).execute();
@@ -133,19 +107,12 @@ public class ChatAdapterImpl implements IChatAdapter {
             cs = ret.body();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            } else if (e instanceof NotFoundException) {
-                throw (NotFoundException) e;
-            }
         }
         return cs != null ? cs.toGenericModel() : null;
     }
 
     @Override
-    public Chat getPrivateChat(int targetUserID) throws AutorizationException, NotFoundException {
+    public Chat getPrivateChat(int targetUserID) throws AuthorizationException, NotFoundException {
         ChatServer cs = null;
         try {
             Response<ChatServer> ret = mServices.getPrivateChat(targetUserID).execute();
@@ -154,13 +121,6 @@ public class ChatAdapterImpl implements IChatAdapter {
             cs = ret.body();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (GenericException e) {
-            e.printStackTrace();
-            if (e instanceof NotFoundException) {
-                throw (NotFoundException) e;
-            } else if (e instanceof AutorizationException) {
-                throw (AutorizationException) e;
-            }
         }
         return cs != null ? cs.toGenericModel() : null;
     }

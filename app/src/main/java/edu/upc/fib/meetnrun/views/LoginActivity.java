@@ -1,6 +1,7 @@
 package edu.upc.fib.meetnrun.views;
 
 import android.app.ProgressDialog;
+import android.arch.persistence.room.Update;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +19,12 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.asynctasks.GetCurrentUser;
+import edu.upc.fib.meetnrun.asynctasks.Login;
+import edu.upc.fib.meetnrun.asynctasks.UpdateFirebaseToken;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
+import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.User;
 import edu.upc.fib.meetnrun.services.FirebaseInstanceService;
@@ -31,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     private ILoginAdapter loginAdapter;
     private CurrentSession cs;
     private boolean see = false;
+    private ProgressBar progressBar;
 
     private static final String TAG = LoginActivity.class.getSimpleName();
 
@@ -46,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
         editUsername = findViewById(R.id.editUsername);
         editPassword = findViewById(R.id.editPassword);
+        progressBar = findViewById(R.id.pb_loading);
 
         cs = CurrentSession.getInstance();
         loginAdapter = cs.getLoginAdapter();
@@ -53,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         String token = prefs.getString("token",null);
         if (token != null) {
-            new GetCurrentUser().execute(token);
+            callGetCurrentUser(token);
         }
     }
 
@@ -78,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        new login().execute();
+        callLogin();
     }
 
     private void changeToMainActivity() {
@@ -96,96 +104,69 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateFirebaseToken(){
         FirebaseMessaging.getInstance().subscribeToTopic("all");
-        new FirebaseInstanceService().onTokenRefresh();
-    }
-
-    private class login extends AsyncTask<String,String,String> {
-
-        String token = null;
-        User u = null;
-
-        @Override
-        protected String doInBackground(String... logUser) {
-            try {
-                token = loginAdapter.login(username, password);
-                //TODO Pending to catch correctly
-            } catch (AutorizationException e) {
-                e.printStackTrace();
+        new UpdateFirebaseToken() {
+            @Override
+            public void onResponseReceived() {
+                Log.d(TAG, "Refreshed token");
             }
 
-            if(token != null && !token.equals("")){
-                cs.setToken(token);
-                saveToken();
-                updateFirebaseToken();
-                try {
-                    u = loginAdapter.getCurrentUser();
-                    //TODO Pending to catch correctly
-                } catch (AutorizationException e) {
-                    e.printStackTrace();
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(LoginActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(LoginActivity.this, R.string.not_found_error, Toast.LENGTH_LONG).show();
                 }
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            if (token == null || token.equals("")) {
-                Toast.makeText(getApplicationContext(), "User not found", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                cs.setCurrentUser(u);
-                changeToMainActivity();
-            }
-            super.onPostExecute(s);
-        }
+        }.execute();
     }
 
-    private class GetCurrentUser extends AsyncTask<String,String,String> {
-
-        User user = null;
-        boolean ok = false;
-        ProgressDialog mProgressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            mProgressDialog = new ProgressDialog(LoginActivity.this);
-            mProgressDialog.setTitle(R.string.login);
-            mProgressDialog.setMessage(getResources().getString(R.string.getting_current_session));
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setCancelable(false);
-            mProgressDialog.show();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected String doInBackground(String... s) {
-            try {
-                cs.setToken(s[0]);
-                user = loginAdapter.getCurrentUser();
-                if (user != null) ok = true;
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-                deleteToken();
+    private void callLogin() {
+        new Login(username,password) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(LoginActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
             }
-            return null;
-        }
+            @Override
+            public void onResponseReceived(String token) {
+                if(token != null && !token.equals("")){
+                    cs.setToken(token);
+                    saveToken();
+                    updateFirebaseToken();
+                    callGetCurrentUser(token);
+                }
+            }
+        }.execute();
+    }
 
-        @Override
-        protected void onPostExecute(String s) {
-            if (ok) {
-                cs.setCurrentUser(user);
-                mProgressDialog.dismiss();
+
+    private void callGetCurrentUser(String token) {
+        progressBar.setVisibility(View.VISIBLE);
+        new GetCurrentUser() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(LoginActivity.this, R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    deleteToken();
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onResponseReceived(User u) {
+                cs.setCurrentUser(u);
+                progressBar.setVisibility(View.INVISIBLE);
                 changeToMainActivity();
             }
-            else deleteToken();
-            mProgressDialog.dismiss();
-            super.onPostExecute(s);
-        }
+        }.execute(token);
     }
 
     private void deleteToken() {
-        cs.setToken(null);
-        cs.setCurrentUser(null);
+        CurrentSession.getInstance().setToken(null);
+        CurrentSession.getInstance().setCurrentUser(null);
         SharedPreferences prefs = getSharedPreferences(MY_PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("token", CurrentSession.getInstance().getToken());

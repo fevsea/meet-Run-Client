@@ -4,7 +4,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -20,16 +19,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.lang.ref.WeakReference;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
+import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
+import edu.upc.fib.meetnrun.utils.UtilsGlobal;
 
 
 public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, OnMapReadyCallback, View.OnTouchListener{
@@ -118,8 +116,10 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
 
         location = new LatLng(Double.parseDouble(meeting.getLatitude()),Double.parseDouble(meeting.getLongitude()));
 
-
-        leaveMeetingButton.setOnClickListener(this);
+        if (meeting.getOwner().getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
+            leaveMeetingButton.setVisibility(View.INVISIBLE);
+        }
+        else leaveMeetingButton.setOnClickListener(this);
 
         mapView.onCreate(new Bundle());
         mapView.setClickable(false);
@@ -142,14 +142,8 @@ public class MyMeetingsViewHolder extends RecyclerView.ViewHolder implements Vie
     }
 
     private boolean isMeetingAvailable(String dateText) {
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         Date date = null;
-        try {
-            date = inputFormat.parse(dateText);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            date = new Date();
-        }
+        date = UtilsGlobal.parseDate(dateText);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.MINUTE,-20);

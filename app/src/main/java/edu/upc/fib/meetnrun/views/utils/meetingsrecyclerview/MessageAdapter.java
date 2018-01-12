@@ -94,7 +94,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
         String messageHourMin = String.valueOf(hour)+":"+aux;
 
-        String messageDay = String.valueOf(day)+"-"+String.valueOf(cal.get(Calendar.MONTH))+"-"+String.valueOf(cal.get(Calendar.YEAR));
+        String messageDay = String.valueOf(day)+"-"+String.valueOf(cal.get(Calendar.MONTH)+1)+"-"+String.valueOf(cal.get(Calendar.YEAR));
 
         if (previous != null) {
 

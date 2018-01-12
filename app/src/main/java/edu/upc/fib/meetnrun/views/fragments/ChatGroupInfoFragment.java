@@ -2,7 +2,6 @@ package edu.upc.fib.meetnrun.views.fragments;
 
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -24,28 +23,25 @@ import java.util.ArrayList;
 import java.util.List;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IFriendsAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.asynctasks.GetAllFriends;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Chat;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 import edu.upc.fib.meetnrun.models.Friend;
 import edu.upc.fib.meetnrun.models.Meeting;
 import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ChatGroupsActivity;
-import edu.upc.fib.meetnrun.views.FriendProfileActivity;
-import edu.upc.fib.meetnrun.views.MeetingInfoActivity;
 import edu.upc.fib.meetnrun.views.ProfileViewPagerFragment;
-import edu.upc.fib.meetnrun.views.UserProfileActivity;
-import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.FriendsAdapter;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.UsersAdapter;
 
 
-public class ChatGroupInfoFragment extends Fragment {
+public class ChatGroupInfoFragment extends BaseFragment {
 
     protected View view;
     protected UsersAdapter usersAdapter;
-    protected IFriendsAdapter friendsDBAdapter;
     protected List<User> groupUsers;
     protected FloatingActionButton fab;
     private TextView groupName;
@@ -67,7 +63,6 @@ public class ChatGroupInfoFragment extends Fragment {
 
         this.view = inflater.inflate(R.layout.fragment_chat_group_info, container, false);
 
-        friendsDBAdapter = CurrentSession.getInstance().getFriendsAdapter();
         chat = CurrentSession.getInstance().getChat();
 
         String name = chat.getChatName();
@@ -94,15 +89,15 @@ public class ChatGroupInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 CurrentSession.getInstance().setChat(chat);
-                Intent addUserIntent = new Intent(getContext(), ChatGroupsActivity.class);
+                Intent addUserIntent = new Intent();
                 addUserIntent.putExtra("action","adduser");
-                startActivity(addUserIntent);
+                BaseActivity.startWithFragment(getActivity(), new ChatGroupsFragment(), addUserIntent);
             }
         });
         setupRecyclerView();
         fab = getActivity().findViewById(R.id.activity_fab);
         fab.setVisibility(View.INVISIBLE);
-        new GetAllFriends().execute();
+        callGetAllFriends();
         return this.view;
     }
 
@@ -139,15 +134,14 @@ public class ChatGroupInfoFragment extends Fragment {
         if (isLoading) Toast.makeText(getContext(),R.string.loading_list,Toast.LENGTH_LONG).show();
         else {
             CurrentSession.getInstance().setFriend(friend);
-            Intent userProfileIntent = null;
+            Intent userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
             if (CurrentSession.getInstance().getCurrentUser().getId().equals(friend.getId())) {
-                userProfileIntent = new Intent(getActivity(), ProfileViewPagerFragment.class);
-            }
-            else if (isFriend(friend)) {
-                userProfileIntent = new Intent(getActivity(), FriendProfileActivity.class);
+                userProfileIntent.putExtra("userId",CurrentSession.getInstance().getCurrentUser().getId());
+                userProfileIntent.putExtra("isFriend",false);
             }
             else {
-                userProfileIntent = new Intent(getActivity(), UserProfileActivity.class);
+                userProfileIntent.putExtra("userId",friend.getId());
+                userProfileIntent.putExtra("isFriend",isFriend(friend));
             }
             startActivity(userProfileIntent);
         }
@@ -168,50 +162,48 @@ public class ChatGroupInfoFragment extends Fragment {
         return circularShape;
     }
 
-    private class GetAllFriends extends AsyncTask<String,String,String> {
-
-        @Override
-        protected void onPreExecute() {
-            friends = new ArrayList<>();
-            progressBar.setVisibility(View.VISIBLE);
-            isLoading = true;
-            pageNumber = 0;
-            isLastPage = false;
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                List<Friend> friendsPage = new ArrayList<>();
-                while (!isLastPage) {
-                    friendsPage = friendsDBAdapter.listUserAcceptedFriends(CurrentSession.getInstance().getCurrentUser().getId(),pageNumber);
-                    if (friendsPage.size() != 0) {
-                        for (Friend f : friendsPage) {
-                            User friend = f.getFriend();
-                            if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
-                            friends.add(friend);
-                        }
-                        ++pageNumber;
-                    }
-                    else isLastPage = true;
-                }
-            } catch (AutorizationException e) {
-                e.printStackTrace();
-            } catch (NotFoundException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            isLoading = false;
-            progressBar.setVisibility(View.INVISIBLE);
-            Log.e("Friends",friends.toString());
-            super.onPostExecute(s);
-        }
-
+    private void setLoading() {
+        friends = new ArrayList<>();
+        progressBar.setVisibility(View.VISIBLE);
+        isLoading = true;
+        pageNumber = 0;
+        isLastPage = false;
     }
+
+    private void updateData() {
+        isLoading = false;
+        progressBar.setVisibility(View.INVISIBLE);
+        Log.e("Friends",friends.toString());
+    }
+
+    private void callGetAllFriends() {
+        setLoading();
+        new GetAllFriends() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+                else if (e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                    dismissProgressBarsOnError();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(List<Friend> allfriends) {
+                friends = new ArrayList<User>();
+                for (Friend f : allfriends) {
+                    User friend = f.getFriend();
+                    if (CurrentSession.getInstance().getCurrentUser().getUsername().equals(friend.getUsername())) friend = f.getUser();
+                    friends.add(friend);
+                }
+                updateData();
+            }
+        }.execute();
+    }
+
 
     @Override
     public void onResume() {
@@ -223,7 +215,7 @@ public class ChatGroupInfoFragment extends Fragment {
 
     private void openMeetingView() {
         Meeting meeting = chat.getMeeting();
-        Intent meetingInfoIntent = new Intent(getActivity(),MeetingInfoActivity.class);
+        Intent meetingInfoIntent = new Intent();
         meetingInfoIntent.putExtra("id",meeting.getId());
         meetingInfoIntent.putExtra("chat",meeting.getChatID());
         meetingInfoIntent.putExtra("title",meeting.getTitle());
@@ -232,11 +224,15 @@ public class ChatGroupInfoFragment extends Fragment {
         meetingInfoIntent.putExtra("description",meeting.getDescription());
         String datetime = meeting.getDate();
         meetingInfoIntent.putExtra("date",datetime.substring(0,datetime.indexOf('T')));
-        meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.indexOf('Z')));
+        meetingInfoIntent.putExtra("time",datetime.substring(datetime.indexOf('T')+1,datetime.length()));
         meetingInfoIntent.putExtra("level",String.valueOf(meeting.getLevel()));
         meetingInfoIntent.putExtra("latitude",meeting.getLatitude());
         meetingInfoIntent.putExtra("longitude",meeting.getLongitude());
-        startActivity(meetingInfoIntent);
+        BaseActivity.startWithFragment(getActivity(), new MeetingInfoFragment(), meetingInfoIntent);
+    }
+
+    private void dismissProgressBarsOnError() {
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
 }

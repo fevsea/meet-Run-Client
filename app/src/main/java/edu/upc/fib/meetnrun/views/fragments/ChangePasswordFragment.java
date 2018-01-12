@@ -15,11 +15,13 @@ import android.widget.Toast;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.ILoginAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.asynctasks.UpdatePassword;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.models.CurrentSession;
 
-public class ChangePasswordFragment extends Fragment {
+public class ChangePasswordFragment extends BaseFragment {
 
     private final ILoginAdapter controller = CurrentSession.getInstance().getLoginAdapter();
     private EditText currentPassText;
@@ -96,37 +98,34 @@ public class ChangePasswordFragment extends Fragment {
     }
 
     private void saveNewPass() {
-        new updatePass().execute(currentPass, newPass);
+        callUpdatePassword(currentPass, newPass);
+    }
+
+    private void callUpdatePassword(String currentPass, String newPass) {
+        new UpdatePassword() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if (e instanceof ForbiddenException) {
+                    Toast.makeText(getActivity(), R.string.forbidden_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived(boolean b) {
+                if (b) {
+                    changeToUserProfile();
+                } else {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.error_change_pass), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }.execute(currentPass, newPass);
     }
 
 
-    private class updatePass extends AsyncTask<String, String, Boolean> {
-
-        Exception exception = null;
-        Boolean actualitzat_correctament;
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-
-                try {
-                    actualitzat_correctament = controller.changePassword(params[0], params[1]);
-                } catch (AutorizationException | ForbiddenException e) {
-                    e.printStackTrace();
-                }
-
-            return actualitzat_correctament;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean b) {
-
-            if(b) {
-                changeToUserProfile();
-            }
-            else {
-                Toast.makeText(getActivity(), getResources().getString(R.string.error_change_pass), Toast.LENGTH_SHORT).show();
-            }
-            super.onPostExecute(b);
-        }
+    public int getTitle() {
+        return R.string.action_change_pass;
     }
 }

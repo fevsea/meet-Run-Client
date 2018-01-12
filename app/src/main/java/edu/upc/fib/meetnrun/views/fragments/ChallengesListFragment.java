@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,19 +16,18 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.adapters.IChallengeAdapter;
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.asynctasks.AcceptOrRejectChallenge;
+import edu.upc.fib.meetnrun.asynctasks.GetChallenges;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
+import edu.upc.fib.meetnrun.exceptions.GenericException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.models.Challenge;
 import edu.upc.fib.meetnrun.models.CurrentSession;
-import edu.upc.fib.meetnrun.models.User;
-import edu.upc.fib.meetnrun.views.ChallengeActivity;
-import edu.upc.fib.meetnrun.views.FriendsListActivity;
+import edu.upc.fib.meetnrun.views.BaseActivity;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChallengesAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.ChallengesRequestAdapter;
 import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.RecyclerViewOnClickListener;
@@ -38,7 +36,7 @@ import edu.upc.fib.meetnrun.views.utils.meetingsrecyclerview.TwoButtonsRecyclerV
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ChallengesListFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+public class ChallengesListFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private RecyclerView recyclerView;
     private RecyclerView recyclerViewRequest;
@@ -59,6 +57,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_challenges_list, container, false);
+
         recyclerView = view.findViewById(R.id.fragment_challenge_recycler);
         recyclerViewRequest = view.findViewById(R.id.fragment_challenge_recycler_requests);
         swipeRefreshLayout = view.findViewById(R.id.fragment_challenge_swipe);
@@ -66,8 +65,9 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
         setupRecyclerView();
 
         FloatingActionButton fab = getActivity().findViewById(R.id.activity_fab);
+        fab.setVisibility(View.VISIBLE);
+        fab.setImageResource(R.drawable.ic_challenge);
         fab.setOnClickListener(this);
-
         return view;
     }
 
@@ -82,9 +82,9 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             @Override
             public void onItemClicked(int position) {
                 Challenge challenge = challengesAdapter.getChallengeAt(position);
-                Intent i = new Intent(getActivity(), ChallengeActivity.class);
+                Intent i = new Intent();
                 i.putExtra("id", challenge.getId());
-                startActivity(i);
+                BaseActivity.startWithFragment(getActivity(), new ChallengeFragment(), i);
             }
         });
         recyclerView.setAdapter(challengesAdapter);
@@ -97,8 +97,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
                 Log.d("ChallengesList", "ACCEPTED REQUEST");
                 Challenge challenge = challengesAdapterRequest.getChallengeAt(position);
                 challenge.setAccepted(true);
-                AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge();
-                acceptOrRejectChallenge.execute(challenge);
+                callAcceptOrRejectChallenge(challenge);
             }
 
             @Override
@@ -106,8 +105,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
                 Log.d("ChallengesList", "REJECTED REQUEST");
                 Challenge challenge = challengesAdapterRequest.getChallengeAt(position);
                 challenge.setAccepted(false);
-                AcceptOrRejectChallenge acceptOrRejectChallenge = new AcceptOrRejectChallenge();
-                acceptOrRejectChallenge.execute(challenge);
+                callAcceptOrRejectChallenge(challenge);
             }
 
             @Override
@@ -116,16 +114,16 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             @Override
             public void onItemClicked(int position) {
                 Challenge challenge = challengesAdapterRequest.getChallengeAt(position);
-                Intent i = new Intent(getActivity(), ChallengeActivity.class);
+                Intent i = new Intent();
                 i.putExtra("id", challenge.getId());
-                startActivity(i);
+                BaseActivity.startWithFragment(getActivity(), new ChallengeFragment(), i);
             }
         });
         recyclerViewRequest.setAdapter(challengesAdapterRequest);
     }
 
     private void updateChallengesList() {
-        new GetChallenges().execute();
+        callGetChallenges();
     }
 
     private void updateChallengesAdapters() {
@@ -135,6 +133,7 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
             Challenge ch = challenges.get(i);
             if (!ch.isAccepted()) {
                 Log.d("ChallengesList", ch.getId().toString() + " is not accepted");
+                Log.d("ChallengesList", String.valueOf(CurrentSession.getInstance().getCurrentUser().getId()));
                 if (ch.getChallenged().getId().equals(CurrentSession.getInstance().getCurrentUser().getId())) {
                     challengesRequest.add(ch);
                 }
@@ -163,81 +162,59 @@ public class ChallengesListFragment extends Fragment implements SwipeRefreshLayo
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.activity_fab) {
-            Intent i = new Intent(getActivity(), FriendsListActivity.class);
-            startActivity(i);
+            Intent i = new Intent();
+            BaseActivity.startWithFragment(getActivity(), new FriendsFragment());
         }
     }
 
-    private class GetChallenges extends AsyncTask<String,String,Boolean> {
+    private void callGetChallenges() {
+        new GetChallenges() {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+            }
 
-        private Exception ex;
-
-        @Override
-        protected Boolean doInBackground(String... params) {
-            try {
-                challenges = CurrentSession.getInstance().getChallengeAdapter().getCurrentUserChallenges();
+            @Override
+            public void onResponseReceived(List<Challenge> challengesResponse) {
+                    challenges = challengesResponse;
+                    updateChallengesAdapters();
+                    swipeRefreshLayout.setRefreshing(false);
             }
-            catch (AutorizationException e) {
-                this.ex = e;
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean s) {
-            super.onPostExecute(s);
-            if (s && ex == null) {
-                updateChallengesAdapters();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-            else if (ex instanceof AutorizationException){
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-            }
-        }
+        }.execute();
     }
 
-    private class AcceptOrRejectChallenge extends AsyncTask<Challenge, String, Boolean> {
 
-        Exception exception;
-
-        @Override
-        protected Boolean doInBackground(Challenge... params) {
-            IChallengeAdapter challengeAdapter = CurrentSession.getInstance().getChallengeAdapter();
-            try {
-                if (params[0].isAccepted()) {
-                    challengeAdapter.acceptChallenge(params[0].getId());
-                }
-                else {
-                    challengeAdapter.deleteRejectChallenge(params[0].getId());
-                }
-            }
-            catch (NotFoundException | AutorizationException e) {
-                exception = e;
-            }
-            return true;
+    private void callAcceptOrRejectChallenge(Challenge challenge) {
+        boolean accept = false;
+        if (challenge.isAccepted()) {
+            accept = true;
         }
 
-        protected void onPostExecute(Boolean s) {
-            super.onPostExecute(s);
-            if (s && exception == null) {
+        new AcceptOrRejectChallenge(challenge.getId()) {
+            @Override
+            public void onExceptionReceived(GenericException e) {
+                if (e instanceof AuthorizationException ) {
+                    Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
+                }
+                else if ( e instanceof NotFoundException) {
+                    Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onResponseReceived() {
                 updateChallengesList();
             }
-            else if (exception instanceof AutorizationException){
-                Toast.makeText(getActivity(), R.string.authorization_error, Toast.LENGTH_LONG).show();
-            }
-            else if (exception instanceof NotFoundException) {
-                Toast.makeText(getActivity(), R.string.not_found_error, Toast.LENGTH_LONG).show();
-            }
-            else {
-                Toast.makeText(getActivity(), R.string.error_loading, Toast.LENGTH_LONG).show();
-            }
-        }
-
+        }.execute(accept);
     }
+
+    @Override
+    public int getTitle() {
+        return R.string.challenges;
+    }
+
 
 
 }

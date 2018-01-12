@@ -15,7 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import edu.upc.fib.meetnrun.exceptions.AutorizationException;
+import edu.upc.fib.meetnrun.exceptions.AuthorizationException;
 import edu.upc.fib.meetnrun.exceptions.ForbiddenException;
 import edu.upc.fib.meetnrun.exceptions.NotFoundException;
 import edu.upc.fib.meetnrun.exceptions.ParamsException;
@@ -52,8 +52,8 @@ public class UtilsGlobal {
         return pe;
     }
 
-    public static AutorizationException CreateAutorizationExceptionFromJson(String jSON) {
-        AutorizationException pe = new AutorizationException(UtilsGlobal.ParseJsonToGetProblems(jSON));
+    public static AuthorizationException CreateAutorizationExceptionFromJson(String jSON) {
+        AuthorizationException pe = new AuthorizationException(UtilsGlobal.ParseJsonToGetProblems(jSON));
         return pe;
     }
 
@@ -76,7 +76,7 @@ public class UtilsGlobal {
     public static String formatDate(Date date) {
         //TimeZone tz = TimeZone.getTimeZone("Europe/Madrid"); //for spanish hours
         TimeZone tz = TimeZone.getDefault();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US); // Quoted "Z" to indicate UTC, no timezone offset
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
         return df.format(date);
     }
@@ -89,13 +89,14 @@ public class UtilsGlobal {
      */
     public static Date parseDate(String lastMessageDateTime) {
         TimeZone tz = TimeZone.getDefault();
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX", Locale.US); // Quoted "Z" to indicate UTC, no timezone offset
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US); // Quoted "Z" to indicate UTC, no timezone offset
         df.setTimeZone(tz);
         Date d = null;
         try {
             d = df.parse(lastMessageDateTime);
         } catch (ParseException e) {
             e.printStackTrace();
+            d = new Date(lastMessageDateTime);
         }
         return d;
     }

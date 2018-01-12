@@ -20,8 +20,8 @@ import edu.upc.fib.meetnrun.models.User;
 
 public class UsersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    private View view;
-    private WeakReference<RecyclerViewOnClickListener> listener;
+    protected View view;
+    protected WeakReference<RecyclerViewOnClickListener> listener;
     private CardView cardView;
     private Context context;
 

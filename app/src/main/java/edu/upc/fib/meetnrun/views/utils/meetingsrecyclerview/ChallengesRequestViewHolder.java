@@ -11,6 +11,8 @@ import java.util.Locale;
 import edu.upc.fib.meetnrun.R;
 import edu.upc.fib.meetnrun.models.Challenge;
 
+import static edu.upc.fib.meetnrun.utils.UtilsViews.getExpirationText;
+
 /**
  * Created by guillemcastro on 08/12/2017.
  */
@@ -29,7 +31,7 @@ public class ChallengesRequestViewHolder extends ChallengesViewHolder {
         ImageButton reject = view.findViewById(R.id.reject);
         TextView expiresIn = view.findViewById(R.id.expires_in);
 
-        String totalText = String.format(Locale.forLanguageTag("es"), "%.0f km", challenge.getDistance());
+        String totalText = String.format(Locale.forLanguageTag("es"), "%.0f km", challenge.getDistance() / 1000.0f);
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,7 +48,7 @@ public class ChallengesRequestViewHolder extends ChallengesViewHolder {
         totalView.setText(totalText);
         opponentView.setText(challenge.getCreator().getUsername());
         try {
-            expiresIn.setText(getExpirationText(challenge.getDeadline()));
+            expiresIn.setText(getExpirationText(challenge.getDeadline(), expirationTextResourceDays, expirationTextResourceNoDays, expirationPastTextResourceDays, expirationPastTextResourceNoDays));
         }
         catch (ParseException e) {
             expiresIn.setText("");
